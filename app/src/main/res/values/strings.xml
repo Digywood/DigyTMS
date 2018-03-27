@@ -1,0 +1,17 @@
+<resources>
+    <string name="app_name">TMS</string>
+    <string name="reglabel">Register Here</string>
+
+    <string-array name="qualifications">
+        <item>Select</item>
+        <item>Below SSC</item>
+        <item>10th Standrad</item>
+        <item>12th Standrad</item>
+        <item>Any Degree</item>
+        <item>Post Graduation</item>
+        <item>Others</item>
+    </string-array>
+    <string name="title_activity_test">TestActivity</string>
+    <string name="title_activity_score">ScoreActivity</string>
+
+</resources>

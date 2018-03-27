@@ -1,0 +1,341 @@
+{
+	"sptu_ID": "PTAA00001",
+
+	"questions": [{
+		"qbm_ID": "QAAA0001",
+		"qbm_ReferenceID": "TEXT",
+		"qbm_Description": "Select  the related word/letters/number from the given alternatives.",
+
+		"qbm_SubjectID": "SSCS0002",
+		"qbm_SubjectName": "Reasoning",
+		"qbm_Paper_ID": "PAA002",
+		"qbm_Paper_Name": "Reasoning",
+		"qbm_ChapterID": "CHAA0002",
+		"qbm_ChapterName": "First",
+		"qbm_Sub_CategoryID": "Cat001",
+		"qbm_Sub_CategoryName": "Scat001",
+		"qbm_level": "1",
+		"qbm_Type": "S",
+		"qbm_marks": "1",
+		"qbm_nagative_applicable": "NO",
+		"qbm_negative_mrk": "0",
+		"qbm_question_type": "IMAGE",
+		"qbm_text_applicable": "YES",
+		"qbm_text": "Select  the related word/letters/number from the given alternatives.",
+		"qbm_image_file": "qaa00001_question.png",
+		"qbm_video_file": "NA",
+		"qbm_media_type": "NA",
+		"qbm_Group_Flag": "NO",
+		"qbm_Group_ID": "NA",
+		"qbm_Group_q_no": "0",
+		"qbm_answer": "A",
+		"qbm_review_flag": "YES",
+		"qbm_Review_Type": "IMAGE",
+		"qbm_Review_Images": "qaa00002_rev_01.png",
+		"qbm_review_Video": "TEXT",
+		"qbm_Additional_Images_num": "0",
+		"qbm_Additional_Image_ref": "qaa00002_rev_01.png",
+		"qbg_media_type": "NA",
+		"qbg_media_file": "TEXT",
+		"qbg_text": "TEXT",
+		"qbg_no_questions": "1",
+		
+		"options": [{
+			"qbo_id": "QAAA0001",
+			"qbo_seq_no": "1",
+			"qbo_type": "IMAGE",
+			"qbo_text": "TEXT",
+			"qbo_media_type": "IMAGE",
+			"qbo_media_file": "qaa00001_option_01.png",
+			"qbo_answer_flag": "YES"
+		},
+		{
+			"qbo_id": "QAAA0001",
+			"qbo_seq_no": "2",
+			"qbo_type": "IMAGE",
+			"qbo_text": "TEXT",
+			"qbo_media_type": "IMAGE",
+			"qbo_media_file": "qaa00001_option_02.png",
+			"qbo_answer_flag": "NO"
+		},
+		{
+			"qbo_id": "QAAA0001",
+			"qbo_seq_no": "3",
+			"qbo_type": "IMAGE",
+			"qbo_text": "TEXT",
+			"qbo_media_type": "IMAGE",
+			"qbo_media_file": "qaa00001_option_03.png",
+			"qbo_answer_flag": "NO"
+		},
+		{
+			"qbo_id": "QAAA0001",
+			"qbo_seq_no": "4",
+			"qbo_type": "IMAGE",
+			"qbo_text": "TEXT",
+			"qbo_media_type": "IMAGE",
+			"qbo_media_file": "qaa00001_option_04.png",
+			"qbo_answer_flag": "NO"
+		}],
+
+		"additions": [{
+		"qba_sequence": "1",
+		"qba_type": "IMAGE",
+		"qba_media_file": "qaa00001_rev_01.png"
+		}]
+	},
+	
+
+
+	{
+		"qbm_ID": "QAAA0002",
+		"qbm_ReferenceID": "TEXT",
+		"qbm_Description": "Select  the related word/letters/number from the given alternatives.",
+		"qbm_SubjectID": "SSCS0002",
+		"qbm_SubjectName": "Reasoning",
+		"qbm_Paper_ID": "PAA002",
+		"qbm_Paper_Name": "Reasoning",
+		"qbm_ChapterID": "CHAA0002",
+		"qbm_ChapterName": "First",
+		"qbm_Sub_CategoryID": "Cat001",
+		"qbm_Sub_CategoryName": "Scat001",
+		"qbm_level": "1",
+		"qbm_Type": "S",
+		"qbm_marks": "1",
+		"qbm_nagative_applicable": "NO",
+		"qbm_negative_mrk": "0",
+		"qbm_question_type": "IMAGE",
+		"qbm_text_applicable": "YES",
+		"qbm_text": "Select  the related word/letters/number from the given alternatives.",
+		"qbm_image_file": "qaa00002_question.png",
+		"qbm_video_file": "NA",
+		"qbm_media_type": "NA",
+		"qbm_Group_Flag": "NO",
+		"qbm_Group_ID": "NA",
+		"qbm_Group_q_no": "0",
+		"qbm_answer": "B",
+		"qbm_review_flag": "YES",
+		"qbm_Review_Type": "IMAGE",
+		"qbm_Review_Images": "qaa00002_rev_02.png",
+		"qbm_review_Video": "TEXT",
+		"qbm_Additional_Images_num": "0",
+		"qbm_Additional_Image_ref": "qaa00002_rev_02.png",
+		"qbg_media_type": "NA",
+		"qbg_media_file": "TEXT",
+		"qbg_text": "TEXT",
+		"qbg_no_questions": "1",
+		
+		"options": [{
+			"qbo_id": "QAAA0002",
+			"qbo_seq_no": "1",
+			"qbo_type": "IMAGE",
+			"qbo_text": "TEXT",
+			"qbo_media_type": "IMAGE",
+			"qbo_media_file": "qaa00002_option_01.png",
+			"qbo_answer_flag": "NO"
+		},
+		{
+			"qbo_id": "QAAA0002",
+			"qbo_seq_no": "2",
+			"qbo_type": "IMAGE",
+			"qbo_text": "TEXT",
+			"qbo_media_type": "IMAGE",
+			"qbo_media_file": "qaa00002_option_02.png",
+			"qbo_answer_flag": "YES"
+		},
+		{
+			"qbo_id": "QAAA0002",
+			"qbo_seq_no": "3",
+			"qbo_type": "IMAGE",
+			"qbo_text": "TEXT",
+			"qbo_media_type": "IMAGE",
+			"qbo_media_file": "qaa00002_option_03.png",
+			"qbo_answer_flag": "NO"
+		},
+		{
+			"qbo_id": "QAAA0002",
+			"qbo_seq_no": "4",
+			"qbo_type": "IMAGE",
+			"qbo_text": "TEXT",
+			"qbo_media_type": "IMAGE",
+			"qbo_media_file": "qaa00002_option_04.png",
+			"qbo_answer_flag": "NO"
+		}],
+
+		"additions": [{
+		"qba_sequence": "1",
+		"qba_type": "IMAGE",
+		"qba_media_file": "qaa00002_rev_01.png"
+		}]
+		
+		},
+	
+	
+	{
+		"qbm_ID": "QAAA0003",
+		"qbm_ReferenceID": "TEXT",
+		"qbm_Description": "Select  the related word/letters/number from the given alternatives.",
+
+		"qbm_SubjectID": "SSCS0002",
+		"qbm_SubjectName": "Reasoning",
+		"qbm_Paper_ID": "PAA002",
+		"qbm_Paper_Name": "Reasoning",
+		"qbm_ChapterID": "CHAA0002",
+		"qbm_ChapterName": "First",
+		"qbm_Sub_CategoryID": "Cat001",
+		"qbm_Sub_CategoryName": "Scat001",
+		"qbm_level": "1",
+		"qbm_Type": "S",
+		"qbm_marks": "1",
+		"qbm_nagative_applicable": "NO",
+		"qbm_negative_mrk": "0",
+		"qbm_question_type": "IMAGE",
+		"qbm_text_applicable": "YES",
+		"qbm_text": "Select  the related word/letters/number from the given alternatives.",
+		"qbm_image_file": "qaa00003_question.png",
+		"qbm_video_file": "NA",
+		"qbm_media_type": "NA",
+		"qbm_Group_Flag": "NO",
+		"qbm_Group_ID": "NA",
+		"qbm_Group_q_no": "0",
+		"qbm_answer": "B",
+		"qbm_review_flag": "YES",
+		"qbm_Review_Type": "IMAGE",
+		"qbm_Review_Images": "qaa00003_rev_02.png",
+		"qbm_review_Video": "TEXT",
+		"qbm_Additional_Images_num": "0",
+		"qbm_Additional_Image_ref": "qaa00003_rev_02.png",
+		"qbg_media_type": "NA",
+		"qbg_media_file": "TEXT",
+		"qbg_text": "TEXT",
+		"qbg_no_questions": "1",
+		
+		"options": [{
+			"qbo_id": "QAAA0003",
+			"qbo_seq_no": "1",
+			"qbo_type": "IMAGE",
+			"qbo_text": "TEXT",
+			"qbo_media_type": "IMAGE",
+			"qbo_media_file": "qaa00003_option_01.png",
+			"qbo_answer_flag": "NO"
+		},
+		{
+			"qbo_id": "QAAA0003",
+			"qbo_seq_no": "2",
+			"qbo_type": "IMAGE",
+			"qbo_text": "TEXT",
+			"qbo_media_type": "IMAGE",
+			"qbo_media_file": "qaa00003_option_02.png",
+			"qbo_answer_flag": "YES"
+		},
+		{
+			"qbo_id": "QAAA0003",
+			"qbo_seq_no": "3",
+			"qbo_type": "IMAGE",
+			"qbo_text": "TEXT",
+			"qbo_media_type": "IMAGE",
+			"qbo_media_file": "qaa00003_option_03.png",
+			"qbo_answer_flag": "NO"
+		},
+		{
+			"qbo_id": "QAAA0003",
+			"qbo_seq_no": "4",
+			"qbo_type": "IMAGE",
+			"qbo_text": "TEXT",
+			"qbo_media_type": "IMAGE",
+			"qbo_media_file": "qaa00003_option_04.png",
+			"qbo_answer_flag": "NO"
+		}
+		],
+
+		"additions": [{
+		"qba_sequence": "1",
+		"qba_type": "IMAGE",
+		"qba_media_file": "qaa00003_rev_01.png"
+		}]
+	},
+	
+	
+	{
+		"qbm_ID": "QAAA0004",
+		"qbm_ReferenceID": "TEXT",
+		"qbm_Description": "Select  the related word/letters/number from the given alternatives.",
+
+		"qbm_SubjectID": "SSCS0002",
+		"qbm_SubjectName": "Reasoning",
+		"qbm_Paper_ID": "PAA002",
+		"qbm_Paper_Name": "Reasoning",
+		"qbm_ChapterID": "CHAA0002",
+		"qbm_ChapterName": "First",
+		"qbm_Sub_CategoryID": "Cat001",
+		"qbm_Sub_CategoryName": "Scat001",
+		"qbm_level": "1",
+		"qbm_Type": "S",
+		"qbm_marks": "1",
+		"qbm_nagative_applicable": "NO",
+		"qbm_negative_mrk": "0",
+		"qbm_question_type": "IMAGE",
+		"qbm_text_applicable": "YES",
+		"qbm_text": "Select  the related word/letters/number from the given alternatives.",
+		"qbm_image_file": "qaa00004_question.png",
+		"qbm_video_file": "NA",
+		"qbm_media_type": "NA",
+		"qbm_Group_Flag": "NO",
+		"qbm_Group_ID": "NA",
+		"qbm_Group_q_no": "0",
+		"qbm_answer": "C",
+		"qbm_review_flag": "YES",
+		"qbm_Review_Type": "IMAGE",
+		"qbm_Review_Images": "qaa00004_rev_02.png",
+		"qbm_review_Video": "TEXT",
+		"qbm_Additional_Images_num": "0",
+		"qbm_Additional_Image_ref": "qaa00004_rev_02.png",
+		"qbg_media_type": "NA",
+		"qbg_media_file": "TEXT",
+		"qbg_text": "TEXT",
+		"qbg_no_questions": "1",
+		
+		"options": [{
+			"qbo_id": "QAAA0004",
+			"qbo_seq_no": "1",
+			"qbo_type": "IMAGE",
+			"qbo_text": "TEXT",
+			"qbo_media_type": "IMAGE",
+			"qbo_media_file": "qaa00004_option_01.png",
+			"qbo_answer_flag": "NO"
+		},
+		{
+			"qbo_id": "QAAA0004",
+			"qbo_seq_no": "2",
+			"qbo_type": "IMAGE",
+			"qbo_text": "TEXT",
+			"qbo_media_type": "IMAGE",
+			"qbo_media_file": "qaa00004_option_02.png",
+			"qbo_answer_flag": "NO"
+		},
+		{
+			"qbo_id": "QAAA0004",
+			"qbo_seq_no": "3",
+			"qbo_type": "IMAGE",
+			"qbo_text": "TEXT",
+			"qbo_media_type": "IMAGE",
+			"qbo_media_file": "qaa00004_option_03.png",
+			"qbo_answer_flag": "YES"
+		},
+		{
+			"qbo_id": "QAAA0004",
+			"qbo_seq_no": "4",
+			"qbo_type": "IMAGE",
+			"qbo_text": "TEXT",
+			"qbo_media_type": "IMAGE",
+			"qbo_media_file": "qaa00004_option_04.png",
+			"qbo_answer_flag": "NO"
+		}
+		],
+
+		"additions": [{
+		"qba_sequence": "1",
+		"qba_type": "IMAGE",
+		"qba_media_file": "qaa00004_rev_01.png"
+		}]
+	} ]
+}
