@@ -20,7 +20,7 @@
             android:layout_marginTop="10dp"
             android:layout_gravity="center_vertical"
             android:theme="@style/Widget.AppCompat.Spinner"
-            android:background="@drawable/spin_bg">
+            android:background="@drawable/spinner_shape">
         </Spinner>
 
         <HorizontalScrollView
@@ -51,7 +51,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
             android:layout_alignParentEnd="true"
-            android:src="@drawable/ic_fullscreen_black_24dp" />
+            app:srcCompat="@drawable/ic_fullscreen_black_24dp" />
 
     </RelativeLayout>
 
@@ -105,7 +105,7 @@
                 android:layout_marginTop="1dp"
                 android:layout_marginBottom="5dp"
                 android:layout_toEndOf="@+id/timer_icon"
-                android:textSize="22sp"
+                android:textSize="28sp"
                 android:textStyle="bold" />
         </RelativeLayout>
 
@@ -164,72 +164,70 @@
             android:layout_height="wrap_content"
             android:layout_weight="1">
 
-                <RadioGroup
-                    android:id="@+id/group"
-                    android:layout_width="match_parent"
+            <RadioGroup
+                android:id="@+id/group"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical">
+
+                <RadioButton
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:gravity="center_vertical">
+                    android:text=""
+                    android:elevation="3dp"
+                    android:id="@+id/op1"/>
 
-                    <RadioButton
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:scaleType="fitXY"
-                        android:text=""
-                        android:elevation="3dp"
-                        android:id="@+id/op1"/>
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="2dp"
+                    android:background="#000000"
+                    android:layout_marginTop="5dp" />
 
-                    <View
-                        android:layout_width="match_parent"
-                        android:layout_height="2dp"
-                        android:background="#000000"
-                        android:layout_marginTop="5dp" />
+                <RadioButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp"
+                    android:text=""
+                    android:elevation="3dp"
+                    android:id="@+id/op2"/>
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="2dp"
+                    android:background="#000000"
+                    android:layout_marginTop="5dp" />
 
-                    <RadioButton
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="20dp"
-                        android:text=""
-                        android:elevation="3dp"
-                        android:id="@+id/op2"/>
-                    <View
-                        android:layout_width="match_parent"
-                        android:layout_height="2dp"
-                        android:background="#000000"
-                        android:layout_marginTop="5dp" />
+                <RadioButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp"
+                    android:text=""
+                    android:elevation="3dp"
+                    android:id="@+id/op3" />
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="2dp"
+                    android:background="#000000"
+                    android:layout_marginTop="5dp" />
 
-                    <RadioButton
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="20dp"
-                        android:text=""
-                        android:elevation="3dp"
-                        android:id="@+id/op3" />
-                    <View
-                        android:layout_width="match_parent"
-                        android:layout_height="2dp"
-                        android:background="#000000"
-                        android:layout_marginTop="5dp" />
+                <RadioButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp"
+                    android:text=""
+                    android:elevation="3dp"
+                    android:id="@+id/op4" />
 
-                    <RadioButton
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="20dp"
-                        android:text=""
-                        android:elevation="3dp"
-                        android:id="@+id/op4" />
-
-                </RadioGroup>
-
+            </RadioGroup>
         </ScrollView>
 
     </LinearLayout>
 
-    <View
+<!--    <View
         android:id="@+id/margin2"
         android:layout_width="match_parent"
         android:layout_height="2dp"
         android:background="#000000"
-        android:layout_below="@+id/question_screen" />
+        android:layout_below="@+id/question_screen" />-->
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -258,7 +256,7 @@
             <TextView
                 android:layout_width="100dp"
                 android:layout_height="wrap_content"
-                android:text="Unmark"
+                android:text="Unbark"
                 android:layout_weight="3"
                 android:textColor="#000000"
                 android:gravity="center"/>

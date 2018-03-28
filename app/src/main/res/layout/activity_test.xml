@@ -14,21 +14,21 @@
         android:id="@+id/header">
         <Spinner
             android:id="@+id/sections"
-            android:layout_width="150dp"
-            android:layout_height="40dp"
+            android:layout_width="180dp"
+            android:layout_height="30dp"
             android:layout_marginStart="5dp"
-            android:layout_marginTop="10dp"
+            android:layout_marginTop="5dp"
             android:layout_gravity="center_vertical"
             android:theme="@style/Widget.AppCompat.Spinner"
-            android:background="@drawable/spinner_shape">
+            android:background="@drawable/spin_bg">
         </Spinner>
 
         <HorizontalScrollView
             android:id="@+id/scroll"
             android:layout_width="match_parent"
-            android:layout_height="40dp"
+            android:layout_height="30dp"
             android:layout_marginStart="5dp"
-            android:layout_marginBottom="10dp"
+            android:layout_marginBottom="5dp"
             android:layout_marginTop="5dp"
             android:layout_toEndOf="@+id/sections"
             android:layout_toStartOf="@+id/fullscreen"
@@ -51,24 +51,23 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
             android:layout_alignParentEnd="true"
-            android:src="@drawable/ic_fullscreen_black_24dp" />
+            app:srcCompat="@drawable/ic_fullscreen_black_24dp" />
 
     </RelativeLayout>
 
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:id="@+id/row2"
-        android:layout_below="@+id/header"
-        android:weightSum="4">
+        android:layout_below="@+id/header">
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/question_number"
-            android:layout_weight="2.5"
-            android:textSize="20sp"
-            android:gravity="center_horizontal|center"
+            android:textSize="15sp"
+            android:layout_marginTop="5dp"
+            android:layout_marginStart="150dp"
             android:text="Question"/>
 
         <ImageView
@@ -76,25 +75,27 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="5dp"
-            android:layout_marginStart="5dp"
+            android:layout_toStartOf="@id/time_layout"
+            android:layout_marginEnd="10dp"
             app:srcCompat="@drawable/ic_info_black_24dp"
             android:layout_gravity="end"
-            android:visibility="visible"
-            android:layout_weight="0.5"/>
+            android:visibility="visible" />
 
-        <RelativeLayout
+        <LinearLayout
             android:layout_height="wrap_content"
             android:layout_width="wrap_content"
             android:background="@drawable/spin_bg"
-            android:layout_gravity="center"
-            android:layout_weight="1">
+            android:id="@+id/time_layout"
+            android:layout_marginEnd="5dp"
+            android:layout_alignParentEnd="true">
 
             <ImageView
                 android:id="@+id/timer_icon"
+                android:layout_marginStart="10dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:paddingStart="5dp"
-                android:layout_gravity="center_vertical"
+                android:layout_marginTop="5dp"
+                android:gravity="center_vertical|center_horizontal"
                 app:srcCompat="@drawable/ic_timer_black_24dp" />
 
             <TextView
@@ -104,13 +105,14 @@
                 android:textColor="@color/colorPrimary"
                 android:layout_marginTop="1dp"
                 android:layout_marginBottom="5dp"
-                android:layout_toEndOf="@+id/timer_icon"
-                android:textSize="28sp"
+                android:layout_marginEnd="10dp"
+                android:gravity="center_vertical|center_horizontal"
+                android:textSize="20sp"
                 android:textStyle="bold" />
-        </RelativeLayout>
+        </LinearLayout>
 
 
-    </LinearLayout>
+    </RelativeLayout>
 
     <View
         android:id="@+id/margin"
@@ -136,11 +138,17 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
+                <View
+                    android:layout_width="2dp"
+                    android:layout_height="match_parent"
+                    android:background="#000000"/>
+
                 <ImageView
                     android:id="@+id/question_img"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+                    android:layout_height="220dp"
                     android:scaleType="fitXY"
+                    android:adjustViewBounds="false"
                     android:gravity="start" />
 
                 <android.support.design.widget.FloatingActionButton
@@ -155,70 +163,25 @@
                     android:elevation="5dp"
                     app:srcCompat="@drawable/ic_input_24dp" />
 
+
             </LinearLayout>
 
         </ScrollView>
 
-        <ScrollView
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_weight="1">
 
-            <RadioGroup
-                android:id="@+id/group"
+            <android.support.v7.widget.RecyclerView
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="center_vertical">
+                android:layout_height="match_parent"
+                android:id="@+id/option_view">
 
-                <RadioButton
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text=""
-                    android:elevation="3dp"
-                    android:id="@+id/op1"/>
+            </android.support.v7.widget.RecyclerView>
 
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="2dp"
-                    android:background="#000000"
-                    android:layout_marginTop="5dp" />
 
-                <RadioButton
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="20dp"
-                    android:text=""
-                    android:elevation="3dp"
-                    android:id="@+id/op2"/>
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="2dp"
-                    android:background="#000000"
-                    android:layout_marginTop="5dp" />
-
-                <RadioButton
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="20dp"
-                    android:text=""
-                    android:elevation="3dp"
-                    android:id="@+id/op3" />
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="2dp"
-                    android:background="#000000"
-                    android:layout_marginTop="5dp" />
-
-                <RadioButton
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="20dp"
-                    android:text=""
-                    android:elevation="3dp"
-                    android:id="@+id/op4" />
-
-            </RadioGroup>
-        </ScrollView>
+        </LinearLayout>
 
     </LinearLayout>
 
@@ -239,7 +202,7 @@
 
         <Button
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="30dp"
             android:layout_weight="1"
             android:background="#703fb5"
             android:text="Previous"
@@ -247,7 +210,7 @@
             android:id="@+id/prev_btn"/>
         <LinearLayout
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="30dp"
             android:orientation="horizontal"
             android:layout_gravity="center_vertical"
             android:layout_weight="1"
@@ -280,7 +243,7 @@
         <Button
             android:id="@+id/next_btn"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="30dp"
             android:layout_weight="1"
             android:background="#703fb5"
             android:text="Next"

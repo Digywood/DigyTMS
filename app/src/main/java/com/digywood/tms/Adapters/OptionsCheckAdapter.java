@@ -12,6 +12,9 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
+import android.widget.Toast;
 import com.digywood.tms.Pojo.SingleOptions;
 import com.digywood.tms.R;
 import java.util.ArrayList;
@@ -24,7 +27,7 @@ public class OptionsCheckAdapter extends RecyclerView.Adapter<OptionsCheckAdapte
     int profstatus = -1;
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
-        public LinearLayout option_layout;
+        public RelativeLayout option_layout;
         public ImageView iv_opmedia;
         public RadioButton rb_option;
 
@@ -69,10 +72,18 @@ public class OptionsCheckAdapter extends RecyclerView.Adapter<OptionsCheckAdapte
         SingleOptions option = optionsList.get(position);
             holder.iv_opmedia.setImageBitmap(getOptionImage(option.getQbo_media_file()));
             Log.e("OptionListAdapter:", optionsList.get(position).getQbo_media_file());
-            holder.iv_opmedia.setScaleType(ImageView.ScaleType.FIT_START);
+
+            holder.iv_opmedia.setScaleType(ImageView.ScaleType.FIT_XY);
 
         holder.rb_option.setChecked(false);
         holder.option_layout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                notifyDataSetChanged();
+                holder.rb_option.setChecked(true);
+            }
+        });
+        holder.rb_option.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 notifyDataSetChanged();
