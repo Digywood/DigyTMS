@@ -26,6 +26,7 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -497,6 +498,15 @@ public class TestActivity extends AppCompatActivity implements
             //Inflate the view from a predefined XML layout
             View layout = inflater.inflate(R.layout.popup_screen,
                     (ViewGroup) findViewById(R.id.popup_element));
+            int width = 350;
+            int height = 200;
+            try {
+                WindowManager wm = (WindowManager)layout.getContext().getSystemService(Context.WINDOW_SERVICE);
+                width = wm.getDefaultDisplay().getWidth();
+                height = wm.getDefaultDisplay().getHeight();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
             //Instantiate grid view
             gridView= layout.findViewById(R.id.scroll_grid);
             //Instantiate grid adapter
@@ -504,7 +514,7 @@ public class TestActivity extends AppCompatActivity implements
             //Setting Adapter to gridview
             gridView.setAdapter(scrollAdapter);
             // create a 300px width and 570px height PopupWindow
-            pw = new PopupWindow(layout, 570, 400, true);
+            pw = new PopupWindow(layout ,width ,height ,true);
             // display the popup in the center
             pw.showAtLocation(v, Gravity.CENTER, 0, 0);
             if(android.os.Build.VERSION.SDK_INT > 20) {
@@ -786,12 +796,16 @@ public class TestActivity extends AppCompatActivity implements
         }
 
 
-        opAdapter = new OptionsCheckAdapter(optionsList,TestActivity.this,photoPath);
-        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
-        rv_option.setLayoutManager(mLayoutManager);
-        //rv_option.setItemAnimator(new DefaultItemAnimator());
-        rv_option.setAdapter(opAdapter);
+        try {
+            opAdapter = new OptionsCheckAdapter(optionsList,TestActivity.this,photoPath);
+            RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
+            rv_option.setLayoutManager(mLayoutManager);
+            rv_option.setItemAnimator(new DefaultItemAnimator());
+            rv_option.setAdapter(opAdapter);
 //        opAdapter.notifyDataSetChanged();
+        } catch (NullPointerException e) {
+            e.printStackTrace();
+        }
     }
 
     //method to store the number of questions in each section{
