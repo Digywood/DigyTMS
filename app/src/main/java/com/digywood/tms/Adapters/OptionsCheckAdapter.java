@@ -15,16 +15,19 @@ import android.widget.RadioButton;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+
 import com.digywood.tms.Pojo.SingleOptions;
 import com.digywood.tms.R;
+
 import java.util.ArrayList;
+import java.util.List;
 
 public class OptionsCheckAdapter extends RecyclerView.Adapter<OptionsCheckAdapter.MyViewHolder>{
 
     private ArrayList<SingleOptions> optionsList;
     Context mycontext;
     String path;
-    int profstatus = -1;
+    public int mSelectedItem = -1;
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
         public RelativeLayout option_layout;
@@ -36,6 +39,21 @@ public class OptionsCheckAdapter extends RecyclerView.Adapter<OptionsCheckAdapte
             iv_opmedia = view.findViewById(R.id.iv_opmedia);
             rb_option = view.findViewById(R.id.rb_option);
             option_layout = view.findViewById(R.id.option_layout);
+
+            option_layout.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    mSelectedItem = getAdapterPosition();
+                    notifyItemRangeChanged(0,optionsList.size());
+                }
+            });
+            rb_option.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    mSelectedItem = getAdapterPosition();
+                    notifyItemRangeChanged(0,optionsList.size());
+                }
+            });
         }
 
     }
@@ -71,9 +89,9 @@ public class OptionsCheckAdapter extends RecyclerView.Adapter<OptionsCheckAdapte
     public void onBindViewHolder(final OptionsCheckAdapter.MyViewHolder holder,int position) {
         SingleOptions option = optionsList.get(position);
             holder.iv_opmedia.setImageBitmap(getOptionImage(option.getQbo_media_file()));
-            Log.e("OptionListAdapter:", optionsList.get(position).getQbo_media_file());
-
             holder.iv_opmedia.setScaleType(ImageView.ScaleType.FIT_XY);
+            holder.rb_option.setChecked(position == mSelectedItem);
+/*
 
         holder.rb_option.setChecked(false);
         holder.option_layout.setOnClickListener(new View.OnClickListener() {
@@ -90,9 +108,13 @@ public class OptionsCheckAdapter extends RecyclerView.Adapter<OptionsCheckAdapte
                 holder.rb_option.setChecked(true);
             }
         });
+*/
 
     }
 
+    public int getSelectedItem(){
+        return mSelectedItem;
+    }
 
     public Bitmap getOptionImage(String file){
         Bitmap b =  BitmapFactory.decodeFile(path + file);
