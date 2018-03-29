@@ -1,7 +1,7 @@
 <resources>
     <dimen name="fab_margin">16dp</dimen>
     <dimen name="popup_width">650dp</dimen>
-    <dimen name="popup_height">350dp</dimen>
+    <dimen name="popup_height">600dp</dimen>
     <dimen name="fullscreen_width">900dp</dimen>
-    <dimen name="fullscreen_height">600dp</dimen>
+    <dimen name="fullscreen_height">500dp</dimen>
 </resources>

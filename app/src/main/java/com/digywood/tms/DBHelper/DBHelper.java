@@ -460,7 +460,7 @@ public class DBHelper extends SQLiteOpenHelper {
         if(c.getCount()!=0)
         {
             while (c.moveToNext()) {
-                QuestionList.add(c.getInt(c.getColumnIndex("Question_Option")));
+                QuestionList.add(c.getInt(c.getColumnIndex("Question_ID")));
             }
         }
 

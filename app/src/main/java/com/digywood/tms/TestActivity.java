@@ -20,6 +20,7 @@ import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.GestureDetector;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -37,6 +38,7 @@ import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.Switch;
 import android.widget.TextView;
@@ -67,8 +69,7 @@ import com.digywood.tms.Pojo.SingleSections;
 public class TestActivity extends AppCompatActivity implements
         AdapterView.OnItemSelectedListener{
 
-    LinearLayout lt;
-    TextView timer,number,date;
+    TextView timer;
     public static File file;
     ImageView fullscreen,menu;
     private PopupWindow pw;
@@ -76,7 +77,6 @@ public class TestActivity extends AppCompatActivity implements
     Spinner sections;
     String Seq,Id,path,enrollid,courseid,subjectId,paperid,testid;
     EncryptDecrypt encObj;
-    static  int position = 0;
     RecyclerView question_scroll;
     ScrollGridAdapter scrollAdapter;
     QuestionListAdapter qAdapter;
@@ -93,9 +93,10 @@ public class TestActivity extends AppCompatActivity implements
     ArrayList<String> q_list=new ArrayList<>();
     Button btn_prev, btn_next;
     ImageView question_img;
-    FloatingActionButton questionData;
+    FloatingActionButton btn_group_info,btn_qadditional;
     Drawable drawable;
-    Bitmap b, op;
+    AlertDialog alertDialog;
+    Bitmap b, op, bitmap;
     Switch markSwitch;
     Boolean flag = true;
     JSONObject obj;
@@ -113,6 +114,7 @@ public class TestActivity extends AppCompatActivity implements
     OptionsCheckAdapter opAdapter;
     SaveJSONdataToFile save;
     DBHelper dataObj;
+    GestureDetector gd;
     ArrayList<String> categories;
     String jsonPath,photoPath;
 
@@ -222,12 +224,42 @@ public class TestActivity extends AppCompatActivity implements
         btn_prev = findViewById(R.id.prev_btn);
         btn_next = findViewById(R.id.next_btn);
         markSwitch = findViewById(R.id.mark_switch);
-        questionData = findViewById(R.id.question_Data);
+        btn_group_info = findViewById(R.id.btn_group_info);
+        btn_qadditional = findViewById(R.id.btn_qadditional);
         save = new SaveJSONdataToFile();
         temp = new JSONObject();
 
         sectionArray = new JSONArray();
 //        Log.e("jsonFile--->",jsonPath);
+        gd = new GestureDetector(TestActivity.this, new GestureDetector.SimpleOnGestureListener(){
+
+            @Override
+            public boolean onDoubleTap(MotionEvent e) {
+
+                //your action here for double tap e.g.
+                Log.d("OnDoubleTapListener", "onDoubleTap");
+//                initiateFullScreenWindow(b);
+                return true;
+            }
+
+            @Override
+            public void onLongPress(MotionEvent e) {
+                super.onLongPress(e);
+
+            }
+
+            @Override
+            public boolean onDoubleTapEvent(MotionEvent e) {
+                return true;
+            }
+
+            @Override
+            public boolean onDown(MotionEvent e) {
+                return true;
+            }
+
+
+        });
         try {
             String json = new String(SaveJSONdataToFile.bytesFromFile(jsonPath), "UTF-8");
 //            Log.e("jsonFile--->",json);
@@ -245,12 +277,12 @@ public class TestActivity extends AppCompatActivity implements
             }
             attempt.put("sections", attemptsectionarray);
             buffer = generateArray(attempt.getJSONArray("sections").getJSONObject(pos));
-
             Log.e("Testing--->", ""+attempt.getJSONArray("sections").length());
             storeSections();
             SaveJSONdataToFile.objectToFile(attempt.toString());
             encObj.getFileToEncrypt(attempt.toString(), photoPath + "Attempt/");
             setScrollbar(pos);
+
 
         } catch (JSONException|IOException|ClassNotFoundException e) {
             e.printStackTrace();
@@ -272,7 +304,7 @@ public class TestActivity extends AppCompatActivity implements
             @Override
             public void onClick(View v) {
                 initiatePopupWindow(v);
-                hscrollview.setVisibility(v.INVISIBLE);
+                hscrollview.setVisibility(View.INVISIBLE);
             }
         });
         menu = findViewById(R.id.menu);
@@ -282,79 +314,92 @@ public class TestActivity extends AppCompatActivity implements
                 initiateMenuWindow(v);
             }
         });
-
+        btn_qadditional.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                try {
+                    questionobj = array.getJSONObject(index);
+                    b = BitmapFactory.decodeFile(photoPath + questionobj.getString("qbm_image_file"));
+                    bitmap = BitmapFactory.decodeFile(photoPath + questionobj.getString("qbm_qimage_file"));
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                initiateFullScreenWindow(b,bitmap);
+            }
+        });
 
 
         btn_next.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 try {
+                    Log.e("Values--->", "" + pos + "," + index);
                     flag = true;
-//                    writeOption();
-
-                    optionsTemp = dataObj.getQuestion();
-                    if (index < buffer.length()) {
-                        index++;
-
-                        Id = buffer.getJSONObject(index).getString("qbm_ID");
-                        Seq = buffer.getJSONObject(index).getString("qbm_sequence");
-                        Log.e("bufferArray:--->","called "+index);
-                        setQuestion(pos, index);
-                        if(index == buffer.length()-1) {
-                            index++;
-                        }
-//                        checkRadio(dataObj.getPosition(Id));
-                    }
-                    else if(index == buffer.length()){
-                        pos = pos+1;
-                        index = 0;
-                        buffer =  generateArray(attempt.getJSONArray("sections").getJSONObject(pos));
-                        sections.setSelection(pos);
-                        setScrollbar(pos);
-                        Log.e("question-->",""+index);
-
-                        //Change button once last question of test is reached
-                        if(pos == attemptsectionarray.length()-1){
-                            index++;
-                            btn_next.setText("Finish");
-//                            btn_next.callOnClick();
-                        }
-                        qAdapter.setData(index);
-                    }
-                    else{
+                    buffer = generateArray(attempt.getJSONArray("sections").getJSONObject(pos));
+                    if (index <= buffer.length()) {
+                        writeOption(opAdapter.getSelectedItem());
                         optionsTemp = dataObj.getQuestion();
-                        for(int i=0; i< dataObj.getQuestionCount(); i++){
-                            Log.e("Options",""+optionsTemp.get(i));
+                        if (index < buffer.length()) {
+                            index++;
+                            Id = buffer.getJSONObject(index).getString("qbm_ID");
+                            Seq = buffer.getJSONObject(index).getString("qbm_sequence");
+                            Log.e("bufferArray:--->", "called " + index);
+                            setQuestion(pos, index);
+                            if (index == buffer.length() - 1) {
+                                index++;
+                            }
+//                        checkRadio(dataObj.getPosition(Id));
+                        } else if (index == buffer.length()) {
+                            //Change button once last question of test is reached
+                            if(pos == attemptsectionarray.length()-1){
+                                btn_next.setText("Finish");
+                                writeOption(opAdapter.getSelectedItem());
+                                index++;
+//                                btn_next.callOnClick();
+                                Log.e("CodeBlock--->","accessed");
+                            }
+                            else{
+                                Log.e("question-->", "" + index);
+                                qAdapter.setData(index);
+                                pos = pos + 1;
+                                index ++;
+                                buffer = generateArray(attempt.getJSONArray("sections").getJSONObject(pos));
+                                sections.setSelection(pos);
+                                setScrollbar(pos);
+                            }
+
                         }
-                        AlertDialog alertbox = new AlertDialog.Builder(TestActivity.this)
-                                .setMessage("Do you want to finish Test?"+" "+dataObj.getQuestionCount())
-                                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                        } else {
+                            optionsTemp = dataObj.getQuestion();
+                            for (int i = 0; i < dataObj.getQuestionCount(); i++) {
+                                Log.e("Options", "" + optionsTemp.get(i));
+                            }
+                            AlertDialog alertbox = new AlertDialog.Builder(TestActivity.this)
+                                    .setMessage("Do you want to finish Test?" + " " + dataObj.getQuestionCount())
+                                    .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
 
-                                    // do something when the button is clicked
-                                    public void onClick(DialogInterface arg0, int arg1) {
-                                        q_list.clear();
-                                        finish();
-                                        Intent intent = new Intent(TestActivity.this, ScoreActivity.class);
-                                        startActivity(intent);
-                                    }
-                                })
-                                .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                                        // do something when the button is clicked
+                                        public void onClick(DialogInterface arg0, int arg1) {
+                                            q_list.clear();
+                                            finish();
+                                            Intent intent = new Intent(TestActivity.this, ScoreActivity.class);
+                                            startActivity(intent);
+                                        }
+                                    })
+                                    .setNegativeButton("No", new DialogInterface.OnClickListener() {
 
-                                    // do something when the button is clicked
-                                    public void onClick(DialogInterface arg0, int arg1) {
-                                        mHideRunnable.run();
-                                        btn_next.setText("Next");
+                                        // do something when the button is clicked
+                                        public void onClick(DialogInterface arg0, int arg1) {
+                                            mHideRunnable.run();
+                                            btn_next.setText("Next");
+                                        }
+                                    })
+                                    .show();
+                        }
 
-                                    }
-                                })
-                                .show();
+                    } catch(JSONException e){
+                        e.printStackTrace();
                     }
-//                    Log.e("Values--->",""+pos+","+index);
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-
-
 
             }
         });
@@ -363,8 +408,8 @@ public class TestActivity extends AppCompatActivity implements
             public void onClick(View v) {
                 try {
 
-//                    writeOption();
-
+                    writeOption(opAdapter.getSelectedItem());
+                    questionobj = array.getJSONObject(index);
                     if(index > 0) {
                         index--;
                         buffer = generateArray(attempt.getJSONArray("sections").getJSONObject(pos));
@@ -381,13 +426,20 @@ public class TestActivity extends AppCompatActivity implements
                         Log.e("bufferArray:--->","called " +buffer.length()+"~"+index);
                         flag = false;
                         sections.setSelection(pos);
+                        setScrollbar(pos);
+
+                    }
+                    if(questionobj.getString("qbm_qimage_flag").equals("YES")){
+                        btn_qadditional.setVisibility(View.VISIBLE);
+                    }else {
+                        btn_qadditional.setVisibility(View.INVISIBLE);
                     }
 //                    checkRadio(dataObj.getPosition(Id));
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
 
-                qAdapter.setData(Integer.valueOf(q_list.get(index)));
+
 
             }
         });
@@ -442,11 +494,13 @@ public class TestActivity extends AppCompatActivity implements
         if (!decdir.exists()) {
             decdir.mkdirs();
         }
+
         String MyImgs=android.os.Environment.getExternalStorageDirectory().toString()+ "/DigyTMS/Encrypted/";
         File dir = new File(MyImgs);
         if (!dir.exists()) {
             dir.mkdirs();
         }
+
         else {
             File myFile = new File(MyImgs + "enc_encryption_key.JPG");
             if (myFile.exists()) {
@@ -455,6 +509,7 @@ public class TestActivity extends AppCompatActivity implements
                 Toast.makeText(TestActivity.this, "File Not Found", Toast.LENGTH_LONG).show();
             }
         }
+
     }
 
     //temperoary method
@@ -496,37 +551,34 @@ public class TestActivity extends AppCompatActivity implements
             LayoutInflater inflater = (LayoutInflater) TestActivity.this
                     .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             //Inflate the view from a predefined XML layout
-            View layout = inflater.inflate(R.layout.popup_screen,
-                    (ViewGroup) findViewById(R.id.popup_element));
-            int width = 350;
-            int height = 200;
-            try {
-                WindowManager wm = (WindowManager)layout.getContext().getSystemService(Context.WINDOW_SERVICE);
-                width = wm.getDefaultDisplay().getWidth();
-                height = wm.getDefaultDisplay().getHeight();
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
+
+            View view = inflater.inflate(R.layout.popup_screen,
+                        (ViewGroup) findViewById(R.id.popup_element));
+            RelativeLayout layout = view.findViewById(R.id.popup_element);
+            int width = 650;
+            int height = 600;
+            width = layout.getWidth();
+            height = layout.getHeight();
             //Instantiate grid view
-            gridView= layout.findViewById(R.id.scroll_grid);
+            gridView= view.findViewById(R.id.scroll_grid);
             //Instantiate grid adapter
             scrollAdapter= new ScrollGridAdapter(TestActivity.this, generateArray(attempt.getJSONArray("sections").getJSONObject(pos)),marked,answered);
             //Setting Adapter to gridview
             gridView.setAdapter(scrollAdapter);
             // create a 300px width and 570px height PopupWindow
-            pw = new PopupWindow(layout ,width ,height ,true);
+            pw = new PopupWindow(view ,ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
             // display the popup in the center
             pw.showAtLocation(v, Gravity.CENTER, 0, 0);
             if(android.os.Build.VERSION.SDK_INT > 20) {
                 pw.setElevation(10);
             }
 //            TextView mResultText = (TextView) layout.findViewById(R.id.server_status_text);
-            Button cancelButton = (Button) layout.findViewById(R.id.close_button);
+            Button cancelButton = (Button) view.findViewById(R.id.close_button);
             cancelButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     pw.dismiss();
-                    hscrollview.setVisibility(v.VISIBLE);
+                    hscrollview.setVisibility(View.VISIBLE);
                     mHideRunnable.run();
                 }
             });
@@ -552,9 +604,8 @@ public class TestActivity extends AppCompatActivity implements
     }*/
 
     //method to store the selected option
-/*    public void writeOption(){
+    public void writeOption(int indx){
 //        RadioButton random = findViewById(group.getCheckedRadioButtonId());
-        int indx = group.indexOfChild(random) + 1;
         try {
             buffer = generateArray(attempt.getJSONArray("sections").getJSONObject(pos));
             Id = buffer.getJSONObject(index).getString("qbm_ID");
@@ -571,8 +622,7 @@ public class TestActivity extends AppCompatActivity implements
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        group.clearCheck();
-    }*/
+    }
 
     //method to create a menu window
     private void initiateMenuWindow(View v) {
@@ -580,12 +630,10 @@ public class TestActivity extends AppCompatActivity implements
             LayoutInflater inflater = (LayoutInflater) TestActivity.this
                     .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             View layout = inflater.inflate(R.layout.menu,null);
-//            menulist = layout.findViewById(R.id.menu_list);
-//            menuAdapter = new MenuAdapter(TestActivity.this,"","","");
             AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);
             dialogBuilder.setView(layout);
 
-            Button cancelButton = (Button) layout.findViewById(R.id.close_button);
+            Button cancelButton = layout.findViewById(R.id.close_button);
             final AlertDialog alertDialog = dialogBuilder.create();
             alertDialog.show();
             cancelButton.setOnClickListener(new View.OnClickListener() {
@@ -595,6 +643,38 @@ public class TestActivity extends AppCompatActivity implements
                     mHideRunnable.run();
                 }
             });
+    }
+
+    //method to generate a window alertbox
+    private void initiateFullScreenWindow(Bitmap qbitmap,Bitmap abitmap) {
+        //We need to get the instance of the LayoutInflater, use the context of this activity
+        LayoutInflater inflater = (LayoutInflater) TestActivity.this
+                .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        View layout = inflater.inflate(R.layout.fullscreen,null);
+        AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);
+        dialogBuilder.setView(layout);
+        ImageView qimg = layout.findViewById(R.id.question_full_img);
+        ImageView aimg = layout.findViewById(R.id.iv_additional_img);
+        qimg.setImageBitmap(qbitmap);
+        aimg.setImageBitmap(abitmap);
+
+        ImageView cancel = layout.findViewById(R.id.iv_close);
+        alertDialog = dialogBuilder.create();
+        alertDialog.show();
+        alertDialog.getWindow().setLayout(RelativeLayout.LayoutParams.MATCH_PARENT,RelativeLayout.LayoutParams.MATCH_PARENT);
+        alertDialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
+            @Override
+            public void onCancel(DialogInterface dialog) {
+                hide();
+            }
+        });
+        cancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                alertDialog.cancel();
+                hide();
+            }
+        });
     }
 
     //method to read the JSON file and store the contents
@@ -769,15 +849,28 @@ public class TestActivity extends AppCompatActivity implements
         array = generateArray(sectionobj);
         questionobj = array.getJSONObject(index);
         if(questionobj.getString("qbm_group_flag").equals("YES")){
-            questionData.setVisibility(View.VISIBLE);
+            btn_group_info.setVisibility(View.VISIBLE);
         }else{
-            questionData.setVisibility(View.INVISIBLE);
+            btn_group_info.setVisibility(View.INVISIBLE);
         }
         if(marked.contains(Integer.valueOf(questionobj.getString("qbm_sequence")))){
 
         }
+        questionobj = array.getJSONObject(index);
+        if(questionobj.getString("qbm_qimage_flag").equals("YES")){
+            btn_qadditional.setVisibility(View.VISIBLE);
+        }else {
+            btn_qadditional.setVisibility(View.INVISIBLE);
+        }
         b = BitmapFactory.decodeFile(photoPath + questionobj.getString("qbm_image_file"));
         question_img.setImageBitmap(b);
+        question_img.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                return gd.onTouchEvent(event);
+            }
+        });
+
         optionsArray = questionobj.getJSONArray("options");
         Log.e("imageFile--->",optionsArray.getJSONObject(0).getString("qbo_media_file"));
         /*setDrawable(optionsArray.getJSONObject(0).getString("qbo_media_file"), op1);
