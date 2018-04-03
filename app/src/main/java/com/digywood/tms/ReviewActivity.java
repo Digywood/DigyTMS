@@ -69,7 +69,7 @@ import com.digywood.tms.Pojo.SingleSections;
 
 import junit.framework.Test;
 
-public class TestActivity extends AppCompatActivity implements
+public class ReviewActivity extends AppCompatActivity implements
         AdapterView.OnItemSelectedListener{
 
     TextView timer;
@@ -96,13 +96,13 @@ public class TestActivity extends AppCompatActivity implements
     ArrayList<String> q_list=new ArrayList<>();
     Button btn_prev, btn_next;
     ImageView question_img;
-    FloatingActionButton btn_group_info,btn_qadditional,btn_review;
+    FloatingActionButton btn_group_info,btn_qadditional,btn_review_img;
     Drawable drawable;
     AlertDialog alertDialog;
     Bitmap b, op, bitmap;
     Switch markSwitch;
     Boolean flag = true;
-    final Boolean edit = true;
+    final Boolean edit = false;
     JSONObject obj;
     static int index = 0,pos = 0,max = 1,grp = 0;
     JSONObject sectionobj, groupobj, questionobj, temp;
@@ -193,10 +193,10 @@ public class TestActivity extends AppCompatActivity implements
         setContentView(R.layout.activity_test);
 
         dataObj = new DBHelper(this);
-        //dataObj.Destroy("attempt_data");
+
         question_scroll = findViewById(R.id.question_scroll);
-        qAdapter = new QuestionListAdapter(q_list,TestActivity.this);
-        myLayoutManager = new LinearLayoutManager(TestActivity.this, LinearLayoutManager.HORIZONTAL,false);
+        qAdapter = new QuestionListAdapter(q_list,ReviewActivity.this);
+        myLayoutManager = new LinearLayoutManager(ReviewActivity.this, LinearLayoutManager.HORIZONTAL,false);
         question_scroll.setLayoutManager(myLayoutManager);
         question_scroll.setItemAnimator(new DefaultItemAnimator());
         question_scroll.setAdapter(qAdapter);
@@ -222,6 +222,7 @@ public class TestActivity extends AppCompatActivity implements
         jsonPath = URLClass.mainpath+path+testid+".json";
 
         question_img = findViewById(R.id.question_img);
+
         btn_prev = findViewById(R.id.prev_btn);
         btn_next = findViewById(R.id.next_btn);
         markSwitch = findViewById(R.id.mark_switch);
@@ -236,14 +237,21 @@ public class TestActivity extends AppCompatActivity implements
         temp = new JSONObject();
         sectionArray = new JSONArray();
 
-        gd = new GestureDetector(TestActivity.this, new GestureDetector.SimpleOnGestureListener(){
+        gd = new GestureDetector(ReviewActivity.this, new GestureDetector.SimpleOnGestureListener(){
 
             @Override
             public boolean onDoubleTap(MotionEvent e) {
 
                 //your action here for double tap e.g.
+                try {
+                    questionobj = array.getJSONObject(index);
+                    b = BitmapFactory.decodeFile(photoPath + questionobj.getString("qbm_Review_Images"));
+                } catch (JSONException e1) {
+
+
+                }
                 Log.d("OnDoubleTapListener", "onDoubleTap");
-//                initiateFullScreenWindow(b);
+                initiateSingleImageWindow(b);
                 return true;
             }
 
@@ -295,7 +303,6 @@ public class TestActivity extends AppCompatActivity implements
         adapter = new ArrayAdapter(this,android.R.layout.simple_spinner_item,categories);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 
-
         sections.setAdapter(adapter);
 
 
@@ -314,6 +321,20 @@ public class TestActivity extends AppCompatActivity implements
             }
         });
 
+        /*btn_review_img.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                try {
+                    questionobj = array.getJSONObject(index);
+                    b = BitmapFactory.decodeFile(photoPath + questionobj.getString("qbm_Review_Images"));
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                initiateSingleImageWindow(b);
+            }
+        });*/
+
+
         btn_qadditional.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -327,6 +348,7 @@ public class TestActivity extends AppCompatActivity implements
                 initiateFullScreenWindow(b,bitmap);
             }
         });
+
 
 
 
@@ -349,7 +371,7 @@ public class TestActivity extends AppCompatActivity implements
                             if (index == buffer.length() - 1) {
                                 index++;
                             }
-                        checkRadio();
+                            checkRadio();
                         } else if (index == buffer.length()) {
                             //Change button once last question of test is reached
                             if(pos == attemptsectionarray.length()-1){
@@ -367,36 +389,37 @@ public class TestActivity extends AppCompatActivity implements
                             }
 
                         }
-                        } else {
-                            optionsTemp = dataObj.getQuestion();
-                            for (int i = 0; i < dataObj.getQuestionCount(); i++) {
-                            }
-                            AlertDialog alertbox = new AlertDialog.Builder(TestActivity.this)
-                                    .setMessage("Do you want to finish Test?" + " " + dataObj.getQuestionCount())
-                                    .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-
-                                        // do something when the button is clicked
-                                        public void onClick(DialogInterface arg0, int arg1) {
-                                            q_list.clear();
-                                            finish();
-                                            Intent intent = new Intent(TestActivity.this, ScoreActivity.class);
-                                            startActivity(intent);
-                                        }
-                                    })
-                                    .setNegativeButton("No", new DialogInterface.OnClickListener() {
-
-                                        // do something when the button is clicked
-                                        public void onClick(DialogInterface arg0, int arg1) {
-                                            mHideRunnable.run();
-                                            btn_next.setText("Next");
-                                        }
-                                    })
-                                    .show();
+                    } else {
+                        optionsTemp = dataObj.getQuestion();
+                        for (int i = 0; i < dataObj.getQuestionCount(); i++) {
                         }
+                        AlertDialog alertbox = new AlertDialog.Builder(ReviewActivity.this)
+                                .setMessage("Do you want to finish Review?" )
+                                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
 
-                    } catch(JSONException e){
-                        e.printStackTrace();
+                                    // do something when the button is clicked
+                                    public void onClick(DialogInterface arg0, int arg1) {
+                                        q_list.clear();
+                                        finish();
+                                        dataObj.Destroy("attempt_data");
+                                        Intent intent = new Intent(ReviewActivity.this, ListofTests.class);
+                                        startActivity(intent);
+                                    }
+                                })
+                                .setNegativeButton("No", new DialogInterface.OnClickListener() {
+
+                                    // do something when the button is clicked
+                                    public void onClick(DialogInterface arg0, int arg1) {
+                                        mHideRunnable.run();
+                                        btn_next.setText("Next");
+                                    }
+                                })
+                                .show();
                     }
+
+                } catch(JSONException e){
+                    e.printStackTrace();
+                }
 
             }
         });
@@ -501,7 +524,7 @@ public class TestActivity extends AppCompatActivity implements
             if (myFile.exists()) {
                 file = new File(MyImgs + "enc_encryption_key.JPG");
             } else {
-                Toast.makeText(TestActivity.this, "File Not Found", Toast.LENGTH_LONG).show();
+                Toast.makeText(ReviewActivity.this, "File Not Found", Toast.LENGTH_LONG).show();
             }
         }
 
@@ -543,12 +566,12 @@ public class TestActivity extends AppCompatActivity implements
     public void initiatePopupWindow(View v) {
         try {
             //We need to get the instance of the LayoutInflater, use the context of this activity
-            LayoutInflater inflater = (LayoutInflater) TestActivity.this
+            LayoutInflater inflater = (LayoutInflater) ReviewActivity.this
                     .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             //Inflate the view from a predefined XML layout
 
             View view = inflater.inflate(R.layout.popup_screen,
-                        (ViewGroup) findViewById(R.id.popup_element));
+                    (ViewGroup) findViewById(R.id.popup_element));
             RelativeLayout layout = view.findViewById(R.id.popup_element);
             int width = 650;
             int height = 600;
@@ -557,7 +580,7 @@ public class TestActivity extends AppCompatActivity implements
             //Instantiate grid view
             gridView= view.findViewById(R.id.scroll_grid);
             //Instantiate grid adapter
-            scrollAdapter= new ScrollGridAdapter(TestActivity.this, generateArray(attempt.getJSONArray("sections").getJSONObject(pos)),marked,answered);
+            scrollAdapter= new ScrollGridAdapter(ReviewActivity.this, generateArray(attempt.getJSONArray("sections").getJSONObject(pos)),marked,answered);
             //Setting Adapter to gridview
             gridView.setAdapter(scrollAdapter);
             // create a 300px width and 570px height PopupWindow
@@ -601,7 +624,6 @@ public class TestActivity extends AppCompatActivity implements
 
     //method to store the selected option
     public void writeOption(int indx){
-//        RadioButton random = findViewById(group.getCheckedRadioButtonId());
         try {
             buffer = generateArray(attempt.getJSONArray("sections").getJSONObject(pos));
             Id = buffer.getJSONObject(index).getString("qbm_ID");
@@ -620,29 +642,29 @@ public class TestActivity extends AppCompatActivity implements
 
     //method to create a menu window
     public void initiateMenuWindow(View v) {
-            //We need to get the instance of the LayoutInflater, use the context of this activity
-            LayoutInflater inflater = (LayoutInflater) TestActivity.this
-                    .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            View layout = inflater.inflate(R.layout.menu,null);
-            AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);
-            dialogBuilder.setView(layout);
+        //We need to get the instance of the LayoutInflater, use the context of this activity
+        LayoutInflater inflater = (LayoutInflater) ReviewActivity.this
+                .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        View layout = inflater.inflate(R.layout.menu,null);
+        AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);
+        dialogBuilder.setView(layout);
 
-            Button cancelButton = layout.findViewById(R.id.close_button);
-            final AlertDialog alertDialog = dialogBuilder.create();
-            alertDialog.show();
-            cancelButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    alertDialog.cancel();
-                    mHideRunnable.run();
-                }
-            });
+        Button cancelButton = layout.findViewById(R.id.close_button);
+        final AlertDialog alertDialog = dialogBuilder.create();
+        alertDialog.show();
+        cancelButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                alertDialog.cancel();
+                mHideRunnable.run();
+            }
+        });
     }
 
     //method to generate a window alertbox to display additional information for questions
     public void initiateFullScreenWindow(Bitmap qbitmap,Bitmap abitmap) {
         //We need to get the instance of the LayoutInflater, use the context of this activity
-        LayoutInflater inflater = (LayoutInflater) TestActivity.this
+        LayoutInflater inflater = (LayoutInflater) ReviewActivity.this
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View layout = inflater.inflate(R.layout.fullscreen,null);
         AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);
@@ -673,7 +695,7 @@ public class TestActivity extends AppCompatActivity implements
 
     public void initiateSingleImageWindow(Bitmap b){
         //We need to get the instance of the LayoutInflater, use the context of this activity
-        LayoutInflater inflater = (LayoutInflater) TestActivity.this
+        LayoutInflater inflater = (LayoutInflater) ReviewActivity.this
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View layout = inflater.inflate(R.layout.singlescreen,null);
         AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);
@@ -698,7 +720,6 @@ public class TestActivity extends AppCompatActivity implements
             }
         });
     }
-
 
     //method to read the JSON file and store the contents
     public void parseJson(JSONObject data) {
@@ -883,6 +904,8 @@ public class TestActivity extends AppCompatActivity implements
         }else {
             btn_qadditional.setVisibility(View.INVISIBLE);
         }
+
+
         b = BitmapFactory.decodeFile(photoPath + questionobj.getString("qbm_image_file"));
         question_img.setImageBitmap(b);
         question_img.setOnTouchListener(new View.OnTouchListener() {
@@ -904,12 +927,12 @@ public class TestActivity extends AppCompatActivity implements
 
 
         try {
-            opAdapter = new OptionsCheckAdapter(optionsList,TestActivity.this,photoPath);
+            opAdapter = new OptionsCheckAdapter(optionsList,ReviewActivity.this,photoPath);
             RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
             rv_option.setLayoutManager(mLayoutManager);
             rv_option.setItemAnimator(new DefaultItemAnimator());
             rv_option.setAdapter(opAdapter);
-                opAdapter.setOptionsEditable(edit);
+            opAdapter.setOptionsEditable(edit);
 //        opAdapter.notifyDataSetChanged();
         } catch (NullPointerException e) {
             e.printStackTrace();
@@ -988,13 +1011,13 @@ public class TestActivity extends AppCompatActivity implements
     protected void exitByBackKey() {
 
         AlertDialog alertbox = new AlertDialog.Builder(this)
-                .setMessage("Do you want to exit Test?")
+                .setMessage("Do you want to exit Review?")
                 .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
 
                     // do something when the button is clicked
                     public void onClick(DialogInterface arg0, int arg1) {
 
-                        Intent intent = new Intent(TestActivity.this,ListofTests.class);
+                        Intent intent = new Intent(ReviewActivity.this,ListofTests.class);
                         startActivity(intent);
 
                     }

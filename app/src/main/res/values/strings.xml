@@ -13,5 +13,8 @@
     </string-array>
     <string name="title_activity_test">TestActivity</string>
     <string name="title_activity_score">ScoreActivity</string>
+    <string name="title_activity_review">ReviewActivity</string>
+    <string name="dummy_button">Dummy Button</string>
+    <string name="dummy_content">DUMMY\nCONTENT</string>
 
 </resources>
