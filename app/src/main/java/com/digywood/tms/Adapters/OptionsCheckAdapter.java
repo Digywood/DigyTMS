@@ -106,6 +106,10 @@ public class OptionsCheckAdapter extends RecyclerView.Adapter<OptionsCheckAdapte
         mSelectedItem = SelectedList;
     }
 
+    public void resetOptionsList(){
+        mSelectedItem = -1;
+    }
+
     public void setOptionsEditable(Boolean edit){
         medit = edit;
     }
@@ -114,5 +118,6 @@ public class OptionsCheckAdapter extends RecyclerView.Adapter<OptionsCheckAdapte
         Bitmap b =  BitmapFactory.decodeFile(path + file);
         return b ;
     }
+
 
 }

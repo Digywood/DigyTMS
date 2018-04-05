@@ -1,38 +1,44 @@
 package com.digywood.tms.Adapters;
 
 import android.content.Context;
-import android.graphics.Color;
+import android.content.res.Configuration;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.digywood.tms.Pojo.SingleQuestionList;
 import com.digywood.tms.R;
 import java.util.ArrayList;
 
-/**
- * Created by Shashank on 09-03-2018.
- */
-
 public class QuestionListAdapter extends RecyclerView.Adapter<QuestionListAdapter.MyViewHolder>{
 
-    TextView[] myTextView;
-    int qid=-1;
-    ArrayList<String> q_list=new ArrayList<>();
-    Context mycontext;
+    private TextView[] myTextView;
+    private int qid=-1;
+    private int size;
+    private ArrayList<SingleQuestionList> q_list=new ArrayList<>();
+    private ArrayList<Integer> attempt =new ArrayList<>();
+    private ArrayList<Integer> marked =new ArrayList<>();
+    private Context mycontext;
+    public int position = -1,index =  -1;
 
     public class MyViewHolder extends RecyclerView.ViewHolder{
-        public TextView Q_num;
-        public MyViewHolder(View view){
+        private TextView Q_num;
+        private ImageView  Q_pointer;
+        private MyViewHolder(View view){
             super(view);
-            Q_num=view.findViewById(R.id.Qnumber);
+            Q_pointer = view.findViewById(R.id.img_pointer);
+            Q_num=view.findViewById(R.id.tv_Qnumber);
             myTextView = new TextView[q_list.size()];
         }
     }
 
-    public QuestionListAdapter(ArrayList<String > q_list,Context c){
+    public QuestionListAdapter(ArrayList<SingleQuestionList> q_list, Context c,int size){
         this.q_list=q_list;
         this.mycontext=c;
+        this.size = size;
 
     }
 
@@ -42,37 +48,15 @@ public class QuestionListAdapter extends RecyclerView.Adapter<QuestionListAdapte
         return new QuestionListAdapter.MyViewHolder(itemView);
     }
 
-    @Override
-    public void onBindViewHolder(final MyViewHolder holder, int position) {
-
-        if(qid==-1){
-            if(position==0){
-                holder.Q_num.setText(q_list.get(position));
-                holder.Q_num.setBackgroundResource(R.drawable.marker);
-            }else{
-                holder.Q_num.setText(q_list.get(position));
-                holder.Q_num.setBackgroundResource(0);
+        @Override
+        public void onBindViewHolder(final MyViewHolder holder, int position) {
+            holder.Q_num.setText(q_list.get(position).getQ_num());
+            holder.Q_num.setBackgroundResource(setResource(size,q_list.get(position).getQ_status()));
+            if(index == position){
+                holder.Q_pointer.setVisibility(View.VISIBLE);
             }
-        }else{
-            int qnum=Integer.valueOf(q_list.get(position));
-            if(qnum==qid){
-                holder.Q_num.setText(q_list.get(position));
-                holder.Q_num.setBackgroundResource(R.drawable.marker);
-            }else{
-                holder.Q_num.setText(q_list.get(position));
-                holder.Q_num.setBackgroundResource(0);
-            }
-        }
-
-        holder.Q_num.setText(q_list.get(position));
-//        holder.Q_num.setBackgroundResource(0);
-        holder.Q_num.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                holder.Q_num.setBackgroundResource(R.drawable.marker);
-            }
-        });
-//        holder.Q_num.setBackgroundResource(R.drawable.marker);
+            else
+                holder.Q_pointer.setVisibility(View.INVISIBLE);
     }
 
     @Override
@@ -85,13 +69,47 @@ public class QuestionListAdapter extends RecyclerView.Adapter<QuestionListAdapte
         notifyDataSetChanged();
     }
 
-    public int getTvCount() {
-        return myTextView.length;
+    public void updateList(ArrayList<SingleQuestionList> q_list){
+        this.q_list = q_list;
+        notifyDataSetChanged();
     }
 
-    public void setBackground(int position ){
-//        MyViewHolder holder = new MyViewHolder(view);
-        myTextView  = new TextView[q_list.size()];
-        myTextView[position].setBackgroundResource(R.drawable.marker);
+    public void setPoiner(int index){
+        this.index = index;
+        notifyDataSetChanged();
     }
+
+    public int setResource(int size, String status){
+        int resource = -1;
+        if(size == Configuration.SCREENLAYOUT_SIZE_LARGE){
+            switch (status){
+                case "NOT_ATTEMPTED": resource = R.drawable.number_background_large;
+                                        break;
+                case "ATTEMPTED": resource = R.drawable.number_confirm_large;
+                                        break;
+                case "SKIPPED": resource = R.drawable.number_skipped_large;
+                                        break;
+                case "BOOKMARKED": resource =R.drawable.number_bookmark_large;
+                                        break;
+                default: resource = R.drawable.number_background_large;
+                                        break;
+            }
+        }
+        else if(size == Configuration.SCREENLAYOUT_SIZE_NORMAL ){
+            switch (status){
+                case "NOT_ATTEMPTED": resource = R.drawable.number_background;
+                    break;
+                case "ATTEMPTED": resource = R.drawable.number_confirm;
+                    break;
+                case "SKIPPED": resource = R.drawable.number_skipped;
+                    break;
+                case "BOOKMARKED": resource =R.drawable.number_bookmark;
+                    break;
+                default: resource = R.drawable.number_background_large;
+                    break;
+            }
+        }
+        return resource;
+    }
+
 }

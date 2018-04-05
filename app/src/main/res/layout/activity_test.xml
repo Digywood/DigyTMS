@@ -11,44 +11,41 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
+        android:background="#8e58d1"
         android:id="@+id/header">
+
         <Spinner
             android:id="@+id/sections"
             android:layout_width="wrap_content"
             android:layout_height="30dp"
             android:layout_marginStart="5dp"
             android:layout_marginTop="5dp"
+            android:theme="@style/Theme.AppCompat"
             android:layout_gravity="center_vertical">
         </Spinner>
 
-        <HorizontalScrollView
-            android:id="@+id/scroll"
-            android:layout_width="match_parent"
-            android:layout_height="30dp"
-            android:layout_marginStart="5dp"
-            android:layout_marginBottom="5dp"
-            android:layout_marginTop="5dp"
-            android:layout_toEndOf="@+id/sections"
-            android:layout_toStartOf="@+id/fullscreen"
-            android:background="#708090">
+
 
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/question_scroll"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="40dp"
-                android:layout_marginLeft="10dp"
-                android:layout_marginRight="10dp"
-                android:gravity="center"
-                android:orientation="horizontal">
+                android:layout_marginEnd="5dp"
+                android:layout_gravity="center|center_horizontal|center_vertical"
+                android:layout_toEndOf="@+id/sections"
+                android:layout_toStartOf="@+id/fullscreen"
+                android:orientation="horizontal"
+                android:background="@color/black_overlay"
+                android:alpha="1">
             </android.support.v7.widget.RecyclerView>
 
-        </HorizontalScrollView>
+
         <ImageView
             android:id="@+id/fullscreen"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
             android:layout_alignParentEnd="true"
+            android:contentDescription="@string/dummy_content"
             app:srcCompat="@drawable/ic_fullscreen_black_24dp" />
 
     </RelativeLayout>
@@ -212,56 +209,46 @@
         android:orientation="horizontal"
         android:id="@+id/action_buttons"
         android:layout_alignParentBottom="true"
-        android:weightSum="3">
+        android:weightSum="4">
 
         <Button
             android:layout_width="wrap_content"
             android:layout_height="30dp"
             android:layout_weight="1"
-            android:background="#703fb5"
+            android:background="@drawable/test_navigation_custom"
+            android:textColor="@drawable/test_navigation_text"
             android:text="Previous"
-            android:textColor="#FFFFFF"
+            android:layout_marginEnd="5dp"
             android:id="@+id/prev_btn"/>
-        <LinearLayout
+
+        <Button
             android:layout_width="wrap_content"
             android:layout_height="30dp"
-            android:orientation="horizontal"
-            android:layout_gravity="center_vertical"
             android:layout_weight="1"
-            android:weightSum="7">
+            android:text="Clear Options"
+            android:background="@drawable/test_button_custom"
+            android:textColor="@drawable/test_text_custom"
+            android:layout_marginEnd="5dp"
+            android:id="@+id/btn_clear_option"/>
 
-            <TextView
-                android:layout_width="100dp"
-                android:layout_height="wrap_content"
-                android:text="Unmark"
-                android:layout_weight="3"
-                android:textColor="#000000"
-                android:gravity="center"/>
-
-            <Switch
-                android:id="@+id/mark_switch"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:gravity="center"
-                android:layout_weight="1" />
-
-            <TextView
-                android:layout_width="100dp"
-                android:layout_height="wrap_content"
-                android:text="Mark"
-                android:layout_weight="3"
-                android:textColor="#000000"
-                android:gravity="center"/>
-        </LinearLayout>
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="30dp"
+            android:layout_weight="1"
+            android:text="Mark / Next"
+            android:background="@drawable/test_button_custom"
+            android:textColor="@drawable/test_text_custom"
+            android:layout_marginEnd="5dp"
+            android:id="@+id/btn_mark"/>
 
         <Button
             android:id="@+id/next_btn"
             android:layout_width="wrap_content"
             android:layout_height="30dp"
             android:layout_weight="1"
-            android:background="#703fb5"
-            android:text="Next"
-            android:textColor="#FFFFFF" />
+            android:background="@drawable/test_navigation_custom"
+            android:textColor="@drawable/test_navigation_text"
+            android:text="Confirm / Next" />
 
     </LinearLayout>
 

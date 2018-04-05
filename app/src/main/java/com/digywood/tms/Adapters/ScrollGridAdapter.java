@@ -67,6 +67,7 @@ public class ScrollGridAdapter extends BaseAdapter{
         textView.setTextColor(Color.WHITE);
         textView.setTextSize(20);
         textView.setGravity(Gravity.CENTER);
+
         if(marked.contains(position)){
             textView.setBackgroundColor(c.getResources().getColor(R.color.red));
         }

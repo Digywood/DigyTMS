@@ -65,6 +65,7 @@ import com.digywood.tms.DBHelper.DBHelper;
 import com.digywood.tms.Pojo.SingleEnrollment;
 import com.digywood.tms.Pojo.SingleOptions;
 import com.digywood.tms.Pojo.SingleQuestion;
+import com.digywood.tms.Pojo.SingleQuestionList;
 import com.digywood.tms.Pojo.SingleSections;
 
 import junit.framework.Test;
@@ -112,15 +113,18 @@ public class ReviewActivity extends AppCompatActivity implements
     ArrayList<SingleQuestion> questionList = new ArrayList<>();
     ArrayList<Integer> questionNumberList = new ArrayList<>();
     ArrayList<SingleOptions> optionsList = new ArrayList<>();
+    ArrayList<SingleQuestionList> questionOpList = new ArrayList<>();
     SingleQuestion question = new SingleQuestion();
     SingleSections section = new SingleSections();
     SingleOptions option;
+    SingleQuestionList qListObj;
     OptionsCheckAdapter opAdapter;
     SaveJSONdataToFile save;
     DBHelper dataObj;
     GestureDetector gd;
     ArrayList<String> categories;
     String jsonPath,photoPath;
+    TestActivity testObj;
 
     private static final boolean AUTO_HIDE = true;
 
@@ -193,9 +197,10 @@ public class ReviewActivity extends AppCompatActivity implements
         setContentView(R.layout.activity_test);
 
         dataObj = new DBHelper(this);
+        testObj = new TestActivity();
 
         question_scroll = findViewById(R.id.question_scroll);
-        qAdapter = new QuestionListAdapter(q_list,ReviewActivity.this);
+        qAdapter = new QuestionListAdapter(questionOpList,ReviewActivity.this,testObj.getScreenSize());
         myLayoutManager = new LinearLayoutManager(ReviewActivity.this, LinearLayoutManager.HORIZONTAL,false);
         question_scroll.setLayoutManager(myLayoutManager);
         question_scroll.setItemAnimator(new DefaultItemAnimator());
@@ -556,7 +561,8 @@ public class ReviewActivity extends AppCompatActivity implements
         pos = position;
         JSONArray array2 = generateArray(attempt.getJSONArray("sections").getJSONObject(pos));
         for (int j = 0; j < array2.length(); j++){
-            q_list.add(array2.getJSONObject(j).getString("qbm_sequence"));
+            qListObj = new SingleQuestionList(array2.getJSONObject(j).getString("qbm_sequence"),"NOT_ATTEMPTED");
+            questionOpList.add(qListObj);
         }
         qAdapter.notifyDataSetChanged();
 
