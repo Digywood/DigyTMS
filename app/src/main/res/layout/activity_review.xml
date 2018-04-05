@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/white"
-    tools:context="com.digywood.tms.TestActivity">
+    tools:context="com.digywood.tms.ReviewActivity">
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -15,7 +15,7 @@
         <Spinner
             android:id="@+id/sections"
             android:layout_width="wrap_content"
-            android:layout_height="40dp"
+            android:layout_height="30dp"
             android:layout_marginStart="5dp"
             android:layout_marginTop="5dp"
             android:layout_gravity="center_vertical">
@@ -24,7 +24,7 @@
         <HorizontalScrollView
             android:id="@+id/scroll"
             android:layout_width="match_parent"
-            android:layout_height="53dp"
+            android:layout_height="30dp"
             android:layout_marginStart="5dp"
             android:layout_marginBottom="5dp"
             android:layout_marginTop="5dp"
@@ -35,10 +35,10 @@
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/question_scroll"
                 android:layout_width="wrap_content"
-                android:layout_height="50dp"
+                android:layout_height="40dp"
                 android:layout_marginLeft="10dp"
                 android:layout_marginRight="10dp"
-                android:layout_gravity="center_vertical"
+                android:gravity="center"
                 android:orientation="horizontal">
             </android.support.v7.widget.RecyclerView>
 
@@ -49,7 +49,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
             android:layout_alignParentEnd="true"
-            app:srcCompat="@drawable/ic_fullscreen_black_40dp" />
+            app:srcCompat="@drawable/ic_fullscreen_black_24dp" />
 
     </RelativeLayout>
 
@@ -59,10 +59,14 @@
         android:orientation="horizontal"
         android:id="@+id/row2"
         android:layout_below="@+id/header">
-
-        <Button
+        <TextView
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_width="wrap_content"/>
+            android:id="@+id/question_number"
+            android:textSize="15sp"
+            android:layout_marginTop="5dp"
+            android:layout_marginStart="150dp"
+            android:text="Question"/>
 
         <ImageView
             android:id="@+id/menu"
@@ -71,7 +75,7 @@
             android:layout_marginTop="5dp"
             android:layout_toStartOf="@id/time_layout"
             android:layout_marginEnd="10dp"
-            app:srcCompat="@drawable/ic_info_black_40dp"
+            app:srcCompat="@drawable/ic_info_black_24dp"
             android:layout_gravity="end"
             android:visibility="visible" />
 
@@ -81,7 +85,6 @@
             android:background="@drawable/spin_bg"
             android:id="@+id/time_layout"
             android:layout_marginEnd="5dp"
-            android:orientation="horizontal"
             android:layout_alignParentEnd="true">
 
             <ImageView
@@ -90,20 +93,19 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5dp"
-                android:contentDescription="@string/dummy_content"
                 android:gravity="center_vertical|center_horizontal"
-                app:srcCompat="@drawable/ic_timer_black_40dp" />
+                app:srcCompat="@drawable/ic_timer_black_24dp" />
 
             <TextView
                 android:id="@+id/timer"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textColor="@color/colorPrimary"
-                android:layout_marginTop="5dp"
+                android:layout_marginTop="1dp"
                 android:layout_marginBottom="5dp"
                 android:layout_marginEnd="10dp"
-                android:layout_gravity="center_vertical"
-                android:textSize="24sp"
+                android:gravity="center_vertical|center_horizontal"
+                android:textSize="20sp"
                 android:textStyle="bold" />
         </LinearLayout>
 
@@ -140,7 +142,6 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:adjustViewBounds="true"
-                    android:contentDescription="@string/dummy_content"
                     android:gravity="start" />
 
                 <View
@@ -151,8 +152,8 @@
 
                 <android.support.design.widget.FloatingActionButton
                     android:id="@+id/btn_group_info"
-                    android:layout_width="50dp"
-                    android:layout_height="50dp"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
                     android:layout_alignParentBottom="true"
                     android:layout_alignParentEnd="true"
                     android:layout_gravity="center"
@@ -163,11 +164,10 @@
                     android:visibility="visible"
                     app:srcCompat="@drawable/ic_input_24dp" />
 
-
                 <android.support.design.widget.FloatingActionButton
                     android:id="@+id/btn_qadditional"
-                    android:layout_width="50dp"
-                    android:layout_height="50dp"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
                     android:layout_alignParentBottom="true"
                     android:layout_alignParentStart="true"
                     android:layout_gravity="center"
@@ -211,46 +211,56 @@
         android:orientation="horizontal"
         android:id="@+id/action_buttons"
         android:layout_alignParentBottom="true"
-        android:weightSum="4">
+        android:weightSum="3">
 
         <Button
             android:layout_width="wrap_content"
-            android:layout_height="50dp"
+            android:layout_height="30dp"
             android:layout_weight="1"
-            android:background="@drawable/test_button_custom"
-            android:textColor="@drawable/test_text_custom"
+            android:background="#703fb5"
             android:text="Previous"
-            android:layout_marginEnd="5dp"
+            android:textColor="#FFFFFF"
             android:id="@+id/prev_btn"/>
-
-        <Button
+        <LinearLayout
             android:layout_width="wrap_content"
-            android:layout_height="50dp"
+            android:layout_height="30dp"
+            android:orientation="horizontal"
+            android:layout_gravity="center_vertical"
             android:layout_weight="1"
-            android:text="Clear Options"
-            android:background="@drawable/test_button_custom"
-            android:textColor="@drawable/test_text_custom"
-            android:layout_marginEnd="5dp"
-            android:id="@+id/btn_clear_option"/>
+            android:weightSum="7">
 
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="50dp"
-            android:layout_weight="1"
-            android:text="Mark for Review"
-            android:background="@drawable/test_button_custom"
-            android:textColor="@drawable/test_text_custom"
-            android:layout_marginEnd="5dp"
-            android:id="@+id/btn_mark"/>
+            <TextView
+                android:layout_width="100dp"
+                android:layout_height="wrap_content"
+                android:text="Unmark"
+                android:layout_weight="3"
+                android:textColor="#000000"
+                android:gravity="center"/>
+
+            <Switch
+                android:id="@+id/mark_switch"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:layout_weight="1" />
+
+            <TextView
+                android:layout_width="100dp"
+                android:layout_height="wrap_content"
+                android:text="Mark"
+                android:layout_weight="3"
+                android:textColor="#000000"
+                android:gravity="center"/>
+        </LinearLayout>
 
         <Button
             android:id="@+id/next_btn"
             android:layout_width="wrap_content"
-            android:layout_height="50dp"
+            android:layout_height="30dp"
             android:layout_weight="1"
-            android:background="@drawable/test_button_custom"
-            android:textColor="@drawable/test_text_custom"
-            android:text="Confirm / Skip" />
+            android:background="#703fb5"
+            android:text="Next"
+            android:textColor="#FFFFFF" />
 
     </LinearLayout>
 

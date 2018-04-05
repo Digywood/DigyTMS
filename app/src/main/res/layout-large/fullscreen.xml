@@ -15,6 +15,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:id="@+id/question_full_img"
+            android:contentDescription="@string/dummy_content"
             android:layout_weight="1"
             android:scaleType="fitXY"/>
         <ImageView
@@ -22,6 +23,7 @@
             android:layout_height="match_parent"
             android:id="@+id/iv_additional_img"
             android:layout_weight="1"
+            android:contentDescription="@string/dummy_content"
             android:scaleType="fitStart"/>
 
     </LinearLayout>
@@ -30,9 +32,10 @@
     <ImageView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:srcCompat="@drawable/ic_arrow_drop_down_circle_black_24dp"
+        app:srcCompat="@drawable/ic_close_black_24dp"
         android:layout_marginTop="10dp"
         android:layout_marginEnd="10dp"
+        android:contentDescription="@string/dummy_content"
         android:layout_alignParentEnd="true"
         android:id="@+id/iv_close"/>
 </RelativeLayout>

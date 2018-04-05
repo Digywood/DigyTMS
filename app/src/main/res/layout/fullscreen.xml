@@ -15,12 +15,14 @@
             android:layout_height="match_parent"
             android:id="@+id/question_full_img"
             android:layout_weight="1"
+            android:contentDescription="@string/dummy_content"
             android:scaleType="fitXY"/>
         <ImageView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:id="@+id/iv_additional_img"
             android:layout_weight="1"
+            android:contentDescription="@string/dummy_content"
             android:scaleType="fitStart"/>
 
     </LinearLayout>

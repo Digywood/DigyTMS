@@ -25,9 +25,10 @@ import java.util.List;
 public class OptionsCheckAdapter extends RecyclerView.Adapter<OptionsCheckAdapter.MyViewHolder>{
 
     private ArrayList<SingleOptions> optionsList;
-    Context mycontext;
-    String path;
-    public int mSelectedItem = -1;
+    private Context mycontext;
+    private String path;
+    private int mSelectedItem = -1;
+    private  Boolean medit = true;
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
         public RelativeLayout option_layout;
@@ -39,7 +40,6 @@ public class OptionsCheckAdapter extends RecyclerView.Adapter<OptionsCheckAdapte
             iv_opmedia = view.findViewById(R.id.iv_opmedia);
             rb_option = view.findViewById(R.id.rb_option);
             option_layout = view.findViewById(R.id.option_layout);
-
             option_layout.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -54,6 +54,11 @@ public class OptionsCheckAdapter extends RecyclerView.Adapter<OptionsCheckAdapte
                     notifyItemRangeChanged(0,optionsList.size());
                 }
             });
+            if (!medit){
+                rb_option.setOnClickListener(null);
+                option_layout.setOnClickListener(null);
+                rb_option.setEnabled(false);
+            }
         }
 
     }
@@ -91,34 +96,28 @@ public class OptionsCheckAdapter extends RecyclerView.Adapter<OptionsCheckAdapte
             holder.iv_opmedia.setImageBitmap(getOptionImage(option.getQbo_media_file()));
             holder.iv_opmedia.setScaleType(ImageView.ScaleType.FIT_XY);
             holder.rb_option.setChecked(position == mSelectedItem);
-/*
-
-        holder.rb_option.setChecked(false);
-        holder.option_layout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                notifyDataSetChanged();
-                holder.rb_option.setChecked(true);
-            }
-        });
-        holder.rb_option.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                notifyDataSetChanged();
-                holder.rb_option.setChecked(true);
-            }
-        });
-*/
-
     }
 
     public int getSelectedItem(){
         return mSelectedItem;
     }
 
+    public void setOptionsList(int SelectedList){
+        mSelectedItem = SelectedList;
+    }
+
+    public void resetOptionsList(){
+        mSelectedItem = -1;
+    }
+
+    public void setOptionsEditable(Boolean edit){
+        medit = edit;
+    }
+
     public Bitmap getOptionImage(String file){
         Bitmap b =  BitmapFactory.decodeFile(path + file);
         return b ;
     }
+
 
 }

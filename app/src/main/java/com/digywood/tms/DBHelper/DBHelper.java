@@ -467,7 +467,7 @@ public class DBHelper extends SQLiteOpenHelper {
         return QuestionList;
     }
     public int getPosition(String qId){
-        int value = 0;
+        int value = -1;
         try {
             String query ="SELECT  Question_Option FROM "+" attempt_data"+" WHERE Question_ID ='"+qId+"'";
             db=this.getWritableDatabase();
