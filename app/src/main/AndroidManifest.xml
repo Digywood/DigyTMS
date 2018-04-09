@@ -42,11 +42,21 @@
         <activity
             android:name=".TestActivity"
             android:label="@string/title_activity_test"
-            android:screenOrientation="landscape"/>
+            android:screenOrientation="landscape"
+            android:theme="@style/AppTheme.NoActionBar">
+        </activity>
         <activity
             android:name=".ScoreActivity"
             android:label="@string/title_activity_score"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:screenOrientation="landscape"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".ReviewActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:screenOrientation="landscape"
+            android:label="@string/title_activity_review"
+            android:noHistory="true"
+            android:theme="@style/FullscreenTheme"/>
     </application>
 
 </manifest>

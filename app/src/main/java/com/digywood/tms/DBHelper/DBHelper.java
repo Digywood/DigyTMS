@@ -552,14 +552,14 @@ public class DBHelper extends SQLiteOpenHelper {
         if(c.getCount()!=0)
         {
             while (c.moveToNext()) {
-                QuestionList.add(c.getInt(c.getColumnIndex("Question_Option")));
+                QuestionList.add(c.getInt(c.getColumnIndex("Question_ID")));
             }
         }
 
         return QuestionList;
     }
     public int getPosition(String qId){
-        int value = 0;
+        int value = -1;
         try {
             String query ="SELECT  Question_Option FROM "+" attempt_data"+" WHERE Question_ID ='"+qId+"'";
             db=this.getWritableDatabase();

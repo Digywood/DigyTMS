@@ -1,0 +1,259 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    tools:context="com.digywood.tms.TestActivity">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:id="@+id/header">
+        <Spinner
+            android:id="@+id/sections"
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:layout_marginStart="5dp"
+            android:layout_marginTop="5dp"
+            android:layout_gravity="center_vertical">
+        </Spinner>
+
+        <HorizontalScrollView
+            android:id="@+id/scroll"
+            android:layout_width="match_parent"
+            android:layout_height="53dp"
+            android:layout_marginStart="5dp"
+            android:layout_marginBottom="5dp"
+            android:layout_marginTop="5dp"
+            android:layout_toEndOf="@+id/sections"
+            android:layout_toStartOf="@+id/fullscreen"
+            android:background="#708090">
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/question_scroll"
+                android:layout_width="wrap_content"
+                android:layout_height="50dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:layout_gravity="center_vertical"
+                android:orientation="horizontal">
+            </android.support.v7.widget.RecyclerView>
+
+        </HorizontalScrollView>
+        <ImageView
+            android:id="@+id/fullscreen"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:layout_alignParentEnd="true"
+            app:srcCompat="@drawable/ic_fullscreen_black_40dp" />
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:id="@+id/row2"
+        android:layout_below="@+id/header">
+
+        <Button
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"/>
+
+        <ImageView
+            android:id="@+id/menu"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:layout_toStartOf="@id/time_layout"
+            android:layout_marginEnd="10dp"
+            app:srcCompat="@drawable/ic_info_black_40dp"
+            android:layout_gravity="end"
+            android:visibility="visible" />
+
+        <LinearLayout
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:background="@drawable/spin_bg"
+            android:id="@+id/time_layout"
+            android:layout_marginEnd="5dp"
+            android:orientation="horizontal"
+            android:layout_alignParentEnd="true">
+
+            <ImageView
+                android:id="@+id/timer_icon"
+                android:layout_marginStart="10dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:contentDescription="@string/dummy_content"
+                android:gravity="center_vertical|center_horizontal"
+                app:srcCompat="@drawable/ic_timer_black_40dp" />
+
+            <TextView
+                android:id="@+id/timer"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/colorPrimary"
+                android:layout_marginTop="5dp"
+                android:layout_marginBottom="5dp"
+                android:layout_marginEnd="10dp"
+                android:layout_gravity="center_vertical"
+                android:textSize="24sp"
+                android:textStyle="bold" />
+        </LinearLayout>
+
+
+    </RelativeLayout>
+
+    <View
+        android:id="@+id/margin"
+        android:layout_width="match_parent"
+        android:layout_height="2dp"
+        android:background="#000000"
+        android:layout_below="@+id/row2" />
+
+    <LinearLayout
+        android:id="@+id/question_screen"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="horizontal"
+        android:layout_below="@+id/margin"
+        android:layout_above="@+id/action_buttons"
+        android:weightSum="2">
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="start"
+            android:layout_weight="1">
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="180dp"
+                android:orientation="vertical">
+
+                <ImageView
+                    android:id="@+id/question_img"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:adjustViewBounds="true"
+                    android:contentDescription="@string/dummy_content"
+                    android:gravity="start" />
+
+                <View
+                    android:layout_width="2dp"
+                    android:layout_height="match_parent"
+                    android:background="#000000"
+                    android:id="@+id/view" />
+
+                <android.support.design.widget.FloatingActionButton
+                    android:id="@+id/btn_group_info"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:layout_alignParentBottom="true"
+                    android:layout_alignParentEnd="true"
+                    android:layout_gravity="center"
+                    android:clickable="true"
+                    android:layout_toStartOf="@id/view"
+                    android:focusable="true"
+                    android:scaleType="center"
+                    android:visibility="visible"
+                    app:srcCompat="@drawable/ic_input_24dp" />
+
+
+                <android.support.design.widget.FloatingActionButton
+                    android:id="@+id/btn_qadditional"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:layout_alignParentBottom="true"
+                    android:layout_alignParentStart="true"
+                    android:layout_gravity="center"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:scaleType="center"
+                    android:visibility="invisible"
+                    app:srcCompat="@drawable/ic_launch_24dp" />
+
+
+            </RelativeLayout>
+
+        </ScrollView>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1">
+
+            <android.support.v7.widget.RecyclerView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/option_view">
+
+            </android.support.v7.widget.RecyclerView>
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <View
+        android:id="@+id/margin2"
+        android:layout_width="match_parent"
+        android:layout_height="2dp"
+        android:background="#000000"
+        android:layout_below="@+id/question_screen" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:id="@+id/action_buttons"
+        android:layout_alignParentBottom="true"
+        android:weightSum="4">
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="50dp"
+            android:layout_weight="1"
+            android:background="@drawable/test_button_custom"
+            android:textColor="@drawable/test_text_custom"
+            android:text="Previous"
+            android:layout_marginEnd="5dp"
+            android:id="@+id/prev_btn"/>
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="50dp"
+            android:layout_weight="1"
+            android:text="Clear Options"
+            android:background="@drawable/test_button_custom"
+            android:textColor="@drawable/test_text_custom"
+            android:layout_marginEnd="5dp"
+            android:id="@+id/btn_clear_option"/>
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="50dp"
+            android:layout_weight="1"
+            android:text="Mark for Review"
+            android:background="@drawable/test_button_custom"
+            android:textColor="@drawable/test_text_custom"
+            android:layout_marginEnd="5dp"
+            android:id="@+id/btn_mark"/>
+
+        <Button
+            android:id="@+id/next_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="50dp"
+            android:layout_weight="1"
+            android:background="@drawable/test_button_custom"
+            android:textColor="@drawable/test_text_custom"
+            android:text="Confirm / Skip" />
+
+    </LinearLayout>
+
+
+
+</RelativeLayout>
