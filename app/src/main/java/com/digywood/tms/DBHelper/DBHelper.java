@@ -5,8 +5,6 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-import android.util.Log;
-
 import com.digywood.tms.Pojo.SingleEnrollment;
 import java.util.ArrayList;
 
@@ -142,15 +140,36 @@ public class DBHelper extends SQLiteOpenHelper {
                 ")";
         db.execSQL(AttemptData);
 
-//        String tblCategory="CREATE TABLE IF NOT EXISTS category_table(keyId INTEGER PRIMARY KEY AUTOINCREMENT,orgId text, categoryId text, longName text, shortName text, createdBy text, createdDate text, modifiedBy text, modifiedDate text, status text)";
-//        db.execSQL(tblCategory);
-//
-//        String tblSubCategory="CREATE TABLE IF NOT EXISTS sub_category_table(keyId INTEGER PRIMARY KEY AUTOINCREMENT, orgId text, categoryId text, subCategoryId text, longName text, shortName text, createdBy text, createdDate text, modifiedBy text, modifiedDate text, status text)";
-//        db.execSQL(tblSubCategory);
-//
-//        String tbladvtCategory="CREATE TABLE IF NOT EXISTS advt_category_table(keyId INTEGER PRIMARY KEY AUTOINCREMENT, orgId text, advtId text, category text, subCategory text)";
-//        db.execSQL(tbladvtCategory);
-//
+        String tblqbgroup="CREATE TABLE `qb_group` (\n" +
+                "  `qbg_key` integer PRIMARY KEY,`qbg_ID` text DEFAULT NULL,`testId` text DEFAULT NULL,\n" +
+                "  `qbg_media_type` text DEFAULT NULL,`qbg_media_file` text DEFAULT NULL,\n" +
+                "  `qbg_text` text DEFAULT NULL,`qbg_no_questions` int(4),`qbg_pickup_count` int(4),\n" +
+                "  `qbg_status` text DEFAULT NULL,`qbg_created_by` text DEFAULT NULL,\n" +
+                "  `qbg_created_dttm` datetime DEFAULT NULL,\n" +
+                "  `qbg_mod_by` varchar(20) DEFAULT NULL,`qbg_mod_dttm` datetime DEFAULT NULL)";
+        db.execSQL(tblqbgroup);
+
+        String tblquesconfig="CREATE TABLE `ques_config` (\n" +
+                "  `ques_configkey` integer PRIMARY KEY,`courseId` text DEFAULT NULL,\n" +
+                "  `subjectId` text DEFAULT NULL,`paperId` text DEFAULT NULL,\n" +
+                "  `testId` text NOT NULL,`categoryId` text DEFAULT NULL,`subcategoryId` text NOT NULL,\n" +
+                "  `avail_count` int(10),`pickup_count` int(10),`min_pickup_count` int(10),\n" +
+                "  `ques_configstatus` text NOT NULL)";
+        db.execSQL(tblquesconfig);
+
+        String tblgroupconfig="CREATE TABLE `groupques_config` (\n" +
+                "  `groupques_configKey` integer PRIMARY KEY,\n" +
+                "  `courseId` text DEFAULT NULL,\n" +
+                "  `subjectId` text DEFAULT NULL,\n" +
+                "  `paperId` text DEFAULT NULL,\n" +
+                "  `testId` text NOT NULL,\n" +
+                "  `sectionId` text NOT NULL,\n" +
+                "  `groupType` text NOT NULL,\n" +
+                "  `groupavail_count` int(10),\n" +
+                "  `grouppickup_count` int(10),\n" +
+                "  `groupques_configstatus` text DEFAULT NULL)";
+        db.execSQL(tblgroupconfig);
+
 //        String tblCategoryCheck="CREATE TABLE IF NOT EXISTS category_check_table(keyId INTEGER PRIMARY KEY AUTOINCREMENT, category text, subCategory text, status text)";
 //        db.execSQL(tblCategoryCheck);
 //
@@ -354,6 +373,79 @@ public class DBHelper extends SQLiteOpenHelper {
         cv.put("sptu_dwnld_status", status);
         updateFlag=db.update("sptu_student", cv, "sptu_ID='"+testid+"'",null);
         return  updateFlag;
+    }
+
+    public long insertQuesGroup(int qbkey,String qbid,String tid,String qbmtype,String qbmfile,String qbtext,String noofques,String pickupcount,String status,String createby,String createdttm,String modby,String moddttm){
+        long insertFlag=0;
+        ContentValues cv = new ContentValues();
+        cv.put("qbg_key",qbkey);
+        cv.put("qbg_ID",qbid);
+        cv.put("testId",qbid);
+        cv.put("qbg_media_type",qbmtype);
+        cv.put("qbg_media_file",qbmfile);
+        cv.put("qbg_text",qbtext);
+        cv.put("qbg_no_questions",noofques);
+        cv.put("qbg_pickup_count",pickupcount);
+        cv.put("qbg_status",status);
+        cv.put("qbg_created_by",createby);
+        cv.put("qbg_created_dttm",createdttm);
+        cv.put("qbg_mod_by",modby);
+        cv.put("qbg_mod_dttm",moddttm);
+        insertFlag = db.insert("qb_group",null, cv);
+        return insertFlag;
+    }
+
+    public long deleteTestGroups(String testid){
+        long deleteFlag=0;
+        deleteFlag=db.delete("qb_group", "testId='"+testid+"'", null);
+        return  deleteFlag;
+    }
+
+    public long insertQuesConfig(int qconkey,String cid,String sid,String pid,String tid,String catid,String scatid,int availcount,int pickupcount,int mincount,String status){
+        long insertFlag=0;
+        ContentValues cv = new ContentValues();
+        cv.put("ques_configkey",qconkey);
+        cv.put("courseId",cid);
+        cv.put("subjectId",sid);
+        cv.put("paperId",pid);
+        cv.put("testId",tid);
+        cv.put("categoryId",catid);
+        cv.put("subcategoryId",scatid);
+        cv.put("avail_count",availcount);
+        cv.put("pickup_count",pickupcount);
+        cv.put("min_pickup_count",mincount);
+        cv.put("ques_configstatus",status);
+        insertFlag = db.insert("ques_config",null, cv);
+        return insertFlag;
+    }
+
+    public long deleteQuesConfig(String testid){
+        long deleteFlag=0;
+        deleteFlag=db.delete("ques_config", "testId='"+testid+"'",null);
+        return  deleteFlag;
+    }
+
+    public long insertGroupConfig(int gconfigkey,String cid,String sid,String pid,String tid,String secid,String gtype,int availcount,int pickupcount,String status){
+        long insertFlag=0;
+        ContentValues cv = new ContentValues();
+        cv.put("groupques_configKey",gconfigkey);
+        cv.put("courseId",cid);
+        cv.put("subjectId",sid);
+        cv.put("paperId",pid);
+        cv.put("testId",tid);
+        cv.put("sectionId",secid);
+        cv.put("groupType",gtype);
+        cv.put("groupavail_count",availcount);
+        cv.put("grouppickup_count",pickupcount);
+        cv.put("groupques_configstatus",status);
+        insertFlag = db.insert("groupques_config",null, cv);
+        return insertFlag;
+    }
+
+    public long deleteGroupsConfig(String testid){
+        long deleteFlag=0;
+        deleteFlag=db.delete("groupques_config", "testId='"+testid+"'", null);
+        return  deleteFlag;
     }
 
     public long updatePrefAdvt(String orgId, String producer_id,String caption, String description, byte[] image, String startDate, String endDate,String contactName, String contactNumber, String emailId,String createdTime, String status){
