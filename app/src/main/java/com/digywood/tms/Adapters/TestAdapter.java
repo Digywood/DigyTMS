@@ -3,17 +3,25 @@ package com.digywood.tms.Adapters;
 import android.content.Context;
 import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.TextView;
+
+import com.digywood.tms.JSONParser;
 import com.digywood.tms.R;
 import com.digywood.tms.Pojo.SingleTest;
 import com.digywood.tms.TestActivity;
+import com.digywood.tms.URLClass;
 
+import java.io.BufferedReader;
+import java.io.FileReader;
 import java.util.ArrayList;
+import java.util.Random;
+
 /**
  * Created by prasa on 2018-02-27.
  */
@@ -24,6 +32,8 @@ public class TestAdapter extends RecyclerView.Adapter<TestAdapter.MyViewHolder> 
     ArrayList<String> downloadedList=new ArrayList<>();
     ArrayList<String> chktestList=new ArrayList<>();
     Context mycontext;
+    JSONParser myparser;
+    String filedata="";
 
     public class MyViewHolder extends RecyclerView.ViewHolder{
 
@@ -75,6 +85,27 @@ public class TestAdapter extends RecyclerView.Adapter<TestAdapter.MyViewHolder> 
 
 //                Intent i=new Intent(mycontext, TestActivity.class);
 //                mycontext.startActivity(i);
+
+
+//                try{
+//                    BufferedReader br = new BufferedReader(new FileReader(URLClass.mainpath+"PTAA00002"+".json"));
+//                    StringBuilder sb = new StringBuilder();
+//                    String line = br.readLine();
+//
+//                    while (line != null) {
+//                        sb.append(line);
+//                        sb.append("\n");
+//                        line = br.readLine();
+//                    }
+//                    filedata=sb.toString();
+//                    br.close();
+//                }catch (Exception e){
+//                    e.printStackTrace();
+//                    Log.e("TestActivity1-----",e.toString());
+//                }
+//
+//                myparser=new JSONParser();
+//                myparser.JSONParser(filedata);
 
             }
         });

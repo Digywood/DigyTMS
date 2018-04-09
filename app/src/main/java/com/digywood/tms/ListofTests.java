@@ -18,16 +18,13 @@ import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import org.json.JSONArray;
 import org.json.JSONObject;
-
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.util.ArrayList;
 import java.util.HashMap;
-
 import com.digywood.tms.Adapters.TestAdapter;
 import com.digywood.tms.AsynTasks.AsyncCheckInternet;
 import com.digywood.tms.AsynTasks.BagroundTask;
@@ -132,13 +129,15 @@ public class ListofTests extends AppCompatActivity {
 
     public void downloadTest(String filename){
 
+//        getTestConfig(selectedtestidList.get(currentitem));
+
         finalUrls.clear();
         finalNames.clear();
 
         hmap.clear();
         hmap.put("testid",selectedtestidList.get(currentitem));
         hmap.put("status","STARTED");
-        new BagroundTask(URLClass.hosturl +"updateTestStatus.php",hmap, ListofTests.this,new IBagroundListener() {
+        new BagroundTask(URLClass.hosturl +"updateTestStatus.php",hmap,ListofTests.this,new IBagroundListener() {
             @Override
             public void bagroundData(String json) {
                 try{
@@ -368,6 +367,121 @@ public class ListofTests extends AppCompatActivity {
         }
         setData();
     }
+
+//    public void getTestConfig(String testid){
+//        hmap.clear();
+//        hmap.put("testId",testid);
+//        new BagroundTask(URLClass.hosturl +"getTestConfig.php",hmap,ListofTests.this,new IBagroundListener() {
+//            @Override
+//            public void bagroundData(String json) {
+//                try{
+//                    Log.e("ListofTests---",json);
+//
+//                    JSONObject myObj=new JSONObject(json);
+//
+//                    Object obj1=myObj.get("enrollments");
+//
+//                    if (obj1 instanceof JSONArray)
+//                    {
+//                        long prefdelcount=myhelper.deleteAllEnrollments();
+//                        Log.e("enrolldelcount---",""+prefdelcount);
+//                        ja_enrollments_table=myObj.getJSONArray("enrollments");
+//                        if(ja_enrollments_table!=null && ja_enrollments_table.length()>0){
+//                            Log.e("enrollLength---",""+ja_enrollments_table.length());
+//                            int p=0,q=0;
+//                            for(int i=0;i<ja_enrollments_table.length();i++){
+//
+//                                enrollObj=ja_enrollments_table.getJSONObject(i);
+//                                long insertFlag=myhelper.insertEnrollment(enrollObj.getInt("Enroll_key"),enrollObj.getString("Enroll_ID"),enrollObj.getString("Enroll_org_id"),enrollObj.getString("Enroll_Student_ID"),
+//                                        enrollObj.getString("Enroll_batch_ID"),enrollObj.getString("Enroll_course_ID"),enrollObj.getString("Enroll_batch_start_Dt"),enrollObj.getString("Enroll_batch_end_Dt"),
+//                                        enrollObj.getString("Enroll_Device_ID"),enrollObj.getString("Enroll_Date"),enrollObj.getString("Enroll_Status"));
+//                                if(insertFlag>0){
+//                                    p++;
+//                                }else {
+//                                    q++;
+//                                }
+//                            }
+//                            Log.e("BackGroundTask--","Inserted: "+p);
+//                        }else{
+//                            Log.e("Enrollments--","Empty Json Array: ");
+//                        }
+//                    }
+//                    else {
+//                        Log.e("Enrollments--","No Enrollments: ");
+//                    }
+//
+//                    Object obj2=myObj.get("subjects");
+//
+//                    if (obj2 instanceof JSONArray)
+//                    {
+//                        long subdelcount=myhelper.deleteAllSubjects();
+//                        Log.e("subdelcount---",""+subdelcount);
+//                        ja_subjects_table=myObj.getJSONArray("subjects");
+//                        if(ja_subjects_table!=null && ja_subjects_table.length()>0){
+//                            Log.e("subLength---",""+ja_subjects_table.length());
+//                            int p=0,q=0;
+//                            for(int i=0;i<ja_subjects_table.length();i++){
+//
+//                                subjectObj=ja_subjects_table.getJSONObject(i);
+//                                long insertFlag=myhelper.insertSubject(subjectObj.getInt("Subject_key"),subjectObj.getString("Course_ID"),subjectObj.getString("Subject_ID"),subjectObj.getString("Subject_Name"),
+//                                        subjectObj.getString("Subject_ShortName"),subjectObj.getInt("Subject_Seq_no"),subjectObj.getString("Subject_Type"),subjectObj.getString("Subject_status"));
+//                                if(insertFlag>0){
+//                                    p++;
+//                                }else {
+//                                    q++;
+//                                }
+//                            }
+//                            Log.e("BackGroundTask--","Inserted: "+p);
+//                        }else{
+//                            Log.e("Subjects--","Empty Json Array: ");
+//                        }
+//                    }
+//                    else {
+//                        Log.e("Subjects--","No Subjects: ");
+//                    }
+//
+//                    Object obj3=myObj.get("papers");
+//
+//                    if (obj3 instanceof JSONArray)
+//                    {
+//                        long paperdelcount=myhelper.deleteAllPapers();
+//                        Log.e("paperdelcount---",""+paperdelcount);
+//                        ja_papers_table=myObj.getJSONArray("papers");
+//                        if(ja_papers_table!=null && ja_papers_table.length()>0){
+//                            Log.e("paperLength---",""+ja_papers_table.length());
+//                            int p=0,q=0;
+//                            for(int i=0;i<ja_papers_table.length();i++){
+//
+//                                paperObj=ja_papers_table.getJSONObject(i);
+//                                long insertFlag=myhelper.insertPaper(paperObj.getInt("Paper_Key"),paperObj.getString("Paper_ID"),paperObj.getString("Paper_Seq_no"),paperObj.getString("Subject_ID"),
+//                                        paperObj.getString("Course_ID"),paperObj.getString("Paper_Name"),paperObj.getString("Paper_Short_Name"),paperObj.getString("Paper_Min_Pass_Marks"),
+//                                        paperObj.getString("Paper_Max_Marks"));
+//                                if(insertFlag>0){
+//                                    p++;
+//                                }else {
+//                                    q++;
+//                                }
+//                            }
+//                            Log.e("BackGroundTask--","Inserted: "+p);
+//                        }else{
+//                            Log.e("Papers--","Empty Json Array: ");
+//                        }
+//                    }
+//                    else {
+//                        Log.e("Papers--","No Papers: ");
+//                    }
+//
+//
+//
+//
+//                }catch (Exception e){
+//                    e.printStackTrace();
+//                    Log.e("ListofTests---",e.toString());
+//                }
+//
+//            }
+//        }).execute();
+//    }
 
     public void getTestIds(){
         hmap.clear();
