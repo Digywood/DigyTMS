@@ -9,8 +9,11 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.TextView;
+
+import com.digywood.tms.DBHelper.DBHelper;
 import com.digywood.tms.R;
 import com.digywood.tms.Pojo.SingleTest;
+import com.digywood.tms.ReviewActivity;
 import com.digywood.tms.TestActivity;
 
 import java.util.ArrayList;
@@ -72,9 +75,9 @@ public class TestAdapter extends RecyclerView.Adapter<TestAdapter.MyViewHolder> 
         holder.btn_resume.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-//                Intent i=new Intent(mycontext, TestActivity.class);
-//                mycontext.startActivity(i);
+//                DBHelper dataObj = new DBHelper(mycontext);
+                Intent i=new Intent(mycontext, ReviewActivity.class);
+                mycontext.startActivity(i);
 
             }
         });
