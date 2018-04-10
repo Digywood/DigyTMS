@@ -22,17 +22,22 @@ import com.digywood.tms.AsynTasks.BagroundTask;
 import com.digywood.tms.DBHelper.DBHelper;
 import org.json.JSONArray;
 import org.json.JSONObject;
+
+import java.io.BufferedReader;
+import java.io.FileReader;
 import java.util.HashMap;
+import java.util.Random;
 
 public class MainActivity extends AppCompatActivity {
 
     Button btn_login;
     TextView tv_signup;
     CheckBox cb_remember;
-    String studentid;
+    String studentid,filedata="";
     DBHelper myhelper;
     EditText et_email,et_password;
     String pwd="",enterpwd;
+    JSONParser myparser;
     SharedPreferences mypreferences,myretrievepreferences;
     SharedPreferences.Editor editor;
     HashMap<String,String> hmap=new HashMap<>();
@@ -161,6 +166,7 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Intent i=new Intent(getApplicationContext(),RegistrationActivity.class);
                 startActivity(i);
+
             }
         });
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);

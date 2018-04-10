@@ -11,6 +11,16 @@ public class SingleOptions {
 
     }
 
+    public SingleOptions(String id,String seqno,String type,String text,String mtype,String mfile,String answflag){
+        this.qbo_id=id;
+        this.qbo_seq_no=seqno;
+        this.qbo_type=type;
+        this.qbo_text=text;
+        this.qbo_media_type=mtype;
+        this.qbo_media_file=mfile;
+        this.qbo_answer_flag=answflag;
+    }
+
 
     public String getQbo_id() {
         return qbo_id;
