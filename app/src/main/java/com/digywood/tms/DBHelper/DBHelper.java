@@ -131,11 +131,22 @@ public class DBHelper extends SQLiteOpenHelper {
                 "  `sptu_mod_by` text DEFAULT NULL,\n" +
                 "  `sptu_mod_dttm` datetime DEFAULT NULL)";
         db.execSQL(tbl_sptu_student);
+        String AttemptList ="CREATE TABLE `attempt_list` (\n"+
+                "   `Attempt_ID` int ,\n"+
+                "   `Attempt_Status` int(5) NOT NULL,\n"+
+                "   `Attempt_Score` int(10) DEFAULT NULL,\n"+
+                "   `Attempt_Percentage` int(10) DEFAULT NULL,\n"+
+                "   PRIMARY KEY (`Attempt_ID`)\n"+
+                ")";
+        db.execSQL(AttemptList);
         String AttemptData=" CREATE TABLE `attempt_data` (\n"+
                 "   `Question_ID` varchar(15),\n" +
                 "   `Question_Seq_No` varchar(15) DEFAULT NULL,\n" +
                 "   `Question_Max_Marks` int(15) DEFAULT NULL,\n"+
                 "   `Question_Option` int(15) DEFAULT NULL,\n"+
+                "   `Question_Status` varchar(20) DEFAULT NULL,\n"+
+                "   `Question_Option_Sequence` varchar(20) DEFAULT NULL,\n"+
+                "   `Option_Answer_Flag` varchar(15) DEFAULT NULL,\n"+
                 "   PRIMARY KEY (`Question_ID`)\n"+
                 ")";
         db.execSQL(AttemptData);
@@ -503,7 +514,7 @@ public class DBHelper extends SQLiteOpenHelper {
         }
         return AdvtprefList;
     }
-    public long InsertQuestion(String qId,String qSeq, int maxMarks, int option){
+    public long InsertQuestion(String qId,String qSeq, int maxMarks, int option,String status,String oSeq,String flag){
 
         long insertFlag=0;
 
@@ -512,12 +523,16 @@ public class DBHelper extends SQLiteOpenHelper {
         cv.put("Question_Seq_No", qSeq);
         cv.put("Question_Max_Marks",maxMarks );
         cv.put("Question_Option",option );
-
+        cv.put("Question_Status",status );
+        cv.put("Question_Option_Sequence",oSeq );
+        cv.put("Option_Answer_Flag",flag );
+        Log.e("DB_Insert:",status);
         insertFlag = db.insert("attempt_data",null, cv);
 
         return insertFlag;
     }
-    public long UpdateQuestion(String qId,String qSeq, int maxMarks, int option){
+
+    public long UpdateQuestion(String qId,String qSeq, int maxMarks, int option,String status,String oSeq,String flag){
 
         long updateFlag=0;
 
@@ -526,11 +541,15 @@ public class DBHelper extends SQLiteOpenHelper {
         cv.put("Question_Seq_No", qSeq);
         cv.put("Question_Max_Marks",maxMarks );
         cv.put("Question_Option",option );
-
+        cv.put("Question_Status",status );
+        cv.put("Question_Option_Sequence",oSeq );
+        cv.put("Option_Answer_Flag",flag );
+        Log.e("DB_Update:",status);
         updateFlag = db.update("attempt_data",cv,"Question_ID='"+qId+"'",null);
 
         return updateFlag;
     }
+
     public Boolean CheckQuestion(String qId){
         Boolean value = false;
         String query ="SELECT  Question_Option FROM "+" attempt_data"+" WHERE Question_ID ='"+qId+"'";
@@ -541,13 +560,14 @@ public class DBHelper extends SQLiteOpenHelper {
             value = true;
         else
             value = false;
-
+        cursor.close();
         return value;
     }
+
     public ArrayList<Integer> getQuestion(){
         ArrayList<Integer> QuestionList = new ArrayList<>();
 //        String query ="SELECT * FROM attempt_data";
-        Cursor c =db.query("attempt_data", new String[] {"Question_ID,Question_Seq_No,Question_Max_Marks,Question_Option"},null, null, null, null,null);
+        Cursor c =db.query("attempt_data", new String[] {"Question_ID,Question_Seq_No,Question_Max_Marks,Question_Option,Question_Status,Question_Option_Sequence,Option_Answer_Flag"},null, null, null, null,null);
 //        Cursor c=db.rawQuery(query,null);
         if(c.getCount()!=0)
         {
@@ -555,9 +575,33 @@ public class DBHelper extends SQLiteOpenHelper {
                 QuestionList.add(c.getInt(c.getColumnIndex("Question_ID")));
             }
         }
-
+        c.close();
         return QuestionList;
     }
+
+    public ArrayList<Integer> getOptions(){
+        ArrayList<Integer> OptionList = new ArrayList<>();
+        Cursor c =db.query("attempt_data", new String[] {"Question_ID,Question_Seq_No,Question_Max_Marks,Question_Option,Question_Status,Question_Option_Sequence,Option_Answer_Flag"},null, null, null, null,null);
+        if(c.getCount()!=0)
+        {
+            while (c.moveToNext()) {
+                OptionList.add(c.getInt(c.getColumnIndex("Question_Option_Sequence")));
+            }
+        }
+        c.close();
+        return OptionList;
+    }
+
+    public int getCorrectOptions(){
+        int count = 0;
+        ArrayList<Integer> OptionList = new ArrayList<>();
+        String query ="SELECT  Option_Answer_Flag FROM "+" attempt_data"+" WHERE Option_Answer_Flag = 'YES'";
+        Cursor c=db.rawQuery(query,null);
+        count=c.getCount();
+        c.close();
+        return count;
+    }
+
     public int getPosition(String qId){
         int value = -1;
         try {
@@ -566,6 +610,7 @@ public class DBHelper extends SQLiteOpenHelper {
             Cursor cursor=db.rawQuery(query,null);
             cursor.moveToFirst();
             value = cursor.getInt(0);
+            cursor.close();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -577,11 +622,86 @@ public class DBHelper extends SQLiteOpenHelper {
         String countQuery = "select * from attempt_data";
         Cursor c = db.rawQuery(countQuery, null);
         count=c.getCount();
+        c.close();
         return count;
 
     }
+
+    public int getQuestionAttempted(){
+        int count=0;
+        String query ="SELECT  Question_Status FROM "+" attempt_data"+" WHERE Question_Status = 'ATTEMPTED'";
+        Cursor c = db.rawQuery(query, null);
+        count=c.getCount();
+        c.close();
+        return count;
+
+    }
+
+    public int getQuestionSkipped(){
+        int count=0;
+        String query ="SELECT  Question_Status FROM "+" attempt_data"+" WHERE Question_Status = 'SKIPPED'";
+        Cursor c = db.rawQuery(query, null);
+        count=c.getCount();
+        c.close();
+        return count;
+
+    }
+
+    public int getQustionBookmarked(){
+        int count=0;
+        String query ="SELECT  Question_Status FROM "+" attempt_data"+" WHERE Question_Status = 'BOOKMARKED'";
+        Cursor c = db.rawQuery(query, null);
+        count=c.getCount();
+        c.close();
+        return count;
+
+    }
+
     public void Destroy(String table){
         db.execSQL("delete from "+table);
 //        db.execSQL("TRUNCATE table " +table);
     }
+
+    public long InsertAttempt(int aID,int status, int aScore, int aperc){
+
+        long insertFlag=0;
+
+        ContentValues cv = new ContentValues();
+        cv.put("Attempt_ID", aID);
+        cv.put("Attempt_Status", status);
+        cv.put("Attempt_Score",aScore );
+        cv.put("Attempt_Percentage",aperc );
+        insertFlag = db.insert("attempt_list",null, cv);
+        return insertFlag;
+    }
+
+    public long UpdateAttempt(int aID,String qSeq, int aScore, int aperc){
+
+        long updateFlag=0;
+        ContentValues cv = new ContentValues();
+        cv.put("Attempt_Status", qSeq);
+        cv.put("Attempt_Score",aScore );
+        cv.put("Attempt_Percentage",aperc );
+        updateFlag = db.update("attempt_list",cv,"Attempt_ID='"+aID+"'",null);
+
+        return updateFlag;
+    }
+    public int getAttempCount(){
+        int count=0;
+        String countQuery = "select * from attempt_list";
+        Cursor c = db.rawQuery(countQuery, null);
+        count=c.getCount();
+        return count;
+    }
+
+    public int getStudentEnrolls(int aID){
+        int status =0 ;
+        String countQuery = "select Attempt_Status from attempt_list where Attempt_ID = '"+aID+"'";
+        Cursor c =db.rawQuery(countQuery,null);
+        while (c.moveToNext()) {
+            status = c.getInt(1);
+        }
+        return status;
+    }
+
 }
