@@ -18,8 +18,6 @@ public class QuestionListAdapter extends RecyclerView.Adapter<QuestionListAdapte
     private int qid=-1;
     private int size;
     private ArrayList<SingleQuestionList> q_list=new ArrayList<>();
-    private ArrayList<Integer> attempt =new ArrayList<>();
-    private ArrayList<Integer> marked =new ArrayList<>();
     private Context mycontext;
     public int position = -1,index =  -1;
 
