@@ -40,6 +40,7 @@ public class ListofTests extends AppCompatActivity {
     HashMap<String,String> hmap=new HashMap<>();
     ArrayList<SingleTest> testidList;
     ArrayList<String> subjectIds;
+    ArrayList<String> groupIds=new ArrayList<>();
     RecyclerView rv_tests;
     TextView tv_emptytests;
     StringBuilder output;
@@ -53,7 +54,7 @@ public class ListofTests extends AppCompatActivity {
     ArrayList<SingleTest> dwdupdateList;
     FloatingActionButton fab_download;
     LinearLayoutManager myLayoutManager;
-    String enrollid="",courseid="",paperid="",subjectid="",downloadjsonpath="",path="",localpath="",filedata="";
+    String enrollid="",courseid="",paperid="",subjectid="",downloadjsonpath="",path="",localpath="",filedata="",groupdata="";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -129,10 +130,9 @@ public class ListofTests extends AppCompatActivity {
 
     public void downloadTest(String filename){
 
-//        getTestConfig(selectedtestidList.get(currentitem));
-
         finalUrls.clear();
         finalNames.clear();
+        filedata="";
 
         hmap.clear();
         hmap.put("testid",selectedtestidList.get(currentitem));
@@ -214,6 +214,8 @@ public class ListofTests extends AppCompatActivity {
                                         }
 
                                         parseJson(filedata);
+
+                                        getTestConfig(selectedtestidList.get(currentitem),groupdata);
 
                                         if(downloadfileList.size()!=0){
 
@@ -368,120 +370,154 @@ public class ListofTests extends AppCompatActivity {
         setData();
     }
 
-//    public void getTestConfig(String testid){
-//        hmap.clear();
-//        hmap.put("testId",testid);
-//        new BagroundTask(URLClass.hosturl +"getTestConfig.php",hmap,ListofTests.this,new IBagroundListener() {
-//            @Override
-//            public void bagroundData(String json) {
-//                try{
-//                    Log.e("ListofTests---",json);
-//
-//                    JSONObject myObj=new JSONObject(json);
-//
-//                    Object obj1=myObj.get("enrollments");
-//
-//                    if (obj1 instanceof JSONArray)
-//                    {
-//                        long prefdelcount=myhelper.deleteAllEnrollments();
-//                        Log.e("enrolldelcount---",""+prefdelcount);
-//                        ja_enrollments_table=myObj.getJSONArray("enrollments");
-//                        if(ja_enrollments_table!=null && ja_enrollments_table.length()>0){
-//                            Log.e("enrollLength---",""+ja_enrollments_table.length());
-//                            int p=0,q=0;
-//                            for(int i=0;i<ja_enrollments_table.length();i++){
-//
-//                                enrollObj=ja_enrollments_table.getJSONObject(i);
-//                                long insertFlag=myhelper.insertEnrollment(enrollObj.getInt("Enroll_key"),enrollObj.getString("Enroll_ID"),enrollObj.getString("Enroll_org_id"),enrollObj.getString("Enroll_Student_ID"),
-//                                        enrollObj.getString("Enroll_batch_ID"),enrollObj.getString("Enroll_course_ID"),enrollObj.getString("Enroll_batch_start_Dt"),enrollObj.getString("Enroll_batch_end_Dt"),
-//                                        enrollObj.getString("Enroll_Device_ID"),enrollObj.getString("Enroll_Date"),enrollObj.getString("Enroll_Status"));
-//                                if(insertFlag>0){
-//                                    p++;
-//                                }else {
-//                                    q++;
-//                                }
-//                            }
-//                            Log.e("BackGroundTask--","Inserted: "+p);
-//                        }else{
-//                            Log.e("Enrollments--","Empty Json Array: ");
-//                        }
-//                    }
-//                    else {
-//                        Log.e("Enrollments--","No Enrollments: ");
-//                    }
-//
-//                    Object obj2=myObj.get("subjects");
-//
-//                    if (obj2 instanceof JSONArray)
-//                    {
-//                        long subdelcount=myhelper.deleteAllSubjects();
-//                        Log.e("subdelcount---",""+subdelcount);
-//                        ja_subjects_table=myObj.getJSONArray("subjects");
-//                        if(ja_subjects_table!=null && ja_subjects_table.length()>0){
-//                            Log.e("subLength---",""+ja_subjects_table.length());
-//                            int p=0,q=0;
-//                            for(int i=0;i<ja_subjects_table.length();i++){
-//
-//                                subjectObj=ja_subjects_table.getJSONObject(i);
-//                                long insertFlag=myhelper.insertSubject(subjectObj.getInt("Subject_key"),subjectObj.getString("Course_ID"),subjectObj.getString("Subject_ID"),subjectObj.getString("Subject_Name"),
-//                                        subjectObj.getString("Subject_ShortName"),subjectObj.getInt("Subject_Seq_no"),subjectObj.getString("Subject_Type"),subjectObj.getString("Subject_status"));
-//                                if(insertFlag>0){
-//                                    p++;
-//                                }else {
-//                                    q++;
-//                                }
-//                            }
-//                            Log.e("BackGroundTask--","Inserted: "+p);
-//                        }else{
-//                            Log.e("Subjects--","Empty Json Array: ");
-//                        }
-//                    }
-//                    else {
-//                        Log.e("Subjects--","No Subjects: ");
-//                    }
-//
-//                    Object obj3=myObj.get("papers");
-//
-//                    if (obj3 instanceof JSONArray)
-//                    {
-//                        long paperdelcount=myhelper.deleteAllPapers();
-//                        Log.e("paperdelcount---",""+paperdelcount);
-//                        ja_papers_table=myObj.getJSONArray("papers");
-//                        if(ja_papers_table!=null && ja_papers_table.length()>0){
-//                            Log.e("paperLength---",""+ja_papers_table.length());
-//                            int p=0,q=0;
-//                            for(int i=0;i<ja_papers_table.length();i++){
-//
-//                                paperObj=ja_papers_table.getJSONObject(i);
-//                                long insertFlag=myhelper.insertPaper(paperObj.getInt("Paper_Key"),paperObj.getString("Paper_ID"),paperObj.getString("Paper_Seq_no"),paperObj.getString("Subject_ID"),
-//                                        paperObj.getString("Course_ID"),paperObj.getString("Paper_Name"),paperObj.getString("Paper_Short_Name"),paperObj.getString("Paper_Min_Pass_Marks"),
-//                                        paperObj.getString("Paper_Max_Marks"));
-//                                if(insertFlag>0){
-//                                    p++;
-//                                }else {
-//                                    q++;
-//                                }
-//                            }
-//                            Log.e("BackGroundTask--","Inserted: "+p);
-//                        }else{
-//                            Log.e("Papers--","Empty Json Array: ");
-//                        }
-//                    }
-//                    else {
-//                        Log.e("Papers--","No Papers: ");
-//                    }
-//
-//
-//
-//
-//                }catch (Exception e){
-//                    e.printStackTrace();
-//                    Log.e("ListofTests---",e.toString());
-//                }
-//
-//            }
-//        }).execute();
-//    }
+    public void getTestConfig(final String testid, String groupidData){
+        hmap.clear();
+        hmap.put("testId",testid);
+        hmap.put("groupiddata",groupidData);
+        new BagroundTask(URLClass.hosturl +"getTestConfig.php",hmap,ListofTests.this,new IBagroundListener() {
+            @Override
+            public void bagroundData(String json) {
+
+                JSONArray groupArray,quesConfigArray,groupConfigArray,sectionArray;
+                JSONObject groupObj=null,qconObj=null,gquesconObj=null,sectionObj=null;
+
+                try{
+                    Log.e("ListofTests---",json);
+
+                    JSONObject myObj=new JSONObject(json);
+
+                    Object obj1=myObj.get("qbgroup");
+
+                    if (obj1 instanceof JSONArray)
+                    {
+                        long prefdelcount=myhelper.deleteAllEnrollments();
+                        Log.e("groupcount---",""+prefdelcount);
+                        groupArray=myObj.getJSONArray("qbgroup");
+                        if(groupArray!=null && groupArray.length()>0){
+                            Log.e("groupLength---",""+groupArray.length());
+                            int p=0,q=0;
+                            for(int i=0;i<groupArray.length();i++){
+
+                                groupObj=groupArray.getJSONObject(i);
+                                long insertFlag=myhelper.insertQuesGroup(groupObj.getInt("qbg_key"),groupObj.getString("qbg_ID"),testid,groupObj.getString("qbg_media_type"),groupObj.getString("qbg_media_file"),
+                                        groupObj.getString("qbg_text"),groupObj.getInt("qbg_no_questions"),groupObj.getInt("qbg_pickup_count"),groupObj.getString("qbg_status"),
+                                        groupObj.getString("qbg_created_by"),groupObj.getString("qbg_created_dttm"),groupObj.getString("qbg_mod_by"),groupObj.getString("qbg_mod_dttm"));
+                                if(insertFlag>0){
+                                    p++;
+                                }else {
+                                    q++;
+                                }
+                            }
+                            Log.e("BackGroundTask--","Inserted: "+p);
+                        }else{
+                            Log.e("QGroups--","Empty Json Array: ");
+                        }
+                    }
+                    else {
+                        Log.e("QGroups--","No Question Groups: ");
+                    }
+
+                    Object obj2=myObj.get("ques_config");
+
+                    if (obj2 instanceof JSONArray)
+                    {
+                        long subdelcount=myhelper.deleteAllSubjects();
+                        Log.e("QuesConDelCount---",""+subdelcount);
+                        quesConfigArray=myObj.getJSONArray("ques_config");
+                        if(quesConfigArray!=null && quesConfigArray.length()>0){
+                            Log.e("QuesConLength---",""+quesConfigArray.length());
+                            int p=0,q=0;
+                            for(int i=0;i<quesConfigArray.length();i++){
+
+                                qconObj=quesConfigArray.getJSONObject(i);
+                                long insertFlag=myhelper.insertQuesConfig(qconObj.getInt("ques_configkey"),qconObj.getString("courseId"),qconObj.getString("subjectId"),qconObj.getString("paperId"),
+                                        qconObj.getString("testId"),qconObj.getString("categoryId"),qconObj.getString("subcategoryId"),qconObj.getInt("avail_count"),qconObj.getInt("pickup_count"),qconObj.getInt("min_pickup_count"),qconObj.getString("ques_configstatus"));
+                                if(insertFlag>0){
+                                    p++;
+                                }else {
+                                    q++;
+                                }
+                            }
+                            Log.e("BackGroundTask--","Inserted: "+p);
+                        }else{
+                            Log.e("QuesConfig--","Empty Json Array: ");
+                        }
+                    }
+                    else {
+                        Log.e("QuesConfig--","No QuesConfig: ");
+                    }
+
+                    Object obj3=myObj.get("groupques_config");
+
+                    if (obj3 instanceof JSONArray)
+                    {
+                        long paperdelcount=myhelper.deleteAllPapers();
+                        Log.e("groupcondelcount---",""+paperdelcount);
+                        groupConfigArray=myObj.getJSONArray("groupques_config");
+                        if(groupConfigArray!=null && groupConfigArray.length()>0){
+                            Log.e("groupconLength---",""+groupConfigArray.length());
+                            int p=0,q=0;
+                            for(int i=0;i<groupConfigArray.length();i++){
+
+                                gquesconObj=groupConfigArray.getJSONObject(i);
+                                long insertFlag=myhelper.insertGroupConfig(gquesconObj.getInt("groupques_configKey"),gquesconObj.getString("courseId"),gquesconObj.getString("subjectId"),gquesconObj.getString("paperId"),
+                                        gquesconObj.getString("testId"),gquesconObj.getString("sectionId"),gquesconObj.getString("groupType"),gquesconObj.getInt("groupavail_count"),
+                                        gquesconObj.getInt("grouppickup_count"),gquesconObj.getString("groupques_configstatus"));
+                                if(insertFlag>0){
+                                    p++;
+                                }else {
+                                    q++;
+                                }
+                            }
+                            Log.e("BackGroundTask--","Inserted: "+p);
+                        }else{
+                            Log.e("GroupConfig--","Empty Json Array: ");
+                        }
+                    }
+                    else {
+                        Log.e("GroupConfig--","No GroupConfig: ");
+                    }
+
+                    Object obj4=myObj.get("sections");
+
+                    if (obj4 instanceof JSONArray)
+                    {
+                        long sectiondelcount=myhelper.deletePtuSections(testid);
+                        Log.e("sectiondelcount---",""+sectiondelcount);
+                        sectionArray=myObj.getJSONArray("sections");
+                        if(sectionArray!=null && sectionArray.length()>0){
+                            Log.e("sectionLength---",""+sectionArray.length());
+                            int p=0,q=0;
+                            for(int i=0;i<sectionArray.length();i++){
+
+                                sectionObj=sectionArray.getJSONObject(i);
+                                long insertFlag=myhelper.insertPtuSection(sectionObj.getInt("Ptu_section_key"),sectionObj.getString("Ptu_ID"),sectionObj.getInt("Ptu_section_sequence"),sectionObj.getString("Ptu_section_ID"),
+                                        sectionObj.getString("Ptu_section_paper_ID"),sectionObj.getString("Ptu_section_subject_ID"),sectionObj.getString("Ptu_section_course_ID"),sectionObj.getInt("Ptu_section_min_questions"),
+                                        sectionObj.getInt("Ptu_section_max_questions"),sectionObj.getInt("Ptu_sec_tot_groups"),sectionObj.getInt("Ptu_sec_no_groups"),sectionObj.getString("Ptu_section_status"),sectionObj.getString("Ptu_section_name"));
+                                if(insertFlag>0){
+                                    p++;
+                                }else {
+                                    q++;
+                                }
+                            }
+                            Log.e("BackGroundTask--","Inserted: "+p);
+                        }else{
+                            Log.e("Sections--","Empty Json Array: ");
+                        }
+                    }
+                    else {
+                        Log.e("Sections--","No Sections: ");
+                    }
+
+
+                }catch (Exception e){
+                    e.printStackTrace();
+                    Log.e("ListofTests---",e.toString());
+                }
+
+            }
+        }).execute();
+    }
 
     public void getTestIds(){
         hmap.clear();
@@ -550,54 +586,86 @@ public class ListofTests extends AppCompatActivity {
 
         downloadfileList.clear();
 
-        JSONArray quesArray,optionsArray,additionsArray;
-        JSONObject mainObj,singlequesObj,optionsObj,additionsObj;
+        JSONArray secArray,quesArray,optionsArray,additionsArray;
+        JSONObject mainObj,secObj,singlequesObj,optionsObj,additionsObj;
         try{
             mainObj=new JSONObject(json);
             Log.e("JSON--",mainObj.getString("sptu_ID"));
-            quesArray=mainObj.optJSONArray("questions");
-            for(int i=0;i<quesArray.length();i++){
 
-                singlequesObj=quesArray.getJSONObject(i);
-                if(downloadfileList.contains(singlequesObj.getString("qbm_image_file"))){
+            secArray=mainObj.optJSONArray("Sections");
 
-                }else{
-                    downloadfileList.add(singlequesObj.getString("qbm_image_file"));
-                }
-                if(downloadfileList.contains(singlequesObj.getString("qbm_Review_Images"))){
+            for(int d=0;d<secArray.length();d++){
 
-                }else{
-                    downloadfileList.add(singlequesObj.getString("qbm_Review_Images"));
-                }
-                if(downloadfileList.contains(singlequesObj.getString("qbm_Additional_Image_ref"))){
+                secObj=secArray.getJSONObject(d);
+                quesArray=secObj.optJSONArray("Questions");
+                for(int i=0;i<quesArray.length();i++){
 
-                }else{
-                    downloadfileList.add(singlequesObj.getString("qbm_Additional_Image_ref"));
-                }
+                    singlequesObj=quesArray.getJSONObject(i);
+                    if(singlequesObj.getString("qbm_group_flag").equalsIgnoreCase("YES")){
 
-                optionsArray=singlequesObj.getJSONArray("options");
-                for(int j=0;j<optionsArray.length();j++){
+                        if(groupIds.contains(singlequesObj.getString("gbg_id"))){
 
-                    optionsObj=optionsArray.getJSONObject(j);
-                    if(downloadfileList.contains(optionsObj.getString("qbo_media_file"))){
+                        }else{
+                            groupIds.add(singlequesObj.getString("gbg_id"));
+                        }
 
                     }else{
-                        downloadfileList.add(optionsObj.getString("qbo_media_file"));
+
                     }
-                }
 
-                additionsArray=singlequesObj.getJSONArray("additions");
-                for(int k=0;k<additionsArray.length();k++){
-
-                    additionsObj=additionsArray.getJSONObject(k);
-                    if(downloadfileList.contains(additionsObj.getString("qba_media_file"))){
+                    if(downloadfileList.contains(singlequesObj.getString("qbm_image_file"))){
 
                     }else{
-                        downloadfileList.add(additionsObj.getString("qba_media_file"));
+                        downloadfileList.add(singlequesObj.getString("qbm_image_file"));
+                    }
+                    if(downloadfileList.contains(singlequesObj.getString("qbm_Review_Images"))){
+
+                    }else{
+                        downloadfileList.add(singlequesObj.getString("qbm_Review_Images"));
+                    }
+                    if(downloadfileList.contains(singlequesObj.getString("qbm_Additional_Image_ref"))){
+
+                    }else{
+                        downloadfileList.add(singlequesObj.getString("qbm_Additional_Image_ref"));
+                    }
+
+                    optionsArray=singlequesObj.getJSONArray("options");
+                    for(int j=0;j<optionsArray.length();j++){
+
+                        optionsObj=optionsArray.getJSONObject(j);
+                        if(downloadfileList.contains(optionsObj.getString("qbo_media_file"))){
+
+                        }else{
+                            downloadfileList.add(optionsObj.getString("qbo_media_file"));
+                        }
+                    }
+
+                    additionsArray=singlequesObj.getJSONArray("additions");
+                    for(int k=0;k<additionsArray.length();k++){
+
+                        additionsObj=additionsArray.getJSONObject(k);
+                        if(downloadfileList.contains(additionsObj.getString("qba_media_file"))){
+
+                        }else{
+                            downloadfileList.add(additionsObj.getString("qba_media_file"));
+                        }
+
                     }
 
                 }
 
+            }
+
+            if(groupIds.size()!=0){
+                for(int i=0;i<groupIds.size();i++){
+                    if(i==0){
+                        groupdata="'"+groupIds.get(i)+"'";
+                    }else{
+                        groupdata=groupdata+",'"+groupIds.get(i)+"'";
+                    }
+                }
+            }else{
+                Log.e("ListofTests----","No Groups Available in Test");
             }
 
             Log.e("JSONPARSE---",""+downloadfileList.size());

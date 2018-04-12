@@ -8,7 +8,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-
 import com.digywood.tms.Pojo.SingleQuestionList;
 import com.digywood.tms.R;
 import java.util.ArrayList;
@@ -51,7 +50,7 @@ public class QuestionListAdapter extends RecyclerView.Adapter<QuestionListAdapte
         @Override
         public void onBindViewHolder(final MyViewHolder holder, int position) {
             holder.Q_num.setText(q_list.get(position).getQ_num());
-            holder.Q_num.setBackgroundResource(setResource(size,q_list.get(position).getQ_status()));
+//            holder.Q_num.setBackgroundResource(setResource(size,q_list.get(position).getQ_status()));
             if(index == position){
                 holder.Q_pointer.setVisibility(View.VISIBLE);
             }

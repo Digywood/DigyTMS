@@ -17,10 +17,8 @@ public class JSONParser {
 
     ArrayList<String> quesIdList=new ArrayList<>();
     ArrayList<String> groupList=new ArrayList<>();
-
     ArrayList<String> groupcompList=new ArrayList<>();
     ArrayList<String> groupcloseList=new ArrayList<>();
-
     ArrayList<String> subcatList=new ArrayList<>();
     ArrayList<String> gquesList=new ArrayList<>();
     ArrayList<String> quesList=new ArrayList<>();
@@ -35,8 +33,11 @@ public class JSONParser {
     JSONArray ja_questions =new JSONArray();
     JSONArray ja_options =new JSONArray();
     JSONArray ja_additions =new JSONArray();
+
+    ArrayList<String> testfimages=new ArrayList<>();
     JSONObject mainObj=null,secObj=null,quesObj=null,optionObj=null,additionsObj=null;
     Random r = new Random();
+    int seqno=0;
     int count=0,maxcount=0,quescount=10,totalsubcatCount=22,testqcount=0;
     JSONObject cmainObj,csecObj,cquesObj,coptionObj,cadditionsObj;
     String section="",sectionid="",testid="",dwdpath="";
@@ -46,6 +47,13 @@ public class JSONParser {
 
         this.dwdpath=dwdPath;
         quesIdList.clear();
+
+        testfimages.add("Q001.PNG");
+        testfimages.add("Q002.PNG");
+        testfimages.add("Q004.PNG");
+        testfimages.add("Q007.PNG");
+        testfimages.add("Q008.PNG");
+        testfimages.add("Q010.PNG");
 
         scConfigList.clear();
         scConfigList.add(new SingleSubcatConfig("SSCE000101",5,3));
@@ -308,10 +316,44 @@ public class JSONParser {
 
                             if(testQuesList.contains(quesObj.get("qbm_ID"))){
 
+                                int g=r.nextInt(testfimages.size());
+                                seqno++;
                                 cquesObj=new JSONObject();
                                 cquesObj.put("qbm_ID",quesObj.get("qbm_ID"));
+                                cquesObj.put("qbm_SequenceId",seqno);
                                 cquesObj.put("qbm_ReferenceID",quesObj.get("qbm_ReferenceID"));
                                 cquesObj.put("qbm_Description",quesObj.get("qbm_Description"));
+                                cquesObj.put("qbm_SubjectID",quesObj.get("qbm_SubjectID"));
+                                cquesObj.put("qbm_Paper_ID",quesObj.get("qbm_Paper_ID"));
+                                cquesObj.put("qbm_ChapterID",quesObj.get("qbm_ChapterID"));
+                                cquesObj.put("qbm_Sub_CategoryID",quesObj.get("qbm_Sub_CategoryID"));
+                                cquesObj.put("qbm_level",quesObj.get("qbm_level"));
+                                cquesObj.put("qbm_Type",quesObj.get("qbm_Type"));
+                                cquesObj.put("qbm_marks",quesObj.get("qbm_marks"));
+                                cquesObj.put("qbm_negative_applicable",quesObj.get("qbm_negative_applicable"));
+                                cquesObj.put("qbm_negative_mrk",quesObj.get("qbm_negative_mrk"));
+                                cquesObj.put("qbm_question_type",quesObj.get("qbm_question_type"));
+                                cquesObj.put("qbm_text_applicable",quesObj.get("qbm_text_applicable"));
+                                cquesObj.put("qbm_text",quesObj.get("qbm_text"));
+                                cquesObj.put("qbm_image_file",quesObj.get("qbm_image_file"));
+                                cquesObj.put("qbm_video_file",quesObj.get("qbm_video_file"));
+                                cquesObj.put("qbm_media_type",quesObj.get("qbm_media_type"));
+                                cquesObj.put("qbm_answer",quesObj.get("qbm_answer"));
+                                cquesObj.put("qbm_group_flag",quesObj.get("qbm_group_flag"));
+                                cquesObj.put("qbm_review_flag",quesObj.get("qbm_review_flag"));
+                                cquesObj.put("qbm_Review_Type",quesObj.get("qbm_Review_Type"));
+                                cquesObj.put("qbm_Review_Images",quesObj.get("qbm_Review_Images"));
+                                cquesObj.put("qbm_review_Video",quesObj.get("qbm_review_Video"));
+                                cquesObj.put("qbm_Additional_Images_num",quesObj.get("qbm_Additional_Images_num"));
+                                cquesObj.put("qbm_Additional_Image_ref",quesObj.get("qbm_Additional_Image_ref"));
+                                cquesObj.put("gbg_id",quesObj.get("gbg_id"));
+                                cquesObj.put("gbg_type",quesObj.get("gbg_type"));
+                                cquesObj.put("gbg_media_type",quesObj.get("gbg_media_type"));
+                                cquesObj.put("gbg_media_file",quesObj.get("gbg_media_file"));
+                                cquesObj.put("gbg_text",quesObj.get("gbg_text"));
+                                cquesObj.put("qbm_jumbling_flag",quesObj.get("qbm_jumbling_flag"));
+                                cquesObj.put("qbm_flash_image",testfimages.get(g));
+                                cquesObj.put("gbg_no_questions",quesObj.get("gbg_no_questions"));
 
                                 ja_options=ja_questions.getJSONObject(q).getJSONArray("Options");
                                 JSONArray cja_options =new JSONArray();
@@ -365,10 +407,44 @@ public class JSONParser {
 
                             if(testQuesList.contains(quesObj.getString("qbm_ID"))){
 
+                                int g=r.nextInt(testfimages.size());
+                                seqno++;
                                 cquesObj=new JSONObject();
                                 cquesObj.put("qbm_ID",quesObj.get("qbm_ID"));
+                                cquesObj.put("qbm_SequenceId",seqno);
                                 cquesObj.put("qbm_ReferenceID",quesObj.get("qbm_ReferenceID"));
                                 cquesObj.put("qbm_Description",quesObj.get("qbm_Description"));
+                                cquesObj.put("qbm_SubjectID",quesObj.get("qbm_SubjectID"));
+                                cquesObj.put("qbm_Paper_ID",quesObj.get("qbm_Paper_ID"));
+                                cquesObj.put("qbm_ChapterID",quesObj.get("qbm_ChapterID"));
+                                cquesObj.put("qbm_Sub_CategoryID",quesObj.get("qbm_Sub_CategoryID"));
+                                cquesObj.put("qbm_level",quesObj.get("qbm_level"));
+                                cquesObj.put("qbm_Type",quesObj.get("qbm_Type"));
+                                cquesObj.put("qbm_marks",quesObj.get("qbm_marks"));
+                                cquesObj.put("qbm_negative_applicable",quesObj.get("qbm_negative_applicable"));
+                                cquesObj.put("qbm_negative_mrk",quesObj.get("qbm_negative_mrk"));
+                                cquesObj.put("qbm_question_type",quesObj.get("qbm_question_type"));
+                                cquesObj.put("qbm_text_applicable",quesObj.get("qbm_text_applicable"));
+                                cquesObj.put("qbm_text",quesObj.get("qbm_text"));
+                                cquesObj.put("qbm_image_file",quesObj.get("qbm_image_file"));
+                                cquesObj.put("qbm_video_file",quesObj.get("qbm_video_file"));
+                                cquesObj.put("qbm_media_type",quesObj.get("qbm_media_type"));
+                                cquesObj.put("qbm_answer",quesObj.get("qbm_answer"));
+                                cquesObj.put("qbm_group_flag",quesObj.get("qbm_group_flag"));
+                                cquesObj.put("qbm_review_flag",quesObj.get("qbm_review_flag"));
+                                cquesObj.put("qbm_Review_Type",quesObj.get("qbm_Review_Type"));
+                                cquesObj.put("qbm_Review_Images",quesObj.get("qbm_Review_Images"));
+                                cquesObj.put("qbm_review_Video",quesObj.get("qbm_review_Video"));
+                                cquesObj.put("qbm_Additional_Images_num",quesObj.get("qbm_Additional_Images_num"));
+                                cquesObj.put("qbm_Additional_Image_ref",quesObj.get("qbm_Additional_Image_ref"));
+                                cquesObj.put("gbg_id",quesObj.get("gbg_id"));
+                                cquesObj.put("gbg_type",quesObj.get("gbg_type"));
+                                cquesObj.put("gbg_media_type",quesObj.get("gbg_media_type"));
+                                cquesObj.put("gbg_media_file",quesObj.get("gbg_media_file"));
+                                cquesObj.put("gbg_text",quesObj.get("gbg_text"));
+                                cquesObj.put("qbm_jumbling_flag",quesObj.get("qbm_jumbling_flag"));
+                                cquesObj.put("qbm_flash_image",testfimages.get(g));
+                                cquesObj.put("gbg_no_questions",quesObj.get("gbg_no_questions"));
 
                                 ja_options=ja_questions.getJSONObject(q).getJSONArray("Options");
                                 JSONArray cja_options =new JSONArray();
@@ -439,13 +515,13 @@ public class JSONParser {
 
             Log.e("SLength",""+cja_sections.length());
 
-            File file = new File(dwdpath+"sample.txt");
+            File file = new File(dwdpath+"sample.json");
             if (!file.exists()) {
                 file.createNewFile();
             }
 
             byte[] bytes = cmainObj.toString().getBytes("UTF-8");
-            FileOutputStream out = new FileOutputStream(dwdpath+"sample.txt");
+            FileOutputStream out = new FileOutputStream(dwdpath+"sample.json");
             out.write(bytes);
             out.close();
 
