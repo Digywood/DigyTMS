@@ -26,7 +26,7 @@ public class OptionsCheckAdapter extends RecyclerView.Adapter<OptionsCheckAdapte
 
     private ArrayList<SingleOptions> optionsList;
     private Context mycontext;
-    private String path;
+    private String path,sequence = "-1",flag="NO";
     private int mSelectedItem = -1;
     private  Boolean medit = true;
 
@@ -44,6 +44,8 @@ public class OptionsCheckAdapter extends RecyclerView.Adapter<OptionsCheckAdapte
                 @Override
                 public void onClick(View v) {
                     mSelectedItem = getAdapterPosition();
+                    sequence = optionsList.get(mSelectedItem).getQbo_seq_no();
+                    flag = optionsList.get(mSelectedItem).getQbo_answer_flag();
                     notifyItemRangeChanged(0,optionsList.size());
                 }
             });
@@ -51,6 +53,8 @@ public class OptionsCheckAdapter extends RecyclerView.Adapter<OptionsCheckAdapte
                 @Override
                 public void onClick(View v) {
                     mSelectedItem = getAdapterPosition();
+                    sequence = optionsList.get(mSelectedItem).getQbo_seq_no();
+                    flag = optionsList.get(mSelectedItem).getQbo_answer_flag();
                     notifyItemRangeChanged(0,optionsList.size());
                 }
             });
@@ -96,10 +100,22 @@ public class OptionsCheckAdapter extends RecyclerView.Adapter<OptionsCheckAdapte
             holder.iv_opmedia.setImageBitmap(getOptionImage(option.getQbo_media_file()));
             holder.iv_opmedia.setScaleType(ImageView.ScaleType.FIT_XY);
             holder.rb_option.setChecked(position == mSelectedItem);
+            if(mSelectedItem > -1){
+                sequence = optionsList.get(mSelectedItem).getQbo_seq_no();
+                flag = optionsList.get(mSelectedItem).getQbo_answer_flag();
+            }
     }
 
     public int getSelectedItem(){
         return mSelectedItem;
+    }
+
+    public String getSelectedSequence(){
+        return sequence;
+    }
+
+    public String getFlag(){
+        return flag;
     }
 
     public void setOptionsList(int SelectedList){
