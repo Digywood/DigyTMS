@@ -1,9 +1,14 @@
 package com.digywood.tms.Adapters;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.RecyclerView;
+import android.text.Html;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,8 +17,8 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.TextView;
 
+import com.digywood.tms.FlashCardActivity;
 import com.digywood.tms.JSONParser;
-
 import com.digywood.tms.DBHelper.DBHelper;
 import com.digywood.tms.R;
 import com.digywood.tms.Pojo.SingleTest;
@@ -21,10 +26,12 @@ import com.digywood.tms.ReviewActivity;
 import com.digywood.tms.TestActivity;
 import com.digywood.tms.URLClass;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileReader;
 import java.util.ArrayList;
-import java.util.Random;
 
 /**
  * Created by prasa on 2018-02-27.
@@ -35,6 +42,7 @@ public class TestAdapter extends RecyclerView.Adapter<TestAdapter.MyViewHolder> 
     ArrayList<SingleTest> testList;
     ArrayList<String> downloadedList=new ArrayList<>();
     ArrayList<String> chktestList=new ArrayList<>();
+    ArrayList<String> fimageList=new ArrayList<>();
     Context mycontext;
     JSONParser myparser;
     String filedata="";
@@ -113,9 +121,6 @@ public class TestAdapter extends RecyclerView.Adapter<TestAdapter.MyViewHolder> 
             }
         });
 
-
-
-
 //                try{
 //                    BufferedReader br = new BufferedReader(new FileReader(URLClass.mainpath+"PTAA00002"+".json"));
 //                    StringBuilder sb = new StringBuilder();
@@ -187,5 +192,63 @@ public class TestAdapter extends RecyclerView.Adapter<TestAdapter.MyViewHolder> 
     @Override
     public int getItemCount() {
         return testList.size();
+    }
+
+    public  void showAlert(String messege){
+        AlertDialog.Builder builder = new AlertDialog.Builder(mycontext,R.style.ALERT_THEME);
+        builder.setMessage(Html.fromHtml("<font color='#FFFFFF'>"+messege+"</font>"))
+                .setCancelable(false)
+                .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+
+                        dialog.cancel();
+
+                    }
+                });
+        AlertDialog alert = builder.create();
+        //Setting the title manually
+        alert.setTitle("Alert!");
+        alert.setIcon(R.drawable.warning);
+        alert.show();
+    }
+
+    public ArrayList<String> readJson(String filedata){
+        ArrayList<String> flashimageList=new ArrayList();
+        JSONObject mainObj=null,secObj=null,quesObj=null;
+        JSONArray ja_sections,ja_questions;
+        String testid="",section="",sectionid="";
+
+        try{
+            mainObj=new JSONObject(filedata);
+
+            testid=mainObj.getString("sptu_ID");
+
+            Log.e("JSON--",mainObj.getString("sptu_ID"));
+
+            ja_sections=mainObj.getJSONArray("Sections");
+
+            Log.e("sectionArray Length---",""+ja_sections.length());
+            for(int i=0;i<ja_sections.length();i++){
+
+                secObj=ja_sections.getJSONObject(i);
+                section=secObj.getString("Ptu_section_name");
+                sectionid=secObj.getString("Ptu_section_ID");
+                ja_questions=secObj.getJSONArray("Questions");
+
+                Log.e("QuesArray Length---",""+ja_questions.length());
+                for(int q=0;q<ja_questions.length();q++){
+
+                    quesObj=ja_questions.getJSONObject(q);
+                    String flashname=quesObj.getString("qbm_flash_image");
+                    flashimageList.add(flashname);
+                }
+
+            }
+
+        }catch (Exception e){
+            e.printStackTrace();
+            Log.e("JSONPARSE---",e.toString()+" : "+e.getStackTrace()[0].getLineNumber());
+        }
+        return flashimageList;
     }
 }
