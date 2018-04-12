@@ -122,7 +122,14 @@ public class TestActivity extends AppCompatActivity implements
     static int index = 0, pos = 0, max = 1, grp = 0, size;
     JSONObject obj, sectionobj, groupobj, questionobj, temp;
     public static JSONObject attempt;
-    JSONArray array, optionsArray, totalArray, groupArray, sectionArray, attemptsectionarray, buffer;
+
+    JSONArray array, optionsArray, totalArray,groupArray, sectionArray,attemptsectionarray,buffer;
+    ArrayList<SingleSections> sectionList = new ArrayList<>();
+    ArrayList<SingleQuestion> questionList = new ArrayList<>();
+    ArrayList<Integer> questionNumberList = new ArrayList<>();
+    ArrayList<SingleOptions> optionsList = new ArrayList<>();
+    ArrayList<SingleQuestionList> questionOpList = new ArrayList<>();
+    ArrayList<ArrayList<SingleQuestionList>> listOfLists = new ArrayList<>();
     SingleQuestion question = new SingleQuestion();
     SingleGroup group = new SingleGroup();
     SingleSections section = new SingleSections();

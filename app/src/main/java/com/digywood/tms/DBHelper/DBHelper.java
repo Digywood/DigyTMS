@@ -181,11 +181,37 @@ public class DBHelper extends SQLiteOpenHelper {
                 "  `groupques_configstatus` text DEFAULT NULL)";
         db.execSQL(tblgroupconfig);
 
-//        String tblCategoryCheck="CREATE TABLE IF NOT EXISTS category_check_table(keyId INTEGER PRIMARY KEY AUTOINCREMENT, category text, subCategory text, status text)";
-//        db.execSQL(tblCategoryCheck);
-//
-//        String tblUserIntrests="CREATE TABLE IF NOT EXISTS user_interests(seqId INTEGER PRIMARY KEY,userId text,advtId integer(10),description text,status text)";
-//        db.execSQL(tblUserIntrests);
+        String tblptusections="CREATE TABLE `ptu_sections` (\n" +
+                "  `Ptu_section_key` integer PRIMARY KEY,\n" +
+                "  `Ptu_ID` text DEFAULT NULL,\n" +
+                "  `Ptu_section_sequence` int(5) DEFAULT NULL,\n" +
+                "  `Ptu_section_ID` text DEFAULT NULL,\n" +
+                "  `Ptu_section_paper_ID` text DEFAULT NULL,\n" +
+                "  `Ptu_section_subject_ID` text DEFAULT NULL,\n" +
+                "  `Ptu_section_course_ID` text DEFAULT NULL,\n" +
+                "  `Ptu_section_min_questions` int(5) DEFAULT NULL,\n" +
+                "  `Ptu_section_max_questions` int(5) DEFAULT NULL,\n" +
+                "  `Ptu_sec_tot_groups` int(5) DEFAULT NULL,\n" +
+                "  `Ptu_sec_no_groups` int(5) DEFAULT NULL,\n" +
+                "  `Ptu_section_status` text DEFAULT NULL,\n" +
+                "  `Ptu_section_name` text DEFAULT NULL)";
+        db.execSQL(tblptusections);
+
+        String tblatusections="CREATE TABLE `atu_sections` (\n" +
+                "  `atu_section_key` integer PRIMARY KEY,\n" +
+                "  `atu_ID` text DEFAULT NULL,\n" +
+                "  `atu_section_sequence` text DEFAULT NULL,\n" +
+                "  `atu_section_ID` text DEFAULT NULL,\n" +
+                "  `atu_section_paper_ID` text DEFAULT NULL,\n" +
+                "  `atu_section_subject_id` text DEFAULT NULL,\n" +
+                "  `atu_section_course_ID` text DEFAULT NULL,\n" +
+                "  `atu_section_min_questions` int(5) DEFAULT NULL,\n" +
+                "  `atu_section_max_questions` int(5) DEFAULT NULL,\n" +
+                "  `atu_sec_tot_groups` int(5) DEFAULT NULL,\n" +
+                "  `atu_sec_no_groups` int(5) DEFAULT NULL,\n" +
+                "  `atu_section_status` text DEFAULT NULL,\n" +
+                "  `atu_section_name` text DEFAULT NULL)";
+        db.execSQL(tblatusections);
     }
 
     @Override
@@ -203,6 +229,32 @@ public class DBHelper extends SQLiteOpenHelper {
     @Override
     public void onDowngrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         super.onDowngrade(db, oldVersion, newVersion);
+    }
+
+    public long insertPtuSection(int seckey,String testid,int secseq,String secid,String spid,String ssid,String scid,int minques,int maxques,int totgroups,int nogroups,String sstatus,String sname){
+        long insertFlag=0;
+        ContentValues cv = new ContentValues();
+        cv.put("Ptu_section_key",seckey);
+        cv.put("Ptu_ID",testid);
+        cv.put("Ptu_section_sequence",secseq);
+        cv.put("Ptu_section_ID",secid);
+        cv.put("Ptu_section_paper_ID",spid);
+        cv.put("Ptu_section_subject_ID",ssid);
+        cv.put("Ptu_section_course_ID",scid);
+        cv.put("Ptu_section_min_questions",minques);
+        cv.put("Ptu_section_max_questions",maxques);
+        cv.put("Ptu_sec_tot_groups",totgroups);
+        cv.put("Ptu_sec_no_groups",nogroups);
+        cv.put("Ptu_section_status",sstatus);
+        cv.put("Ptu_section_name",sname);
+        insertFlag = db.insert("ptu_sections",null, cv);
+        return insertFlag;
+    }
+
+    public long deletePtuSections(String testid){
+        long deleteFlag=0;
+        deleteFlag=db.delete("ptu_sections", "Ptu_ID='"+testid+"'", null);
+        return  deleteFlag;
     }
 
     public long insertStudent(int skey,String sid,String sname,String sgender,String sedu,String sdob,String saddress1,String saddress2,String scity,String sstate,String scountry,String smobile,String semail,String spassword,String smacid,String sstatus,String screateby,String screateddatetime){
@@ -386,12 +438,12 @@ public class DBHelper extends SQLiteOpenHelper {
         return  updateFlag;
     }
 
-    public long insertQuesGroup(int qbkey,String qbid,String tid,String qbmtype,String qbmfile,String qbtext,String noofques,String pickupcount,String status,String createby,String createdttm,String modby,String moddttm){
+    public long insertQuesGroup(int qbkey,String qbid,String tid,String qbmtype,String qbmfile,String qbtext,int noofques,int pickupcount,String status,String createby,String createdttm,String modby,String moddttm){
         long insertFlag=0;
         ContentValues cv = new ContentValues();
         cv.put("qbg_key",qbkey);
         cv.put("qbg_ID",qbid);
-        cv.put("testId",qbid);
+        cv.put("testId",tid);
         cv.put("qbg_media_type",qbmtype);
         cv.put("qbg_media_file",qbmfile);
         cv.put("qbg_text",qbtext);
@@ -458,6 +510,8 @@ public class DBHelper extends SQLiteOpenHelper {
         deleteFlag=db.delete("groupques_config", "testId='"+testid+"'", null);
         return  deleteFlag;
     }
+
+
 
     public long updatePrefAdvt(String orgId, String producer_id,String caption, String description, byte[] image, String startDate, String endDate,String contactName, String contactNumber, String emailId,String createdTime, String status){
         long updateFlag=0;

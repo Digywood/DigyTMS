@@ -11,11 +11,20 @@
         <item>Post Graduation</item>
         <item>Others</item>
     </string-array>
+    <string-array name="sections">
+        <item>Select</item>
+        <item>Section1</item>
+        <item>Section2</item>
+        <item>Section3</item>
+        <item>Section4</item>
+    </string-array>
     <string name="title_activity_test">TestActivity</string>
     <string name="title_activity_score">ScoreActivity</string>
     <string name="title_activity_review">ReviewActivity</string>
     <string name="dummy_button">Dummy Button</string>
     <string name="dummy_content">DUMMY\nCONTENT</string>
     <string name="option_image">Option Image</string>
+
+    <string name="title_activity_flash_card">FlashCardActivity</string>
 
 </resources>

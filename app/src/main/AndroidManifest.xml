@@ -13,7 +13,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".MainActivity"
+        <activity
+            android:name=".MainActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:label="@string/title_activity_test"
             android:noHistory="true"
@@ -57,6 +58,12 @@
             android:label="@string/title_activity_review"
             android:noHistory="true"
             android:theme="@style/FullscreenTheme"/>
+        <activity
+            android:name=".FlashCardActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:label="@string/title_activity_flash_card"
+            android:screenOrientation="landscape"
+            android:theme="@style/FullscreenTheme"></activity>
     </application>
 
 </manifest>
