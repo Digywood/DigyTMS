@@ -2,6 +2,7 @@ package com.digywood.tms.Adapters;
 
 import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -70,11 +71,41 @@ public class TestAdapter extends RecyclerView.Adapter<TestAdapter.MyViewHolder> 
         final SingleTest singletest = testList.get(position);
         holder.tv_testid.setText(singletest.getTestid());
         holder.tv_teststatus.setText(singletest.getStatus());
+        final DBHelper dataObj = new DBHelper(mycontext);
+        if(dataObj.getQuestionCount() == 0){
+            holder.btn_resume.setEnabled(false);
+        }else
+            holder.btn_resume.setEnabled(true);
+        int count = dataObj.getAttempCount() - 1 ;
+        Cursor c = dataObj.getAttempt(count);
+        //if cursor has values then the test is being resumed and data is retrieved from database
+        if(c.getCount()> 0) {
+            c.moveToLast();
+            if (c.getInt(c.getColumnIndex("Attempt_Status")) == 1) {
+                holder.btn_resume.setText("Resume");
+                holder.btn_resume.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent i=new Intent(mycontext, TestActivity.class);
+                        mycontext.startActivity(i);
+                    }
+                });
+            }
+            else {
+                holder.btn_resume.setText("Review");
+                holder.btn_resume.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent i=new Intent(mycontext, ReviewActivity.class);
+                        mycontext.startActivity(i);}});
+            }
+        }
 
         holder.btn_start.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                dataObj.Destroy("attempt_data");
+                dataObj.Destroy("attempt_list");
                 Intent i=new Intent(mycontext, TestActivity.class);
                 i.putExtra("TestId",testList.get(position).getTestid());
                 mycontext.startActivity(i);
@@ -82,12 +113,7 @@ public class TestAdapter extends RecyclerView.Adapter<TestAdapter.MyViewHolder> 
             }
         });
 
-        holder.btn_resume.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-//                DBHelper dataObj = new DBHelper(mycontext);
-                Intent i=new Intent(mycontext, ReviewActivity.class);
-                mycontext.startActivity(i);
+
 
 
 //                try{
@@ -109,9 +135,6 @@ public class TestAdapter extends RecyclerView.Adapter<TestAdapter.MyViewHolder> 
 //
 //                myparser=new JSONParser();
 //                myparser.JSONParser(filedata);
-
-            }
-        });
 
         holder.cb_download.setOnClickListener(new View.OnClickListener() {
             @Override

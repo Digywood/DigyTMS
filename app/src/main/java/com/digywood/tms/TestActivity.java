@@ -4,7 +4,6 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.database.Cursor;
@@ -16,7 +15,6 @@ import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.os.Handler;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.ActionBar;
@@ -33,48 +31,36 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.GridView;
-import android.widget.HorizontalScrollView;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.widget.RadioButton;
-import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
 import android.widget.Spinner;
-import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Locale;
 import java.util.concurrent.TimeUnit;
-
 import com.digywood.tms.Adapters.OptionsCheckAdapter;
 import com.digywood.tms.Adapters.QuestionListAdapter;
 import com.digywood.tms.Adapters.ScrollGridAdapter;
 import com.digywood.tms.DBHelper.DBHelper;
-import com.digywood.tms.Pojo.SingleEnrollment;
 import com.digywood.tms.Pojo.SingleGroup;
 import com.digywood.tms.Pojo.SingleOptions;
 import com.digywood.tms.Pojo.SingleQuestion;
 import com.digywood.tms.Pojo.SingleQuestionList;
 import com.digywood.tms.Pojo.SingleSections;
-
-import junit.framework.Test;
 
 import static android.Manifest.permission.READ_EXTERNAL_STORAGE;
 import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
@@ -100,8 +86,6 @@ public class TestActivity extends AppCompatActivity implements
     private static final String TAG = "TestActivity";
     ArrayList<Integer> oplist = new ArrayList<>();
     ArrayList<Integer> list = new ArrayList<>();
-    ArrayList<Integer> marked = new ArrayList<>();
-    ArrayList<Integer> answered = new ArrayList<>();
     ArrayList<Integer> optionsTemp = new ArrayList<>();
     ArrayList<SingleSections> sectionList = new ArrayList<>();
     ArrayList<SingleQuestion> questionList = new ArrayList<>();
@@ -114,12 +98,13 @@ public class TestActivity extends AppCompatActivity implements
     Bundle bundle;
     Button btn_group_info, btn_qadditional, btn_review, btn_prev, btn_next, btn_clear_option, btn_mark;
     Drawable drawable;
+    Cursor c;
     AlertDialog alertDialog;
     Bitmap b, op, bitmap;
-    Boolean flag = true;
+    Boolean flag = false;
     final Boolean edit = true;
     public static final int RequestPermissionCode = 1;
-    static int index = 0, pos = 0, max = 1, grp = 0, size;
+    static int index = 0, pos = 0, max = 1, grp = 0, size,count =-1;
     JSONObject obj, sectionobj, groupobj, questionobj, temp;
     public static JSONObject attempt;
     JSONArray array, optionsArray, totalArray, groupArray, sectionArray, attemptsectionarray, buffer;
@@ -131,6 +116,7 @@ public class TestActivity extends AppCompatActivity implements
     OptionsCheckAdapter opAdapter;
     SaveJSONdataToFile save;
     DBHelper dataObj;
+    long millisStart = 0,millisRemaining = 0;
     GestureDetector gd;
 
 
@@ -205,7 +191,8 @@ public class TestActivity extends AppCompatActivity implements
         setContentView(R.layout.activity_test);
 
         dataObj = new DBHelper(this);
-        dataObj.Destroy("attempt_data");
+//        dataObj.Destroy("attempt_data");
+
 
         question_scroll = findViewById(R.id.question_scroll);
         question_img = findViewById(R.id.question_img);
@@ -249,6 +236,7 @@ public class TestActivity extends AppCompatActivity implements
 
         temp = new JSONObject();
         sectionArray = new JSONArray();
+        attempt = new JSONObject();
 
         gd = new GestureDetector(TestActivity.this, new GestureDetector.SimpleOnGestureListener() {
 
@@ -257,7 +245,7 @@ public class TestActivity extends AppCompatActivity implements
 
                 //your action here for double tap e.g.
                 Log.d("OnDoubleTapListener", "onDoubleTap");
-//                initiateFullScreenWindow(b);
+                initiateSingleImageWindow(b);
                 return true;
             }
 
@@ -281,26 +269,50 @@ public class TestActivity extends AppCompatActivity implements
         });
 
         try {
-            String json = new String(SaveJSONdataToFile.bytesFromFile(jsonPath), "UTF-8");
-            obj = new JSONObject(json);
-            positiveMarks = obj.getString("sptu_marks");
-            negativeMarks = obj.getString("sptu_negative_mrk");
-            parseJson(obj);
-            encObj = new EncryptDecrypt();
-            attemptsectionarray = new JSONArray();
-
-            attempt = new JSONObject();
-            for (int i = 0; i < 2; i++) {
-                Collections.shuffle(list);
-                Collections.shuffle(oplist);
-                generateAttemptJSON(i);
+            count = dataObj.getAttempCount() - 1 ;
+            c = dataObj.getAttempt(count);
+            //if cursor has values then the test is being resumed and data is retrieved from database
+            if(c.getCount()> 0) {
+                c.moveToLast();
+                if (c.getInt(c.getColumnIndex("Attempt_Status")) == 1) {
+                    millisStart = c.getLong(c.getColumnIndex("Attempt_RemainingTime")) ;
+                    String json = new String(SaveJSONdataToFile.bytesFromFile(URLClass.mainpath + path + "Attempt/"+ testid + ".json"), "UTF-8");
+                    attempt = new JSONObject(json);
+                    parseJson(attempt);
+                    attemptsectionarray = new JSONArray();
+                    attemptsectionarray = attempt.getJSONArray("sections");
+                    restoreSections(dataObj.getQuestionStatus(),attempt);
+                    buffer = generateArray(attempt.getJSONArray("sections").getJSONObject(pos));
+                    index = c.getInt(c.getColumnIndex("Attempt_LastQuestion"));
+                    pos = c.getInt(c.getColumnIndex("Attempt_LastSection"));
+                }
             }
-            attempt.put("sections", attemptsectionarray);
-            buffer = generateArray(attempt.getJSONArray("sections").getJSONObject(pos));
-            storeSections();
-            SaveJSONdataToFile.objectToFile(attempt.toString());
-            encObj.getFileToEncrypt(attempt.toString(), photoPath + "Attempt/");
-//            setScrollbar(pos);
+            //else cursor doesn't have values then the test is started fresh
+            else {
+                    Log.e("Fresh","Test");
+                    millisStart = 3600000;
+                    String json = new String(SaveJSONdataToFile.bytesFromFile(jsonPath), "UTF-8");
+                    obj = new JSONObject(json);
+                    parseJson(obj);
+                    encObj = new EncryptDecrypt();
+                    attemptsectionarray = new JSONArray();
+                    max = 1;
+                    for (int i = 0; i < 2; i++) {
+                        Collections.shuffle(list);
+                        Collections.shuffle(oplist);
+                        generateAttemptJSON(i);
+                    }
+                    attempt.put("sptu_marks",obj.getString("sptu_marks"));
+                    attempt.put("sptu_negative_applicable",obj.getString("sptu_negative_applicable"));
+                    attempt.put("sptu_negative_mrk",obj.getString("sptu_negative_mrk"));
+                    attempt.put("sections", attemptsectionarray);
+                    buffer = generateArray(attempt.getJSONArray("sections").getJSONObject(pos));
+                    storeSections();
+                    index = 0;
+                    pos = 0;
+            }
+            SaveJSONdataToFile.objectToFile(URLClass.mainpath + path + "Attempt/"+ testid + ".json",attempt.toString());
+
 
         } catch (JSONException | IOException | ClassNotFoundException e) {
             e.printStackTrace();
@@ -310,6 +322,8 @@ public class TestActivity extends AppCompatActivity implements
         adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, categories);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         sections.setAdapter(adapter);
+
+
 
         fullscreen.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -372,21 +386,17 @@ public class TestActivity extends AppCompatActivity implements
                     if (index <= buffer.length()) {
 //                        optionsTemp = dataObj.getQuestion();
                         if (index < buffer.length() - 1) {
-                            setQBackground();
+                            setQBackground(pos,index);
                             writeOption(opAdapter.getSelectedItem());
                             index++;
                             Log.e("ValuesIf--->", "" + pos + "," + index);
                             Id = buffer.getJSONObject(index).getString("qbm_ID");
                             Seq = buffer.getJSONObject(index).getString("qbm_sequence");
                             setQuestion(pos, index, edit);
-/*                            if (index == buffer.length() - 1) {
-//                                index++;
-//                                pos++;
-                            }*/
                             checkRadio();
                         } else if (index == buffer.length() - 1) {
                             //Change button once last question of test is reached
-                            setQBackground();
+                            setQBackground(pos,index);
                             writeOption(opAdapter.getSelectedItem());
                             if (pos == attemptsectionarray.length() - 1) {
                                 btn_next.setText("Finish");
@@ -398,17 +408,32 @@ public class TestActivity extends AppCompatActivity implements
                                             // do something when the button is clicked
                                             public void onClick(DialogInterface arg0, int arg1) {
 //                                            q_list.clear();
+
+                                                try {
+                                                    SaveJSONdataToFile.objectToFile(URLClass.mainpath + path + "Attempt/"+ testid + ".json",attempt.toString());
+                                                } catch (IOException e) {
+                                                    e.printStackTrace();
+                                                }
                                                 finish();
-                                                dataObj.InsertAttempt(1,2,0,0);
+                                                count = dataObj.getAttempCount()-1;
+                                                long value = dataObj.UpdateAttempt(count,2,0,0,millisRemaining,index,pos);
+                                                if(value>=0){
+                                                    dataObj.InsertAttempt(2,0,0,millisRemaining,index,pos);
+                                                }
+                                                c = dataObj.getAttempt(count);
+                                                c.moveToFirst();
+                                                if (c.getInt(c.getColumnIndex("Attempt_Status")) == 2)
+                                                    Log.e("Test","Finished");
                                                 Intent intent = new Intent(TestActivity.this, ScoreActivity.class);
                                                 bundle = new Bundle();
-                                                bundle.putString("JSON",temp.toString());
+                                                bundle.putString("JSON",attempt.toString());
                                                 bundle.putString("Course",courseid);
                                                 bundle.putString("Subject",subjectId);
                                                 bundle.putInt("Integer",getCorrectCount());
 
                                                 intent.putExtra("BUNDLE",bundle);
                                                 startActivity(intent);
+
                                             }
                                         })
                                         .setNegativeButton("No", new DialogInterface.OnClickListener() {
@@ -419,13 +444,22 @@ public class TestActivity extends AppCompatActivity implements
                                             }
                                         })
                                         .show();
+                                alertbox.setOnCancelListener(new DialogInterface.OnCancelListener() {
+                                    @Override
+                                    public void onCancel(DialogInterface dialog) {
+                                        mHideRunnable.run();
+                                        btn_next.setText("Next");
+                                    }
+                                });
                             } else {
                                 qAdapter.setData(index);
                                 pos = pos + 1;
                                 Log.e("ValuesElse--->", "" + pos + "," + index);
                                 buffer = generateArray(attempt.getJSONArray("sections").getJSONObject(pos));
                                 sections.setSelection(pos);
+                                scrollAdapter.updateList(listOfLists.get(pos));
                                 setScrollbar(pos);
+
                             }
                         }
                     }
@@ -440,7 +474,7 @@ public class TestActivity extends AppCompatActivity implements
             @Override
             public void onClick(View v) {
                 try {
-                    setQBackground();
+                    setQBackground(pos,index);
                     writeOption(opAdapter.getSelectedItem());
 
                     questionobj = array.getJSONObject(index);
@@ -456,7 +490,9 @@ public class TestActivity extends AppCompatActivity implements
                         index = generateArray(attemptsectionarray.getJSONObject(pos)).length() - 1;
                         flag = false;
                         sections.setSelection(pos);
+                        scrollAdapter.updateList(listOfLists.get(pos));
                         setScrollbar(pos);
+
 
                     }
                     checkRadio();
@@ -470,21 +506,7 @@ public class TestActivity extends AppCompatActivity implements
         question_scroll.addOnItemTouchListener(new RecyclerTouchListener(getApplicationContext(), question_scroll, new RecyclerTouchListener.OnItemClickListener() {
             @Override
             public void onClick(View view, int in) {
-                try {
-                    setQBackground();
-                    writeOption(opAdapter.getSelectedItem());
-
-                    index = in;
-//                    qAdapter.setBackground(index);
-                    buffer = generateArray(attempt.getJSONArray("sections").getJSONObject(pos));
-                    Id = buffer.getJSONObject(index).getString("qbm_ID");
-                    if (index == buffer.length() - 1)
-                        index++;
-                    setQuestion(pos, in, edit);
-                    checkRadio();
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
+                gotoQuestion(in);
             }
 
             @Override
@@ -498,7 +520,7 @@ public class TestActivity extends AppCompatActivity implements
 //        String check = dateFormat.format(dt);
 //        date.setText(check);
         //Setting countdown timer
-        new CountDownTimer(3600000, 1000) {
+        new CountDownTimer(millisStart, 1000) {
 
             public void onTick(long millisUntilFinished) {
                 String text = String.format(Locale.getDefault(), "%02d:%02d:%02d",
@@ -506,6 +528,7 @@ public class TestActivity extends AppCompatActivity implements
                         TimeUnit.MILLISECONDS.toMinutes(millisUntilFinished) % 60,
                         TimeUnit.MILLISECONDS.toSeconds(millisUntilFinished) % 60);
                 timer.setText(text);
+                millisRemaining = millisUntilFinished;
             }
 
             public void onFinish() {
@@ -555,6 +578,25 @@ public class TestActivity extends AppCompatActivity implements
         return json;
     }
 
+    //method to display selected question
+    public void gotoQuestion(int in){
+        try {
+            setQBackground(pos,index);
+            writeOption(opAdapter.getSelectedItem());
+
+            index = in;
+            setQuestion(pos,index,edit);
+//                    qAdapter.setBackground(index);
+            buffer = generateArray(attempt.getJSONArray("sections").getJSONObject(pos));
+            Id = buffer.getJSONObject(index).getString("qbm_ID");
+            if(index == buffer.length() -1)
+                Log.e("TQuestionScroll","LastQuestions");
+            checkRadio();
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
+
     //method to dynamically request permissions
     private void requestPermission() {
         ActivityCompat.requestPermissions(TestActivity.this, new
@@ -569,13 +611,15 @@ public class TestActivity extends AppCompatActivity implements
     }
 
     //method to set the background of the question nuumber in the scroll bar
-    public void setQBackground() {
+    public void setQBackground(int pos, int index) {
 
         if (opAdapter.getSelectedItem() == -1) {
             listOfLists.get(pos).get(index).setQ_status("SKIPPED");
         } else {
             if (!listOfLists.get(pos).get(index).getQ_status().equals("BOOKMARKED"))
-                listOfLists.get(pos).get(index).setQ_status("ATTEMPTED");
+                {   listOfLists.get(pos).get(index).setQ_status("ATTEMPTED");}
+            else
+                {   listOfLists.get(pos).get(index).setQ_status("BOOKMARKED");}
         }
         qAdapter.updateList(listOfLists.get(pos));
     }
@@ -591,10 +635,12 @@ public class TestActivity extends AppCompatActivity implements
 
     //method to find total number of correct questions
     public int getCorrectCount(){
+
         int CorrectCount=0;
         optionsTemp = dataObj.getOptions();
+        correctOptionList = dataObj.getCorrectOptions();
         for(int i=0; i<optionsTemp.size();i++){
-            if(optionsTemp.get(i)+1 == correctOptionList.get(i)){
+            if(correctOptionList.contains(optionsTemp.get(i))){
                 CorrectCount++;
             }
         }
@@ -616,37 +662,39 @@ public class TestActivity extends AppCompatActivity implements
             LayoutInflater inflater = (LayoutInflater) TestActivity.this
                     .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             //Inflate the view from a predefined XML layout
-
             View view = inflater.inflate(R.layout.popup_screen,
                     (ViewGroup) findViewById(R.id.popup_element));
-            RelativeLayout layout = view.findViewById(R.id.popup_element);
-            int width = 650;
-            int height = 600;
-            width = layout.getWidth();
-            height = layout.getHeight();
-            //Instantiate grid view
-            gridView = view.findViewById(R.id.scroll_grid);
-            //Instantiate grid adapter
-            scrollAdapter = new ScrollGridAdapter(TestActivity.this, generateArray(attempt.getJSONArray("sections").getJSONObject(pos)), marked, answered);
-            //Setting Adapter to gridview
-            gridView.setAdapter(scrollAdapter);
-            // create a 300px width and 570px height PopupWindow
-            pw = new PopupWindow(view, ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-            // display the popup in the center
-            pw.showAtLocation(v, Gravity.CENTER, 0, 0);
-            if (android.os.Build.VERSION.SDK_INT > 20) {
-                pw.setElevation(10);
-            }
-//            TextView mResultText = (TextView) layout.findViewById(R.id.server_status_text);
-            Button cancelButton = (Button) view.findViewById(R.id.close_button);
+            //Initialise an dialogbuilder to create an alertdialog
+            AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);
+            //Set the layout to the alertDialog
+            dialogBuilder.setView(view);
+            final AlertDialog alertDialog = dialogBuilder.create();
+            alertDialog.show();
+            final Button cancelButton = (Button) view.findViewById(R.id.close_button);
+            alertDialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
+                @Override
+                public void onCancel(DialogInterface dialog) {
+                    hide();
+                }
+            });
             cancelButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    pw.dismiss();
+                    alertDialog.cancel();
                     mHideRunnable.run();
                 }
             });
-
+            //Instantiate grid view
+            gridView = view.findViewById(R.id.scroll_grid);
+            //Setting Adapter to gridview
+            gridView.setAdapter(scrollAdapter);
+            gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                    gotoQuestion(position);
+                    cancelButton.callOnClick();
+                }
+            });
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -672,15 +720,27 @@ public class TestActivity extends AppCompatActivity implements
     public void writeOption(int indx) {
 //        RadioButton random = findViewById(group.getCheckedRadioButtonId());
         try {
+            long result = -1;
             buffer = generateArray(attempt.getJSONArray("sections").getJSONObject(pos));
             Id = buffer.getJSONObject(index).getString("qbm_ID");
             Seq = buffer.getJSONObject(index).getString("qbm_sequence");
+            scrollAdapter.updateList(listOfLists.get(pos));
             if (dataObj.CheckQuestion(Id)) {
+                Log.e("Option_Status",listOfLists.get(pos).get(index).getQ_status());
                 if (indx > -1) {
-                    dataObj.UpdateQuestion(Id, Seq, Integer.valueOf(questionobj.getString("qbm_marks")), indx, listOfLists.get(pos).get(index).getQ_status(),opAdapter.getSelectedSequence(),opAdapter.getFlag());
+                    Log.e("CurrentStatus",listOfLists.get(pos).get(index).getQ_status());
+                    result = dataObj.UpdateQuestion(Id, Seq, Integer.valueOf(questionobj.getString("qbm_marks")), indx, listOfLists.get(pos).get(index).getQ_status(),opAdapter.getSelectedSequence(),opAdapter.getFlag());
+                }else{
+                    result = dataObj.UpdateQuestion(Id, Seq, Integer.valueOf(questionobj.getString("qbm_marks")), indx, listOfLists.get(pos).get(index).getQ_status(),opAdapter.getSelectedSequence(),opAdapter.getFlag());
                 }
-            } else {
-                dataObj.InsertQuestion(Id, Seq, Integer.valueOf(questionobj.getString("qbm_marks")), indx, listOfLists.get(pos).get(index).getQ_status(),opAdapter.getSelectedSequence(),opAdapter.getFlag());
+                if(result == 0 ){
+                    dataObj.InsertQuestion(Id, Seq, Integer.valueOf(questionobj.getString("qbm_marks")), indx, listOfLists.get(pos).get(index).getQ_status(),opAdapter.getSelectedSequence(),opAdapter.getFlag());
+                }
+            }
+            // Saving time remaining
+            long value = dataObj.UpdateAttempt(count,1,0,0,millisRemaining,index,pos);
+            if(value>=0){
+                dataObj.InsertAttempt(1,0,0,millisRemaining,index,pos);
             }
             Log.e("WriteOption:", opAdapter.getSelectedSequence());
         } catch (JSONException e) {
@@ -765,7 +825,7 @@ public class TestActivity extends AppCompatActivity implements
         ImageView cancel = layout.findViewById(R.id.iv_close);
         alertDialog = dialogBuilder.create();
         alertDialog.show();
-        alertDialog.getWindow().setLayout(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.MATCH_PARENT);
+        alertDialog.getWindow().setLayout(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.MATCH_PARENT);
         alertDialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
             @Override
             public void onCancel(DialogInterface dialog) {
@@ -788,15 +848,13 @@ public class TestActivity extends AppCompatActivity implements
         questionList = new ArrayList<>();
         try {
             sectionArray = data.getJSONArray("sections");
-
             for (int i = 0; i < sectionArray.length(); i++) {
                 section = new SingleSections();
                 sectionobj = sectionArray.getJSONObject(i);
                 section.setSec_ID(sectionobj.getString("section_ID"));
                 section.setSec_Name(sectionobj.getString("section_Name"));
                 array = sectionobj.getJSONArray("questions");
-
-                /*for (int g = 0; g < sectionobj.getJSONArray("groups").length(); g++) {
+                for (int g = 0; g < sectionobj.getJSONArray("groups").length(); g++) {
                     group = new SingleGroup();
                     groupobj = array.getJSONObject(g);
                     group.setGroup_ID(groupobj.getString("Group_ID"));
@@ -829,9 +887,7 @@ public class TestActivity extends AppCompatActivity implements
                         question.setQbm_image_file(questionobj.getString("qbm_image_file"));
                         question.setQbm_video_file(questionobj.getString("qbm_video_file"));
                         question.setQbm_media_type(questionobj.getString("qbm_media_type"));
-                        question.setQbm_Group_Flag(questionobj.getString("qbm_Group_Flag"));
-                        question.setQbm_Group_ID(questionobj.getString("qbm_Group_ID"));
-                        question.setQbm_Group_q_no(questionobj.getString("qbm_Group_q_no"));
+                        question.setQbm_Group_Flag(questionobj.getString("qbm_group_flag"));
                         question.setQbm_answer(questionobj.getString("qbm_answer"));
                         question.setQbm_review_flag(questionobj.getString("qbm_review_flag"));
                         question.setQbm_Review_Type(questionobj.getString("qbm_Review_Type"));
@@ -861,10 +917,9 @@ public class TestActivity extends AppCompatActivity implements
                                 Log.e("correct : ","i "+optionJSON.getString("qbo_seq_no"));
                             }
                         }
-
                         questionList.add(question);
                     }
-                }*/
+                }
                 for (int j = 0; j < array.length(); j++) {
                     question = new SingleQuestion();
                     questionobj = array.getJSONObject(j);
@@ -941,6 +996,7 @@ public class TestActivity extends AppCompatActivity implements
     public void generateAttemptJSON(int pos) {
 
         try {
+
             list = new ArrayList<>();
             JSONObject attemptSection;
             JSONArray attemptquestionarray = new JSONArray();
@@ -1026,6 +1082,7 @@ public class TestActivity extends AppCompatActivity implements
 
     //method to set the questions and its options
     public void setQuestion(int pos, int index, Boolean edit) throws JSONException {
+
         sectionobj = attempt.getJSONArray("sections").getJSONObject(pos);
         array = generateArray(sectionobj);
         myLayoutManager.scrollToPositionWithOffset(index, 500);
@@ -1079,14 +1136,6 @@ public class TestActivity extends AppCompatActivity implements
             option.setQbo_answer_flag(optionsArray.getJSONObject(i).getString(("qbo_answer_flag")));
             optionsList.add(option);
         }
-/*        if (!marked.contains(index)) {
-            answered.add(index);
-            if(size == Configuration.SCREENLAYOUT_SIZE_LARGE)
-                qAdapter.setMarked(R.drawable.number_confirm_large,answered );
-            else if(size == Configuration.SCREENLAYOUT_SIZE_NORMAL)
-                qAdapter.setMarked(R.drawable.number_confirm,answered );
-            qAdapter.notifyDataSetChanged();
-        }*/
 
         try {
             opAdapter = new OptionsCheckAdapter(optionsList, TestActivity.this, photoPath);
@@ -1111,7 +1160,37 @@ public class TestActivity extends AppCompatActivity implements
                 JSONArray array2 = generateArray(attempt.getJSONArray("sections").getJSONObject(i));
                 questionOpList = new ArrayList<>();
                 for (int j = 0; j < array2.length(); j++) {
+                    Id = array2.getJSONObject(j).getString("qbm_ID");
+                    Seq = array2.getJSONObject(j).getString("qbm_sequence");
                     qListObj = new SingleQuestionList(array2.getJSONObject(j).getString("qbm_sequence"), "NOT_ATTEMPTED");
+                    dataObj.InsertQuestion(Id, Seq, 0, -1, "NOT_ATTEMPTED","-1","NO");
+                    questionOpList.add(qListObj);
+                }
+                listOfLists.add(questionOpList);
+            }
+            Log.e("StoreSections",""+categories.size());
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
+
+    //method to store the number of questions in each section{
+    public void restoreSections(ArrayList<String> statusList, JSONObject attempt) {
+        categories = new ArrayList<String>();
+        try {
+            int max = 0;
+            listOfLists = new ArrayList<>();
+            for (int i = 0; i < attempt.getJSONArray("sections").length(); i++) {
+                categories.add(attempt.getJSONArray("sections").getJSONObject(i).getString("section_Name"));
+                JSONArray array2 = generateArray(attempt.getJSONArray("sections").getJSONObject(i));
+                questionOpList = new ArrayList<>();
+                Log.e("array2",""+array2.length());
+                for (int j = 0; j < array2.length(); j++) {
+                    if(statusList.get(i) != null) {
+                        qListObj = new SingleQuestionList(array2.getJSONObject(j).getString("qbm_sequence"), statusList.get(max));
+                    }
+                    max++;
                     questionOpList.add(qListObj);
                 }
                 listOfLists.add(questionOpList);
@@ -1168,7 +1247,6 @@ public class TestActivity extends AppCompatActivity implements
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (keyCode == KeyEvent.KEYCODE_BACK) {
             exitByBackKey();
-
             //moveTaskToBack(false);
 
             return true;
@@ -1180,12 +1258,20 @@ public class TestActivity extends AppCompatActivity implements
     protected void exitByBackKey() {
 
         AlertDialog alertbox = new AlertDialog.Builder(this)
-                .setMessage("Do you want to exit Test?")
+                .setMessage("Do you want to exit Test?  Progress will be saved")
                 .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
 
                     // do something when the button is clicked
                     public void onClick(DialogInterface arg0, int arg1) {
-
+                        long value = dataObj.UpdateAttempt(count,1,0,0,millisRemaining,index,pos);
+                        if(value>=0){
+                            dataObj.InsertAttempt(1,0,0,millisRemaining,index,pos);
+                        }
+                        try {
+                            SaveJSONdataToFile.objectToFile(URLClass.mainpath + path + "Attempt/"+ testid + ".json",attempt.toString());
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
                         Intent intent = new Intent(TestActivity.this, ListofTests.class);
                         startActivity(intent);
 
@@ -1266,8 +1352,11 @@ public class TestActivity extends AppCompatActivity implements
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
         ((TextView) parent.getChildAt(0)).setTextColor(Color.WHITE);
         try {
+            Log.e("ItemSelected","reached");
             mHideRunnable.run();
+            //Instantiate grid adapter
             pos = position;
+            scrollAdapter = new ScrollGridAdapter(TestActivity.this, generateArray(attempt.getJSONArray("sections").getJSONObject(pos)),listOfLists.get(pos),getScreenSize());
             setScrollbar(pos);
             if (flag) {
                 index = 0;
@@ -1283,37 +1372,14 @@ public class TestActivity extends AppCompatActivity implements
     @Override
     public void onNothingSelected(AdapterView<?> parent) {
         try {
+            Log.e("NothingSelected","reached");
             setScrollbar(0);
             pos = 0;
+            mHideRunnable.run();
         } catch (JSONException e) {
             e.printStackTrace();
         }
     }
-
-/*    @Override
-    protected void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-//        outState.putSerializable("ListofLists", listOfLists);
-        outState.putInt("Index",index);
-        outState.putInt("Position",pos);
-        outState.putString("JSON",attempt.toString());
-    }
-
-    @Override
-    protected void onRestoreInstanceState(Bundle savedInstanceState) {
-        super.onRestoreInstanceState(savedInstanceState);
-        index = savedInstanceState.getInt("Index");
-        pos = savedInstanceState.getInt("Position");
-        Log.d("onRestore:",""+index);
-//        listOfLists = (ArrayList) savedInstanceState.getSerializable("ListofLists");
-        try {
-            attempt = new JSONObject(savedInstanceState.getString("JSON",null));
-            setQuestion(pos,index,edit);
-            setScrollbar(pos);
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-    }*/
 
     @Override public void onStart() {
         Log.d(TAG, "onStart:");
@@ -1331,7 +1397,17 @@ public class TestActivity extends AppCompatActivity implements
     @Override public void onPause() {
         Log.d(TAG, "onPause:");
         dataObj = new DBHelper(TestActivity.this);
-        dataObj.InsertAttempt(1,1,0,0);
+        try {
+            SaveJSONdataToFile.objectToFile(URLClass.mainpath + path + "Attempt/"+ testid + ".json",attempt.toString());
+            Log.e("Attempt-Json",attempt.toString());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        long value = dataObj.UpdateAttempt(count,1,0,0,millisRemaining,index,pos);
+        if(value>=0){
+            dataObj.InsertAttempt(1,0,0,millisRemaining,index,pos);
+        }
+
         super.onPause();
     }
     @Override public void onStop() {

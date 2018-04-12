@@ -177,39 +177,40 @@
         android:elevation="5dp"
         app:cardElevation="5dp"
         app:cardUseCompatPadding="true">
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:id="@+id/line3">
 
-            <ImageView
-                android:layout_width="wrap_content"
+            <RelativeLayout
+                android:id="@+id/line3"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:id="@+id/bookmarked_icon"
-                app:srcCompat="@drawable/number_bookmark"/>
+                android:orientation="vertical">
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="No. of Questions bookmarked: "
-                android:id="@+id/tv_bookmarked_label"
-                android:layout_toEndOf="@id/bookmarked_icon"
-                android:layout_marginStart="10dp"
-                android:textColor="@android:color/black"
-                android:textSize="20sp" />
+                <ImageView
+                    android:id="@+id/bookmarked_icon"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:srcCompat="@drawable/number_bookmark" />
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_toEndOf="@id/tv_bookmarked_label"
-                android:layout_marginStart="5dp"
-                android:textSize="20sp"
-                android:id="@+id/tv_bookmarked"/>
+                <TextView
+                    android:id="@+id/tv_bookmarked_label"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="10dp"
+                    android:layout_toEndOf="@id/bookmarked_icon"
+                    android:text="No. of Questions bookmarked: "
+                    android:textColor="@android:color/black"
+                    android:textSize="20sp" />
 
-        </RelativeLayout>
+                <TextView
+                    android:id="@+id/tv_bookmarked"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="5dp"
+                    android:layout_toEndOf="@id/tv_bookmarked_label"
+                    android:textSize="20sp" />
 
-    </android.support.v7.widget.CardView>
+            </RelativeLayout>
+
+        </android.support.v7.widget.CardView>
 
         <android.support.v7.widget.CardView
         android:layout_width="match_parent"

@@ -8,5 +8,11 @@
     <color name="green">#64c47d</color>
     <color name="dull_yellow">#e0b34a</color>
     <color name="black_overlay">#66000000</color>
+    <color name="transp_green">#7962d628</color>
+    <color name="transp_red">#79d63728</color>
+    <color name="transp">#00000000</color>
+    <color name="confirm">#81c265</color>
+    <color name="skipped">#6758c4</color>
+    <color name="bookmark">#ff5315</color>
 
 </resources>
