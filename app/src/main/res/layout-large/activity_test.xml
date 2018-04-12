@@ -11,45 +11,39 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
+        android:background="#8e58d1"
         android:id="@+id/header">
+
         <Spinner
             android:id="@+id/sections"
-            android:layout_width="wrap_content"
+            android:layout_width="120dp"
             android:layout_height="40dp"
             android:layout_marginStart="5dp"
             android:layout_marginTop="5dp"
+            android:backgroundTint="@color/white"
             android:layout_gravity="center_vertical">
         </Spinner>
 
-        <HorizontalScrollView
-            android:id="@+id/scroll"
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/question_scroll"
             android:layout_width="match_parent"
-            android:layout_height="53dp"
-            android:layout_marginStart="5dp"
-            android:layout_marginBottom="5dp"
-            android:layout_marginTop="5dp"
+            android:layout_height="50dp"
+            android:layout_marginEnd="5dp"
+            android:layout_gravity="center|center_horizontal|center_vertical"
             android:layout_toEndOf="@+id/sections"
             android:layout_toStartOf="@+id/fullscreen"
-            android:background="#708090">
+            android:orientation="horizontal"
+            android:background="@color/black_overlay"
+            android:alpha="1">
+        </android.support.v7.widget.RecyclerView>
 
-            <android.support.v7.widget.RecyclerView
-                android:id="@+id/question_scroll"
-                android:layout_width="wrap_content"
-                android:layout_height="50dp"
-                android:layout_marginLeft="10dp"
-                android:layout_marginRight="10dp"
-                android:layout_gravity="center_vertical"
-                android:orientation="horizontal">
-            </android.support.v7.widget.RecyclerView>
-
-        </HorizontalScrollView>
         <ImageView
             android:id="@+id/fullscreen"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
             android:layout_alignParentEnd="true"
-            app:srcCompat="@drawable/ic_fullscreen_black_40dp" />
+            android:contentDescription="@string/dummy_content"
+            app:srcCompat="@drawable/ic_fullscreen_black_24dp" />
 
     </RelativeLayout>
 
@@ -61,52 +55,78 @@
         android:layout_below="@+id/header">
 
         <Button
+            android:id="@+id/btn_qadditional"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_width="wrap_content"/>
+            android:clickable="false"
+            android:visibility="visible"
+            android:text="Adl info." />
+
+
+        <Button
+            android:id="@+id/btn_group_info"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:clickable="false"
+            android:scaleType="center"
+            android:layout_toEndOf="@+id/btn_qadditional"
+            android:layout_marginStart="5dp"
+            android:visibility="visible"
+            android:text="Grp Info." />
+
+        <Button
+            android:id="@+id/btn_review_info"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:clickable="false"
+            android:scaleType="center"
+            android:layout_toEndOf="@+id/btn_group_info"
+            android:layout_marginStart="5dp"
+            android:visibility="visible"
+            android:text="Rev Info." />
 
         <ImageView
             android:id="@+id/menu"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="5dp"
-            android:layout_toStartOf="@id/time_layout"
-            android:layout_marginEnd="10dp"
-            app:srcCompat="@drawable/ic_info_black_40dp"
             android:layout_gravity="end"
-            android:visibility="visible" />
+            android:layout_marginEnd="10dp"
+            android:layout_marginTop="10dp"
+            android:layout_toStartOf="@id/time_layout"
+            android:visibility="visible"
+            app:srcCompat="@drawable/ic_info_black_24dp" />
 
         <LinearLayout
-            android:layout_height="wrap_content"
-            android:layout_width="wrap_content"
-            android:background="@drawable/spin_bg"
             android:id="@+id/time_layout"
-            android:layout_marginEnd="5dp"
-            android:orientation="horizontal"
-            android:layout_alignParentEnd="true">
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:gravity="center"
+            android:layout_marginEnd="5dp">
 
             <ImageView
                 android:id="@+id/timer_icon"
-                android:layout_marginStart="10dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
                 android:layout_marginTop="5dp"
-                android:contentDescription="@string/dummy_content"
                 android:gravity="center_vertical|center_horizontal"
-                app:srcCompat="@drawable/ic_timer_black_40dp" />
+                app:srcCompat="@drawable/ic_timer_black_24dp" />
 
             <TextView
                 android:id="@+id/timer"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textColor="@color/colorPrimary"
-                android:layout_marginTop="5dp"
-                android:layout_marginBottom="5dp"
                 android:layout_marginEnd="10dp"
+                android:layout_marginTop="5dp"
+                android:gravity="center_vertical"
                 android:layout_gravity="center_vertical"
-                android:textSize="24sp"
+                android:textColor="@color/colorPrimary"
+                android:textSize="20sp"
                 android:textStyle="bold" />
         </LinearLayout>
-
 
     </RelativeLayout>
 
@@ -140,7 +160,6 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:adjustViewBounds="true"
-                    android:contentDescription="@string/dummy_content"
                     android:gravity="start" />
 
                 <View
@@ -148,35 +167,6 @@
                     android:layout_height="match_parent"
                     android:background="#000000"
                     android:id="@+id/view" />
-
-                <android.support.design.widget.FloatingActionButton
-                    android:id="@+id/btn_group_info"
-                    android:layout_width="50dp"
-                    android:layout_height="50dp"
-                    android:layout_alignParentBottom="true"
-                    android:layout_alignParentEnd="true"
-                    android:layout_gravity="center"
-                    android:clickable="true"
-                    android:layout_toStartOf="@id/view"
-                    android:focusable="true"
-                    android:scaleType="center"
-                    android:visibility="visible"
-                    app:srcCompat="@drawable/ic_input_24dp" />
-
-
-                <android.support.design.widget.FloatingActionButton
-                    android:id="@+id/btn_qadditional"
-                    android:layout_width="50dp"
-                    android:layout_height="50dp"
-                    android:layout_alignParentBottom="true"
-                    android:layout_alignParentStart="true"
-                    android:layout_gravity="center"
-                    android:clickable="true"
-                    android:focusable="true"
-                    android:scaleType="center"
-                    android:visibility="invisible"
-                    app:srcCompat="@drawable/ic_launch_24dp" />
-
 
             </RelativeLayout>
 
@@ -219,8 +209,11 @@
             android:layout_weight="1"
             android:background="@drawable/test_button_custom"
             android:textColor="@drawable/test_text_custom"
-            android:text="Previous"
+            android:text="Confirm/Back"
             android:layout_marginEnd="5dp"
+            android:drawablePadding="0dp"
+            android:drawableStart="@drawable/ic_arrow_back_24dp"
+            android:paddingEnd="5dp"
             android:id="@+id/prev_btn"/>
 
         <Button
@@ -228,8 +221,8 @@
             android:layout_height="50dp"
             android:layout_weight="1"
             android:text="Clear Options"
-            android:background="@drawable/test_button_custom"
-            android:textColor="@drawable/test_text_custom"
+            android:background="@drawable/test_navigation_custom"
+            android:textColor="@drawable/test_navigation_text"
             android:layout_marginEnd="5dp"
             android:id="@+id/btn_clear_option"/>
 
@@ -237,10 +230,10 @@
             android:layout_width="wrap_content"
             android:layout_height="50dp"
             android:layout_weight="1"
-            android:text="Mark for Review"
-            android:background="@drawable/test_button_custom"
-            android:textColor="@drawable/test_text_custom"
+            android:text="Mark / Next"
             android:layout_marginEnd="5dp"
+            android:background="@drawable/test_navigation_custom"
+            android:textColor="@drawable/test_navigation_text"
             android:id="@+id/btn_mark"/>
 
         <Button
@@ -250,7 +243,9 @@
             android:layout_weight="1"
             android:background="@drawable/test_button_custom"
             android:textColor="@drawable/test_text_custom"
-            android:text="Confirm / Skip" />
+            android:drawableEnd="@drawable/ic_arrow_forward_24dp"
+            android:drawablePadding="0dp"
+            android:text="Confirm/Next" />
 
     </LinearLayout>
 
