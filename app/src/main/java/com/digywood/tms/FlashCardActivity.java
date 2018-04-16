@@ -41,6 +41,7 @@ import com.digywood.tms.Adapters.CardQuestionAdapter;
 import com.digywood.tms.Adapters.QuestionListAdapter;
 import com.digywood.tms.Adapters.ScrollGridAdapter;
 import com.digywood.tms.Adapters.ScrollGridCardAdapter;
+import com.digywood.tms.Pojo.SingleQuestion;
 import com.digywood.tms.Pojo.SingleQuestionList;
 
 import org.json.JSONArray;
@@ -72,8 +73,9 @@ public class FlashCardActivity extends AppCompatActivity {
     Dialog mydialog;
     int attemptcount=0,knowcount=0,donknowcount=0,skipcount=0;
     TextView tv_attempted,tv_iknow,tv_idonknow,tv_skipped;
-    ArrayList<Integer> attemptList=new ArrayList<>();
-    ArrayList<Integer> nonattemptList=new ArrayList<>();
+    ArrayList<Integer> knownList=new ArrayList<>();
+    ArrayList<Integer> donknowList=new ArrayList<>();
+    ArrayList<Integer> skipList=new ArrayList<>();
     ArrayList<String> sectionList=new ArrayList<>();
     ArrayList<SingleQuestionList> questionList=new ArrayList<>();
     ArrayList<String> fimageList=new ArrayList<>();
@@ -378,13 +380,16 @@ public class FlashCardActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                String currStatus=questionList.get(pos).getQ_status();
+                SingleQuestionList singleQList=questionList.get(pos);
+
+                String currStatus=singleQList.getQ_status();
 
                 if(currStatus.equalsIgnoreCase("NOT_ATTEMPTED")){
 
                     if(status.equalsIgnoreCase("")){
                         questionList.get(pos).setQ_status("SKIPPED");
                         skipcount++;
+                        skipList.add(pos);
                         String count=String.format("%03d",skipcount);
                         tv_skipped.setText(count);
 
@@ -392,11 +397,13 @@ public class FlashCardActivity extends AppCompatActivity {
                         if(status.equalsIgnoreCase("IKNOW")){
                             questionList.get(pos).setQ_status("IKNOW");
                             knowcount++;
+                            knownList.add(pos);
                             String count=String.format("%03d",knowcount);
                             tv_iknow.setText(count);
                         }else{
                             questionList.get(pos).setQ_status("IDONKNOW");
                             donknowcount++;
+                            donknowList.add(pos);
                             String count=String.format("%03d",donknowcount);
                             tv_idonknow.setText(count);
                         }
@@ -640,7 +647,7 @@ public class FlashCardActivity extends AppCompatActivity {
             //Instantiate grid view
             gridView = view.findViewById(R.id.scroll_grid);
             //Instantiate grid adapter
-            scrollAdapter = new ScrollGridCardAdapter(FlashCardActivity.this,gja_questions,nonattemptList,attemptList);
+            scrollAdapter = new ScrollGridCardAdapter(FlashCardActivity.this,gja_questions,knownList,donknowList,skipList);
             //Setting Adapter to gridview
             gridView.setAdapter(scrollAdapter);
             // create a 300px width and 570px height PopupWindow

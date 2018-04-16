@@ -47,7 +47,6 @@ public class JSONParser extends AppCompatActivity{
 
     public JSONParser(String JSON,String dwdPath){
 
-
         this.dwdpath=dwdPath;
         quesIdList.clear();
 
@@ -181,6 +180,8 @@ public class JSONParser extends AppCompatActivity{
 
                             int groupquescount=myhelper.getGroupQPickCount(finalgroupList.get(d));
 
+//                            int groupquescount=1;
+
                             if(gquesList.size()>=groupquescount){
                                 getGroupQues(gquesList,groupquescount);
                             }else{
@@ -225,6 +226,8 @@ public class JSONParser extends AppCompatActivity{
                             Log.e("GroupId: --",""+finalgroupList.get(d));
 
                             int groupquescount=myhelper.getGroupQPickCount(finalgroupList.get(d));
+
+//                            int groupquescount=6;
 
                             if(gquesList.size()>=groupquescount){
                                 getGroupQues(gquesList,groupquescount);

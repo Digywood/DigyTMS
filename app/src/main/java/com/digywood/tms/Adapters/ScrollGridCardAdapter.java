@@ -25,14 +25,17 @@ public class ScrollGridCardAdapter extends BaseAdapter{
     TextView textView;
     Context c;
     JSONArray samplequestion;
-    ArrayList<Integer> marked;
-    ArrayList<Integer> answered;
-    public ScrollGridCardAdapter(Context c, JSONArray samplequestion, ArrayList<Integer> marked, ArrayList<Integer> answered ){
+    ArrayList<Integer> knowList;
+    ArrayList<Integer> donknowList;
+    ArrayList<Integer> skipList;
+
+    public ScrollGridCardAdapter(Context c, JSONArray samplequestion,ArrayList<Integer> knowList,ArrayList<Integer> donknowList,ArrayList<Integer> skipList){
 
         this.c = c;
         this.samplequestion = samplequestion;
-        this.marked = marked;
-        this.answered = answered;
+        this.knowList = knowList;
+        this.donknowList = donknowList;
+        this.skipList = skipList;
     }
 
     @Override
@@ -68,11 +71,14 @@ public class ScrollGridCardAdapter extends BaseAdapter{
         textView.setTextSize(20);
         textView.setGravity(Gravity.CENTER);
 
-        if(marked.contains(position)){
-            textView.setBackgroundColor(c.getResources().getColor(R.color.red));
-        }
-        if(answered.contains(position)){
+        if(knowList.contains(position)){
             textView.setBackgroundColor(c.getResources().getColor(R.color.green));
+        }else if(donknowList.contains(position)){
+            textView.setBackgroundColor(c.getResources().getColor(R.color.red));
+        }else if(skipList.contains(position)){
+            textView.setBackgroundColor(Color.parseColor("#6758c4"));
+        }else{
+
         }
         return textView;
     }
