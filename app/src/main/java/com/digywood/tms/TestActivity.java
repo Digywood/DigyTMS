@@ -109,12 +109,6 @@ public class TestActivity extends AppCompatActivity implements
     public static JSONObject attempt;
 
     JSONArray array, optionsArray, totalArray,groupArray, sectionArray,attemptsectionarray,buffer;
-    ArrayList<SingleSections> sectionList = new ArrayList<>();
-    ArrayList<SingleQuestion> questionList = new ArrayList<>();
-    ArrayList<Integer> questionNumberList = new ArrayList<>();
-    ArrayList<SingleOptions> optionsList = new ArrayList<>();
-    ArrayList<SingleQuestionList> questionOpList = new ArrayList<>();
-    ArrayList<ArrayList<SingleQuestionList>> listOfLists = new ArrayList<>();
     SingleQuestion question = new SingleQuestion();
     SingleGroup group = new SingleGroup();
     SingleSections section = new SingleSections();
@@ -410,7 +404,7 @@ public class TestActivity extends AppCompatActivity implements
                                 writeOption(opAdapter.getSelectedItem());
                                 AlertDialog alertbox = new AlertDialog.Builder(TestActivity.this)
                                         .setMessage("Do you want to finish Test?" + " " + dataObj.getQuestionCount())
-                                        .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                                        .setPositiveButton("Yes",new DialogInterface.OnClickListener() {
 
                                             // do something when the button is clicked
                                             public void onClick(DialogInterface arg0, int arg1) {

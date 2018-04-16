@@ -8,6 +8,8 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
 import com.digywood.tms.Pojo.SingleEnrollment;
+import com.digywood.tms.Pojo.SingleSubcatConfig;
+
 import java.util.ArrayList;
 
 /**
@@ -470,6 +472,15 @@ public class DBHelper extends SQLiteOpenHelper {
         return  deleteFlag;
     }
 
+    public int getGroupQPickCount(String groupId){
+        int count=0;
+        Cursor c =db.query("qb_group", new String[] {"qbg_pickup_count"},"qbg_ID='"+groupId+"'", null, null, null,null);
+        while (c.moveToNext()) {
+            count=c.getInt(c.getColumnIndex("qbg_pickup_count"));
+        }
+        return count;
+    }
+
     public long insertQuesConfig(int qconkey,String cid,String sid,String pid,String tid,String catid,String scatid,int availcount,int pickupcount,int mincount,String status){
         long insertFlag=0;
         ContentValues cv = new ContentValues();
@@ -492,6 +503,15 @@ public class DBHelper extends SQLiteOpenHelper {
         long deleteFlag=0;
         deleteFlag=db.delete("ques_config", "testId='"+testid+"'",null);
         return  deleteFlag;
+    }
+
+    public ArrayList<SingleSubcatConfig> getSubcatData(String testId){
+        ArrayList<SingleSubcatConfig> subcatList=new ArrayList<>();
+        Cursor c =db.query("ques_config", new String[] {"subcategoryId,pickup_count,min_pickup_count"},"testId='"+testId+"'", null, null, null,null);
+        while (c.moveToNext()) {
+            subcatList.add(new SingleSubcatConfig(c.getString(c.getColumnIndex("subcategoryId")),c.getInt(c.getColumnIndex("pickup_count")),c.getInt(c.getColumnIndex("min_pickup_count"))));
+        }
+        return subcatList;
     }
 
     public long insertGroupConfig(int gconfigkey,String cid,String sid,String pid,String tid,String secid,String gtype,int availcount,int pickupcount,String status){
@@ -517,7 +537,23 @@ public class DBHelper extends SQLiteOpenHelper {
         return  deleteFlag;
     }
 
+    public int getCompGroupCount(String testId,String sectionId,String type){
+        int count=0;
+        Cursor c =db.query("groupques_config", new String[] {"grouppickup_count"},"testId='"+testId+"' and sectionId='"+sectionId+"' and groupType='"+type+"'", null, null, null,null);
+        while (c.moveToNext()) {
+            count=c.getInt(c.getColumnIndex("grouppickup_count"));
+        }
+        return count;
+    }
 
+    public int getCloseGroupCount(String testId,String sectionId,String type){
+        int count=0;
+        Cursor c =db.query("groupques_config", new String[] {"grouppickup_count"},"testId='"+testId+"' and sectionId='"+sectionId+"' and groupType='"+type+"'", null, null, null,null);
+        while (c.moveToNext()) {
+            count=c.getInt(c.getColumnIndex("grouppickup_count"));
+        }
+        return count;
+    }
 
     public long updatePrefAdvt(String orgId, String producer_id,String caption, String description, byte[] image, String startDate, String endDate,String contactName, String contactNumber, String emailId,String createdTime, String status){
         long updateFlag=0;

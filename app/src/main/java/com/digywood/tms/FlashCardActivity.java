@@ -1,7 +1,11 @@
 package com.digywood.tms;
 
 import android.annotation.SuppressLint;
+import android.app.Dialog;
+import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
+import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.support.v7.app.ActionBar;
@@ -14,18 +18,29 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Html;
 import android.util.Log;
+import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
+import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.GridView;
+import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.PopupWindow;
+import android.widget.RatingBar;
 import android.widget.RelativeLayout;
 import android.widget.Spinner;
+import android.widget.TextView;
+import android.widget.Toast;
 
+import com.digywood.tms.Adapters.CardQuestionAdapter;
 import com.digywood.tms.Adapters.QuestionListAdapter;
-import com.digywood.tms.Adapters.TestAdapter;
-import com.digywood.tms.Pojo.SingleQuestion;
+import com.digywood.tms.Adapters.ScrollGridAdapter;
+import com.digywood.tms.Adapters.ScrollGridCardAdapter;
 import com.digywood.tms.Pojo.SingleQuestionList;
 
 import org.json.JSONArray;
@@ -42,18 +57,27 @@ import java.util.ArrayList;
 public class FlashCardActivity extends AppCompatActivity {
 
     Spinner sp_sections;
-    RecyclerView rv_quesnum;
+    RecyclerView question_scroll;
     ImageView iv_quesimg,iv_fullscreen;
-    String filedata;
-    int d=0;
+    String filedata,status="";
+    int d=0,pos=0,secpos=0;
+    GridView gridView;
+    private PopupWindow pw;
+    ScrollGridCardAdapter scrollAdapter;
     ArrayAdapter<String> sectionAdp;
-    QuestionListAdapter qAdp;
+    CardQuestionAdapter cAdp;
     LinearLayoutManager myLayoutManager;
     JSONArray gja_sections,gja_questions;
+    static int screensize=0;
+    Dialog mydialog;
+    int attemptcount=0,knowcount=0,donknowcount=0,skipcount=0;
+    TextView tv_attempted,tv_iknow,tv_idonknow,tv_skipped;
+    ArrayList<Integer> attemptList=new ArrayList<>();
+    ArrayList<Integer> nonattemptList=new ArrayList<>();
     ArrayList<String> sectionList=new ArrayList<>();
     ArrayList<SingleQuestionList> questionList=new ArrayList<>();
     ArrayList<String> fimageList=new ArrayList<>();
-    Button btn_know,btn_idonknow,btn_prev,btn_next;
+    Button btn_know,btn_idonknow,btn_prev,btn_next,btn_answer;
 
     /**
      * Whether or not the system UI should be auto-hidden after
@@ -137,13 +161,19 @@ public class FlashCardActivity extends AppCompatActivity {
         myrlayout = findViewById(R.id.header);
 
         sp_sections=findViewById(R.id.fl_sections);
-        rv_quesnum=findViewById(R.id.question_scroll);
+        question_scroll=findViewById(R.id.question_scroll);
         iv_quesimg=findViewById(R.id.fl_ivques);
         iv_fullscreen=findViewById(R.id.fl_fullscreen);
         btn_prev=findViewById(R.id.btn_prev);
         btn_next=findViewById(R.id.btn_next);
         btn_know=findViewById(R.id.btn_iknow);
         btn_idonknow=findViewById(R.id.btn_idonknow);
+        btn_answer=findViewById(R.id.btn_answer);
+
+        tv_attempted=findViewById(R.id.tv_attemptcount);
+        tv_iknow=findViewById(R.id.tv_iknowcount);
+        tv_idonknow=findViewById(R.id.tv_idonknowcount);
+        tv_skipped=findViewById(R.id.tv_skippedcount);
 
         try{
             BufferedReader br = new BufferedReader(new FileReader(URLClass.mainpath+"sample"+".json"));
@@ -208,18 +238,22 @@ public class FlashCardActivity extends AppCompatActivity {
             }
         });
 
-        rv_quesnum.addOnItemTouchListener(new RecyclerTouchListener(FlashCardActivity.this,rv_quesnum,new RecyclerTouchListener.OnItemClickListener() {
+        question_scroll.addOnItemTouchListener(new RecyclerTouchListener(FlashCardActivity.this,question_scroll,new RecyclerTouchListener.OnItemClickListener() {
             @Override
             public void onClick(View view, int position) {
 
                 try{
+                    pos=position;
+                    d=position;
                     JSONObject qObj=gja_questions.getJSONObject(position);
                     String imagefile=qObj.getString("qbm_flash_image");
                     Log.e("Image Path :--",URLClass.mainpath+imagefile);
                     Bitmap bmp = BitmapFactory.decodeFile(URLClass.mainpath+imagefile);
                     iv_quesimg.setImageBitmap(bmp);
 
-                    qAdp.setPoiner(position);
+                    myLayoutManager.scrollToPosition(position);
+//                    rv_quesnum.scrollBy(position,0);
+                    cAdp.setPoiner(position);
                 }catch (Exception e){
                     e.printStackTrace();
                     Log.e("FlashCardActivity----",e.toString());
@@ -238,14 +272,14 @@ public class FlashCardActivity extends AppCompatActivity {
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 try{
                     questionList.clear();
-
+                    secpos=position;
                     JSONObject secObj=gja_sections.getJSONObject(position);
 
                     gja_questions=secObj.getJSONArray("Questions");
                     for(int j=0;j<gja_questions.length();j++){
-                        questionList.add(new SingleQuestionList(gja_questions.getJSONObject(j).getString("qbm_SequenceId"),"Intialised"));
+                        questionList.add(new SingleQuestionList(gja_questions.getJSONObject(j).getString("qbm_SequenceId"),"NOT_ATTEMPTED"));
                     }
-                    qAdp.updateList(questionList);
+                    cAdp.updateList(questionList);
                 }catch (Exception e){
                     e.printStackTrace();
                     Log.e("FlashCardActivity----",e.toString());
@@ -261,6 +295,41 @@ public class FlashCardActivity extends AppCompatActivity {
         iv_fullscreen.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                initiatePopupWindow(v);
+            }
+        });
+
+        btn_answer.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                mydialog = new Dialog(FlashCardActivity.this);
+                mydialog.getWindow();
+                mydialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                mydialog.setContentView(R.layout.dialog_answer);
+                mydialog.show();
+                mydialog.setCanceledOnTouchOutside(false);
+
+                ImageView iv_answerimg = mydialog.findViewById(R.id.iv_answer);
+                ImageView iv_dialogclose = mydialog.findViewById(R.id.iv_close);
+
+                try {
+                    String filename=gja_questions.getJSONObject(d).getString("qbm_flash_image");
+                    Log.e("Image Path :--",filename);
+                    Bitmap bmp = BitmapFactory.decodeFile(URLClass.mainpath+filename);
+                    iv_answerimg.setImageBitmap(bmp);
+                    cAdp.setPoiner(d);
+                }catch (Exception e){
+                    e.printStackTrace();
+                    Log.e("ViewLotInfo---",e.toString());
+                }
+
+                iv_dialogclose.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        mydialog.dismiss();
+                    }
+                });
 
             }
         });
@@ -270,18 +339,38 @@ public class FlashCardActivity extends AppCompatActivity {
             public void onClick(View v) {
 
                 d--;
-                try {
-                    Log.e("Image Path :--",URLClass.mainpath+fimageList.get(d));
-                    Bitmap bmp = BitmapFactory.decodeFile(URLClass.mainpath+fimageList.get(d));
-                    iv_quesimg.setImageBitmap(bmp);
-                    qAdp.setPoiner(d);
-                }catch (Exception e){
-                    e.printStackTrace();
-                    Log.e("ViewLotInfo---",e.toString());
+                if(d>=0){
+                    myLayoutManager.scrollToPosition(d);
+                    try {
+                        String filename=gja_questions.getJSONObject(d).getString("qbm_flash_image");
+                        Log.e("Image Path :--",filename);
+                        Bitmap bmp = BitmapFactory.decodeFile(URLClass.mainpath+filename);
+                        iv_quesimg.setImageBitmap(bmp);
+                        cAdp.setPoiner(d);
+                    }catch (Exception e){
+                        e.printStackTrace();
+                        Log.e("ViewLotInfo---",e.toString());
+                    }
+                }else{
+                    secpos--;
+                    if(secpos>=0){
+                        sp_sections.setSelection(secpos);
+                        d=0;
+                        pos=d;
+                        try {
+                            String filename=gja_questions.getJSONObject(d).getString("qbm_flash_image");
+                            Log.e("Image Path :--",filename);
+                            Bitmap bmp = BitmapFactory.decodeFile(URLClass.mainpath+filename);
+                            iv_quesimg.setImageBitmap(bmp);
+                            cAdp.setPoiner(d);
+                        }catch (Exception e){
+                            e.printStackTrace();
+                            Log.e("ViewLotInfo---",e.toString());
+                        }
+                    }else{
+                        Toast.makeText(getApplicationContext(),"Your are at Starting",Toast.LENGTH_SHORT).show();
+                    }
                 }
-
-//                iv_quesimg.setImageBitmap();
-
             }
         });
 
@@ -289,19 +378,113 @@ public class FlashCardActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                d++;
-                try {
-                    Log.e("Image Path :--",URLClass.mainpath+fimageList.get(d));
-                    Bitmap bmp = BitmapFactory.decodeFile(URLClass.mainpath+fimageList.get(d));
-                    iv_quesimg.setImageBitmap(bmp);
-                    qAdp.setPoiner(d);
-                }catch (Exception e){
-                    e.printStackTrace();
-                    Log.e("ViewLotInfo---",e.toString());
+                String currStatus=questionList.get(pos).getQ_status();
+
+                if(currStatus.equalsIgnoreCase("NOT_ATTEMPTED")){
+
+                    if(status.equalsIgnoreCase("")){
+                        questionList.get(pos).setQ_status("SKIPPED");
+                        skipcount++;
+                        String count=String.format("%03d",skipcount);
+                        tv_skipped.setText(count);
+
+                    }else{
+                        if(status.equalsIgnoreCase("IKNOW")){
+                            questionList.get(pos).setQ_status("IKNOW");
+                            knowcount++;
+                            String count=String.format("%03d",knowcount);
+                            tv_iknow.setText(count);
+                        }else{
+                            questionList.get(pos).setQ_status("IDONKNOW");
+                            donknowcount++;
+                            String count=String.format("%03d",donknowcount);
+                            tv_idonknow.setText(count);
+                        }
+                    }
+
+                    attemptcount++;
+
+                    String count=String.format("%03d",attemptcount);
+                    tv_attempted.setText(count);
+
+                    cAdp.updateList(questionList);
+
+                    status="";
+
+                    if(pos>=questionList.size()-1){
+
+                        if(secpos<gja_sections.length()-1){
+                            secpos=secpos+1;
+                            sp_sections.setSelection(secpos);
+                            d=0;
+                            pos=d;
+                            try {
+                                String filename=gja_questions.getJSONObject(d).getString("qbm_flash_image");
+                                Log.e("Image Path :--",filename);
+                                Bitmap bmp = BitmapFactory.decodeFile(URLClass.mainpath+filename);
+                                iv_quesimg.setImageBitmap(bmp);
+                                cAdp.setPoiner(d);
+                            }catch (Exception e){
+                                e.printStackTrace();
+                                Log.e("ViewLotInfo---",e.toString());
+                            }
+                        }else{
+                            showAlert("Would you like to end the test?");
+                        }
+
+                    }else{
+                        d++;
+                        pos=d;
+                        myLayoutManager.scrollToPosition(d);
+                        try {
+                            String filename=gja_questions.getJSONObject(d).getString("qbm_flash_image");
+                            Log.e("Image Path :--",filename);
+                            Bitmap bmp = BitmapFactory.decodeFile(URLClass.mainpath+filename);
+                            iv_quesimg.setImageBitmap(bmp);
+                            cAdp.setPoiner(d);
+                        }catch (Exception e){
+                            e.printStackTrace();
+                            Log.e("ViewLotInfo---",e.toString());
+                        }
+                    }
+                }else{
+                    if(pos>=questionList.size()-1){
+
+                        if(secpos<gja_sections.length()-1){
+                            secpos=secpos+1;
+                            sp_sections.setSelection(secpos);
+                            d=0;
+                            pos=d;
+                            try {
+                                String filename=gja_questions.getJSONObject(d).getString("qbm_flash_image");
+                                Log.e("Image Path :--",filename);
+                                Bitmap bmp = BitmapFactory.decodeFile(URLClass.mainpath+filename);
+                                iv_quesimg.setImageBitmap(bmp);
+                                cAdp.setPoiner(d);
+                            }catch (Exception e){
+                                e.printStackTrace();
+                                Log.e("ViewLotInfo---",e.toString());
+                            }
+                        }else{
+                            showAlert("Would you like to end the test?");
+                        }
+
+                    }else{
+                        d++;
+                        pos=d;
+                        myLayoutManager.scrollToPosition(d);
+                        try {
+                            String filename=gja_questions.getJSONObject(d).getString("qbm_flash_image");
+                            Log.e("Image Path :--",filename);
+                            Bitmap bmp = BitmapFactory.decodeFile(URLClass.mainpath+filename);
+                            iv_quesimg.setImageBitmap(bmp);
+                            cAdp.setPoiner(d);
+                        }catch (Exception e){
+                            e.printStackTrace();
+                            Log.e("ViewLotInfo---",e.toString());
+                        }
+                    }
                 }
-
-//                iv_quesimg.setImageBitmap();
-
             }
         });
 
@@ -309,6 +492,8 @@ public class FlashCardActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
+                status="IKNOW";
+//                questionList.get(pos).setQ_status(status);
             }
         });
 
@@ -316,6 +501,8 @@ public class FlashCardActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
+                status="IDONKNOW";
+//                questionList.get(pos).setQ_status(status);
             }
         });
 
@@ -397,7 +584,7 @@ public class FlashCardActivity extends AppCompatActivity {
                 if(i==0){
                     gja_questions=secObj.getJSONArray("Questions");
                     for(int j=0;j<gja_questions.length();j++){
-                        questionList.add(new SingleQuestionList(gja_questions.getJSONObject(j).getString("qbm_SequenceId"),"Intialised"));
+                        questionList.add(new SingleQuestionList(gja_questions.getJSONObject(j).getString("qbm_SequenceId"),"NOT_ATTEMPTED"));
                     }
                 }else{
 
@@ -435,6 +622,49 @@ public class FlashCardActivity extends AppCompatActivity {
         return flashimageList;
     }
 
+    //method to create a popup window containing question numbers
+    public void initiatePopupWindow(View v) {
+        try {
+            //We need to get the instance of the LayoutInflater, use the context of this activity
+            LayoutInflater inflater = (LayoutInflater) FlashCardActivity.this
+                    .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            //Inflate the view from a predefined XML layout
+
+            View view = inflater.inflate(R.layout.popup_screen,
+                    (ViewGroup) findViewById(R.id.popup_element));
+            RelativeLayout layout = view.findViewById(R.id.popup_element);
+            int width = 650;
+            int height = 600;
+            width = layout.getWidth();
+            height = layout.getHeight();
+            //Instantiate grid view
+            gridView = view.findViewById(R.id.scroll_grid);
+            //Instantiate grid adapter
+            scrollAdapter = new ScrollGridCardAdapter(FlashCardActivity.this,gja_questions,nonattemptList,attemptList);
+            //Setting Adapter to gridview
+            gridView.setAdapter(scrollAdapter);
+            // create a 300px width and 570px height PopupWindow
+            pw = new PopupWindow(view, ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+            // display the popup in the center
+            pw.showAtLocation(v, Gravity.CENTER, 0, 0);
+            if (android.os.Build.VERSION.SDK_INT > 20) {
+                pw.setElevation(10);
+            }
+//            TextView mResultText = (TextView) layout.findViewById(R.id.server_status_text);
+            Button cancelButton = (Button) view.findViewById(R.id.close_button);
+            cancelButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    pw.dismiss();
+                    mHideRunnable.run();
+                }
+            });
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
     public  void showAlert(String messege){
         AlertDialog.Builder builder = new AlertDialog.Builder(FlashCardActivity.this,R.style.ALERT_THEME);
         builder.setMessage(Html.fromHtml("<font color='#FFFFFF'>"+messege+"</font>"))
@@ -457,14 +687,22 @@ public class FlashCardActivity extends AppCompatActivity {
         if (questionList.size() != 0) {
             Log.e("Advtlist.size()", "comes:" + questionList.size());
 //            tv_emptytests.setVisibility(View.GONE);
-            qAdp = new QuestionListAdapter(questionList,FlashCardActivity.this,questionList.size());
-            qAdp.setPoiner(0);
+            cAdp = new CardQuestionAdapter(questionList,FlashCardActivity.this,getScreenSize());
+            cAdp.setPoiner(0);
             myLayoutManager = new LinearLayoutManager(FlashCardActivity.this,LinearLayoutManager.HORIZONTAL,false);
-            rv_quesnum.setLayoutManager(myLayoutManager);
-            rv_quesnum.setItemAnimator(new DefaultItemAnimator());
-            rv_quesnum.setAdapter(qAdp);
+            question_scroll.setLayoutManager(myLayoutManager);
+            question_scroll.setItemAnimator(new DefaultItemAnimator());
+            question_scroll.setAdapter(cAdp);
         } else {
 //            rv_quesnum.setAdapter(null);
         }
     }
+
+    //method to get the deivce screen size
+    public int getScreenSize() {
+        screensize = getResources().getConfiguration().screenLayout &
+                Configuration.SCREENLAYOUT_SIZE_MASK;
+        return screensize;
+    }
+
 }
