@@ -300,7 +300,7 @@ public class EnrollRequestActivity extends AppCompatActivity {
         branchnames.clear();
         hashMap.clear();
         hashMap.put("OrgId",orgid);
-        new BagroundTask(URLClass.hosturl +"getCoursesandBranchesByOrg.php", hashMap, EnrollRequestActivity.this, new IBagroundListener() {
+        new BagroundTask(URLClass.hosturl +"getCoursesandBranchesByOrg.php",hashMap,EnrollRequestActivity.this, new IBagroundListener() {
             @Override
             public void bagroundData(String json) {
                 JSONObject courseObj,branchObj;

@@ -1,6 +1,8 @@
 package com.digywood.tms;
 
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import com.digywood.tms.DBHelper.DBHelper;
 import com.digywood.tms.Pojo.GroupQues;
 import com.digywood.tms.Pojo.SingleGroupConfig;
 import com.digywood.tms.Pojo.SingleOptions;
@@ -13,7 +15,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Random;
 
-public class JSONParser {
+public class JSONParser extends AppCompatActivity{
 
     ArrayList<String> quesIdList=new ArrayList<>();
     ArrayList<String> groupList=new ArrayList<>();
@@ -38,11 +40,12 @@ public class JSONParser {
     JSONObject mainObj=null,secObj=null,quesObj=null,optionObj=null,additionsObj=null;
     Random r = new Random();
     int seqno=0;
+    DBHelper myhelper=new DBHelper(this);
     int count=0,maxcount=0,quescount=10,totalsubcatCount=22,testqcount=0;
     JSONObject cmainObj,csecObj,cquesObj,coptionObj,cadditionsObj;
     String section="",sectionid="",testid="",dwdpath="";
 
-    public ArrayList<String> JSONParser(String JSON,String dwdPath){
+    public JSONParser(String JSON,String dwdPath){
 
 
         this.dwdpath=dwdPath;
@@ -55,15 +58,14 @@ public class JSONParser {
         testfimages.add("Q008.PNG");
         testfimages.add("Q010.PNG");
 
-        scConfigList.clear();
-        scConfigList.add(new SingleSubcatConfig("SSCE000101",5,3));
-        scConfigList.add(new SingleSubcatConfig("SSCE000102",5,2));
-        scConfigList.add(new SingleSubcatConfig("SSCR000101",5,3));
-        scConfigList.add(new SingleSubcatConfig("SSCR000201",3,2));
-        scConfigList.add(new SingleSubcatConfig("SSCR000301",4,2));
-        scConfigList.add(new SingleSubcatConfig("SSCM000101",4,2));
-        scConfigList.add(new SingleSubcatConfig("SSCM000201",3,2));
-        scConfigList.add(new SingleSubcatConfig("SSCM000301",5,3));
+//        scConfigList.add(new SingleSubcatConfig("SSCE000101",5,3));
+//        scConfigList.add(new SingleSubcatConfig("SSCE000102",5,2));
+//        scConfigList.add(new SingleSubcatConfig("SSCR000101",5,3));
+//        scConfigList.add(new SingleSubcatConfig("SSCR000201",3,2));
+//        scConfigList.add(new SingleSubcatConfig("SSCR000301",4,2));
+//        scConfigList.add(new SingleSubcatConfig("SSCM000101",4,2));
+//        scConfigList.add(new SingleSubcatConfig("SSCM000201",3,2));
+//        scConfigList.add(new SingleSubcatConfig("SSCM000301",5,3));
 
         try{
             mainObj=new JSONObject(JSON);
@@ -71,6 +73,9 @@ public class JSONParser {
             cmainObj=new JSONObject();
             testid=mainObj.getString("Ptu_test_ID");
             cmainObj.put("sptu_ID",mainObj.getString("Ptu_test_ID"));
+
+            scConfigList.clear();
+            scConfigList=myhelper.getSubcatData(testid);
 
             Log.e("JSON--",mainObj.getString("Ptu_test_ID"));
 
@@ -148,7 +153,8 @@ public class JSONParser {
 
                 finalgroupList.clear();
                 if(groupcompList.size()>0){
-                    finalgroupList=getFinalGroups(groupcompList,2);
+                    int finalcompgroupcount=myhelper.getCompGroupCount(testid,sectionid,"Comprehention");
+                    finalgroupList=getFinalGroups(groupcompList,finalcompgroupcount);
                     if(finalgroupList.size()>0){
                         for(int d=0;d<finalgroupList.size();d++){
 
@@ -173,8 +179,10 @@ public class JSONParser {
 
                             Log.e("GroupId: --",""+finalgroupList.get(d));
 
-                            if(gquesList.size()>=1){
-                                getGroupQues(gquesList,1);
+                            int groupquescount=myhelper.getGroupQPickCount(finalgroupList.get(d));
+
+                            if(gquesList.size()>=groupquescount){
+                                getGroupQues(gquesList,groupquescount);
                             }else{
                                 Log.e("GroupConfig","Check"+"-Group"+finalgroupList.get(d));
                             }
@@ -190,7 +198,8 @@ public class JSONParser {
 
                 finalgroupList.clear();
                 if(groupcloseList.size()>0){
-                    finalgroupList=getFinalGroups(groupcloseList,1);
+                    int finalclosegroupcount=myhelper.getCloseGroupCount(testid,sectionid,"Closure");
+                    finalgroupList=getFinalGroups(groupcloseList,finalclosegroupcount);
                     if(finalgroupList.size()>0){
                         for(int d=0;d<finalgroupList.size();d++){
 
@@ -215,8 +224,10 @@ public class JSONParser {
 
                             Log.e("GroupId: --",""+finalgroupList.get(d));
 
-                            if(gquesList.size()>=6){
-                                getGroupQues(gquesList,6);
+                            int groupquescount=myhelper.getGroupQPickCount(finalgroupList.get(d));
+
+                            if(gquesList.size()>=groupquescount){
+                                getGroupQues(gquesList,groupquescount);
                             }else{
                                 Log.e("GroupConfig","Check"+"-Group"+finalgroupList.get(d));
                             }
@@ -531,7 +542,6 @@ public class JSONParser {
             e.printStackTrace();
             Log.e("JSONPARSE---",e.toString()+" : "+e.getStackTrace()[0].getLineNumber());
         }
-        return quesIdList;
     }
 
     public ArrayList<String> getFinalGroups(ArrayList<String> grouplist,int count) {

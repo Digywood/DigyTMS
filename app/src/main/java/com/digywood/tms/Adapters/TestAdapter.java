@@ -92,29 +92,54 @@ public class TestAdapter extends RecyclerView.Adapter<TestAdapter.MyViewHolder> 
         holder.btn_resume.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                DBHelper dataObj = new DBHelper(mycontext);
-                Intent i=new Intent(mycontext, ReviewActivity.class);
-                mycontext.startActivity(i);
 
-//                try{
-//                    BufferedReader br = new BufferedReader(new FileReader(URLClass.mainpath+"PTAA00002"+".json"));
-//                    StringBuilder sb = new StringBuilder();
-//                    String line = br.readLine();
-//
-//                    while (line != null) {
-//                        sb.append(line);
-//                        sb.append("\n");
-//                        line = br.readLine();
-//                    }
-//                    filedata=sb.toString();
-//                    br.close();
-//                }catch (Exception e){
-//                    e.printStackTrace();
-//                    Log.e("TestActivity1-----",e.toString());
-//                }
-//
-//                myparser=new JSONParser();
-//                myparser.JSONParser(filedata);
+//                Intent i=new Intent(mycontext, ReviewActivity.class);
+//                mycontext.startActivity(i);
+
+                try{
+                    BufferedReader br = new BufferedReader(new FileReader(URLClass.mainpath+"sample"+".json"));
+                    StringBuilder sb = new StringBuilder();
+                    String line = br.readLine();
+
+                    while (line != null) {
+                        sb.append(line);
+                        sb.append("\n");
+                        line = br.readLine();
+                    }
+                    filedata=sb.toString();
+                    br.close();
+                    fimageList=readJson(filedata);
+                    if(fimageList.size()!=0){
+
+                        ArrayList<String> missingfList=new ArrayList<>();
+
+                        for(int i=0;i<fimageList.size();i++){
+                            File myFile = new File(URLClass.mainpath+fimageList.get(i));
+                            if(myFile.exists()){
+
+                            }else{
+                                missingfList.add(fimageList.get(i));
+                            }
+                        }
+
+                        if(missingfList.size()!=0){
+                            StringBuilder sbm=new StringBuilder();
+                            sbm.append("The following file are missing...\n");
+                            for(int i=0;i<missingfList.size();i++){
+                                sbm.append(missingfList.get(i)+" , "+"\n");
+                            }
+                            showAlert(sbm.toString());
+                        }else{
+                            Intent i=new Intent(mycontext, FlashCardActivity.class);
+                            mycontext.startActivity(i);
+                        }
+                    }else{
+                        Log.e("FlashCardActivity---","No Questions to Display");
+                    }
+                }catch (Exception e){
+                    e.printStackTrace();
+                    Log.e("TestActivity1-----",e.toString());
+                }
 
             }
         });

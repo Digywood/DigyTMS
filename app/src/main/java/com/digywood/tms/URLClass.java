@@ -6,7 +6,11 @@ package com.digywood.tms;
 
 public class URLClass {
 
-    public static final String hosturl="http://www.digywood.com/phpfiles/tms/";
+//    public static final String hosturl="http://www.digywood.com/phpfiles/tms/";
+
+    public static final String hosturl="http://www.digywoodads.com/digytms/php/";
+
+//    public static final String hosturl="http://www.digywoodads.com/digytms/php_test/";
 
 //    public static final String downloadurl="http://192.168.0.153/dwdimages/";
 
