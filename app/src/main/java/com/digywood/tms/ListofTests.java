@@ -591,7 +591,7 @@ public class ListofTests extends AppCompatActivity {
         JSONObject mainObj,secObj,singlequesObj,optionsObj,additionsObj;
         try{
             mainObj=new JSONObject(json);
-            Log.e("JSON--",mainObj.getString("sptu_ID"));
+            Log.e("JSON--",mainObj.getString("Ptu_test_ID"));
 
             secArray=mainObj.optJSONArray("Sections");
 

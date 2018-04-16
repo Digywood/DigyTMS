@@ -14,9 +14,13 @@ public class URLClass {
 
 //    public static final String downloadurl="http://192.168.0.153/dwdimages/";
 
-    public static final String downloadurl="http://www.digywood.com/DigyAdvertisements/DigyAdvertisementsResources/tms/images/";
+//    public static final String downloadurl="http://www.digywood.com/DigyAdvertisements/DigyAdvertisementsResources/tms/images/";
 
-    public static final String downloadjson="http://www.digywood.com/DigyAdvertisements/DigyAdvertisementsResources/tms/";
+    public static final String downloadurl="http://www.digywoodads.com/digytms/assets/images/";
+
+//    public static final String downloadjson="http://www.digywood.com/DigyAdvertisements/DigyAdvertisementsResources/tms/";
+
+    public static final String downloadjson="http://www.digywoodads.com/digytms/assets/";
 
     public static final String mainpath=android.os.Environment.getExternalStorageDirectory().toString()+ "/tms/";
 
