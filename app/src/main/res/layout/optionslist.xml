@@ -11,26 +11,35 @@
         android:orientation="horizontal"
         android:id="@+id/option_layout">
 
-        <RadioButton
+        <LinearLayout
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:id="@+id/rb_option"/>
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:id="@+id/ll_rb_wrapper">
+            <RadioButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:id="@+id/rb_option"/>
+        </LinearLayout>
 
-        <ImageView
+        <FrameLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="10dp"
-            android:id="@+id/iv_opmedia"
-            android:layout_toEndOf="@+id/rb_option"
-            android:layout_marginBottom="5dp" />
+            android:layout_toEndOf="@id/ll_rb_wrapper"
+            android:id="@+id/fl_img_wrapper">
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/iv_opmedia"
+                android:layout_toEndOf="@+id/rb_option" />
+        </FrameLayout>
 
         <View
             android:layout_width="match_parent"
             android:layout_height="2dp"
             android:background="#000000"
-            android:layout_below="@+id/iv_opmedia"
-            android:layout_marginBottom="5dp" />
+            android:layout_below="@+id/fl_img_wrapper" />
 
     </RelativeLayout>
 

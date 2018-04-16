@@ -3,14 +3,13 @@
     android:id="@+id/popup_element"
     android:layout_width="@dimen/popup_width"
     android:layout_height="@dimen/popup_height"
-    android:elevation="5dp"
-    android:background="@drawable/popup_elevation"
-    android:padding="10px">
+    android:background="@drawable/popup_elevation">
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:orientation="vertical"
+        android:background="@color/black_overlay"
         android:layout_marginBottom="48dp">
         <GridView
             android:id="@+id/scroll_grid"
@@ -39,6 +38,6 @@
             android:drawablePadding="3sp"
             android:background="@drawable/custom_button"
             android:textColor="#FFFFFF"
-            android:text="Close" />
+            android:text="@string/close_text" />
     </LinearLayout>
 </RelativeLayout>

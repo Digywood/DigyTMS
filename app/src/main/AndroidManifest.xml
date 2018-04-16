@@ -16,7 +16,6 @@
         <activity
             android:name=".MainActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
-            android:label="@string/title_activity_test"
             android:noHistory="true"
             android:screenOrientation="landscape"
             android:theme="@style/AppTheme.NoActionBar">
@@ -25,11 +24,12 @@
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+
         </activity>
         <activity
             android:name=".RegistrationActivity"
             android:label="@string/reglabel"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="landscape" />
         <activity
             android:name=".LandingActivity"
             android:screenOrientation="landscape" />
@@ -39,12 +39,13 @@
         <activity android:name=".EnrollRequestActivity" />
         <activity
             android:name=".ListofTests"
-            android:screenOrientation="landscape" />
+            android:screenOrientation="landscape"
+            android:parentActivityName=".CourseActivity"/>
         <activity
             android:name=".TestActivity"
-            android:label="@string/title_activity_test"
             android:screenOrientation="landscape"
             android:theme="@style/AppTheme.NoActionBar">
+
         </activity>
         <activity
             android:name=".ScoreActivity"
