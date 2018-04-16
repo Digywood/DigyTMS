@@ -430,6 +430,11 @@ public class DBHelper extends SQLiteOpenHelper {
         return c;
     }
 
+    public Cursor getSingleStudentTests(String testId){
+        Cursor c =db.query("sptu_student", new String[] {"sptu_entroll_id,sptu_student_ID,sptu_ID,sptu_paper_ID,sptu_subjet_ID,sptu_course_id,sptu_dwnld_status"},"sptu_ID='"+testId+"'", null, null, null,null);
+        return c;
+    }
+
     public long deleteAllTests(){
         long deleteFlag=0;
         deleteFlag=db.delete("sptu_student", null, null);

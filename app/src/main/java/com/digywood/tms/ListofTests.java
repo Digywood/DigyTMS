@@ -158,21 +158,6 @@ public class ListofTests extends AppCompatActivity {
 
                         localpath=enrollid+"/"+courseid+"/"+subjectIds.get(currentitem)+"/"+paperid+"/"+selectedtestidList.get(currentitem)+"/";
 
-//                        File dir = new File(URLClass.mainpath+enrollid+"/"+courseid+"/"+subjectid+"/"+paperid+"/"+selectedtestidList.get(currentitem));
-//                        if(dir.exists()){
-//                            if (dir.isDirectory())
-//                            {
-//                                String[] children = dir.list();
-//                                for (int i = 0; i < children.length; i++)
-//                                {
-//                                    new File(dir, children[i]).delete();
-//                                }
-//                            }else{
-//                                dir.delete();
-//                            }
-//                        }else{
-//
-//                        }
                         File myFile1 = new File(URLClass.mainpath+localpath+selectedtestidList.get(currentitem)+".json");
                         if(myFile1.exists()){
 
@@ -587,7 +572,7 @@ public class ListofTests extends AppCompatActivity {
 
         downloadfileList.clear();
 
-        JSONArray secArray,quesArray,optionsArray,additionsArray;
+        JSONArray secArray,grpArray,grpquesArray,quesArray,optionsArray,additionsArray;
         JSONObject mainObj,secObj,singlequesObj,optionsObj,additionsObj;
         try{
             mainObj=new JSONObject(json);
@@ -599,6 +584,7 @@ public class ListofTests extends AppCompatActivity {
 
                 secObj=secArray.getJSONObject(d);
                 quesArray=secObj.optJSONArray("Questions");
+
                 for(int i=0;i<quesArray.length();i++){
 
                     singlequesObj=quesArray.getJSONObject(i);

@@ -107,14 +107,7 @@ public class TestActivity extends AppCompatActivity implements
     static int index = 0, pos = 0, max = 1, grp = 0, size,count =-1;
     JSONObject obj, sectionobj, groupobj, questionobj, temp;
     public static JSONObject attempt;
-
-    JSONArray array, optionsArray, totalArray,groupArray, sectionArray,attemptsectionarray,buffer;
-    ArrayList<SingleSections> sectionList = new ArrayList<>();
-    ArrayList<SingleQuestion> questionList = new ArrayList<>();
-    ArrayList<Integer> questionNumberList = new ArrayList<>();
-    ArrayList<SingleOptions> optionsList = new ArrayList<>();
-    ArrayList<SingleQuestionList> questionOpList = new ArrayList<>();
-    ArrayList<ArrayList<SingleQuestionList>> listOfLists = new ArrayList<>();
+    JSONArray array, optionsArray, totalArray, groupArray, sectionArray, attemptsectionarray, buffer;
     SingleQuestion question = new SingleQuestion();
     SingleGroup group = new SingleGroup();
     SingleSections section = new SingleSections();
@@ -200,7 +193,6 @@ public class TestActivity extends AppCompatActivity implements
         dataObj = new DBHelper(this);
 //        dataObj.Destroy("attempt_data");
 
-
         question_scroll = findViewById(R.id.question_scroll);
         question_img = findViewById(R.id.question_img);
         btn_prev = findViewById(R.id.prev_btn);
@@ -214,7 +206,6 @@ public class TestActivity extends AppCompatActivity implements
         sections = findViewById(R.id.sections);
         fullscreen = findViewById(R.id.fullscreen);
         menu = findViewById(R.id.menu);
-
 
         qAdapter = new QuestionListAdapter(questionOpList, TestActivity.this, getScreenSize());
         myLayoutManager = new LinearLayoutManager(TestActivity.this, LinearLayoutManager.HORIZONTAL, false);
@@ -283,13 +274,15 @@ public class TestActivity extends AppCompatActivity implements
                 c.moveToLast();
                 if (c.getInt(c.getColumnIndex("Attempt_Status")) == 1) {
                     millisStart = c.getLong(c.getColumnIndex("Attempt_RemainingTime")) ;
-                    String json = new String(SaveJSONdataToFile.bytesFromFile(URLClass.mainpath + path + "Attempt/"+ testid + ".json"), "UTF-8");
-                    attempt = new JSONObject(json);
-                    parseJson(attempt);
+//                    String json = new String(SaveJSONdataToFile.bytesFromFile(URLClass.mainpath + path + "Attempt/"+ testid + ".json"), "UTF-8");
+                    attempt = new JSONObject(getIntent().getStringExtra("json"));
+                    Log.e("TestingJson",""+attempt.toString());
                     attemptsectionarray = new JSONArray();
-                    attemptsectionarray = attempt.getJSONArray("sections");
+                    attemptsectionarray = attempt.getJSONArray("Sections");
+                    parseJson(attempt);
+
                     restoreSections(dataObj.getQuestionStatus(),attempt);
-                    buffer = generateArray(attempt.getJSONArray("sections").getJSONObject(pos));
+                    buffer = generateArray(attempt.getJSONArray("Sections").getJSONObject(pos));
                     index = c.getInt(c.getColumnIndex("Attempt_LastQuestion"));
                     pos = c.getInt(c.getColumnIndex("Attempt_LastSection"));
                 }
@@ -330,8 +323,7 @@ public class TestActivity extends AppCompatActivity implements
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         sections.setAdapter(adapter);
 
-
-
+        
         fullscreen.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -464,9 +456,8 @@ public class TestActivity extends AppCompatActivity implements
                                 Log.e("ValuesElse--->", "" + pos + "," + index);
                                 buffer = generateArray(attempt.getJSONArray("sections").getJSONObject(pos));
                                 sections.setSelection(pos);
-                                scrollAdapter.updateList(listOfLists.get(pos));
                                 setScrollbar(pos);
-
+                                scrollAdapter.updateList(listOfLists.get(pos));
                             }
                         }
                     }
@@ -497,9 +488,8 @@ public class TestActivity extends AppCompatActivity implements
                         index = generateArray(attemptsectionarray.getJSONObject(pos)).length() - 1;
                         flag = false;
                         sections.setSelection(pos);
-                        scrollAdapter.updateList(listOfLists.get(pos));
                         setScrollbar(pos);
-
+                        scrollAdapter.updateList(listOfLists.get(pos));
 
                     }
                     checkRadio();
@@ -854,101 +844,34 @@ public class TestActivity extends AppCompatActivity implements
         temp = data;
         questionList = new ArrayList<>();
         try {
-            sectionArray = data.getJSONArray("sections");
+            sectionArray = data.getJSONArray("Sections");
             for (int i = 0; i < sectionArray.length(); i++) {
                 section = new SingleSections();
                 sectionobj = sectionArray.getJSONObject(i);
-                section.setSec_ID(sectionobj.getString("section_ID"));
-                section.setSec_Name(sectionobj.getString("section_Name"));
-                array = sectionobj.getJSONArray("questions");
-                for (int g = 0; g < sectionobj.getJSONArray("groups").length(); g++) {
-                    group = new SingleGroup();
-                    groupobj = array.getJSONObject(g);
-                    group.setGroup_ID(groupobj.getString("Group_ID"));
-                    group.setGroup_Qnos(groupobj.getString("Group_Qnos"));
-                    group.setGroup_pickup(groupobj.getString("Group_pickup"));
-                    JSONArray grpQuestions = groupobj.getJSONArray("Group_question");
-                    for (int a =0; a<grpQuestions.length();a++){
-                        question = new SingleQuestion();
-                        questionobj = array.getJSONObject(a);
-                        JSONArray optionsArray = questionobj.getJSONArray("options");
-                        question.setQbm_ID(questionobj.getString("qbm_ID"));
-                        question.setQbm_ReferenceID(questionobj.getString("qbm_ReferenceID"));
-                        question.setQbm_Description(questionobj.getString("qbm_Description"));
-                        question.setQbm_SubjectID(questionobj.getString("qbm_SubjectID"));
-                        question.setQbm_SubjectName(questionobj.getString("qbm_SubjectName"));
-                        question.setQbm_Paper_ID(questionobj.getString("qbm_Paper_ID"));
-                        question.setQbm_Paper_Name(questionobj.getString("qbm_Paper_Name"));
-                        question.setQbm_ChapterID(questionobj.getString("qbm_ChapterID"));
-                        question.setQbm_ChapterName(questionobj.getString("qbm_ChapterName"));
-                        question.setQbm_Sub_CategoryID(questionobj.getString("qbm_Sub_CategoryID"));
-                        question.setQbm_Sub_CategoryName(questionobj.getString("qbm_Sub_CategoryName"));
-                        question.setQbm_level(questionobj.getString("qbm_level"));
-                        question.setQbm_Type(questionobj.getString("qbm_Type"));
-                        question.setQbm_marks(questionobj.getString("qbm_marks"));
-                        question.setQbm_negative_applicable(questionobj.getString("qbm_negative_applicable"));
-                        question.setQbm_negative_mrk(questionobj.getString("qbm_negative_mrk"));
-                        question.setQbm_question_type(questionobj.getString("qbm_question_type"));
-                        question.setQbm_text_applicable(questionobj.getString("qbm_text_applicable"));
-                        question.setQbm_text(questionobj.getString("qbm_text"));
-                        question.setQbm_image_file(questionobj.getString("qbm_image_file"));
-                        question.setQbm_video_file(questionobj.getString("qbm_video_file"));
-                        question.setQbm_media_type(questionobj.getString("qbm_media_type"));
-                        question.setQbm_Group_Flag(questionobj.getString("qbm_group_flag"));
-                        question.setQbm_answer(questionobj.getString("qbm_answer"));
-                        question.setQbm_review_flag(questionobj.getString("qbm_review_flag"));
-                        question.setQbm_Review_Type(questionobj.getString("qbm_Review_Type"));
-                        question.setQbm_Review_Images(questionobj.getString("qbm_Review_Images"));
-                        question.setQbm_review_Video(questionobj.getString("qbm_review_Video"));
-                        question.setQbm_Additional_Images_num(questionobj.getString("qbm_Additional_Images_num"));
-                        question.setQbm_Additional_Image_ref(questionobj.getString("qbm_Additional_Image_ref"));
-                        question.setGbg_id(questionobj.getString("gbg_id"));
-                        question.setQbg_media_type(questionobj.getString("qbg_media_type"));
-                        question.setQbg_media_file(questionobj.getString("qbg_media_file"));
-                        question.setQbg_text(questionobj.getString("qbg_text"));
-                        question.setQbg_no_questions(questionobj.getString("qbg_no_questions"));
-                        question.setQbg_no_pick(questionobj.getString("qbg_no_pick"));
-                        for (int k = 0; k < optionsArray.length(); k++) {
-                            JSONObject optionJSON = optionsArray.getJSONObject(k);
-                            option = new SingleOptions();
-                            option.setQbo_id(optionJSON.getString("qbo_id"));
-                            option.setQbo_seq_no(optionJSON.getString("qbo_seq_no"));
-                            option.setQbo_type(optionJSON.getString("qbo_type"));
-                            option.setQbo_text(optionJSON.getString("qbo_text"));
-                            option.setQbo_media_type(optionJSON.getString("qbo_media_type"));
-                            option.setQbo_media_file(optionJSON.getString("qbo_media_file"));
-                            option.setQbo_answer_flag(optionJSON.getString("qbo_answer_flag"));
-                            optionsList.add(option);
-                            if(optionJSON.getString("qbo_answer_flag").equals("YES")) {
-                                correctOptionList.add(Integer.valueOf(optionJSON.getString("qbo_seq_no")));
-                                Log.e("correct : ","i "+optionJSON.getString("qbo_seq_no"));
-                            }
-                        }
-                        questionList.add(question);
-                    }
-                }
+                section.setSec_ID(sectionobj.getString("Ptu_section_ID"));
+                section.setSec_Name(sectionobj.getString("Ptu_section_name"));
+                array = sectionobj.getJSONArray("Questions");
                 for (int j = 0; j < array.length(); j++) {
                     question = new SingleQuestion();
                     questionobj = array.getJSONObject(j);
                     JSONArray optionsArray = questionobj.getJSONArray("options");
-
+                    Log.e("TestingJson",""+attempt.toString());
                     question.setQbm_ID(questionobj.getString("qbm_ID"));
                     question.setQbm_ReferenceID(questionobj.getString("qbm_ReferenceID"));
                     question.setQbm_Description(questionobj.getString("qbm_Description"));
                     question.setQbm_SubjectID(questionobj.getString("qbm_SubjectID"));
                     question.setQbm_SubjectName(questionobj.getString("qbm_SubjectName"));
                     question.setQbm_Paper_ID(questionobj.getString("qbm_Paper_ID"));
-                    question.setQbm_Paper_Name(questionobj.getString("qbm_Paper_Name"));
+//                    question.setQbm_Paper_Name(questionobj.getString("qbm_Paper_Name"));
                     question.setQbm_ChapterID(questionobj.getString("qbm_ChapterID"));
-                    question.setQbm_ChapterName(questionobj.getString("qbm_ChapterName"));
+//                    question.setQbm_ChapterName(questionobj.getString("qbm_ChapterName"));
                     question.setQbm_Sub_CategoryID(questionobj.getString("qbm_Sub_CategoryID"));
-                    question.setQbm_Sub_CategoryName(questionobj.getString("qbm_Sub_CategoryName"));
+//                    question.setQbm_Sub_CategoryName(questionobj.getString("qbm_Sub_CategoryName"));
                     question.setQbm_level(questionobj.getString("qbm_level"));
                     question.setQbm_Type(questionobj.getString("qbm_Type"));
-
                     question.setQbm_marks(questionobj.getString("qbm_marks"));
                     question.setQbm_negative_applicable(questionobj.getString("qbm_negative_applicable"));
-                    question.setQbm_negative_mrk(questionobj.getString("qbm_negative_mrk"));
+                    question.setQbm_negative_mrk(questionobj.getDouble("qbm_negative_mrk"));
                     question.setQbm_question_type(questionobj.getString("qbm_question_type"));
                     question.setQbm_text_applicable(questionobj.getString("qbm_text_applicable"));
                     question.setQbm_text(questionobj.getString("qbm_text"));
@@ -959,7 +882,6 @@ public class TestActivity extends AppCompatActivity implements
 //                    question.setQbm_Group_ID(questionobj.getString("qbm_Group_ID"));
 //                    question.setQbm_Group_q_no(questionobj.getString("qbm_Group_q_no"));
                     question.setQbm_answer(questionobj.getString("qbm_answer"));
-
                     question.setQbm_review_flag(questionobj.getString("qbm_review_flag"));
                     question.setQbm_Review_Type(questionobj.getString("qbm_Review_Type"));
                     question.setQbm_Review_Images(questionobj.getString("qbm_Review_Images"));
@@ -967,11 +889,13 @@ public class TestActivity extends AppCompatActivity implements
                     question.setQbm_Additional_Images_num(questionobj.getString("qbm_Additional_Images_num"));
                     question.setQbm_Additional_Image_ref(questionobj.getString("qbm_Additional_Image_ref"));
                     question.setGbg_id(questionobj.getString("gbg_id"));
-                    question.setQbg_media_type(questionobj.getString("qbg_media_type"));
-                    question.setQbg_media_file(questionobj.getString("qbg_media_file"));
-                    question.setQbg_text(questionobj.getString("qbg_text"));
+
+                    question.setQbg_media_type(questionobj.getString("gbg_media_type"));
+                    question.setQbg_media_file(questionobj.getString("gbg_media_file"));
+                    question.setQbg_text(questionobj.getString("gbg_text"));
+
+
                     question.setQbg_no_questions(questionobj.getString("qbg_no_questions"));
-                    question.setQbg_no_pick(questionobj.getString("qbg_no_pick"));
                     for (int k = 0; k < optionsArray.length(); k++) {
                         JSONObject optionJSON = optionsArray.getJSONObject(k);
 
@@ -1361,8 +1285,8 @@ public class TestActivity extends AppCompatActivity implements
         try {
             Log.e("ItemSelected","reached");
             mHideRunnable.run();
-            //Instantiate grid adapter
             pos = position;
+            //Instantiate grid adapter
             scrollAdapter = new ScrollGridAdapter(TestActivity.this, generateArray(attempt.getJSONArray("sections").getJSONObject(pos)),listOfLists.get(pos),getScreenSize());
             setScrollbar(pos);
             if (flag) {

@@ -8,10 +8,11 @@ public class SingleQuestion {
 
     public String qbm_ID,qbm_ReferenceID,qbm_Description,
             qbm_SubjectID,qbm_SubjectName,qbm_Paper_ID,qbm_Paper_Name,qbm_ChapterID,qbm_ChapterName,qbm_Sub_CategoryID,qbm_Sub_CategoryName,
-            qbm_level,qbm_Type,qbm_marks,qbm_negative_applicable,qbm_negative_mrk,qbm_question_type,qbm_text_applicable,qbm_text,
+            qbm_level,qbm_Type,qbm_marks,qbm_negative_applicable,qbm_question_type,qbm_text_applicable,qbm_text,
             qbm_image_file,qbm_video_file,qbm_media_type,qbm_Group_Flag,qbm_Group_ID,qbm_Group_q_no,qbm_answer,qbm_review_flag,
             qbm_Review_Type,qbm_Review_Images,qbm_review_Video,qbm_Additional_Images_num,qbm_Additional_Image_ref,gbg_id,qbg_media_type,
             qbg_media_file,qbg_text,qbg_no_questions,qbg_no_pick,qba_sequence,qba_type,qba_media_file;
+    Double qbm_negative_mrk;
 
     public SingleQuestion(){
 
@@ -137,11 +138,11 @@ public class SingleQuestion {
         this.qbm_negative_applicable = qbm_negative_applicable;
     }
 
-    public String getQbm_negative_mrk() {
+    public Double getQbm_negative_mrk() {
         return qbm_negative_mrk;
     }
 
-    public void setQbm_negative_mrk(String qbm_negative_mrk) {
+    public void setQbm_negative_mrk(Double qbm_negative_mrk) {
         this.qbm_negative_mrk = qbm_negative_mrk;
     }
 

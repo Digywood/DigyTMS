@@ -134,7 +134,6 @@ public class JSONParser {
                             }
                         }
 
-
 //                        if(groupList.contains(quesObj.getString("gbg_id"))){
 //
 //                        }else{
@@ -515,13 +514,13 @@ public class JSONParser {
 
             Log.e("SLength",""+cja_sections.length());
 
-            File file = new File(dwdpath+"sample.json");
+            File file = new File(URLClass.mainpath+"sample.json");
             if (!file.exists()) {
                 file.createNewFile();
             }
 
             byte[] bytes = cmainObj.toString().getBytes("UTF-8");
-            FileOutputStream out = new FileOutputStream(dwdpath+"sample.json");
+            FileOutputStream out = new FileOutputStream(URLClass.mainpath+"sample.json");
             out.write(bytes);
             out.close();
 

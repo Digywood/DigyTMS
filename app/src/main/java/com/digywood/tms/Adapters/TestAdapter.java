@@ -16,6 +16,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.digywood.tms.FlashCardActivity;
 import com.digywood.tms.JSONParser;
@@ -23,6 +24,7 @@ import com.digywood.tms.DBHelper.DBHelper;
 import com.digywood.tms.R;
 import com.digywood.tms.Pojo.SingleTest;
 import com.digywood.tms.ReviewActivity;
+import com.digywood.tms.SaveJSONdataToFile;
 import com.digywood.tms.TestActivity;
 import com.digywood.tms.URLClass;
 
@@ -31,6 +33,7 @@ import org.json.JSONObject;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
+import java.io.IOException;
 import java.util.ArrayList;
 
 /**
@@ -41,11 +44,13 @@ public class TestAdapter extends RecyclerView.Adapter<TestAdapter.MyViewHolder> 
 
     ArrayList<SingleTest> testList;
     ArrayList<String> downloadedList=new ArrayList<>();
+    ArrayList<String> downloadfileList =new ArrayList<>();
+    ArrayList<String> groupIds=new ArrayList<>();
     ArrayList<String> chktestList=new ArrayList<>();
     ArrayList<String> fimageList=new ArrayList<>();
     Context mycontext;
     JSONParser myparser;
-    String filedata="";
+    String filedata="",path, jsonPath, photoPath, enrollid, courseid, subjectId, paperid, testid, json;
 
     public class MyViewHolder extends RecyclerView.ViewHolder{
 
@@ -85,6 +90,8 @@ public class TestAdapter extends RecyclerView.Adapter<TestAdapter.MyViewHolder> 
         }else
             holder.btn_resume.setEnabled(true);
         int count = dataObj.getAttempCount() - 1 ;
+
+
         Cursor c = dataObj.getAttempt(count);
         //if cursor has values then the test is being resumed and data is retrieved from database
         if(c.getCount()> 0) {
@@ -113,10 +120,34 @@ public class TestAdapter extends RecyclerView.Adapter<TestAdapter.MyViewHolder> 
             @Override
             public void onClick(View v) {
                 dataObj.Destroy("attempt_data");
-                dataObj.Destroy("attempt_list");
-                Intent i=new Intent(mycontext, TestActivity.class);
-                i.putExtra("TestId",testList.get(position).getTestid());
-                mycontext.startActivity(i);
+//                dataObj.Destroy("attempt_list");
+                testid = singletest.getTestid();
+                Cursor cursor = dataObj.getSingleStudentTests(testid);
+                if (cursor.getCount() > 0) {
+                    while (cursor.moveToNext()) {
+                        enrollid = cursor.getString(cursor.getColumnIndex("sptu_entroll_id"));
+                        courseid = cursor.getString(cursor.getColumnIndex("sptu_course_id"));
+                        subjectId = cursor.getString(cursor.getColumnIndex("sptu_subjet_ID"));
+                        paperid = cursor.getString(cursor.getColumnIndex("sptu_paper_ID"));
+                    }
+                }
+
+                Log.e("path_vars",enrollid+" "+courseid+" "+subjectId+" "+paperid+" "+testid);
+                path = enrollid + "/" + courseid + "/" + subjectId + "/" + paperid + "/" + testid + "/";
+                photoPath = URLClass.mainpath + path;
+                jsonPath = URLClass.mainpath + path + "Attempt/"+ testid + ".json";
+                try {
+                    json = new String(SaveJSONdataToFile.bytesFromFile(URLClass.mainpath + path + "Attempt/"+ testid + ".json"), "UTF-8");
+                } catch (IOException|ClassNotFoundException|NullPointerException e) {
+                    e.printStackTrace();
+                }
+                if (readJson(json)) {
+                    Intent i=new Intent(mycontext, TestActivity.class);
+                    i.putExtra("json",json);
+                    mycontext.startActivity(i);
+                }else {
+                    Toast.makeText(mycontext,"FILES NOT DOWNLOADED",Toast.LENGTH_LONG).show();
+                }
 
             }
         });
@@ -212,12 +243,12 @@ public class TestAdapter extends RecyclerView.Adapter<TestAdapter.MyViewHolder> 
         alert.show();
     }
 
-    public ArrayList<String> readJson(String filedata){
-        ArrayList<String> flashimageList=new ArrayList();
-        JSONObject mainObj=null,secObj=null,quesObj=null;
-        JSONArray ja_sections,ja_questions;
+    public boolean readJson(String filedata){
+        downloadfileList.clear();
+        JSONObject mainObj,secObj,singlequesObj,optionsObj,additionsObj;
+        JSONArray ja_sections,ja_questions,optionsArray,additionsArray;
         String testid="",section="",sectionid="";
-
+        boolean value =  true;
         try{
             mainObj=new JSONObject(filedata);
 
@@ -237,10 +268,63 @@ public class TestAdapter extends RecyclerView.Adapter<TestAdapter.MyViewHolder> 
 
                 Log.e("QuesArray Length---",""+ja_questions.length());
                 for(int q=0;q<ja_questions.length();q++){
+                    singlequesObj=ja_questions.getJSONObject(i);
+                    if(singlequesObj.getString("qbm_group_flag").equalsIgnoreCase("YES")){
 
-                    quesObj=ja_questions.getJSONObject(q);
-                    String flashname=quesObj.getString("qbm_flash_image");
-                    flashimageList.add(flashname);
+                        if(groupIds.contains(singlequesObj.getString("gbg_id"))){
+
+                        }else{
+                            groupIds.add(singlequesObj.getString("gbg_id"));
+                        }
+
+                    }else{
+
+                    }
+
+                    if(downloadfileList.contains(singlequesObj.getString("qbm_image_file"))){
+
+                    }else{
+                        value = false;
+                        downloadfileList.add(singlequesObj.getString("qbm_image_file"));
+                    }
+                    if(downloadfileList.contains(singlequesObj.getString("qbm_Review_Images"))){
+
+                    }else{
+                        value = false;
+                        downloadfileList.add(singlequesObj.getString("qbm_Review_Images"));
+                    }
+                    if(downloadfileList.contains(singlequesObj.getString("qbm_Additional_Image_ref"))){
+
+                    }else{
+                        value = false;
+                        downloadfileList.add(singlequesObj.getString("qbm_Additional_Image_ref"));
+                    }
+
+                    optionsArray=singlequesObj.getJSONArray("options");
+                    for(int j=0;j<optionsArray.length();j++){
+
+                        optionsObj=optionsArray.getJSONObject(j);
+                        if(downloadfileList.contains(optionsObj.getString("qbo_media_file"))){
+
+                        }else{
+                            value = false;
+                            downloadfileList.add(optionsObj.getString("qbo_media_file"));
+                        }
+                    }
+
+                    additionsArray=singlequesObj.getJSONArray("additions");
+                    for(int k=0;k<additionsArray.length();k++){
+
+                        additionsObj=additionsArray.getJSONObject(k);
+                        if(downloadfileList.contains(additionsObj.getString("qba_media_file"))){
+
+                        }else{
+                            value = false;
+                            downloadfileList.add(additionsObj.getString("qba_media_file"));
+                        }
+
+                    }
+
                 }
 
             }
@@ -249,6 +333,6 @@ public class TestAdapter extends RecyclerView.Adapter<TestAdapter.MyViewHolder> 
             e.printStackTrace();
             Log.e("JSONPARSE---",e.toString()+" : "+e.getStackTrace()[0].getLineNumber());
         }
-        return flashimageList;
+        return value;
     }
 }
