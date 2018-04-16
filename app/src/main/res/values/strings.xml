@@ -11,6 +11,7 @@
         <item>Post Graduation</item>
         <item>Others</item>
     </string-array>
+    <string name="title_activity_main">MainActivity</string>
     <string-array name="sections">
         <item>Select</item>
         <item>Section1</item>
@@ -24,7 +25,7 @@
     <string name="dummy_button">Dummy Button</string>
     <string name="dummy_content">DUMMY\nCONTENT</string>
     <string name="option_image">Option Image</string>
-
+    <string name="close_text">Close</string>
     <string name="title_activity_flash_card">FlashCardActivity</string>
 
 </resources>

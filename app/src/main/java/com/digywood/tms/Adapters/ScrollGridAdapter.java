@@ -1,6 +1,7 @@
 package com.digywood.tms.Adapters;
 
 import android.content.Context;
+import android.content.res.Configuration;
 import android.graphics.Color;
 import android.view.Gravity;
 import android.view.View;
@@ -8,6 +9,7 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
+import com.digywood.tms.Pojo.SingleQuestionList;
 import com.digywood.tms.R;
 
 import org.json.JSONArray;
@@ -24,15 +26,15 @@ public class ScrollGridAdapter extends BaseAdapter{
 
     TextView textView;
     Context c;
+    private int size;
     JSONArray samplequestion;
-    ArrayList<Integer> marked;
-    ArrayList<Integer> answered;
-    public ScrollGridAdapter(Context c, JSONArray samplequestion, ArrayList<Integer> marked, ArrayList<Integer> answered ){
+    ArrayList<SingleQuestionList> q_List;
+    public ScrollGridAdapter(Context c, JSONArray samplequestion , ArrayList<SingleQuestionList> q_List,int size){
 
         this.c = c;
         this.samplequestion = samplequestion;
-        this.marked = marked;
-        this.answered = answered;
+        this.q_List = q_List;
+        this.size = size;
     }
 
     @Override
@@ -67,14 +69,47 @@ public class ScrollGridAdapter extends BaseAdapter{
         textView.setTextColor(Color.WHITE);
         textView.setTextSize(20);
         textView.setGravity(Gravity.CENTER);
+        textView.setBackgroundColor(c.getResources().getColor(setResource(size,q_List.get(position).getQ_status())));
 
-        if(marked.contains(position)){
-            textView.setBackgroundColor(c.getResources().getColor(R.color.red));
-        }
-        if(answered.contains(position)){
-            textView.setBackgroundColor(c.getResources().getColor(R.color.green));
-        }
         return textView;
+    }
+
+    public void updateList(ArrayList<SingleQuestionList> q_list){
+        this.q_List = q_list;
+        notifyDataSetChanged();
+    }
+
+    public int setResource(int size, String status){
+        int resource = -1;
+        if(size == Configuration.SCREENLAYOUT_SIZE_LARGE){
+            switch (status){
+                case "NOT_ATTEMPTED": resource = R.color.transp;
+                    break;
+                case "ATTEMPTED": resource = R.color.confirm;
+                    break;
+                case "SKIPPED": resource = R.color.skipped;
+                    break;
+                case "BOOKMARKED": resource = R.color.bookmark;
+                    break;
+                default: resource = R.color.transp;
+                    break;
+            }
+        }
+        else if(size == Configuration.SCREENLAYOUT_SIZE_NORMAL ){
+            switch (status){
+                case "NOT_ATTEMPTED": resource = R.color.transp;
+                    break;
+                case "ATTEMPTED": resource = R.color.confirm;
+                    break;
+                case "SKIPPED": resource = R.color.skipped;
+                    break;
+                case "BOOKMARKED": resource = R.color.bookmark;
+                    break;
+                default: resource = R.color.transp;
+                    break;
+            }
+        }
+        return resource;
     }
 
 }
