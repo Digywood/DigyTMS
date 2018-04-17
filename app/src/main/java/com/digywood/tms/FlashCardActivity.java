@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Configuration;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.support.v7.app.ActionBar;
@@ -36,11 +37,11 @@ import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.digywood.tms.Adapters.CardQuestionAdapter;
 import com.digywood.tms.Adapters.QuestionListAdapter;
 import com.digywood.tms.Adapters.ScrollGridAdapter;
 import com.digywood.tms.Adapters.ScrollGridCardAdapter;
+import com.digywood.tms.DBHelper.DBHelper;
 import com.digywood.tms.Pojo.SingleQuestion;
 import com.digywood.tms.Pojo.SingleQuestionList;
 
@@ -50,6 +51,8 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.TimeZone;
 
 /**
  * An example full-screen activity that shows and hides the system UI (i.e.
@@ -60,7 +63,7 @@ public class FlashCardActivity extends AppCompatActivity {
     Spinner sp_sections;
     RecyclerView question_scroll;
     ImageView iv_quesimg,iv_fullscreen;
-    String filedata,status="";
+    String filedata,status="",testId="",studentid="",enrollid="",courseid="",subjectid="",paperid="",startDttm="",endDttm="";
     int d=0,pos=0,secpos=0;
     GridView gridView;
     private PopupWindow pw;
@@ -71,12 +74,14 @@ public class FlashCardActivity extends AppCompatActivity {
     JSONArray gja_sections,gja_questions;
     static int screensize=0;
     Dialog mydialog;
-    int attemptcount=0,knowcount=0,donknowcount=0,skipcount=0;
+    DBHelper myhelper;
+    int attemptcount=0,knowcount=0,donknowcount=0,skipcount=0,Qcount=0;
     TextView tv_attempted,tv_iknow,tv_idonknow,tv_skipped;
     ArrayList<Integer> knownList=new ArrayList<>();
     ArrayList<Integer> donknowList=new ArrayList<>();
     ArrayList<Integer> skipList=new ArrayList<>();
     ArrayList<String> sectionList=new ArrayList<>();
+    ArrayList<ArrayList<SingleQuestionList>> baseQList=new ArrayList();
     ArrayList<SingleQuestionList> questionList=new ArrayList<>();
     ArrayList<String> fimageList=new ArrayList<>();
     Button btn_know,btn_idonknow,btn_prev,btn_next,btn_answer;
@@ -162,6 +167,26 @@ public class FlashCardActivity extends AppCompatActivity {
 //        myrlayout = findViewById(R.id.header);
         myrlayout = findViewById(R.id.header);
 
+        myhelper=new DBHelper(this);
+
+        Intent cmgintent=getIntent();
+        if(cmgintent!=null){
+            testId=cmgintent.getStringExtra("testId");
+        }
+
+        if(testId!=null){
+            Cursor mycursor=myhelper.getSingleTestData(testId);
+            if(mycursor.getCount()>0){
+                studentid=mycursor.getString(mycursor.getColumnIndex("sptu_student_ID"));
+                enrollid=mycursor.getString(mycursor.getColumnIndex("sptu_entroll_id"));
+                courseid=mycursor.getString(mycursor.getColumnIndex("sptu_course_id"));
+                subjectid=mycursor.getString(mycursor.getColumnIndex("sptu_subjet_ID"));
+                paperid=mycursor.getString(mycursor.getColumnIndex("sptu_paper_ID"));
+            }else{
+                mycursor.close();
+            }
+        }
+
         sp_sections=findViewById(R.id.fl_sections);
         question_scroll=findViewById(R.id.question_scroll);
         iv_quesimg=findViewById(R.id.fl_ivques);
@@ -177,8 +202,10 @@ public class FlashCardActivity extends AppCompatActivity {
         tv_idonknow=findViewById(R.id.tv_idonknowcount);
         tv_skipped=findViewById(R.id.tv_skippedcount);
 
+        startDttm= new java.text.SimpleDateFormat("yyyy-MM-dd hh:mm:ss").format(Calendar.getInstance(TimeZone.getDefault()).getTime());
+
         try{
-            BufferedReader br = new BufferedReader(new FileReader(URLClass.mainpath+"sample"+".json"));
+            BufferedReader br = new BufferedReader(new FileReader(URLClass.mainpath+"EAAA000009/SSCT1001/SSCS0002/PAA002/PTU0002/"+"PTU0002_01"+".json"));
             StringBuilder sb = new StringBuilder();
             String line = br.readLine();
 
@@ -275,12 +302,13 @@ public class FlashCardActivity extends AppCompatActivity {
                 try{
                     questionList.clear();
                     secpos=position;
-                    JSONObject secObj=gja_sections.getJSONObject(position);
-
-                    gja_questions=secObj.getJSONArray("Questions");
-                    for(int j=0;j<gja_questions.length();j++){
-                        questionList.add(new SingleQuestionList(gja_questions.getJSONObject(j).getString("qbm_SequenceId"),"NOT_ATTEMPTED"));
-                    }
+//                    JSONObject secObj=gja_sections.getJSONObject(position);
+//
+//                    gja_questions=secObj.getJSONArray("Questions");
+//                    for(int j=0;j<gja_questions.length();j++){
+//                        questionList.add(new SingleQuestionList(gja_questions.getJSONObject(j).getString("qbm_SequenceId"),"NOT_ATTEMPTED"));
+//                    }
+                    questionList=baseQList.get(position);
                     cAdp.updateList(questionList);
                 }catch (Exception e){
                     e.printStackTrace();
@@ -597,6 +625,15 @@ public class FlashCardActivity extends AppCompatActivity {
 
                 }
 
+                questionList.clear();
+                gja_questions=secObj.getJSONArray("Questions");
+                for(int j=0;j<gja_questions.length();j++){
+                    Qcount++;
+                    questionList.add(new SingleQuestionList(gja_questions.getJSONObject(j).getString("qbm_SequenceId"),"NOT_ATTEMPTED"));
+                }
+
+                baseQList.add(questionList);
+
                 section=secObj.getString("Ptu_section_name");
                 sectionList.add(section);
                 sectionid=secObj.getString("Ptu_section_ID");
@@ -676,10 +713,24 @@ public class FlashCardActivity extends AppCompatActivity {
         AlertDialog.Builder builder = new AlertDialog.Builder(FlashCardActivity.this,R.style.ALERT_THEME);
         builder.setMessage(Html.fromHtml("<font color='#FFFFFF'>"+messege+"</font>"))
                 .setCancelable(false)
-                .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                .setPositiveButton("Ok",new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
 
+                        int attemptcount=myhelper.getFlashAttemptNum(testId);
+                        attemptcount=attemptcount+1;
+                        double percentage=knowcount/Qcount;
+//                        double percentage=knowcount/questionList.size();
+                        endDttm= new java.text.SimpleDateFormat("yyyy-MM-dd hh:mm:ss").format(Calendar.getInstance(TimeZone.getDefault()).getTime());
+                        long iFlag=myhelper.insertFlashAttempt(studentid,enrollid,courseid,subjectid,paperid,testId,attemptcount,startDttm,endDttm,knowcount,donknowcount,skipcount,percentage,"Completed");
+                        if(iFlag>0){
+                            Log.e("FlashCardActivity----","Attempt Inserted");
+                        }else{
+                            Log.e("FlashCardActivity----","Unable to Insert Attempt");
+                        }
+
                         dialog.cancel();
+
+                        finish();
 
                     }
                 });
