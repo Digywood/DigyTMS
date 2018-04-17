@@ -184,8 +184,7 @@ public class MainActivity extends AppCompatActivity {
                     Log.e("TestActivity1-----",e.toString());
                 }
 
-                myparser=new JSONParser();
-                myparser.JSONParser(filedata,URLClass.mainpath);
+                myparser=new JSONParser(filedata,URLClass.mainpath);
 
 //                getTestConfig("PTAA00002","'GAA0001','GAA0004','GAA0006','GAA0008'");
 

@@ -30,6 +30,7 @@ import com.digywood.tms.URLClass;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
@@ -43,39 +44,40 @@ import java.util.ArrayList;
 public class TestAdapter extends RecyclerView.Adapter<TestAdapter.MyViewHolder> {
 
     ArrayList<SingleTest> testList;
-    ArrayList<String> downloadedList=new ArrayList<>();
-    ArrayList<String> downloadfileList =new ArrayList<>();
-    ArrayList<String> groupIds=new ArrayList<>();
-    ArrayList<String> chktestList=new ArrayList<>();
-    ArrayList<String> fimageList=new ArrayList<>();
+    ArrayList<String> downloadedList = new ArrayList<>();
+    ArrayList<String> downloadfileList = new ArrayList<>();
+    ArrayList<String> groupIds = new ArrayList<>();
+    ArrayList<String> chktestList = new ArrayList<>();
+    ArrayList<String> fimageList = new ArrayList<>();
     Context mycontext;
+    Boolean value = false;
     JSONParser myparser;
-    String filedata="",path, jsonPath, photoPath, enrollid, courseid, subjectId, paperid, testid, json;
+    String filedata = "", path, jsonPath, attemptPath, photoPath, enrollid, courseid, subjectId, paperid, testid, attempt ,json;
 
-    public class MyViewHolder extends RecyclerView.ViewHolder{
+    public class MyViewHolder extends RecyclerView.ViewHolder {
 
-        public TextView tv_testid,tv_teststatus;
-        public Button btn_start,btn_resume;
+        public TextView tv_testid, tv_teststatus;
+        public Button btn_start, btn_resume;
         public CheckBox cb_download;
 
-        public MyViewHolder(View view){
+        public MyViewHolder(View view) {
             super(view);
-            tv_testid=view.findViewById(R.id.tv_testid);
-            tv_teststatus=view.findViewById(R.id.tv_teststatus);
-            btn_start=view.findViewById(R.id.btn_teststart);
-            btn_resume=view.findViewById(R.id.btn_testresume);
-            cb_download=view.findViewById(R.id.cb_testselection);
+            tv_testid = view.findViewById(R.id.tv_testid);
+            tv_teststatus = view.findViewById(R.id.tv_teststatus);
+            btn_start = view.findViewById(R.id.btn_teststart);
+            btn_resume = view.findViewById(R.id.btn_testresume);
+            cb_download = view.findViewById(R.id.cb_testselection);
         }
     }
 
-    public TestAdapter(ArrayList<SingleTest> testList,Context c){
-        this.testList=testList;
-        this.mycontext=c;
+    public TestAdapter(ArrayList<SingleTest> testList, Context c) {
+        this.testList = testList;
+        this.mycontext = c;
     }
 
     @Override
     public MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.activity_testitem, parent,false);
+        View itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.activity_testitem, parent, false);
         return new TestAdapter.MyViewHolder(itemView);
     }
 
@@ -85,34 +87,35 @@ public class TestAdapter extends RecyclerView.Adapter<TestAdapter.MyViewHolder> 
         holder.tv_testid.setText(singletest.getTestid());
         holder.tv_teststatus.setText(singletest.getStatus());
         final DBHelper dataObj = new DBHelper(mycontext);
-        if(dataObj.getQuestionCount() == 0){
+        if (dataObj.getQuestionCount() == 0) {
             holder.btn_resume.setEnabled(false);
-        }else
+        } else
             holder.btn_resume.setEnabled(true);
-        int count = dataObj.getAttempCount() - 1 ;
+        int count = dataObj.getAttempCount() - 1;
 
 
         Cursor c = dataObj.getAttempt(count);
         //if cursor has values then the test is being resumed and data is retrieved from database
-        if(c.getCount()> 0) {
+        if (c.getCount() > 0) {
             c.moveToLast();
             if (c.getInt(c.getColumnIndex("Attempt_Status")) == 1) {
                 holder.btn_resume.setText("Resume");
                 holder.btn_resume.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        Intent i=new Intent(mycontext, TestActivity.class);
+                        Intent i = new Intent(mycontext, TestActivity.class);
                         mycontext.startActivity(i);
                     }
                 });
-            }
-            else {
+            } else {
                 holder.btn_resume.setText("Review");
                 holder.btn_resume.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        Intent i=new Intent(mycontext, ReviewActivity.class);
-                        mycontext.startActivity(i);}});
+                        Intent i = new Intent(mycontext, ReviewActivity.class);
+                        mycontext.startActivity(i);
+                    }
+                });
             }
         }
 
@@ -120,7 +123,7 @@ public class TestAdapter extends RecyclerView.Adapter<TestAdapter.MyViewHolder> 
             @Override
             public void onClick(View v) {
                 dataObj.Destroy("attempt_data");
-//                dataObj.Destroy("attempt_list");
+                dataObj.Destroy("attempt_list");
                 testid = singletest.getTestid();
                 Cursor cursor = dataObj.getSingleStudentTests(testid);
                 if (cursor.getCount() > 0) {
@@ -132,70 +135,65 @@ public class TestAdapter extends RecyclerView.Adapter<TestAdapter.MyViewHolder> 
                     }
                 }
 
-                Log.e("path_vars",enrollid+" "+courseid+" "+subjectId+" "+paperid+" "+testid);
+                Log.e("path_vars", enrollid + " " + courseid + " " + subjectId + " " + paperid + " " + testid);
                 path = enrollid + "/" + courseid + "/" + subjectId + "/" + paperid + "/" + testid + "/";
                 photoPath = URLClass.mainpath + path;
-                jsonPath = URLClass.mainpath + path + "Attempt/"+ testid + ".json";
+                attemptPath = URLClass.mainpath + path + "Attempt/" + testid + ".json";
+                jsonPath = URLClass.mainpath + path + testid + ".json";
                 try {
-                    json = new String(SaveJSONdataToFile.bytesFromFile(URLClass.mainpath + path + "Attempt/"+ testid + ".json"), "UTF-8");
-                } catch (IOException|ClassNotFoundException|NullPointerException e) {
+                    /*json = new String(SaveJSONdataToFile.bytesFromFile(jsonPath), "UTF-8");
+                    Log.e("JSON_testadapter",json.toString());
+                    JSONParser parser = new JSONParser(json,attemptPath);*/
+                    attempt = new String(SaveJSONdataToFile.bytesFromFile(attemptPath), "UTF-8");
+//                    Log.e("Attempt_testadapter",attempt.toString());
+                    Intent i = new Intent(mycontext, TestActivity.class);
+                    i.putExtra("json", attempt);
+                    mycontext.startActivity(i);
+                } catch (IOException | ClassNotFoundException | NullPointerException e) {
                     e.printStackTrace();
                 }
-                if (readJson(json)) {
-                    Intent i=new Intent(mycontext, TestActivity.class);
-                    i.putExtra("json",json);
-                    mycontext.startActivity(i);
-                }else {
-                    Toast.makeText(mycontext,"FILES NOT DOWNLOADED",Toast.LENGTH_LONG).show();
-                }
+/*                if (value) {
+
+                } else {
+                    Toast.makeText(mycontext, "FILES NOT DOWNLOADED", Toast.LENGTH_LONG).show();
+                }*/
 
             }
         });
 
-//                try{
-//                    BufferedReader br = new BufferedReader(new FileReader(URLClass.mainpath+"PTAA00002"+".json"));
-//                    StringBuilder sb = new StringBuilder();
-//                    String line = br.readLine();
-//
-//                    while (line != null) {
-//                        sb.append(line);
-//                        sb.append("\n");
-//                        line = br.readLine();
-//                    }
-//                    filedata=sb.toString();
-//                    br.close();
-//                }catch (Exception e){
-//                    e.printStackTrace();
-//                    Log.e("TestActivity1-----",e.toString());
-//                }
-//
-//                myparser=new JSONParser();
-//                myparser.JSONParser(filedata);
+        holder.btn_resume.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                Intent i=new Intent(mycontext, ReviewActivity.class);
+                mycontext.startActivity(i);
+
+            }});
 
         holder.cb_download.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
-                if(holder.cb_download.isChecked()){
-                    if(singletest.getStatus().equalsIgnoreCase("DOWNLOADED")){
+                if (holder.cb_download.isChecked()) {
+                    if (singletest.getStatus().equalsIgnoreCase("DOWNLOADED")) {
                         downloadedList.add(singletest.getTestid());
-                    }else{
+                    } else {
 
                     }
 
-                    if(chktestList.size()!=0){
-                        if(chktestList.contains(singletest.getTestid())){
+                    if (chktestList.size() != 0) {
+                        if (chktestList.contains(singletest.getTestid())) {
 
-                        }else{
+                        } else {
                             chktestList.add(singletest.getTestid());
                         }
-                    }else{
+                    } else {
                         chktestList.add(singletest.getTestid());
                     }
 
-                }else{
+                } else {
 
-                    if(downloadedList.contains(singletest.getTestid())){
+                    if (downloadedList.contains(singletest.getTestid())) {
                         downloadedList.remove(singletest.getTestid());
                     }
 
@@ -207,7 +205,7 @@ public class TestAdapter extends RecyclerView.Adapter<TestAdapter.MyViewHolder> 
 
     }
 
-    public void updateTests(ArrayList<SingleTest> list){
+    public void updateTests(ArrayList<SingleTest> list) {
         testList = list;
         notifyDataSetChanged();
     }
@@ -225,9 +223,9 @@ public class TestAdapter extends RecyclerView.Adapter<TestAdapter.MyViewHolder> 
         return testList.size();
     }
 
-    public  void showAlert(String messege){
-        AlertDialog.Builder builder = new AlertDialog.Builder(mycontext,R.style.ALERT_THEME);
-        builder.setMessage(Html.fromHtml("<font color='#FFFFFF'>"+messege+"</font>"))
+    public void showAlert(String messege) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(mycontext, R.style.ALERT_THEME);
+        builder.setMessage(Html.fromHtml("<font color='#FFFFFF'>" + messege + "</font>"))
                 .setCancelable(false)
                 .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
@@ -243,96 +241,99 @@ public class TestAdapter extends RecyclerView.Adapter<TestAdapter.MyViewHolder> 
         alert.show();
     }
 
-    public boolean readJson(String filedata){
-        downloadfileList.clear();
-        JSONObject mainObj,secObj,singlequesObj,optionsObj,additionsObj;
-        JSONArray ja_sections,ja_questions,optionsArray,additionsArray;
-        String testid="",section="",sectionid="";
-        boolean value =  true;
-        try{
-            mainObj=new JSONObject(filedata);
 
-            testid=mainObj.getString("sptu_ID");
+    public ArrayList<String> readJson(String filedata) {
+        ArrayList<String> flashimageList = new ArrayList();
+        JSONObject mainObj, secObj, singlequesObj, optionsObj, additionsObj;
+        JSONArray ja_sections, ja_questions, optionsArray, additionsArray;
+        String testid = "", section = "", sectionid = "";
 
-            Log.e("JSON--",mainObj.getString("sptu_ID"));
+        try {
+            mainObj = new JSONObject(filedata);
 
-            ja_sections=mainObj.getJSONArray("Sections");
+            testid = mainObj.getString("sptu_ID");
 
-            Log.e("sectionArray Length---",""+ja_sections.length());
-            for(int i=0;i<ja_sections.length();i++){
+            Log.e("JSON--", mainObj.getString("sptu_ID"));
 
-                secObj=ja_sections.getJSONObject(i);
-                section=secObj.getString("Ptu_section_name");
-                sectionid=secObj.getString("Ptu_section_ID");
-                ja_questions=secObj.getJSONArray("Questions");
+            ja_sections = mainObj.getJSONArray("Sections");
 
-                Log.e("QuesArray Length---",""+ja_questions.length());
-                for(int q=0;q<ja_questions.length();q++){
-                    singlequesObj=ja_questions.getJSONObject(i);
-                    if(singlequesObj.getString("qbm_group_flag").equalsIgnoreCase("YES")){
+            Log.e("sectionArray Length---", "" + ja_sections.length());
+            for (int i = 0; i < ja_sections.length(); i++) {
 
-                        if(groupIds.contains(singlequesObj.getString("gbg_id"))){
+                secObj = ja_sections.getJSONObject(i);
+                section = secObj.getString("Ptu_section_name");
+                sectionid = secObj.getString("Ptu_section_ID");
+                ja_questions = secObj.getJSONArray("Questions");
 
-                        }else{
+                Log.e("QuesArray Length---", "" + ja_questions.length());
+                for (int q = 0; q < ja_questions.length(); q++) {
+
+                    singlequesObj = ja_questions.getJSONObject(q);
+                    String flashname = singlequesObj.getString("qbm_flash_image");
+                    flashimageList.add(flashname);
+                    singlequesObj = ja_questions.getJSONObject(q);
+                    if (singlequesObj.getString("qbm_group_flag").equalsIgnoreCase("YES")) {
+
+                        if (groupIds.contains(singlequesObj.getString("gbg_id"))) {
+
+                        } else {
                             groupIds.add(singlequesObj.getString("gbg_id"));
                         }
 
-                    }else{
+                    } else {
 
                     }
 
-                    if(downloadfileList.contains(singlequesObj.getString("qbm_image_file"))){
+                    if (downloadfileList.contains(singlequesObj.getString("qbm_image_file"))) {
 
-                    }else{
+                    } else {
                         value = false;
                         downloadfileList.add(singlequesObj.getString("qbm_image_file"));
                     }
-                    if(downloadfileList.contains(singlequesObj.getString("qbm_Review_Images"))){
+                    if (downloadfileList.contains(singlequesObj.getString("qbm_Review_Images"))) {
 
-                    }else{
+                    } else {
                         value = false;
                         downloadfileList.add(singlequesObj.getString("qbm_Review_Images"));
                     }
-                    if(downloadfileList.contains(singlequesObj.getString("qbm_Additional_Image_ref"))){
+                    if (downloadfileList.contains(singlequesObj.getString("qbm_Additional_Image_ref"))) {
 
-                    }else{
+                    } else {
                         value = false;
                         downloadfileList.add(singlequesObj.getString("qbm_Additional_Image_ref"));
                     }
 
-                    optionsArray=singlequesObj.getJSONArray("options");
-                    for(int j=0;j<optionsArray.length();j++){
+                    optionsArray = singlequesObj.getJSONArray("options");
+                    for (int j = 0; j < optionsArray.length(); j++) {
 
-                        optionsObj=optionsArray.getJSONObject(j);
-                        if(downloadfileList.contains(optionsObj.getString("qbo_media_file"))){
+                        optionsObj = optionsArray.getJSONObject(j);
+                        if (downloadfileList.contains(optionsObj.getString("qbo_media_file"))) {
 
-                        }else{
+                        } else {
                             value = false;
                             downloadfileList.add(optionsObj.getString("qbo_media_file"));
                         }
                     }
 
-                    additionsArray=singlequesObj.getJSONArray("additions");
-                    for(int k=0;k<additionsArray.length();k++){
+                    additionsArray = singlequesObj.getJSONArray("additions");
+                    for (int k = 0; k < additionsArray.length(); k++) {
 
-                        additionsObj=additionsArray.getJSONObject(k);
-                        if(downloadfileList.contains(additionsObj.getString("qba_media_file"))){
+                        additionsObj = additionsArray.getJSONObject(k);
+                        if (downloadfileList.contains(additionsObj.getString("qba_media_file"))) {
 
-                        }else{
+                        } else {
                             value = false;
                             downloadfileList.add(additionsObj.getString("qba_media_file"));
                         }
 
+
                     }
-
                 }
-
             }
-
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
-            Log.e("JSONPARSE---",e.toString()+" : "+e.getStackTrace()[0].getLineNumber());
+            Log.e("JSONPARSE---", e.toString() + " : " + e.getStackTrace()[0].getLineNumber());
         }
-        return value;
+        return flashimageList;
     }
 }

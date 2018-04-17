@@ -107,7 +107,7 @@ public class TestActivity extends AppCompatActivity implements
     static int index = 0, pos = 0, max = 1, grp = 0, size,count =-1;
     JSONObject obj, sectionobj, groupobj, questionobj, temp;
     public static JSONObject attempt;
-    JSONArray array, optionsArray, totalArray, groupArray, sectionArray, attemptsectionarray, buffer;
+    JSONArray array, optionsArray, totalArray,groupArray, sectionArray,attemptsectionarray,buffer;
     SingleQuestion question = new SingleQuestion();
     SingleGroup group = new SingleGroup();
     SingleSections section = new SingleSections();
@@ -276,15 +276,15 @@ public class TestActivity extends AppCompatActivity implements
                     millisStart = c.getLong(c.getColumnIndex("Attempt_RemainingTime")) ;
 //                    String json = new String(SaveJSONdataToFile.bytesFromFile(URLClass.mainpath + path + "Attempt/"+ testid + ".json"), "UTF-8");
                     attempt = new JSONObject(getIntent().getStringExtra("json"));
-                    Log.e("TestingJson",""+attempt.toString());
                     attemptsectionarray = new JSONArray();
                     attemptsectionarray = attempt.getJSONArray("Sections");
+//                    Log.e("TestingJson",""+attempt.toString());
                     parseJson(attempt);
-
                     restoreSections(dataObj.getQuestionStatus(),attempt);
-                    buffer = generateArray(attempt.getJSONArray("Sections").getJSONObject(pos));
                     index = c.getInt(c.getColumnIndex("Attempt_LastQuestion"));
                     pos = c.getInt(c.getColumnIndex("Attempt_LastSection"));
+                    buffer = attempt.getJSONArray("Sections").getJSONObject(pos).getJSONArray("Questions");
+
                 }
             }
             //else cursor doesn't have values then the test is started fresh
@@ -297,22 +297,27 @@ public class TestActivity extends AppCompatActivity implements
                     encObj = new EncryptDecrypt();
                     attemptsectionarray = new JSONArray();
                     max = 1;
-                    for (int i = 0; i < 2; i++) {
+                    /*for (int i = 0; i < 2; i++) {
                         Collections.shuffle(list);
                         Collections.shuffle(oplist);
                         generateAttemptJSON(i);
-                    }
-                    attempt.put("sptu_marks",obj.getString("sptu_marks"));
+                    }*/
+                    attempt = new JSONObject(getIntent().getStringExtra("json"));
+                    attemptsectionarray = attempt.getJSONArray("Sections");
+                    /*attempt.put("sptu_marks",obj.getString("sptu_marks"));
                     attempt.put("sptu_negative_applicable",obj.getString("sptu_negative_applicable"));
-                    attempt.put("sptu_negative_mrk",obj.getString("sptu_negative_mrk"));
-                    attempt.put("sections", attemptsectionarray);
-                    buffer = generateArray(attempt.getJSONArray("sections").getJSONObject(pos));
-                    storeSections();
+                    attempt.put("sptu_negative_mrk",obj.getString("sptu_negative_mrk"));*/
+                    Log.e("Sections",""+attemptsectionarray.length());
+//                    attempt.put("sections", attemptsectionarray);
                     index = 0;
                     pos = 0;
+                    buffer = attempt.getJSONArray("Sections").getJSONObject(pos).getJSONArray("Questions");
+                    Log.e("BufferLength",""+buffer.length());
+                    storeSections();
+
             }
             SaveJSONdataToFile.objectToFile(URLClass.mainpath + path + "Attempt/"+ testid + ".json",attempt.toString());
-
+            setQuestion(pos,index,edit);
 
         } catch (JSONException | IOException | ClassNotFoundException e) {
             e.printStackTrace();
@@ -323,7 +328,7 @@ public class TestActivity extends AppCompatActivity implements
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         sections.setAdapter(adapter);
 
-        
+
         fullscreen.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -381,7 +386,7 @@ public class TestActivity extends AppCompatActivity implements
                 try {
 
                     flag = true;
-                    buffer = generateArray(attempt.getJSONArray("sections").getJSONObject(pos));
+                    buffer = attempt.getJSONArray("Sections").getJSONObject(pos).getJSONArray("Questions");
                     if (index <= buffer.length()) {
 //                        optionsTemp = dataObj.getQuestion();
                         if (index < buffer.length() - 1) {
@@ -402,7 +407,7 @@ public class TestActivity extends AppCompatActivity implements
                                 writeOption(opAdapter.getSelectedItem());
                                 AlertDialog alertbox = new AlertDialog.Builder(TestActivity.this)
                                         .setMessage("Do you want to finish Test?" + " " + dataObj.getQuestionCount())
-                                        .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                                        .setPositiveButton("Yes",new DialogInterface.OnClickListener() {
 
                                             // do something when the button is clicked
                                             public void onClick(DialogInterface arg0, int arg1) {
@@ -454,7 +459,7 @@ public class TestActivity extends AppCompatActivity implements
                                 qAdapter.setData(index);
                                 pos = pos + 1;
                                 Log.e("ValuesElse--->", "" + pos + "," + index);
-                                buffer = generateArray(attempt.getJSONArray("sections").getJSONObject(pos));
+                                buffer =attempt.getJSONArray("Sections").getJSONObject(pos).getJSONArray("Questions");
                                 sections.setSelection(pos);
                                 setScrollbar(pos);
                                 scrollAdapter.updateList(listOfLists.get(pos));
@@ -478,18 +483,19 @@ public class TestActivity extends AppCompatActivity implements
                     questionobj = array.getJSONObject(index);
                     if (index > 0) {
                         index--;
-                        buffer = generateArray(attempt.getJSONArray("sections").getJSONObject(pos));
+                        buffer = attempt.getJSONArray("Sections").getJSONObject(pos).getJSONArray("Questions");
                         Id = buffer.getJSONObject(index).getString("qbm_ID");
                         Seq = buffer.getJSONObject(index).getString("qbm_sequence");
                         flag = true;
                         setQuestion(pos, index, edit);
                     } else if (index == 0 && pos > 0) {
                         pos = pos - 1;
-                        index = generateArray(attemptsectionarray.getJSONObject(pos)).length() - 1;
+                        index = attempt.getJSONArray("Sections").getJSONObject(pos).length() - 1;
                         flag = false;
                         sections.setSelection(pos);
-                        setScrollbar(pos);
                         scrollAdapter.updateList(listOfLists.get(pos));
+                        setScrollbar(pos);
+
 
                     }
                     checkRadio();
@@ -584,7 +590,7 @@ public class TestActivity extends AppCompatActivity implements
             index = in;
             setQuestion(pos,index,edit);
 //                    qAdapter.setBackground(index);
-            buffer = generateArray(attempt.getJSONArray("sections").getJSONObject(pos));
+            buffer = attempt.getJSONArray("Sections");
             Id = buffer.getJSONObject(index).getString("qbm_ID");
             if(index == buffer.length() -1)
                 Log.e("TQuestionScroll","LastQuestions");
@@ -700,7 +706,7 @@ public class TestActivity extends AppCompatActivity implements
     //method to check the radiobutton based on its position in the group
     public void checkRadio() {
         try {
-            buffer = generateArray(attempt.getJSONArray("sections").getJSONObject(pos));
+            buffer = attempt.getJSONArray("Sections");
             Id = buffer.getJSONObject(index).getString("qbm_ID");
             if (dataObj.getPosition(Id) > -1) {
                 opAdapter.setOptionsList(dataObj.getPosition(Id));
@@ -718,7 +724,7 @@ public class TestActivity extends AppCompatActivity implements
 //        RadioButton random = findViewById(group.getCheckedRadioButtonId());
         try {
             long result = -1;
-            buffer = generateArray(attempt.getJSONArray("sections").getJSONObject(pos));
+            buffer = attempt.getJSONArray("Sections");
             Id = buffer.getJSONObject(index).getString("qbm_ID");
             Seq = buffer.getJSONObject(index).getString("qbm_sequence");
             scrollAdapter.updateList(listOfLists.get(pos));
@@ -748,7 +754,7 @@ public class TestActivity extends AppCompatActivity implements
     //method to clear the selected options in the local database
     public void clearOptions() {
         try {
-            buffer = generateArray(attempt.getJSONArray("sections").getJSONObject(pos));
+            buffer = attempt.getJSONArray("Sections");
             Id = buffer.getJSONObject(index).getString("qbm_ID");
             Seq = buffer.getJSONObject(index).getString("qbm_sequence");
             dataObj.UpdateQuestion(Id, Seq, Integer.valueOf(questionobj.getString("qbm_marks")), -1, "SKIPPED",opAdapter.getSelectedSequence(),opAdapter.getFlag());
@@ -845,22 +851,26 @@ public class TestActivity extends AppCompatActivity implements
         questionList = new ArrayList<>();
         try {
             sectionArray = data.getJSONArray("Sections");
+
             for (int i = 0; i < sectionArray.length(); i++) {
                 section = new SingleSections();
                 sectionobj = sectionArray.getJSONObject(i);
+                array = new JSONArray();
                 section.setSec_ID(sectionobj.getString("Ptu_section_ID"));
-                section.setSec_Name(sectionobj.getString("Ptu_section_name"));
-                array = sectionobj.getJSONArray("Questions");
+                section.setSec_Name(sectionobj.getString("Ptu_section_ID"));
+                array = sectionobj.optJSONArray("Questions");
+
                 for (int j = 0; j < array.length(); j++) {
                     question = new SingleQuestion();
                     questionobj = array.getJSONObject(j);
-                    JSONArray optionsArray = questionobj.getJSONArray("options");
-                    Log.e("TestingJson",""+attempt.toString());
+                    JSONArray optionsArray = questionobj.getJSONArray("Options");
+
                     question.setQbm_ID(questionobj.getString("qbm_ID"));
+
                     question.setQbm_ReferenceID(questionobj.getString("qbm_ReferenceID"));
                     question.setQbm_Description(questionobj.getString("qbm_Description"));
                     question.setQbm_SubjectID(questionobj.getString("qbm_SubjectID"));
-                    question.setQbm_SubjectName(questionobj.getString("qbm_SubjectName"));
+//                    question.setQbm_SubjectName(questionobj.getString("qbm_SubjectName"));
                     question.setQbm_Paper_ID(questionobj.getString("qbm_Paper_ID"));
 //                    question.setQbm_Paper_Name(questionobj.getString("qbm_Paper_Name"));
                     question.setQbm_ChapterID(questionobj.getString("qbm_ChapterID"));
@@ -869,7 +879,8 @@ public class TestActivity extends AppCompatActivity implements
 //                    question.setQbm_Sub_CategoryName(questionobj.getString("qbm_Sub_CategoryName"));
                     question.setQbm_level(questionobj.getString("qbm_level"));
                     question.setQbm_Type(questionobj.getString("qbm_Type"));
-                    question.setQbm_marks(questionobj.getString("qbm_marks"));
+                    question.setQbm_marks(questionobj.getInt("qbm_marks"));
+
                     question.setQbm_negative_applicable(questionobj.getString("qbm_negative_applicable"));
                     question.setQbm_negative_mrk(questionobj.getDouble("qbm_negative_mrk"));
                     question.setQbm_question_type(questionobj.getString("qbm_question_type"));
@@ -879,23 +890,20 @@ public class TestActivity extends AppCompatActivity implements
                     question.setQbm_video_file(questionobj.getString("qbm_video_file"));
                     question.setQbm_media_type(questionobj.getString("qbm_media_type"));
                     question.setQbm_Group_Flag(questionobj.getString("qbm_group_flag"));
-//                    question.setQbm_Group_ID(questionobj.getString("qbm_Group_ID"));
-//                    question.setQbm_Group_q_no(questionobj.getString("qbm_Group_q_no"));
+
                     question.setQbm_answer(questionobj.getString("qbm_answer"));
                     question.setQbm_review_flag(questionobj.getString("qbm_review_flag"));
                     question.setQbm_Review_Type(questionobj.getString("qbm_Review_Type"));
                     question.setQbm_Review_Images(questionobj.getString("qbm_Review_Images"));
                     question.setQbm_review_Video(questionobj.getString("qbm_review_Video"));
-                    question.setQbm_Additional_Images_num(questionobj.getString("qbm_Additional_Images_num"));
+                    question.setQbm_Additional_Images_num(questionobj.getInt("qbm_Additional_Images_num"));
                     question.setQbm_Additional_Image_ref(questionobj.getString("qbm_Additional_Image_ref"));
                     question.setGbg_id(questionobj.getString("gbg_id"));
-
                     question.setQbg_media_type(questionobj.getString("gbg_media_type"));
                     question.setQbg_media_file(questionobj.getString("gbg_media_file"));
                     question.setQbg_text(questionobj.getString("gbg_text"));
+                    question.setQbg_no_questions(questionobj.getString("gbg_no_questions"));
 
-
-                    question.setQbg_no_questions(questionobj.getString("qbg_no_questions"));
                     for (int k = 0; k < optionsArray.length(); k++) {
                         JSONObject optionJSON = optionsArray.getJSONObject(k);
 
@@ -1014,8 +1022,7 @@ public class TestActivity extends AppCompatActivity implements
     //method to set the questions and its options
     public void setQuestion(int pos, int index, Boolean edit) throws JSONException {
 
-        sectionobj = attempt.getJSONArray("sections").getJSONObject(pos);
-        array = generateArray(sectionobj);
+        array = attempt.getJSONArray("Sections").getJSONObject(pos).getJSONArray("Questions");
         myLayoutManager.scrollToPositionWithOffset(index, 500);
         questionobj = array.getJSONObject(index);
         if (questionobj.getString("qbm_group_flag").equals("YES")) {
@@ -1029,7 +1036,7 @@ public class TestActivity extends AppCompatActivity implements
         }
         qAdapter.setPoiner(index);
         questionobj = array.getJSONObject(index);
-        if (questionobj.getString("qbm_qimage_flag").equals("YES")) {
+        /*if (questionobj.getString("qbm_qimage_flag").equals("YES")) {
             btn_qadditional.setEnabled(true);
             btn_qadditional.setClickable(true);
             btn_qadditional.setBackgroundColor(getResources().getColor(R.color.dull_yellow));
@@ -1038,7 +1045,8 @@ public class TestActivity extends AppCompatActivity implements
             btn_qadditional.setClickable(false);
             btn_qadditional.setBackgroundColor(0);
 
-        }
+        }*/
+        Log.e("Setquestions",questionobj.getString("qbm_image_file"));
         if (!edit) {
             btn_review.setEnabled(true);
             btn_review.setClickable(true);
@@ -1088,7 +1096,7 @@ public class TestActivity extends AppCompatActivity implements
             listOfLists = new ArrayList<>();
             for (int i = 0; i < attempt.getJSONArray("sections").length(); i++) {
                 categories.add(attempt.getJSONArray("sections").getJSONObject(i).getString("section_Name"));
-                JSONArray array2 = generateArray(attempt.getJSONArray("sections").getJSONObject(i));
+                JSONArray array2 = attempt.getJSONArray("Sections");
                 questionOpList = new ArrayList<>();
                 for (int j = 0; j < array2.length(); j++) {
                     Id = array2.getJSONObject(j).getString("qbm_ID");
@@ -1114,7 +1122,7 @@ public class TestActivity extends AppCompatActivity implements
             listOfLists = new ArrayList<>();
             for (int i = 0; i < attempt.getJSONArray("sections").length(); i++) {
                 categories.add(attempt.getJSONArray("sections").getJSONObject(i).getString("section_Name"));
-                JSONArray array2 = generateArray(attempt.getJSONArray("sections").getJSONObject(i));
+                JSONArray array2 = attempt.getJSONArray("Sections");
                 questionOpList = new ArrayList<>();
                 Log.e("array2",""+array2.length());
                 for (int j = 0; j < array2.length(); j++) {
@@ -1287,13 +1295,13 @@ public class TestActivity extends AppCompatActivity implements
             mHideRunnable.run();
             pos = position;
             //Instantiate grid adapter
-            scrollAdapter = new ScrollGridAdapter(TestActivity.this, generateArray(attempt.getJSONArray("sections").getJSONObject(pos)),listOfLists.get(pos),getScreenSize());
+            scrollAdapter = new ScrollGridAdapter(TestActivity.this, attempt.getJSONArray("Sections").getJSONObject(pos).getJSONArray("Questions"),listOfLists.get(pos),getScreenSize());
             setScrollbar(pos);
             if (flag) {
                 index = 0;
-                setQuestion(position, index, edit);
+                setQuestion(pos, index, edit);
             } else {
-                setQuestion(position, index, edit);
+                setQuestion(pos, index, edit);
             }
         } catch (JSONException e) {
             e.printStackTrace();

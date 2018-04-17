@@ -6,13 +6,14 @@ package com.digywood.tms.Pojo;
 
 public class SingleQuestion {
 
-    public String qbm_ID,qbm_ReferenceID,qbm_Description,
+    public String qbm_ID,qbm_Description,
             qbm_SubjectID,qbm_SubjectName,qbm_Paper_ID,qbm_Paper_Name,qbm_ChapterID,qbm_ChapterName,qbm_Sub_CategoryID,qbm_Sub_CategoryName,
-            qbm_level,qbm_Type,qbm_marks,qbm_negative_applicable,qbm_question_type,qbm_text_applicable,qbm_text,
+            qbm_level,qbm_ReferenceID,qbm_Type,qbm_negative_applicable,qbm_question_type,qbm_text_applicable,qbm_text,
             qbm_image_file,qbm_video_file,qbm_media_type,qbm_Group_Flag,qbm_Group_ID,qbm_Group_q_no,qbm_answer,qbm_review_flag,
-            qbm_Review_Type,qbm_Review_Images,qbm_review_Video,qbm_Additional_Images_num,qbm_Additional_Image_ref,gbg_id,qbg_media_type,
+            qbm_Review_Type,qbm_Review_Images,qbm_review_Video,qbm_Additional_Image_ref,gbg_id,qbg_media_type,
             qbg_media_file,qbg_text,qbg_no_questions,qbg_no_pick,qba_sequence,qba_type,qba_media_file;
     Double qbm_negative_mrk;
+    int qbm_marks,qbm_Additional_Images_num;
 
     public SingleQuestion(){
 
@@ -122,11 +123,11 @@ public class SingleQuestion {
         this.qbm_Type = qbm_Type;
     }
 
-    public String getQbm_marks() {
+    public int getQbm_marks() {
         return qbm_marks;
     }
 
-    public void setQbm_marks(String qbm_marks) {
+    public void setQbm_marks(int qbm_marks) {
         this.qbm_marks = qbm_marks;
     }
 
@@ -258,11 +259,11 @@ public class SingleQuestion {
         this.qbm_review_Video = qbm_review_Video;
     }
 
-    public String getQbm_Additional_Images_num() {
+    public int getQbm_Additional_Images_num() {
         return qbm_Additional_Images_num;
     }
 
-    public void setQbm_Additional_Images_num(String qbm_Additional_Images_num) {
+    public void setQbm_Additional_Images_num(int qbm_Additional_Images_num) {
         this.qbm_Additional_Images_num = qbm_Additional_Images_num;
     }
 

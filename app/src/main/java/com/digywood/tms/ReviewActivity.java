@@ -268,7 +268,7 @@ public class ReviewActivity extends AppCompatActivity implements
                         String json = new String(SaveJSONdataToFile.bytesFromFile(URLClass.mainpath + path + "Attempt/"+ testid + ".json"), "UTF-8");
                         attempt = new JSONObject(json);
                         parseJson(attempt);
-                        buffer = generateArray(attempt.getJSONArray("sections").getJSONObject(pos));
+                        buffer = generateArray(attempt.getJSONArray("Sections").getJSONObject(pos));
                         Log.e("Resume-cursor",""+attempt.toString());
                         restoreSections(dataObj.getQuestionStatus(),attempt);
                         CorrectOptions = dataObj.getCorrectOptions();
@@ -690,19 +690,24 @@ public class ReviewActivity extends AppCompatActivity implements
         questionList = new ArrayList<>();
         try {
             sectionArray = data.getJSONArray("Sections");
+            Log.e("Parse",""+data.toString());
             for (int i = 0; i < sectionArray.length(); i++) {
                 section = new SingleSections();
                 sectionobj = sectionArray.getJSONObject(i);
                 section.setSec_ID(sectionobj.getString("Ptu_section_ID"));
                 section.setSec_Name(sectionobj.getString("Ptu_section_name"));
+
                 array = sectionobj.getJSONArray("Questions");
+
                 for (int j = 0; j < array.length(); j++) {
                     question = new SingleQuestion();
                     questionobj = array.getJSONObject(j);
-                    JSONArray optionsArray = questionobj.getJSONArray("options");
+                    JSONArray optionsArray = questionobj.getJSONArray("Options");
+
 
                     question.setQbm_ID(questionobj.getString("qbm_ID"));
                     question.setQbm_ReferenceID(questionobj.getString("qbm_ReferenceID"));
+
                     question.setQbm_Description(questionobj.getString("qbm_Description"));
                     question.setQbm_SubjectID(questionobj.getString("qbm_SubjectID"));
                     question.setQbm_SubjectName(questionobj.getString("qbm_SubjectName"));
@@ -714,7 +719,8 @@ public class ReviewActivity extends AppCompatActivity implements
 //                    question.setQbm_Sub_CategoryName(questionobj.getString("qbm_Sub_CategoryName"));
                     question.setQbm_level(questionobj.getString("qbm_level"));
                     question.setQbm_Type(questionobj.getString("qbm_Type"));
-                    question.setQbm_marks(questionobj.getString("qbm_marks"));
+                    question.setQbm_marks(questionobj.getInt("qbm_marks"));
+
                     question.setQbm_negative_applicable(questionobj.getString("qbm_negative_applicable"));
                     question.setQbm_negative_mrk(questionobj.getDouble("qbm_negative_mrk"));
                     question.setQbm_question_type(questionobj.getString("qbm_question_type"));
@@ -726,12 +732,13 @@ public class ReviewActivity extends AppCompatActivity implements
                     question.setQbm_Group_Flag(questionobj.getString("qbm_group_flag"));
 //                    question.setQbm_Group_ID(questionobj.getString("qbm_Group_ID"));
 //                    question.setQbm_Group_q_no(questionobj.getString("qbm_Group_q_no"));
+
                     question.setQbm_answer(questionobj.getString("qbm_answer"));
                     question.setQbm_review_flag(questionobj.getString("qbm_review_flag"));
                     question.setQbm_Review_Type(questionobj.getString("qbm_Review_Type"));
                     question.setQbm_Review_Images(questionobj.getString("qbm_Review_Images"));
                     question.setQbm_review_Video(questionobj.getString("qbm_review_Video"));
-                    question.setQbm_Additional_Images_num(questionobj.getString("qbm_Additional_Images_num"));
+                    question.setQbm_Additional_Images_num(questionobj.getInt("qbm_Additional_Images_num"));
                     question.setQbm_Additional_Image_ref(questionobj.getString("qbm_Additional_Image_ref"));
                     question.setGbg_id(questionobj.getString("gbg_id"));
 
