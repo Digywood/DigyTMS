@@ -591,7 +591,7 @@ public class ListofTests extends AppCompatActivity {
         JSONObject mainObj,secObj,singlequesObj,optionsObj,additionsObj;
         try{
             mainObj=new JSONObject(json);
-            Log.e("JSON--",mainObj.getString("Ptu_test_ID"));
+            Log.e("JSON--",mainObj.getString("ptu_test_ID"));
 
             secArray=mainObj.optJSONArray("Sections");
 
@@ -630,7 +630,7 @@ public class ListofTests extends AppCompatActivity {
                         downloadfileList.add(singlequesObj.getString("qbm_Additional_Image_ref"));
                     }
 
-                    optionsArray=singlequesObj.getJSONArray("options");
+                    optionsArray=singlequesObj.getJSONArray("Options");
                     for(int j=0;j<optionsArray.length();j++){
 
                         optionsObj=optionsArray.getJSONObject(j);

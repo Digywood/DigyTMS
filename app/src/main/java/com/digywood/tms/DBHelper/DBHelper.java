@@ -147,6 +147,7 @@ public class DBHelper extends SQLiteOpenHelper {
                 "   PRIMARY KEY (`Attempt_ID`)\n"+
                 ")";
         db.execSQL(AttemptList);
+
         String AttemptData=" CREATE TABLE `attempt_data` (\n"+
                 "   `Question_ID` varchar(15),\n" +
                 "   `Question_Seq_No` varchar(15) DEFAULT NULL,\n" +
@@ -158,6 +159,24 @@ public class DBHelper extends SQLiteOpenHelper {
                 "   PRIMARY KEY (`Question_ID`)\n"+
                 ")";
         db.execSQL(AttemptData);
+
+        String FlashAttemptTable="CREATE TABLE `flashcard_attempt` (\n" +
+                "  `flashcard_attemptKey` integer PRIMARY KEY AUTOINCREMENT,\n" +
+                "  `studentId` text DEFAULT NULL,\n" +
+                "  `enrollmentId` text DEFAULT NULL,\n" +
+                "  `courseId` text DEFAULT NULL,\n" +
+                "  `subjectId` text DEFAULT NULL,\n" +
+                "  `paperId` text DEFAULT NULL,\n" +
+                "  `flashcardId` text DEFAULT NULL,\n" +
+                "  `attemptNumber` int(5) DEFAULT NULL,\n" +
+                "  `startDttm` datetime DEFAULT NULL,\n" +
+                "  `endDttm` datetime DEFAULT NULL,\n" +
+                "  `iknowCount` int(5) DEFAULT NULL,\n" +
+                "  `donknowCount` int(5) DEFAULT NULL,\n" +
+                "  `skipCount` int(5) DEFAULT NULL,\n" +
+                "  `percentageObtain` double DEFAULT NULL,\n" +
+                "  `Status` text DEFAULT NULL)";
+        db.execSQL(FlashAttemptTable);
 
         String tblqbgroup="CREATE TABLE `qb_group` (\n" +
                 "  `qbg_key` integer PRIMARY KEY,`qbg_ID` text DEFAULT NULL,`testId` text DEFAULT NULL,\n" +
@@ -239,6 +258,40 @@ public class DBHelper extends SQLiteOpenHelper {
         super.onDowngrade(db, oldVersion, newVersion);
     }
 
+    public long insertFlashAttempt(String studentId,String enrollId,String courseId,String subjectId,String paperId,String fcardId,int attemptnum,String sdttm,String edttm,int iknowcount,int donknowcount,int skipcount,Double percentage,String status){
+        long insertFlag=0;
+        ContentValues cv = new ContentValues();
+        cv.put("studentId",studentId);
+        cv.put("enrollmentId",enrollId);
+        cv.put("courseId",courseId);
+        cv.put("subjectId",subjectId);
+        cv.put("paperId",paperId);
+        cv.put("flashcardId",fcardId);
+        cv.put("attemptNumber",attemptnum);
+        cv.put("startDttm",sdttm);
+        cv.put("endDttm",edttm);
+        cv.put("iknowCount",iknowcount);
+        cv.put("donknowCount",donknowcount);
+        cv.put("skipCount",skipcount);
+        cv.put("percentageObtain",percentage);
+        cv.put("Status",status);
+        insertFlag = db.insert("flashcard_attempt",null, cv);
+        return insertFlag;
+    }
+
+    public long deleteAllTestFlashAttempts(String testId){
+        long deleteFlag=0;
+        deleteFlag=db.delete("flashcard_attempt", "flashcardId='"+testId+"'", null);
+        return  deleteFlag;
+    }
+
+    public int getFlashAttemptNum(String testId){
+        int count=0;
+        Cursor c =db.query("flashcard_attempt", new String[] {"attemptNumber,studentId,enrollmentId,courseId,subjectId,paperId"},"flashcardId='"+testId+"'", null, null, null,null);
+        count=c.getCount();
+        return count;
+    }
+
     public long insertPtuSection(int seckey,String testid,int secseq,String secid,String spid,String ssid,String scid,int minques,int maxques,int totgroups,int nogroups,String sstatus,String sname){
         long insertFlag=0;
         ContentValues cv = new ContentValues();
@@ -263,6 +316,15 @@ public class DBHelper extends SQLiteOpenHelper {
         long deleteFlag=0;
         deleteFlag=db.delete("ptu_sections", "Ptu_ID='"+testid+"'", null);
         return  deleteFlag;
+    }
+
+    public int getSectionMaxQCount(String testId,String sectionId){
+        int count=0;
+        Cursor c =db.query("ptu_sections", new String[] {"Ptu_section_sequence,Ptu_section_course_ID,Ptu_section_paper_ID,Ptu_section_min_questions"},"Ptu_ID='"+testId+"' and Ptu_section_ID='"+sectionId+"'", null, null, null,null);
+        while (c.moveToNext()) {
+            count=c.getInt(c.getColumnIndex("Ptu_section_min_questions"));
+        }
+        return  count;
     }
 
     public long insertStudent(int skey,String sid,String sname,String sgender,String sedu,String sdob,String saddress1,String saddress2,String scity,String sstate,String scountry,String smobile,String semail,String spassword,String smacid,String sstatus,String screateby,String screateddatetime){
@@ -429,6 +491,11 @@ public class DBHelper extends SQLiteOpenHelper {
 
     public Cursor getStudentTests(){
         Cursor c =db.query("sptu_student", new String[] {"sptu_entroll_id,sptu_student_ID,sptu_ID,sptu_paper_ID,sptu_subjet_ID,sptu_course_id,sptu_dwnld_status"},null, null, null, null,null);
+        return c;
+    }
+
+    public Cursor getSingleTestData(String testId){
+        Cursor c =db.query("sptu_student", new String[] {"sptu_entroll_id,sptu_student_ID,sptu_ID,sptu_paper_ID,sptu_subjet_ID,sptu_course_id,sptu_dwnld_status"},"sptu_ID='"+testId+"'", null, null, null,null);
         return c;
     }
 
