@@ -815,7 +815,7 @@ public class ReviewActivity extends AppCompatActivity implements
             btn_group_info.setClickable(false);
             btn_group_info.setBackgroundColor(0);
         }
-        qAdapter.setPoiner(index);
+        qAdapter.setPointer(index);
         questionobj = array.getJSONObject(index);
         if (questionobj.getString("qbm_qimage_flag").equals("YES")) {
             btn_qadditional.setEnabled(true);

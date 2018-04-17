@@ -22,12 +22,12 @@ import java.util.ArrayList;
 
 public class ScrollGridCardAdapter extends BaseAdapter{
 
-    TextView textView;
-    Context c;
-    JSONArray samplequestion;
-    ArrayList<Integer> knowList;
-    ArrayList<Integer> donknowList;
-    ArrayList<Integer> skipList;
+    private TextView textView;
+    private Context c;
+    private JSONArray samplequestion;
+    private ArrayList<Integer> knowList;
+    private ArrayList<Integer> donknowList;
+    private ArrayList<Integer> skipList;
 
     public ScrollGridCardAdapter(Context c, JSONArray samplequestion,ArrayList<Integer> knowList,ArrayList<Integer> donknowList,ArrayList<Integer> skipList){
 
@@ -78,9 +78,6 @@ public class ScrollGridCardAdapter extends BaseAdapter{
             textView.setBackgroundColor(c.getResources().getColor(R.color.red));
         }else if(skipList.contains(position)){
             textView.setBackgroundColor(Color.parseColor("#6758c4"));
-        }else{
-
-
         }
         return textView;
     }

@@ -71,7 +71,7 @@ public class QuestionListAdapter extends RecyclerView.Adapter<QuestionListAdapte
         notifyDataSetChanged();
     }
 
-    public void setPoiner(int index){
+    public void setPointer(int index){
         this.index = index;
         notifyDataSetChanged();
     }
