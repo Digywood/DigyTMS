@@ -81,7 +81,7 @@ public class FlashCardActivity extends AppCompatActivity {
     ArrayList<Integer> donknowList=new ArrayList<>();
     ArrayList<Integer> skipList=new ArrayList<>();
     ArrayList<String> sectionList=new ArrayList<>();
-    ArrayList<ArrayList<SingleQuestionList>> baseQList=new ArrayList();
+    ArrayList<ArrayList<SingleQuestionList>> baseQList=new ArrayList<>();
     ArrayList<SingleQuestionList> questionList=new ArrayList<>();
     ArrayList<String> fimageList=new ArrayList<>();
     Button btn_know,btn_idonknow,btn_prev,btn_next,btn_answer;
@@ -177,11 +177,15 @@ public class FlashCardActivity extends AppCompatActivity {
         if(testId!=null){
             Cursor mycursor=myhelper.getSingleTestData(testId);
             if(mycursor.getCount()>0){
-                studentid=mycursor.getString(mycursor.getColumnIndex("sptu_student_ID"));
-                enrollid=mycursor.getString(mycursor.getColumnIndex("sptu_entroll_id"));
-                courseid=mycursor.getString(mycursor.getColumnIndex("sptu_course_id"));
-                subjectid=mycursor.getString(mycursor.getColumnIndex("sptu_subjet_ID"));
-                paperid=mycursor.getString(mycursor.getColumnIndex("sptu_paper_ID"));
+                while(mycursor.moveToNext()){
+
+                    studentid=mycursor.getString(mycursor.getColumnIndex("sptu_student_ID"));
+                    enrollid=mycursor.getString(mycursor.getColumnIndex("sptu_entroll_id"));
+                    courseid=mycursor.getString(mycursor.getColumnIndex("sptu_course_id"));
+                    subjectid=mycursor.getString(mycursor.getColumnIndex("sptu_subjet_ID"));
+                    paperid=mycursor.getString(mycursor.getColumnIndex("sptu_paper_ID"));
+
+                }
             }else{
                 mycursor.close();
             }
@@ -205,6 +209,7 @@ public class FlashCardActivity extends AppCompatActivity {
         startDttm= new java.text.SimpleDateFormat("yyyy-MM-dd hh:mm:ss").format(Calendar.getInstance(TimeZone.getDefault()).getTime());
 
         try{
+//            BufferedReader br = new BufferedReader(new FileReader(URLClass.mainpath+"EAAA000009/SSCT1001/SSCS0002/PAA002/PTU0002/"+"PTU0002_01"+".json"));
             BufferedReader br = new BufferedReader(new FileReader(URLClass.mainpath+"EAAA000009/SSCT1001/SSCS0002/PAA002/PTU0002/"+"PTU0002_01"+".json"));
             StringBuilder sb = new StringBuilder();
             String line = br.readLine();
@@ -217,6 +222,9 @@ public class FlashCardActivity extends AppCompatActivity {
             filedata=sb.toString();
             br.close();
             fimageList=readJson(filedata);
+
+            questionList=baseQList.get(0);
+
             setData();
             if(fimageList.size()!=0){
 
@@ -301,14 +309,27 @@ public class FlashCardActivity extends AppCompatActivity {
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 try{
                     questionList.clear();
+                    knownList.clear();
+                    donknowList.clear();
+                    skipList.clear();
                     secpos=position;
-//                    JSONObject secObj=gja_sections.getJSONObject(position);
-//
+                    JSONObject secObj=gja_sections.getJSONObject(position);
+
 //                    gja_questions=secObj.getJSONArray("Questions");
 //                    for(int j=0;j<gja_questions.length();j++){
 //                        questionList.add(new SingleQuestionList(gja_questions.getJSONObject(j).getString("qbm_SequenceId"),"NOT_ATTEMPTED"));
 //                    }
                     questionList=baseQList.get(position);
+                    for(int i=0;i<questionList.size();i++){
+                        SingleQuestionList singleQList=questionList.get(i);
+                        if(singleQList.getQ_status().equalsIgnoreCase("SKIPPED")){
+                            skipList.add(i);
+                        }else if(singleQList.getQ_status().equalsIgnoreCase("IKNOW")){
+                            knownList.add(i);
+                        }else if(singleQList.getQ_status().equalsIgnoreCase("IDONKNOW")){
+                            donknowList.add(i);
+                        }
+                    }
                     cAdp.updateList(questionList);
                 }catch (Exception e){
                     e.printStackTrace();
@@ -368,6 +389,9 @@ public class FlashCardActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
+                btn_know.setBackgroundResource(R.drawable.test_button_normal);
+                btn_idonknow.setBackgroundResource(R.drawable.test_button_normal);
+
                 d--;
                 if(d>=0){
                     myLayoutManager.scrollToPosition(d);
@@ -407,6 +431,9 @@ public class FlashCardActivity extends AppCompatActivity {
         btn_next.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+                btn_know.setBackgroundResource(R.drawable.test_button_normal);
+                btn_idonknow.setBackgroundResource(R.drawable.test_button_normal);
 
                 SingleQuestionList singleQList=questionList.get(pos);
 
@@ -483,6 +510,50 @@ public class FlashCardActivity extends AppCompatActivity {
                         }
                     }
                 }else{
+
+                    if(status.equalsIgnoreCase("")){
+                        questionList.get(pos).setQ_status("SKIPPED");
+                        skipcount++;
+                        skipList.add(pos);
+                        String count=String.format("%03d",skipcount);
+                        tv_skipped.setText(count);
+
+                        if(knownList.contains(pos)){
+                            knownList.remove(pos);
+                        }else{
+                            donknowList.remove(pos);
+                        }
+
+                    }else{
+                        if(status.equalsIgnoreCase("IKNOW")){
+                            questionList.get(pos).setQ_status("IKNOW");
+                            knowcount++;
+                            knownList.add(pos);
+                            String count=String.format("%03d",knowcount);
+                            tv_iknow.setText(count);
+
+                            if(skipList.contains(pos)){
+                                skipList.remove(pos);
+                            }else{
+                                donknowList.remove(pos);
+                            }
+
+                        }else{
+                            questionList.get(pos).setQ_status("IDONKNOW");
+                            donknowcount++;
+                            donknowList.add(pos);
+                            String count=String.format("%03d",donknowcount);
+                            tv_idonknow.setText(count);
+
+                            if(skipList.contains(pos)){
+                                skipList.remove(pos);
+                            }else{
+                                knownList.remove(pos);
+                            }
+                        }
+                    }
+
+
                     if(pos>=questionList.size()-1){
 
                         if(secpos<gja_sections.length()-1){
@@ -528,6 +599,8 @@ public class FlashCardActivity extends AppCompatActivity {
             public void onClick(View v) {
 
                 status="IKNOW";
+                btn_idonknow.setBackgroundResource(R.drawable.test_button_normal);
+                btn_know.setBackgroundResource(R.drawable.test_button_pressed);
 //                questionList.get(pos).setQ_status(status);
             }
         });
@@ -537,6 +610,8 @@ public class FlashCardActivity extends AppCompatActivity {
             public void onClick(View v) {
 
                 status="IDONKNOW";
+                btn_know.setBackgroundResource(R.drawable.test_button_normal);
+                btn_idonknow.setBackgroundResource(R.drawable.test_button_pressed);
 //                questionList.get(pos).setQ_status(status);
             }
         });
@@ -616,23 +691,14 @@ public class FlashCardActivity extends AppCompatActivity {
 
                 secObj=ja_sections.getJSONObject(i);
 
-                if(i==0){
-                    gja_questions=secObj.getJSONArray("Questions");
-                    for(int j=0;j<gja_questions.length();j++){
-                        questionList.add(new SingleQuestionList(gja_questions.getJSONObject(j).getString("qbm_SequenceId"),"NOT_ATTEMPTED"));
-                    }
-                }else{
-
-                }
-
-                questionList.clear();
+                ArrayList<SingleQuestionList> tempList=new ArrayList<>();
                 gja_questions=secObj.getJSONArray("Questions");
                 for(int j=0;j<gja_questions.length();j++){
                     Qcount++;
-                    questionList.add(new SingleQuestionList(gja_questions.getJSONObject(j).getString("qbm_SequenceId"),"NOT_ATTEMPTED"));
+                    tempList.add(new SingleQuestionList(gja_questions.getJSONObject(j).getString("qbm_SequenceId"),"NOT_ATTEMPTED"));
                 }
 
-                baseQList.add(questionList);
+                baseQList.add(tempList);
 
                 section=secObj.getString("Ptu_section_name");
                 sectionList.add(section);
@@ -651,13 +717,12 @@ public class FlashCardActivity extends AppCompatActivity {
 
             }
 
+            questionList.clear();
+            questionList=baseQList.get(0);
+
             sectionAdp= new ArrayAdapter(FlashCardActivity.this,android.R.layout.simple_spinner_item,sectionList);
             sectionAdp.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
             sp_sections.setAdapter(sectionAdp);
-
-            for(int i=0;i<questionList.size();i++){
-                Log.e("Qid----",""+questionList.get(i).getQ_num());
-            }
 
         }catch (Exception e){
             e.printStackTrace();
@@ -718,7 +783,9 @@ public class FlashCardActivity extends AppCompatActivity {
 
                         int attemptcount=myhelper.getFlashAttemptNum(testId);
                         attemptcount=attemptcount+1;
-                        double percentage=knowcount/Qcount;
+                        float percent=knowcount/Qcount;
+                        Log.e("PERCENT: -----",""+percent);
+                        Double percentage=Double.parseDouble(String.valueOf(percent));
 //                        double percentage=knowcount/questionList.size();
                         endDttm= new java.text.SimpleDateFormat("yyyy-MM-dd hh:mm:ss").format(Calendar.getInstance(TimeZone.getDefault()).getTime());
                         long iFlag=myhelper.insertFlashAttempt(studentid,enrollid,courseid,subjectid,paperid,testId,attemptcount,startDttm,endDttm,knowcount,donknowcount,skipcount,percentage,"Completed");
