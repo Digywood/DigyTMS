@@ -23,7 +23,6 @@
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-
         </activity>
         <activity
             android:name=".RegistrationActivity"
@@ -38,14 +37,12 @@
         <activity android:name=".EnrollRequestActivity" />
         <activity
             android:name=".ListofTests"
-            android:screenOrientation="landscape"
-            android:parentActivityName=".CourseActivity"/>
+            android:parentActivityName=".CourseActivity"
+            android:screenOrientation="landscape" />
         <activity
             android:name=".TestActivity"
             android:screenOrientation="landscape"
-            android:theme="@style/AppTheme.NoActionBar">
-
-        </activity>
+            android:theme="@style/AppTheme.NoActionBar"></activity>
         <activity
             android:name=".ScoreActivity"
             android:label="@string/title_activity_score"
@@ -54,16 +51,18 @@
         <activity
             android:name=".ReviewActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
-            android:screenOrientation="landscape"
             android:label="@string/title_activity_review"
             android:noHistory="true"
-            android:theme="@style/FullscreenTheme"/>
+            android:screenOrientation="landscape"
+            android:theme="@style/FullscreenTheme" />
         <activity
             android:name=".FlashCardActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:label="@string/title_activity_flash_card"
             android:screenOrientation="landscape"
-            android:theme="@style/FullscreenTheme"></activity>
+            android:theme="@style/FullscreenTheme" />
+        <activity android:name=".FlashAttemptDataActivity"
+            android:screenOrientation="landscape"></activity>
     </application>
 
 </manifest>

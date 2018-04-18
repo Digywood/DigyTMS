@@ -16,7 +16,7 @@
 
         <TextView
             android:id="@+id/tv_testid"
-            android:layout_width="wrap_content"
+            android:layout_width="150dp"
             android:layout_height="wrap_content"
             android:hint="testid"
             android:gravity="center_vertical"
@@ -25,7 +25,7 @@
             android:textSize="16dp"/>
 
         <LinearLayout
-            android:layout_width="wrap_content"
+            android:layout_width="150dp"
             android:layout_height="wrap_content"
             android:layout_weight="1">
 
@@ -40,7 +40,7 @@
         </LinearLayout>
 
         <LinearLayout
-            android:layout_width="wrap_content"
+            android:layout_width="150dp"
             android:layout_height="wrap_content"
             android:layout_weight="1">
 
@@ -55,7 +55,7 @@
         </LinearLayout>
 
         <LinearLayout
-            android:layout_width="wrap_content"
+            android:layout_width="150dp"
             android:layout_height="wrap_content"
             android:layout_weight="1">
 
@@ -68,7 +68,7 @@
 
         <TextView
             android:id="@+id/tv_teststatus"
-            android:layout_width="wrap_content"
+            android:layout_width="150dp"
             android:layout_height="wrap_content"
             android:hint="teststatus"
             android:gravity="center_vertical"
@@ -76,21 +76,35 @@
             android:layout_weight="1"
             android:textSize="16dp"/>
 
-        <Button
-            android:id="@+id/btn_fteststart"
-            android:layout_width="wrap_content"
-            android:layout_height="35dp"
-            android:textColor="#000000"
-            android:background="@drawable/btn_shape"
-            android:text="Start"/>
+        <LinearLayout
+            android:layout_width="150dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1">
 
-        <Button
-            android:id="@+id/btn_fattempthistory"
-            android:layout_width="wrap_content"
-            android:layout_height="35dp"
-            android:textColor="#000000"
-            android:background="@drawable/btn_shape"
-            android:text="History"/>
+            <Button
+                android:id="@+id/btn_fteststart"
+                android:layout_width="wrap_content"
+                android:layout_height="35dp"
+                android:textColor="#000000"
+                android:background="@drawable/btn_shape"
+                android:text="Start"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="150dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1">
+
+            <Button
+                android:id="@+id/btn_fattempthistory"
+                android:layout_width="wrap_content"
+                android:layout_height="35dp"
+                android:textColor="#000000"
+                android:background="@drawable/btn_shape"
+                android:text="History"/>
+
+        </LinearLayout>
 
     </LinearLayout>
 
