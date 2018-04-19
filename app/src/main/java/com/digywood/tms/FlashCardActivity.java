@@ -71,7 +71,7 @@ public class FlashCardActivity extends AppCompatActivity {
     static int screensize=0;
     Dialog mydialog;
     DBHelper myhelper;
-    FloatingActionButton fab_fgroupQview;
+//    FloatingActionButton fab_fgroupQview;
     int attemptcount=0,knowcount=0,donknowcount=0,skipcount=0,Qcount=0;
     TextView tv_attempted,tv_iknow,tv_idonknow,tv_skipped;
     ArrayList<String> knownList=new ArrayList<>();
@@ -81,7 +81,7 @@ public class FlashCardActivity extends AppCompatActivity {
     ArrayList<ArrayList<SingleFlashQuestion>> baseQList=new ArrayList<>();
     ArrayList<SingleFlashQuestion> questionList=new ArrayList<>();
     ArrayList<String> fimageList=new ArrayList<>();
-    Button btn_know,btn_idonknow,btn_prev,btn_next,btn_answer;
+    Button btn_know,btn_idonknow,btn_prev,btn_next,btn_answer,btn_gQues,btn_exit;
 
     /**
      * Whether or not the system UI should be auto-hidden after
@@ -197,7 +197,8 @@ public class FlashCardActivity extends AppCompatActivity {
         btn_know=findViewById(R.id.btn_iknow);
         btn_idonknow=findViewById(R.id.btn_idonknow);
         btn_answer=findViewById(R.id.btn_answer);
-        fab_fgroupQview=findViewById(R.id.fab_fgroupQview);
+        btn_gQues=findViewById(R.id.btn_groupQues);
+        btn_exit=findViewById(R.id.btn_exit);
 
         tv_attempted=findViewById(R.id.tv_attemptcount);
         tv_iknow=findViewById(R.id.tv_iknowcount);
@@ -207,8 +208,8 @@ public class FlashCardActivity extends AppCompatActivity {
         startDttm= new java.text.SimpleDateFormat("yyyy-MM-dd hh:mm:ss").format(Calendar.getInstance(TimeZone.getDefault()).getTime());
 
         try{
-//            BufferedReader br = new BufferedReader(new FileReader(URLClass.mainpath+"sample"+".json"));
-            BufferedReader br = new BufferedReader(new FileReader(URLClass.mainpath+"EAAA000009/SSCT1001/SSCS0002/PAA002/PTU0002/"+"PTU0002_01"+".json"));
+            BufferedReader br = new BufferedReader(new FileReader(URLClass.mainpath+"sample"+".json"));
+//            BufferedReader br = new BufferedReader(new FileReader(URLClass.mainpath+"EAAA000009/SSCT1001/SSCS0002/PAA002/PTU0002/"+"PTU0002_01"+".json"));
             StringBuilder sb = new StringBuilder();
             String line = br.readLine();
 
@@ -272,13 +273,6 @@ public class FlashCardActivity extends AppCompatActivity {
             }
         });
 
-        fab_fgroupQview.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-            }
-        });
-
         question_scroll.addOnItemTouchListener(new RecyclerTouchListener(FlashCardActivity.this,question_scroll,new RecyclerTouchListener.OnItemClickListener() {
             @Override
             public void onClick(View view, int position) {
@@ -318,24 +312,7 @@ public class FlashCardActivity extends AppCompatActivity {
                     skipList.clear();
                     secpos=position;
 
-                    Log.e("BASE2:-----",""+baseQList.size());
-
-                    for(int i=0;i<baseQList.size();i++){
-                        Log.e("BASE222:-----",""+baseQList.get(i).size());
-                    }
-
-                    Toast.makeText(getApplicationContext(),"Sections",Toast.LENGTH_SHORT).show();
-
                     JSONObject secObj=gja_sections.getJSONObject(position);
-
-//                    if(position==0){
-//                        gja_questions=secObj.getJSONArray("Questions");
-//                        for(int j=0;j<gja_questions.length();j++){
-//                            questionList.add(new SingleQuestionList(gja_questions.getJSONObject(j).getString("qbm_SequenceId"),"NOT_ATTEMPTED"));
-//                        }
-//                    }else{
-//                        questionList=baseQList.get(position);
-//                    }
 
                     ArrayList<SingleFlashQuestion> tempList;
 
@@ -345,16 +322,6 @@ public class FlashCardActivity extends AppCompatActivity {
 
                     questionList = (ArrayList<SingleFlashQuestion>)tempList.clone();
 
-//                    for(int i=0;i<questionList.size();i++){
-//                        SingleFlashQuestion singleFQ=questionList.get(i);
-//                        if(singleFQ.getQstatus().equalsIgnoreCase("SKIPPED")){
-//                            skipList.add(singleFQ.getQnum());
-//                        }else if(singleFQ.getQstatus().equalsIgnoreCase("IKNOW")){
-//                            knownList.add(singleFQ.getQnum());
-//                        }else if(singleFQ.getQstatus().equalsIgnoreCase("IDONKNOW")){
-//                            donknowList.add(singleFQ.getQnum());
-//                        }
-//                    }
                     cAdp.updateList(questionList);
                 }catch (Exception e){
                     e.printStackTrace();
@@ -372,6 +339,48 @@ public class FlashCardActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 initiatePopupWindow(v);
+            }
+        });
+
+        btn_gQues.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                mydialog = new Dialog(FlashCardActivity.this);
+                mydialog.getWindow();
+                mydialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                mydialog.setContentView(R.layout.dialog_answer);
+                mydialog.show();
+                mydialog.setCanceledOnTouchOutside(false);
+
+                ImageView iv_answerimg = mydialog.findViewById(R.id.iv_answer);
+                ImageView iv_dialogclose = mydialog.findViewById(R.id.iv_close);
+
+                try {
+                    String filename=gja_questions.getJSONObject(d).getString("qbm_flash_image");
+                    Log.e("Image Path :--",filename);
+                    Bitmap bmp = BitmapFactory.decodeFile(URLClass.mainpath+filename);
+                    iv_answerimg.setImageBitmap(bmp);
+                    cAdp.setPoiner(d);
+                }catch (Exception e){
+                    e.printStackTrace();
+                    Log.e("ViewLotInfo---",e.toString());
+                }
+
+                iv_dialogclose.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        mydialog.dismiss();
+                    }
+                });
+
+            }
+        });
+
+        btn_exit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                exitAlert("Would you like exit Test Session?");
             }
         });
 
@@ -614,7 +623,6 @@ public class FlashCardActivity extends AppCompatActivity {
 
                     status="";
 
-
                     if(pos>=questionList.size()-1){
 
                         if(secpos<gja_sections.length()-1){
@@ -819,7 +827,7 @@ public class FlashCardActivity extends AppCompatActivity {
             gridView = view.findViewById(R.id.scroll_grid);
             //Instantiate grid adapter
 //            scrollAdapter = new ScrollGridCardAdapter(FlashCardActivity.this,gja_questions,knownList,donknowList,skipList,getScreenSize());
-            scrollAdapter = new ScrollGridCardAdapter(FlashCardActivity.this,gja_questions,questionList,getScreenSize());
+            scrollAdapter = new ScrollGridCardAdapter(FlashCardActivity.this,questionList,getScreenSize());
             //Setting Adapter to gridview
             gridView.setAdapter(scrollAdapter);
             // create a 300px width and 570px height PopupWindow
@@ -862,6 +870,25 @@ public class FlashCardActivity extends AppCompatActivity {
                         long iFlag=myhelper.insertFlashAttempt(studentid,enrollid,courseid,subjectid,paperid,testId,attemptcount,startDttm,endDttm,knowcount,donknowcount,skipcount,percent,"Completed");
                         if(iFlag>0){
                             Log.e("FlashCardActivity----","Attempt Inserted");
+
+                            Double minscore=0.0,maxscore=0.0,avgscore=0.0;
+                            Cursor mycursor=myhelper.getFlashRawData(testId);
+                            if(mycursor.getCount()>0){
+                                while (mycursor.moveToNext()){
+                                    minscore=mycursor.getDouble(mycursor.getColumnIndex("minscore"));
+                                    maxscore=mycursor.getDouble(mycursor.getColumnIndex("maxscore"));
+                                    avgscore=mycursor.getDouble(mycursor.getColumnIndex("avgscore"));
+                                }
+                                Log.e("Scores:---","min:--"+minscore+"  max--"+maxscore+"  avg----"+avgscore);
+                                long uFlag=myhelper.updateTestStatus(testId,attemptcount,minscore,maxscore,avgscore,endDttm,percent);
+                                if(uFlag>0){
+                                    Log.e("FlashCardActivity----","Test Updated");
+                                }else{
+                                    Log.e("FlashCardActivity----","Unable to update Test");
+                                }
+                            }else{
+
+                            }
                         }else{
                             Log.e("FlashCardActivity----","Unable to Insert Attempt");
                         }
@@ -870,6 +897,38 @@ public class FlashCardActivity extends AppCompatActivity {
 
                         finish();
 
+                    }
+                })
+                .setNegativeButton("Cancel",new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.cancel();
+                    }
+                });
+        AlertDialog alert = builder.create();
+        //Setting the title manually
+        alert.setTitle("Alert!");
+        alert.setIcon(R.drawable.warning);
+        alert.show();
+    }
+
+    public  void exitAlert(String messege){
+        AlertDialog.Builder builder = new AlertDialog.Builder(FlashCardActivity.this,R.style.ALERT_THEME);
+        builder.setMessage(Html.fromHtml("<font color='#FFFFFF'>"+messege+"</font>"))
+                .setCancelable(false)
+                .setPositiveButton("Ok",new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+
+                        dialog.cancel();
+
+                        finish();
+
+                    }
+                })
+                .setNegativeButton("Cancel",new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.cancel();
                     }
                 });
         AlertDialog alert = builder.create();

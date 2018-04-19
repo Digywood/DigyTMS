@@ -130,6 +130,12 @@ public class DBHelper extends SQLiteOpenHelper {
                 "  `sptu_last_attempt_start_dttm` datetime DEFAULT NULL,\n" +
                 "  `sptu_last_attempt_end_dttm` datetime DEFAULT NULL,\n" +
                 "  `sptu_no_of_attempts` integer(4) DEFAULT NULL,\n" +
+                "  `sptuflash_attempts` int(5) DEFAULT NULL,\n" +
+                "  `min_flashScore` double DEFAULT NULL,\n" +
+                "  `max_flashScore` double DEFAULT NULL,\n" +
+                "  `avg_flashScore` double DEFAULT NULL,\n" +
+                "  `lastAttemptDttm` datetime DEFAULT NULL,\n" +
+                "  `lastAttemptScore` double DEFAULT NULL,\n" +
                 "  `sptu_created_by` text DEFAULT NULL,\n" +
                 "  `sptu_created_dttm` datetime DEFAULT NULL,\n" +
                 "  `sptu_mod_by` text DEFAULT NULL,\n" +
@@ -295,6 +301,12 @@ public class DBHelper extends SQLiteOpenHelper {
         Cursor c =db.query("flashcard_attempt", new String[] {"attemptNumber,studentId,enrollmentId,courseId,subjectId,paperId"},"flashcardId='"+testId+"'", null, null, null,null);
         count=c.getCount();
         return count;
+    }
+
+    public Cursor getFlashRawData(String testId){
+        String query ="SELECT COUNT(*) as attemptcount,MIN(percentageObtain) as minscore,MAX(percentageObtain) as maxscore,AVG(percentageObtain) as avgscore FROM "+" flashcard_attempt"+" WHERE flashcardId ='"+testId+"'";
+        Cursor c=db.rawQuery(query,null);
+        return c;
     }
 
     public long insertPtuSection(int seckey,String testid,int secseq,String secid,String spid,String ssid,String scid,int minques,int maxques,int totgroups,int nogroups,String sstatus,String sname){
@@ -487,6 +499,19 @@ public class DBHelper extends SQLiteOpenHelper {
         return insertFlag;
     }
 
+    public long updateTestStatus(String testid,int attemptcount,Double minscore,Double maxscore,Double avgscore,String Dttm,Double lastAttemptscore){
+        long updateFlag=0;
+        ContentValues cv = new ContentValues();
+        cv.put("sptuflash_attempts",attemptcount);
+        cv.put("min_flashScore",minscore);
+        cv.put("max_flashScore",maxscore);
+        cv.put("avg_flashScore",avgscore);
+        cv.put("lastAttemptDttm",Dttm);
+        cv.put("lastAttemptScore",lastAttemptscore);
+        updateFlag=db.update("sptu_student", cv,"sptu_ID='"+testid+"'",null);
+        return  updateFlag;
+    }
+
     public long checkTest(int testkey){
         long returnrows=0;
         Cursor c =db.query("sptu_student", new String[] {"sptu_entroll_id,sptu_student_ID,sptu_paper_ID,sptu_subjet_ID,sptu_course_id,sptu_dwnld_status"},"sptu_key='"+testkey+"'", null, null, null,null);
@@ -505,6 +530,11 @@ public class DBHelper extends SQLiteOpenHelper {
 
     public Cursor getSingleTestData(String testId){
         Cursor c =db.query("sptu_student", new String[] {"sptu_entroll_id,sptu_student_ID,sptu_ID,sptu_paper_ID,sptu_subjet_ID,sptu_course_id,sptu_dwnld_status"},"sptu_ID='"+testId+"'", null, null, null,null);
+        return c;
+    }
+
+    public Cursor getTestFlashData(String testId){
+        Cursor c =db.query("sptu_student", new String[] {"min_flashScore,max_flashScore,avg_flashScore"},"sptu_ID='"+testId+"'", null, null, null,null);
         return c;
     }
 
