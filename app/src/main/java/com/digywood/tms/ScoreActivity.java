@@ -22,12 +22,13 @@ import java.util.ArrayList;
 public class ScoreActivity extends AppCompatActivity {
 
     DBHelper dataObj;
-    TextView tv_test,tv_course,tv_subject,tv_attempted,tv_skipped,tv_bookmarked,tv_totalQuestions,tv_totalCorrect,tv_totalWrong,tv_totalNegative,tv_totalPositive,tv_totalScore;
+    TextView tv_test,tv_course,tv_subject,tv_attempted,tv_skipped,tv_bookmarked,tv_totalQuestions,tv_totalCorrect,tv_totalWrong,tv_totalNegative,tv_totalPositive,tv_totalScore,tv_totalPercentage;
     Button btn_save;
     JSONObject attempt;
     Bundle bundle;
     TestActivity testObj;
-    int CorrectCount = 0,WrongCount = 0,TotalPositive = 0, TotalNegative = 0,TotalCount = 0,TotalScore = 0;
+    int CorrectCount = 0,WrongCount = 0,TotalPositive = 0, TotalNegative = 0,TotalCount = 0,TotalScore = 0 ,MaxMarks ;
+    float Percentage;
     ArrayList<Integer> OptionsList = new ArrayList<>();;
 
     @Override
@@ -54,6 +55,7 @@ public class ScoreActivity extends AppCompatActivity {
         tv_totalPositive = findViewById(R.id.tv_totalPositive);
         tv_totalNegative = findViewById(R.id.tv_totalNegative);
         tv_totalScore = findViewById(R.id.tv_totalScore);
+        tv_totalPercentage = findViewById(R.id.tv_totalPercentage);
         btn_save = findViewById(R.id.btn_save);
         dataObj = new DBHelper(ScoreActivity.this);
         testObj.parseJson(attempt);
@@ -70,6 +72,9 @@ public class ScoreActivity extends AppCompatActivity {
             {
                 TotalPositive = Integer.valueOf(attempt.getString("sptu_marks")) * CorrectCount;
                 TotalNegative = Integer.valueOf(attempt.getString("sptu_negative_mrk"))* WrongCount;
+                MaxMarks = Integer.valueOf(attempt.getString("sptu_marks")) * dataObj.getQuestionCount();
+                Percentage = ( (float) TotalPositive /(float) MaxMarks )*100;
+                Log.e("Fraction",""+Percentage);
             }
             TotalScore = TotalPositive - TotalNegative;
             tv_test.setText(attempt.getString("sptu_ID"));
@@ -87,6 +92,7 @@ public class ScoreActivity extends AppCompatActivity {
         tv_totalPositive.setText(String.valueOf(TotalPositive));
         tv_totalNegative.setText(String.valueOf(TotalNegative));
         tv_totalScore.setText(String.valueOf(TotalScore));
+        tv_totalPercentage.setText(String.valueOf(Percentage) + " %");
         Log.e("NumberofQuestionSkip :",""+dataObj.getQuestionAttempted());
 
         btn_save.setOnClickListener(new View.OnClickListener() {

@@ -494,6 +494,10 @@ public class DBHelper extends SQLiteOpenHelper {
         return returnrows;
     }
 
+    public Cursor getSingleStudentTests(String testId){
+        Cursor c =db.query("sptu_student", new String[] {"sptu_entroll_id,sptu_student_ID,sptu_ID,sptu_paper_ID,sptu_subjet_ID,sptu_course_id,sptu_dwnld_status"},"sptu_ID='"+testId+"'", null, null, null,null);
+        return c;
+    }
     public Cursor getStudentTests(){
         Cursor c =db.query("sptu_student", new String[] {"sptu_entroll_id,sptu_student_ID,sptu_ID,sptu_paper_ID,sptu_subjet_ID,sptu_course_id,sptu_dwnld_status"},null, null, null, null,null);
         return c;
@@ -858,6 +862,16 @@ public class DBHelper extends SQLiteOpenHelper {
     public int getQustionBookmarked(){
         int count=0;
         String query ="SELECT  Question_Status FROM "+" attempt_data"+" WHERE Question_Status = 'BOOKMARKED'";
+        Cursor c = db.rawQuery(query, null);
+        count=c.getCount();
+        c.close();
+        return count;
+
+    }
+
+    public int getQustionNotAttempted(){
+        int count=0;
+        String query ="SELECT  Question_Status FROM "+" attempt_data"+" WHERE Question_Status = 'NOT_ATTEMPTED'";
         Cursor c = db.rawQuery(query, null);
         count=c.getCount();
         c.close();
