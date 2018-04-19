@@ -44,6 +44,21 @@ public class FlashAttemptDataActivity extends AppCompatActivity {
     }
 
     public void getFlashAttemptData(String testId){
+
+        Double minscore,maxscore,avgscore;
+        Cursor cur=myhelper.getTestFlashData("PTU0002");
+        if(cur.getCount()>0){
+            while (cur.moveToNext()){
+                minscore=cur.getDouble(cur.getColumnIndex("min_flashScore"));
+                maxscore=cur.getDouble(cur.getColumnIndex("max_flashScore"));
+                avgscore=cur.getDouble(cur.getColumnIndex("avg_flashScore"));
+            }
+        }else{
+            cur.close();
+        }
+
+
+
         Cursor mycursor=myhelper.getFlashTestData("PTU0002");
         if(mycursor.getCount()>0){
             while(mycursor.moveToNext()){

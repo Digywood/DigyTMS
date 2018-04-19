@@ -10,9 +10,6 @@ import android.widget.BaseAdapter;
 import android.widget.TextView;
 import com.digywood.tms.Pojo.SingleFlashQuestion;
 import com.digywood.tms.R;
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
 import java.util.ArrayList;
 
 /**
@@ -24,16 +21,15 @@ public class ScrollGridCardAdapter extends BaseAdapter{
     TextView textView;
     Context c;
     private int size;
-    JSONArray samplequestion;
     ArrayList<SingleFlashQuestion> fq_List;
 //    ArrayList<Integer> knowList;
 //    ArrayList<Integer> donknowList;
 //    ArrayList<Integer> skipList;
 
-    public ScrollGridCardAdapter(Context c,JSONArray samplequestion,ArrayList<SingleFlashQuestion> fQList,int screensize){
+    public ScrollGridCardAdapter(Context c,ArrayList<SingleFlashQuestion> fQList,int screensize){
 
         this.c = c;
-        this.samplequestion = samplequestion;
+//        this.samplequestion = samplequestion;
         this.fq_List=fQList;
 //        ArrayList<Integer> knowList,ArrayList<Integer> donknowList,ArrayList<Integer> skipList
 //        this.knowList = knowList;
@@ -44,18 +40,12 @@ public class ScrollGridCardAdapter extends BaseAdapter{
 
     @Override
     public int getCount() {
-        return samplequestion.length();
+        return fq_List.size();
     }
 
     @Override
-    public JSONObject getItem(int position) {
-        JSONObject obj = new JSONObject();
-        try {
-            obj =  samplequestion.getJSONObject(position);
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-        return obj;
+    public SingleFlashQuestion getItem(int position) {
+        return fq_List.get(position);
     }
 
     @Override
@@ -66,24 +56,10 @@ public class ScrollGridCardAdapter extends BaseAdapter{
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         textView = new TextView(c);
-        try {
-            textView.setText(samplequestion.getJSONObject(position).getString("qbm_SequenceId"));
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
+        textView.setText(fq_List.get(position).getQseqnum());
         textView.setTextColor(Color.WHITE);
         textView.setTextSize(20);
         textView.setGravity(Gravity.CENTER);
-
-//        if(knowList.contains(position)){
-//            textView.setBackgroundColor(c.getResources().getColor(R.color.green));
-//        }else if(donknowList.contains(position)){
-//            textView.setBackgroundColor(c.getResources().getColor(R.color.red));
-//        }else if(skipList.contains(position)){
-//            textView.setBackgroundColor(Color.parseColor("#6758c4"));
-//        }else{
-//
-//        }
         textView.setBackgroundColor(c.getResources().getColor(setResource(size,fq_List.get(position).getQstatus())));
         return textView;
     }
@@ -96,9 +72,9 @@ public class ScrollGridCardAdapter extends BaseAdapter{
                     break;
                 case "IKNOW": resource = R.color.confirm;
                     break;
-                case "IDONKNOW": resource = R.color.skipped;
+                case "IDONKNOW": resource = R.color.bookmark;
                     break;
-                case "SKIPPED": resource = R.color.bookmark;
+                case "SKIPPED": resource = R.color.skipped;
                     break;
                 default: resource = R.color.transp;
                     break;
@@ -110,9 +86,9 @@ public class ScrollGridCardAdapter extends BaseAdapter{
                     break;
                 case "IKNOW": resource = R.color.confirm;
                     break;
-                case "IDONKNOW": resource = R.color.skipped;
+                case "IDONKNOW": resource = R.color.bookmark;
                     break;
-                case "SKIPPED": resource = R.color.bookmark;
+                case "SKIPPED": resource = R.color.skipped;
                     break;
                 default: resource = R.color.transp;
                     break;
