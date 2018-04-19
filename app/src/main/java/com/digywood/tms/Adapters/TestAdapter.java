@@ -40,7 +40,6 @@ import java.util.ArrayList;
 /**
  * Created by prasa on 2018-02-27.
  */
-
 public class TestAdapter extends RecyclerView.Adapter<TestAdapter.MyViewHolder> {
 
     ArrayList<SingleTest> testList;
@@ -103,17 +102,33 @@ public class TestAdapter extends RecyclerView.Adapter<TestAdapter.MyViewHolder> 
                 holder.btn_resume.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        Intent i = new Intent(mycontext, TestActivity.class);
-                        mycontext.startActivity(i);
+                        try {
+                            attempt = new String(SaveJSONdataToFile.bytesFromFile(getExternalPath(mycontext,singletest)), "UTF-8");
+                            Log.e("Attempt_testadapter",attempt.toString());
+                            Intent i = new Intent(mycontext, TestActivity.class);
+                            i.putExtra("json", attempt);
+                            i.putExtra("test",testid);
+                            mycontext.startActivity(i);
+                        } catch (IOException | ClassNotFoundException | NullPointerException e) {
+                            e.printStackTrace();
+                        }
                     }
                 });
             } else {
                 holder.btn_resume.setText("Review");
+                testid = singletest.getTestid();
                 holder.btn_resume.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        Intent i = new Intent(mycontext, ReviewActivity.class);
-                        mycontext.startActivity(i);
+                        try {
+                            attempt = new String(SaveJSONdataToFile.bytesFromFile(getExternalPath(mycontext,singletest)), "UTF-8");
+                            Intent i = new Intent(mycontext, ReviewActivity.class);
+                            i.putExtra("test",testid);
+                            i.putExtra("json", attempt);
+                            mycontext.startActivity(i);
+                        } catch (IOException | ClassNotFoundException e) {
+                            e.printStackTrace();
+                        }
                     }
                 });
             }
@@ -124,8 +139,9 @@ public class TestAdapter extends RecyclerView.Adapter<TestAdapter.MyViewHolder> 
             public void onClick(View v) {
                 dataObj.Destroy("attempt_data");
                 dataObj.Destroy("attempt_list");
-                testid = singletest.getTestid();
+                /*testid = singletest.getTestid();
                 Cursor cursor = dataObj.getSingleStudentTests(testid);
+
                 if (cursor.getCount() > 0) {
                     while (cursor.moveToNext()) {
                         enrollid = cursor.getString(cursor.getColumnIndex("sptu_entroll_id"));
@@ -139,15 +155,13 @@ public class TestAdapter extends RecyclerView.Adapter<TestAdapter.MyViewHolder> 
                 path = enrollid + "/" + courseid + "/" + subjectId + "/" + paperid + "/" + testid + "/";
                 photoPath = URLClass.mainpath + path;
                 attemptPath = URLClass.mainpath + path + "Attempt/" + testid + ".json";
-                jsonPath = URLClass.mainpath + path + testid + ".json";
+                jsonPath = URLClass.mainpath + path + testid + ".json";*/
                 try {
-                    /*json = new String(SaveJSONdataToFile.bytesFromFile(jsonPath), "UTF-8");
-                    Log.e("JSON_testadapter",json.toString());
-                    JSONParser parser = new JSONParser(json,attemptPath);*/
-                    attempt = new String(SaveJSONdataToFile.bytesFromFile(attemptPath), "UTF-8");
-//                    Log.e("Attempt_testadapter",attempt.toString());
+                    attempt = new String(SaveJSONdataToFile.bytesFromFile(getExternalPath(mycontext,singletest)), "UTF-8");
+                    Log.e("Attempt_testadapter",attempt.toString());
                     Intent i = new Intent(mycontext, TestActivity.class);
                     i.putExtra("json", attempt);
+                    i.putExtra("test",testid);
                     mycontext.startActivity(i);
                 } catch (IOException | ClassNotFoundException | NullPointerException e) {
                     e.printStackTrace();
@@ -160,16 +174,6 @@ public class TestAdapter extends RecyclerView.Adapter<TestAdapter.MyViewHolder> 
 
             }
         });
-
-        holder.btn_resume.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                Intent i=new Intent(mycontext, ReviewActivity.class);
-                mycontext.startActivity(i);
-
-            }});
-
         holder.cb_download.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -239,6 +243,28 @@ public class TestAdapter extends RecyclerView.Adapter<TestAdapter.MyViewHolder> 
         alert.setTitle("Alert!");
         alert.setIcon(R.drawable.warning);
         alert.show();
+    }
+
+    public String getExternalPath(Context context, SingleTest singletest){
+        DBHelper dataObj = new DBHelper(context);
+        testid = singletest.getTestid();
+        Cursor cursor = dataObj.getSingleStudentTests(testid);
+
+        if (cursor.getCount() > 0) {
+            while (cursor.moveToNext()) {
+                enrollid = cursor.getString(cursor.getColumnIndex("sptu_entroll_id"));
+                courseid = cursor.getString(cursor.getColumnIndex("sptu_course_id"));
+                subjectId = cursor.getString(cursor.getColumnIndex("sptu_subjet_ID"));
+                paperid = cursor.getString(cursor.getColumnIndex("sptu_paper_ID"));
+            }
+        }
+
+        Log.e("path_vars", enrollid + " " + courseid + " " + subjectId + " " + paperid + " " + testid);
+        path = enrollid + "/" + courseid + "/" + subjectId + "/" + paperid + "/" + testid + "/";
+        photoPath = URLClass.mainpath + path;
+        attemptPath = URLClass.mainpath + path + "Attempt/" + testid + ".json";
+        jsonPath = URLClass.mainpath + path + testid + ".json";
+        return attemptPath;
     }
 
 

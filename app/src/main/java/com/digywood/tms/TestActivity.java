@@ -15,6 +15,7 @@ import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.os.Handler;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.ActionBar;
@@ -70,7 +71,7 @@ public class TestActivity extends AppCompatActivity implements
 
     TextView timer;
     public static File file;
-    ImageView fullscreen, menu;
+    ImageView fullscreen;
     private PopupWindow pw;
     GridView gridView;
     Spinner sections;
@@ -79,6 +80,7 @@ public class TestActivity extends AppCompatActivity implements
     RecyclerView question_scroll;
     ScrollGridAdapter scrollAdapter;
     QuestionListAdapter qAdapter;
+    FloatingActionButton menu;
     LinearLayoutManager myLayoutManager;
     ArrayAdapter adapter;
     RecyclerView rv_option;
@@ -109,7 +111,6 @@ public class TestActivity extends AppCompatActivity implements
     public static JSONObject attempt;
     JSONArray array, optionsArray, totalArray,groupArray, sectionArray,attemptsectionarray,buffer;
     SingleQuestion question = new SingleQuestion();
-    SingleGroup group = new SingleGroup();
     SingleSections section = new SingleSections();
     SingleOptions option;
     SingleQuestionList qListObj;
@@ -212,10 +213,10 @@ public class TestActivity extends AppCompatActivity implements
         question_scroll.setLayoutManager(myLayoutManager);
         question_scroll.setItemAnimator(new DefaultItemAnimator());
         question_scroll.setAdapter(qAdapter);
-        testid = "PTAA00002";
+        testid = getIntent().getStringExtra("test");
         rv_option = findViewById(R.id.option_view);
 
-        Cursor cursor = dataObj.getStudentTests();
+        Cursor cursor = dataObj.getSingleStudentTests(testid);
         if (cursor.getCount() > 0) {
             while (cursor.moveToNext()) {
                 if (cursor.getString(cursor.getColumnIndex("sptu_ID")).equals(testid)) {
@@ -227,10 +228,9 @@ public class TestActivity extends AppCompatActivity implements
             }
         }
         save = new SaveJSONdataToFile();
-
         path = enrollid + "/" + courseid + "/" + subjectId + "/" + paperid + "/" + testid + "/";
         photoPath = URLClass.mainpath + path;
-        jsonPath = URLClass.mainpath + path + testid + ".json";
+        jsonPath = URLClass.mainpath + path + "Attempt/" + testid + ".json";
 
         temp = new JSONObject();
         sectionArray = new JSONArray();
@@ -273,62 +273,53 @@ public class TestActivity extends AppCompatActivity implements
             if(c.getCount()> 0) {
                 c.moveToLast();
                 if (c.getInt(c.getColumnIndex("Attempt_Status")) == 1) {
-                    millisStart = c.getLong(c.getColumnIndex("Attempt_RemainingTime")) ;
-//                    String json = new String(SaveJSONdataToFile.bytesFromFile(URLClass.mainpath + path + "Attempt/"+ testid + ".json"), "UTF-8");
-                    attempt = new JSONObject(getIntent().getStringExtra("json"));
-                    attemptsectionarray = new JSONArray();
-                    attemptsectionarray = attempt.getJSONArray("Sections");
-                    parseJson(attempt);
-                    restoreSections(dataObj.getQuestionStatus(),attempt);
-                    Log.e("TestingJsonif",""+listOfLists.size());
-                    index = c.getInt(c.getColumnIndex("Attempt_LastQuestion"));
-                    pos = c.getInt(c.getColumnIndex("Attempt_LastSection"));
-                    buffer = attempt.getJSONArray("Sections").getJSONObject(pos).getJSONArray("Questions");
-
+                    try {
+                        millisStart = c.getLong(c.getColumnIndex("Attempt_RemainingTime")) ;
+                        String json = new String(SaveJSONdataToFile.bytesFromFile(URLClass.mainpath + path + "Attempt/"+ testid + ".json"), "UTF-8");
+                        attempt = new JSONObject(json);
+                        attemptsectionarray = new JSONArray();
+                        attemptsectionarray = attempt.getJSONArray("Sections");
+                        Log.e("TestingJsonif",""+attempt.toString());
+                        parseJson(attempt);
+                        restoreSections(dataObj.getQuestionStatus(),attempt);
+                        index = c.getInt(c.getColumnIndex("Attempt_LastQuestion"));
+                        pos = c.getInt(c.getColumnIndex("Attempt_LastSection"));
+                        buffer = attempt.getJSONArray("Sections").getJSONObject(pos).getJSONArray("Questions");
+                    } catch (IOException | ClassNotFoundException e) {
+                        e.printStackTrace();
+                    }
                 }
             }
             //else cursor doesn't have values then the test is started fresh
             else {
                     Log.e("Fresh","Test");
                     millisStart = 3600000;
-                    String json = new String(SaveJSONdataToFile.bytesFromFile(jsonPath), "UTF-8");
-                    obj = new JSONObject(json);
+//                    String json = new String(SaveJSONdataToFile.bytesFromFile(jsonPath), "UTF-8");
+                    obj = new JSONObject(getIntent().getStringExtra("json"));
                     parseJson(obj);
                     encObj = new EncryptDecrypt();
                     attemptsectionarray = new JSONArray();
                     max = 1;
-                    /*for (int i = 0; i < 2; i++) {
-                        Collections.shuffle(list);
-                        Collections.shuffle(oplist);
-                        generateAttemptJSON(i);
-                    }*/
                     attempt = new JSONObject(getIntent().getStringExtra("json"));
                     attemptsectionarray = attempt.getJSONArray("Sections");
-                    /*attempt.put("sptu_marks",obj.getString("sptu_marks"));
-                    attempt.put("sptu_negative_applicable",obj.getString("sptu_negative_applicable"));
-                    attempt.put("sptu_negative_mrk",obj.getString("sptu_negative_mrk"));*/
                     Log.e("Sections",""+attemptsectionarray.length());
-//                    attempt.put("sections", attemptsectionarray);
                     index = 0;
                     pos = 0;
                     buffer = attempt.getJSONArray("Sections").getJSONObject(pos).getJSONArray("Questions");
-                    Log.e("BufferLength",""+buffer.length());
                     storeSections();
-                Log.e("TestingJsonelse",""+listOfLists.size());
 
             }
-            SaveJSONdataToFile.objectToFile(URLClass.mainpath + path + "Attempt/"+ testid + ".json",attempt.toString());
+//            SaveJSONdataToFile.objectToFile(URLClass.mainpath + path + "Attempt/"+ testid + ".json",attempt.toString());
             setQuestion(pos,index,edit);
 
-        } catch (JSONException | IOException | ClassNotFoundException e) {
+        } catch (JSONException e) {
             e.printStackTrace();
         }
 
         sections.setOnItemSelectedListener(this);
-        adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, categories);
+        adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, categories);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         sections.setAdapter(adapter);
-
 
         fullscreen.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -358,9 +349,10 @@ public class TestActivity extends AppCompatActivity implements
             public void onClick(View v) {
                 if (opAdapter.getSelectedItem() > -1) {
                     listOfLists.get(pos).get(index).setQ_status("BOOKMARKED");
-                    qAdapter.updateList(questionOpList);
+//                    qAdapter.updateList(questionOpList);
                     writeOption(opAdapter.getSelectedItem());
-                    btn_next.callOnClick();
+                    index++;
+                    gotoQuestion(index);
                 } else
                     Toast.makeText(TestActivity.this, "No option Selected", Toast.LENGTH_LONG).show();
             }
@@ -400,11 +392,9 @@ public class TestActivity extends AppCompatActivity implements
             @Override
             public void onClick(View v) {
                 try {
-
                     flag = true;
                     buffer = attempt.getJSONArray("Sections").getJSONObject(pos).getJSONArray("Questions");
                     if (index <= buffer.length()) {
-//                        optionsTemp = dataObj.getQuestion();
                         if (index < buffer.length() - 1) {
                             setQBackground(pos,index);
                             writeOption(opAdapter.getSelectedItem());
@@ -425,7 +415,6 @@ public class TestActivity extends AppCompatActivity implements
                                             // do something when the button is clicked
                                             public void onClick(DialogInterface arg0, int arg1) {
 //                                            q_list.clear();
-
                                                 try {
                                                     SaveJSONdataToFile.objectToFile(URLClass.mainpath + path + "Attempt/"+ testid + ".json",attempt.toString());
                                                 } catch (IOException e) {
@@ -508,8 +497,6 @@ public class TestActivity extends AppCompatActivity implements
                         sections.setSelection(pos);
                         scrollAdapter.updateList(listOfLists.get(pos));
                         setScrollbar(pos);
-
-
                     }
                     checkRadio();
                 } catch (JSONException e) {
@@ -522,6 +509,8 @@ public class TestActivity extends AppCompatActivity implements
         question_scroll.addOnItemTouchListener(new RecyclerTouchListener(getApplicationContext(), question_scroll, new RecyclerTouchListener.OnItemClickListener() {
             @Override
             public void onClick(View view, int in) {
+                setQBackground(pos,index);
+                writeOption(opAdapter.getSelectedItem());
                 gotoQuestion(in);
             }
 
@@ -530,12 +519,6 @@ public class TestActivity extends AppCompatActivity implements
             }
         }));
 
-//        date = findViewById(R.id.date);
-//        Date dt = new Date();
-//        SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
-//        String check = dateFormat.format(dt);
-//        date.setText(check);
-        //Setting countdown timer
         new CountDownTimer(millisStart, 1000) {
 
             public void onTick(long millisUntilFinished) {
@@ -597,16 +580,20 @@ public class TestActivity extends AppCompatActivity implements
     //method to display selected question
     public void gotoQuestion(int in){
         try {
-            setQBackground(pos,index);
-            writeOption(opAdapter.getSelectedItem());
 
-            index = in;
-            setQuestion(pos,index,edit);
-//                    qAdapter.setBackground(index);
             buffer = attempt.getJSONArray("Sections").getJSONObject(pos).getJSONArray("Questions");
             Id = buffer.getJSONObject(index).getString("qbm_ID");
-            if(index == buffer.length() -1)
-                Log.e("TQuestionScroll",Id);
+            if(index == buffer.length() -1){
+                pos++;
+                index = 0;
+                Log.e("next","sections");
+//                qAdapter.updateList(questionOpList);
+            }
+            else{
+                Log.e("same","sections");
+                index = in;
+            }
+            setQuestion(pos,index,edit);
             checkRadio();
         } catch (JSONException e) {
             e.printStackTrace();
@@ -632,10 +619,7 @@ public class TestActivity extends AppCompatActivity implements
         if (opAdapter.getSelectedItem() == -1) {
             listOfLists.get(pos).get(index).setQ_status("SKIPPED");
         } else {
-            if (!listOfLists.get(pos).get(index).getQ_status().equals("BOOKMARKED"))
-                {   listOfLists.get(pos).get(index).setQ_status("ATTEMPTED");}
-            else
-                {   listOfLists.get(pos).get(index).setQ_status("BOOKMARKED");}
+                listOfLists.get(pos).get(index).setQ_status("ATTEMPTED");
         }
         qAdapter.updateList(listOfLists.get(pos));
     }
@@ -663,7 +647,7 @@ public class TestActivity extends AppCompatActivity implements
         return CorrectCount;
     }
 
-    //method to set a horizantal scrollbar containing question numbers of the current section
+    //method to set a horizontal scrollbar containing question numbers of the current section
     public void setScrollbar(int position) throws JSONException {
 //        questionOpList = new ArrayList<>();
         pos = position;
@@ -707,7 +691,10 @@ public class TestActivity extends AppCompatActivity implements
             gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                    setQBackground(pos,index);
+                    writeOption(opAdapter.getSelectedItem());
                     gotoQuestion(position);
+                    index = position;
                     cancelButton.callOnClick();
                 }
             });
@@ -736,7 +723,6 @@ public class TestActivity extends AppCompatActivity implements
 
     //method to store the selected option in the local database
     public void writeOption(int indx) {
-//        RadioButton random = findViewById(group.getCheckedRadioButtonId());
         try {
             long result = -1;
             buffer = attempt.getJSONArray("Sections").getJSONObject(pos).getJSONArray("Questions");
@@ -787,7 +773,67 @@ public class TestActivity extends AppCompatActivity implements
         View layout = inflater.inflate(R.layout.menu, null);
         AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);
         dialogBuilder.setView(layout);
+        TextView tv_answered_count = layout.findViewById(R.id.tv_answered_count);
+        TextView tv_skipped_count = layout.findViewById(R.id.tv_skipped_count);
+        TextView tv_bookmarked_count = layout.findViewById(R.id.tv_bookmarked_count);
+        TextView tv_not_attempted_count = layout.findViewById(R.id.tv_not_attempted_count);
+        tv_answered_count.setText(""+dataObj.getQuestionAttempted());
+        tv_skipped_count.setText(""+dataObj.getQuestionSkipped());
+        tv_bookmarked_count.setText(""+dataObj.getQustionBookmarked());
+        tv_not_attempted_count.setText(""+dataObj.getQustionNotAttempted());
+        Button finish = layout.findViewById(R.id.finish_button);
+        finish.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                AlertDialog alertbox = new AlertDialog.Builder(TestActivity.this)
+                        .setMessage("Do you want to finish Test?" + " " + dataObj.getQuestionCount())
+                        .setPositiveButton("Yes",new DialogInterface.OnClickListener() {
 
+                            // do something when the button is clicked
+                            public void onClick(DialogInterface arg0, int arg1) {
+//                                            q_list.clear();
+                                try {
+                                    SaveJSONdataToFile.objectToFile(URLClass.mainpath + path + "Attempt/"+ testid + ".json",attempt.toString());
+                                } catch (IOException e) {
+                                    e.printStackTrace();
+                                }
+                                finish();
+                                count = dataObj.getAttempCount()-1;
+                                long value = dataObj.UpdateAttempt(count,2,0,0,millisRemaining,index,pos);
+                                if(value>=0){
+                                    dataObj.InsertAttempt(2,0,0,millisRemaining,index,pos);
+                                }
+                                c = dataObj.getAttempt(count);
+                                c.moveToFirst();
+                                Intent intent = new Intent(TestActivity.this, ScoreActivity.class);
+                                bundle = new Bundle();
+                                bundle.putString("JSON",attempt.toString());
+                                bundle.putString("Course",courseid);
+                                bundle.putString("Subject",subjectId);
+                                bundle.putInt("Integer",getCorrectCount());
+
+                                intent.putExtra("BUNDLE",bundle);
+                                startActivity(intent);
+
+                            }
+                        })
+                        .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                            // do something when the button is clicked
+                            public void onClick(DialogInterface arg0, int arg1) {
+                                mHideRunnable.run();
+                                btn_next.setText("Next");
+                            }
+                        })
+                        .show();
+                alertbox.setOnCancelListener(new DialogInterface.OnCancelListener() {
+                    @Override
+                    public void onCancel(DialogInterface dialog) {
+                        mHideRunnable.run();
+                        btn_next.setText("Next");
+                    }
+                });
+            }
+        });
         Button cancelButton = layout.findViewById(R.id.close_button);
         final AlertDialog alertDialog = dialogBuilder.create();
         alertDialog.show();
@@ -1053,7 +1099,7 @@ public class TestActivity extends AppCompatActivity implements
         }
         qAdapter.setPointer(index);
         questionobj = array.getJSONObject(index);
-        /*if (questionobj.getString("qbm_qimage_flag").equals("YES")) {
+        /*if (questionobj.getString("qbm_QAdditional_Flag").equals("YES")) {
             btn_qadditional.setEnabled(true);
             btn_qadditional.setClickable(true);
             btn_qadditional.setBackgroundColor(getResources().getColor(R.color.dull_yellow));
@@ -1065,13 +1111,15 @@ public class TestActivity extends AppCompatActivity implements
         }*/
         Log.e("Setquestions",questionobj.getString("qbm_image_file"));
         if (!edit) {
-            btn_review.setEnabled(true);
-            btn_review.setClickable(true);
-            btn_review.setBackgroundColor(getResources().getColor(R.color.dull_yellow));
-        } else {
-            btn_review.setEnabled(false);
-            btn_review.setClickable(false);
-            btn_review.setBackgroundColor(0);
+            if (questionobj.getString("qbm_review_flag").equals("YES")) {
+                btn_review.setEnabled(true);
+                btn_review.setClickable(true);
+                btn_review.setBackgroundColor(getResources().getColor(R.color.dull_yellow));
+            } else {
+                btn_review.setEnabled(false);
+                btn_review.setClickable(false);
+                btn_review.setBackgroundColor(0);
+            }
         }
         b = BitmapFactory.decodeFile(photoPath + questionobj.getString("qbm_image_file"));
         question_img.setImageBitmap(b);
@@ -1140,12 +1188,13 @@ public class TestActivity extends AppCompatActivity implements
             listOfLists = new ArrayList<>();
             for (int i = 0; i < attempt.getJSONArray("Sections").length(); i++) {
                 categories.add(attempt.getJSONArray("Sections").getJSONObject(i).getString("Ptu_section_name"));
-                JSONArray array2 = attempt.getJSONArray("Sections");
+                JSONArray array2 = attempt.getJSONArray("Sections").getJSONObject(i).getJSONArray("Questions");
+                Log.e("sequence",""+categories.size());
                 questionOpList = new ArrayList<>();
                 Log.e("array2",""+array2.length());
                 for (int j = 0; j < array2.length(); j++) {
                     if(statusList.get(i) != null) {
-                        Log.e("sequence",array2.getJSONObject(j).getString("qbm_SequenceId"));
+
                         qListObj = new SingleQuestionList(array2.getJSONObject(j).getString("qbm_SequenceId"), statusList.get(max));
                     }
                     max++;

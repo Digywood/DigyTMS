@@ -62,7 +62,7 @@ public class ScrollGridAdapter extends BaseAdapter{
     public View getView(int position, View convertView, ViewGroup parent) {
         textView = new TextView(c);
         try {
-            textView.setText(samplequestion.getJSONObject(position).getString("qbm_sequence"));
+            textView.setText(samplequestion.getJSONObject(position).getString("qbm_SequenceId"));
         } catch (JSONException e) {
             e.printStackTrace();
         }
