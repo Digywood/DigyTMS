@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="3dp"
+        android:orientation="horizontal">
+
+    <TextView
+        android:id="@+id/tv_fdate"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textColor="#000000"
+        android:textSize="16sp"
+        android:layout_weight="1"
+        android:hint="date"/>
+
+    <TextView
+        android:id="@+id/tv_fknowcount"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textColor="#000000"
+        android:textSize="16sp"
+        android:layout_weight="1"
+        android:hint="kcount"/>
+
+    <TextView
+        android:id="@+id/tv_fdonknowcount"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textColor="#000000"
+        android:textSize="16sp"
+        android:layout_weight="1"
+        android:hint="donkcount"/>
+
+    <TextView
+        android:id="@+id/tv_fskipcount"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textColor="#000000"
+        android:textSize="16sp"
+        android:layout_weight="1"
+        android:hint="scount"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1">
+
+        <ProgressBar
+            android:id="@+id/pb_progress"
+            style="@android:style/Widget.ProgressBar.Horizontal"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="3dp"/>
+
+        <TextView
+            android:id="@+id/tv_fpercentage"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="#000000"
+            android:textSize="16sp"
+            android:hint="percent"/>
+
+    </LinearLayout>
+
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0.1dip"
+        android:layout_margin="3dp"
+        android:background="#828282"/>
+
+</LinearLayout>

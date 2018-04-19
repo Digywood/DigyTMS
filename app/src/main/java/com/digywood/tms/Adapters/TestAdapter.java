@@ -18,6 +18,7 @@ import android.widget.CheckBox;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.digywood.tms.FlashAttemptDataActivity;
 import com.digywood.tms.FlashCardActivity;
 import com.digywood.tms.JSONParser;
 import com.digywood.tms.DBHelper.DBHelper;
@@ -30,7 +31,6 @@ import com.digywood.tms.URLClass;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
-
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
@@ -40,6 +40,7 @@ import java.util.ArrayList;
 /**
  * Created by prasa on 2018-02-27.
  */
+
 public class TestAdapter extends RecyclerView.Adapter<TestAdapter.MyViewHolder> {
 
     ArrayList<SingleTest> testList;
@@ -56,7 +57,7 @@ public class TestAdapter extends RecyclerView.Adapter<TestAdapter.MyViewHolder> 
     public class MyViewHolder extends RecyclerView.ViewHolder {
 
         public TextView tv_testid, tv_teststatus;
-        public Button btn_start, btn_resume;
+        public Button btn_start, btn_resume,btn_fstart,btn_fattempthistory;
         public CheckBox cb_download;
 
         public MyViewHolder(View view) {
@@ -65,6 +66,8 @@ public class TestAdapter extends RecyclerView.Adapter<TestAdapter.MyViewHolder> 
             tv_teststatus = view.findViewById(R.id.tv_teststatus);
             btn_start = view.findViewById(R.id.btn_teststart);
             btn_resume = view.findViewById(R.id.btn_testresume);
+            btn_fstart=view.findViewById(R.id.btn_fteststart);
+            btn_fattempthistory=view.findViewById(R.id.btn_fattempthistory);
             cb_download = view.findViewById(R.id.cb_testselection);
         }
     }
@@ -91,7 +94,6 @@ public class TestAdapter extends RecyclerView.Adapter<TestAdapter.MyViewHolder> 
         } else
             holder.btn_resume.setEnabled(true);
         int count = dataObj.getAttempCount() - 1;
-
 
         Cursor c = dataObj.getAttempt(count);
         //if cursor has values then the test is being resumed and data is retrieved from database
@@ -172,6 +174,66 @@ public class TestAdapter extends RecyclerView.Adapter<TestAdapter.MyViewHolder> 
                     Toast.makeText(mycontext, "FILES NOT DOWNLOADED", Toast.LENGTH_LONG).show();
                 }*/
 
+            }
+        });
+
+        holder.btn_fstart.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                try {
+                    BufferedReader br = new BufferedReader(new FileReader(URLClass.mainpath +"EAAA000009/SSCT1001/SSCS0002/PAA002/PTU0002/"+"PTU0002_01"+".json"));
+                    StringBuilder sb = new StringBuilder();
+                    String line = br.readLine();
+
+                    while (line != null) {
+                        sb.append(line);
+                        sb.append("\n");
+                        line = br.readLine();
+                    }
+                    filedata = sb.toString();
+                    br.close();
+                    fimageList = readJson(filedata);
+                    if (fimageList.size() != 0) {
+
+                        ArrayList<String> missingfList = new ArrayList<>();
+
+                        for (int i = 0; i < fimageList.size(); i++) {
+                            File myFile = new File(URLClass.mainpath + fimageList.get(i));
+                            if (myFile.exists()) {
+
+                            } else {
+                                missingfList.add(fimageList.get(i));
+                            }
+                        }
+
+                        if (missingfList.size() != 0) {
+                            StringBuilder sbm = new StringBuilder();
+                            sbm.append("The following file are missing...\n");
+                            for (int i = 0; i < missingfList.size(); i++) {
+                                sbm.append(missingfList.get(i) + " , " + "\n");
+                            }
+                            showAlert(sbm.toString());
+                        } else {
+                            Intent i = new Intent(mycontext, FlashCardActivity.class);
+                            i.putExtra("testId",testList.get(position).getTestid());
+                            mycontext.startActivity(i);
+                        }
+                    } else {
+                        Log.e("FlashCardActivity---", "No Questions to Display");
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    Log.e("TestActivity1-----", e.toString());
+                }
+            }
+        });
+
+        holder.btn_fattempthistory.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i=new Intent(mycontext, FlashAttemptDataActivity.class);
+                i.putExtra("testId",singletest.getTestid());
+                mycontext.startActivity(i);
             }
         });
         holder.cb_download.setOnClickListener(new View.OnClickListener() {
