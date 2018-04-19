@@ -48,7 +48,6 @@ public class FlashAttemptDataActivity extends AppCompatActivity {
         if(mycursor.getCount()>0){
             while(mycursor.moveToNext()){
                 fattemptList.add(new SingleFlashAttempt(mycursor.getString(mycursor.getColumnIndex("startDttm")),mycursor.getInt(mycursor.getColumnIndex("iknowCount")),mycursor.getInt(mycursor.getColumnIndex("donknowCount")),mycursor.getInt(mycursor.getColumnIndex("skipCount")),mycursor.getDouble(mycursor.getColumnIndex("percentageObtain"))));
-                Log.e("AttemptRecord:---","atemptno--"+mycursor.getInt(mycursor.getColumnIndex("attemptNumber"))+"  knowcount---"+mycursor.getInt(mycursor.getColumnIndex("iknowCount"))+"  donknowcount----"+mycursor.getInt(mycursor.getColumnIndex("donknowCount"))+"  skipcount"+mycursor.getInt(mycursor.getColumnIndex("skipCount"))+"  percent--"+mycursor.getDouble(mycursor.getColumnIndex("percentageObtain")));
             }
         }else{
             mycursor.close();

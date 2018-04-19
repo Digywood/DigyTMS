@@ -51,6 +51,13 @@
         android:layout_height="wrap_content"
         android:layout_weight="1">
 
+        <ProgressBar
+            android:id="@+id/pb_progress"
+            style="@android:style/Widget.ProgressBar.Horizontal"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="3dp"/>
+
         <TextView
             android:id="@+id/tv_fpercentage"
             android:layout_width="wrap_content"
@@ -58,13 +65,6 @@
             android:textColor="#000000"
             android:textSize="16sp"
             android:hint="percent"/>
-
-        <ProgressBar
-            android:id="@+id/pb_progress"
-            style="@android:style/Widget.ProgressBar.Horizontal"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            />
 
     </LinearLayout>
 

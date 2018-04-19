@@ -8,6 +8,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.digywood.tms.Pojo.SingleFlashQuestion;
 import com.digywood.tms.Pojo.SingleQuestionList;
 import com.digywood.tms.R;
 import java.util.ArrayList;
@@ -17,7 +19,7 @@ public class CardQuestionAdapter extends RecyclerView.Adapter<CardQuestionAdapte
     private TextView[] myTextView;
     private int qid=-1;
     private int size;
-    private ArrayList<SingleQuestionList> q_list=new ArrayList<>();
+    private ArrayList<SingleFlashQuestion> q_list=new ArrayList<>();
     private Context mycontext;
     public int position = -1,index =  -1;
 
@@ -32,7 +34,7 @@ public class CardQuestionAdapter extends RecyclerView.Adapter<CardQuestionAdapte
         }
     }
 
-    public CardQuestionAdapter(ArrayList<SingleQuestionList> q_list, Context c,int size){
+    public CardQuestionAdapter(ArrayList<SingleFlashQuestion> q_list, Context c,int size){
         this.q_list=q_list;
         this.mycontext=c;
         this.size = size;
@@ -47,8 +49,8 @@ public class CardQuestionAdapter extends RecyclerView.Adapter<CardQuestionAdapte
 
         @Override
         public void onBindViewHolder(final MyViewHolder holder, int position) {
-            holder.Q_num.setText(q_list.get(position).getQ_num());
-            holder.Q_num.setBackgroundResource(setResource(size,q_list.get(position).getQ_status()));
+            holder.Q_num.setText(q_list.get(position).getQseqnum());
+            holder.Q_num.setBackgroundResource(setResource(size,q_list.get(position).getQstatus()));
             if(index == position){
                 holder.Q_pointer.setVisibility(View.VISIBLE);
             }
@@ -66,7 +68,7 @@ public class CardQuestionAdapter extends RecyclerView.Adapter<CardQuestionAdapte
         notifyDataSetChanged();
     }
 
-    public void updateList(ArrayList<SingleQuestionList> q_list){
+    public void updateList(ArrayList<SingleFlashQuestion> q_list){
         this.q_list = q_list;
         notifyDataSetChanged();
     }
