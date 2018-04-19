@@ -2,6 +2,8 @@ package com.digywood.tms.Adapters;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.ColorStateList;
+import android.graphics.Color;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -60,7 +62,9 @@ public class FlashAttemptAdapter extends RecyclerView.Adapter<FlashAttemptAdapte
         holder.tv_fdonknowcount.setText(String.valueOf(singlefattempt.getDonknowcount()));
         holder.tv_fskipcount.setText(String.valueOf(singlefattempt.getSkipcount()));
         holder.tv_fpercentage.setText(String.valueOf(singlefattempt.getPercent()));
-        holder.pb_progress.setProgress(10);
+        Double d = new Double(singlefattempt.getPercent());
+        int progress = d.intValue();
+        holder.pb_progress.setProgress(progress);
 
     }
 

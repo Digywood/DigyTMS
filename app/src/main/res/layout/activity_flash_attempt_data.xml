@@ -65,7 +65,7 @@
             android:textStyle="bold"
             android:textSize="16sp"
             android:layout_weight="1"
-            android:text="Percentage"/>
+            android:text="Percentage(%)"/>
 
     </LinearLayout>
 

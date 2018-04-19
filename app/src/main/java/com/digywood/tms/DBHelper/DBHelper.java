@@ -286,7 +286,7 @@ public class DBHelper extends SQLiteOpenHelper {
     }
 
     public Cursor getFlashTestData(String testId){
-        Cursor c =db.query("flashcard_attempt", new String[] {"attemptNumber,startDttm,iknowCount,donknowCount,skipCount,percentageObtain"},"flashcardId='"+testId+"'", null, null, null,null);
+        Cursor c =db.query("flashcard_attempt", new String[] {"attemptNumber,startDttm,iknowCount,donknowCount,skipCount,percentageObtain"},"flashcardId='"+testId+"'", null, null, null,"startDttm DESC");
         return  c;
     }
 
