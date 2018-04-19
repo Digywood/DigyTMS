@@ -1,5 +1,6 @@
 package com.digywood.tms;
 
+import android.content.Context;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import com.digywood.tms.DBHelper.DBHelper;
@@ -40,14 +41,18 @@ public class JSONParser extends AppCompatActivity{
     JSONObject mainObj=null,secObj=null,quesObj=null,optionObj=null,additionsObj=null;
     Random r = new Random();
     int seqno=0;
-    DBHelper myhelper=new DBHelper(this);
-    int count=0,maxcount=0,quescount=10,totalsubcatCount=22,testqcount=0;
+    DBHelper myhelper;
+    Context mycontext;
+    int count=0,maxcount=0,quescount=0,totalsubcatCount=22,testqcount=0;
     JSONObject cmainObj,csecObj,cquesObj,coptionObj,cadditionsObj;
     String section="",sectionid="",testid="",dwdpath="";
 
-    public JSONParser(String JSON,String dwdPath){
+    public JSONParser(String JSON,String dwdPath,Context c){
 
         this.dwdpath=dwdPath;
+        this.myhelper=new DBHelper(c.getApplicationContext());
+//        this.myhelper=new DBHelper(JSONParser.this);
+
         quesIdList.clear();
 
         testfimages.add("Q001.PNG");
@@ -69,14 +74,16 @@ public class JSONParser extends AppCompatActivity{
         try{
             mainObj=new JSONObject(JSON);
 
+//            DBHelper myhelper=new DBHelper(this);
+
             cmainObj=new JSONObject();
-            testid=mainObj.getString("Ptu_test_ID");
-            cmainObj.put("sptu_ID",mainObj.getString("Ptu_test_ID"));
+            testid=mainObj.getString("ptu_test_ID");
+            cmainObj.put("sptu_ID",mainObj.getString("ptu_test_ID"));
 
             scConfigList.clear();
             scConfigList=myhelper.getSubcatData(testid);
 
-            Log.e("JSON--",mainObj.getString("Ptu_test_ID"));
+            Log.e("JSON--",mainObj.getString("ptu_test_ID"));
 
             ja_sections=mainObj.getJSONArray("Sections");
 
@@ -96,13 +103,14 @@ public class JSONParser extends AppCompatActivity{
                 freeSubcatList.clear();
                 secObj=ja_sections.getJSONObject(i);
                 csecObj=new JSONObject();
-                section=secObj.getString("Ptu_section_name");
-                sectionid=secObj.getString("Ptu_section_ID");
-                csecObj.put("Ptu_section_ID",secObj.getString("Ptu_section_ID"));
-                csecObj.put("Ptu_section_name",secObj.getString("Ptu_section_name"));
+                section=secObj.getString("ptu_section_name");
+                sectionid=secObj.getString("ptu_section_ID");
+                csecObj.put("Ptu_section_ID",secObj.getString("ptu_section_ID"));
+                csecObj.put("Ptu_section_name",secObj.getString("ptu_section_name"));
                 ja_questions=secObj.getJSONArray("Questions");
                 Log.e("QuesArray Length---",""+ja_questions.length());
 
+                quescount=myhelper.getSectionMaxQCount(testid,sectionid);
 
                 for(int q=0;q<ja_questions.length();q++){
 
@@ -137,6 +145,7 @@ public class JSONParser extends AppCompatActivity{
                                 groupcloseList.add(quesObj.getString("gbg_id"));
                             }
                         }
+
 
 //                        if(groupList.contains(quesObj.getString("gbg_id"))){
 //
@@ -528,14 +537,13 @@ public class JSONParser extends AppCompatActivity{
 
             Log.e("SLength",""+cja_sections.length());
 
-            File file = new File(URLClass.mainpath+"sample.json");
+            File file = new File(dwdpath+"sample.json");
             if (!file.exists()) {
                 file.createNewFile();
             }
 
             byte[] bytes = cmainObj.toString().getBytes("UTF-8");
-            Log.e("JSONParser",cmainObj.toString());
-            FileOutputStream out = new FileOutputStream(dwdPath);
+            FileOutputStream out = new FileOutputStream(dwdpath+"PTU0002_01.json");
             out.write(bytes);
             out.close();
 
