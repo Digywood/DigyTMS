@@ -244,8 +244,8 @@ public class FlashCardActivity extends AppCompatActivity {
                     d=position;
                     JSONObject qObj=gja_questions.getJSONObject(position);
                     String imagefile=qObj.getString("qbm_flash_image");
-                    Log.e("Image Path :--",URLClass.mainpath+imagefile);
-                    Bitmap bmp = BitmapFactory.decodeFile(URLClass.mainpath+imagefile);
+                    Log.e("Image Path :--",testPath+imagefile);
+                    Bitmap bmp = BitmapFactory.decodeFile(testPath+imagefile);
                     iv_quesimg.setImageBitmap(bmp);
 
                     String gFlag=qObj.getString("qbm_group_flag");
@@ -287,8 +287,8 @@ public class FlashCardActivity extends AppCompatActivity {
 
                     JSONObject qObj=gja_questions.getJSONObject(position);
                     String imagefile=qObj.getString("qbm_flash_image");
-                    Log.e("Image Path :--",URLClass.mainpath+imagefile);
-                    Bitmap bmp = BitmapFactory.decodeFile(URLClass.mainpath+imagefile);
+                    Log.e("Image Path :--",testPath+imagefile);
+                    Bitmap bmp = BitmapFactory.decodeFile(testPath+imagefile);
                     iv_quesimg.setImageBitmap(bmp);
 
                     String gFlag=qObj.getString("qbm_group_flag");
@@ -341,7 +341,7 @@ public class FlashCardActivity extends AppCompatActivity {
                 try {
                     String filename=gja_questions.getJSONObject(d).getString("gbg_media_file");
                     Log.e("Image Path :--",filename);
-                    Bitmap bmp = BitmapFactory.decodeFile(URLClass.mainpath+filename);
+                    Bitmap bmp = BitmapFactory.decodeFile(testPath+filename);
                     iv_answerimg.setImageBitmap(bmp);
                     cAdp.setPoiner(d);
                 }catch (Exception e){
@@ -383,7 +383,7 @@ public class FlashCardActivity extends AppCompatActivity {
                 try {
                     String filename=gja_questions.getJSONObject(d).getString("qbm_flash_image");
                     Log.e("Image Path :--",filename);
-                    Bitmap bmp = BitmapFactory.decodeFile(URLClass.mainpath+filename);
+                    Bitmap bmp = BitmapFactory.decodeFile(testPath+filename);
                     iv_answerimg.setImageBitmap(bmp);
 
                     String gFlag=gja_questions.getJSONObject(d).getString("qbm_group_flag");
@@ -422,7 +422,7 @@ public class FlashCardActivity extends AppCompatActivity {
                     try {
                         String filename=gja_questions.getJSONObject(d).getString("qbm_flash_image");
                         Log.e("Image Path :--",filename);
-                        Bitmap bmp = BitmapFactory.decodeFile(URLClass.mainpath+filename);
+                        Bitmap bmp = BitmapFactory.decodeFile(testPath+filename);
                         iv_quesimg.setImageBitmap(bmp);
 
                         String gFlag=gja_questions.getJSONObject(d).getString("qbm_group_flag");
@@ -446,7 +446,7 @@ public class FlashCardActivity extends AppCompatActivity {
                         try {
                             String filename=gja_questions.getJSONObject(d).getString("qbm_flash_image");
                             Log.e("Image Path :--",filename);
-                            Bitmap bmp = BitmapFactory.decodeFile(URLClass.mainpath+filename);
+                            Bitmap bmp = BitmapFactory.decodeFile(testPath+filename);
                             iv_quesimg.setImageBitmap(bmp);
 
                             String gFlag=gja_questions.getJSONObject(d).getString("qbm_group_flag");
@@ -523,7 +523,7 @@ public class FlashCardActivity extends AppCompatActivity {
                             try {
                                 String filename=gja_questions.getJSONObject(d).getString("qbm_flash_image");
                                 Log.e("Image Path :--",filename);
-                                Bitmap bmp = BitmapFactory.decodeFile(URLClass.mainpath+filename);
+                                Bitmap bmp = BitmapFactory.decodeFile(testPath+filename);
                                 iv_quesimg.setImageBitmap(bmp);
 
                                 String gFlag=gja_questions.getJSONObject(d).getString("qbm_group_flag");
@@ -549,7 +549,7 @@ public class FlashCardActivity extends AppCompatActivity {
                         try {
                             String filename=gja_questions.getJSONObject(d).getString("qbm_flash_image");
                             Log.e("Image Path :--",filename);
-                            Bitmap bmp = BitmapFactory.decodeFile(URLClass.mainpath+filename);
+                            Bitmap bmp = BitmapFactory.decodeFile(testPath+filename);
                             iv_quesimg.setImageBitmap(bmp);
 
                             String gFlag=gja_questions.getJSONObject(d).getString("qbm_group_flag");
@@ -650,7 +650,7 @@ public class FlashCardActivity extends AppCompatActivity {
                             try {
                                 String filename=gja_questions.getJSONObject(d).getString("qbm_flash_image");
                                 Log.e("Image Path :--",filename);
-                                Bitmap bmp = BitmapFactory.decodeFile(URLClass.mainpath+filename);
+                                Bitmap bmp = BitmapFactory.decodeFile(testPath+filename);
                                 iv_quesimg.setImageBitmap(bmp);
 
                                 String gFlag=gja_questions.getJSONObject(d).getString("qbm_group_flag");
@@ -676,7 +676,7 @@ public class FlashCardActivity extends AppCompatActivity {
                         try {
                             String filename=gja_questions.getJSONObject(d).getString("qbm_flash_image");
                             Log.e("Image Path :--",filename);
-                            Bitmap bmp = BitmapFactory.decodeFile(URLClass.mainpath+filename);
+                            Bitmap bmp = BitmapFactory.decodeFile(testPath+filename);
                             iv_quesimg.setImageBitmap(bmp);
 
                             String gFlag=gja_questions.getJSONObject(d).getString("qbm_group_flag");
