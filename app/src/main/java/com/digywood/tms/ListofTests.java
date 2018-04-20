@@ -627,7 +627,7 @@ public class ListofTests extends AppCompatActivity {
                         }
                     }
 
-                    additionsArray=singlequesObj.getJSONArray("additions");
+                    additionsArray=singlequesObj.getJSONArray("Review");
                     for(int k=0;k<additionsArray.length();k++){
 
                         additionsObj=additionsArray.getJSONObject(k);

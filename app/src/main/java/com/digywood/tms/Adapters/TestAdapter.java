@@ -219,34 +219,39 @@ public class TestAdapter extends RecyclerView.Adapter<TestAdapter.MyViewHolder> 
                         myparser=new JSONParser(filedata,tPath+"/flashAttempts/","FLASH",mycontext);
                     }
 
-                    if (fimageList.size() != 0) {
-
-                        ArrayList<String> missingfList = new ArrayList<>();
-
-                        for (int i = 0; i < fimageList.size(); i++) {
-                            File myFile = new File(URLClass.mainpath + fimageList.get(i));
-                            if (myFile.exists()) {
-
-                            } else {
-                                missingfList.add(fimageList.get(i));
-                            }
-                        }
-
-                        if (missingfList.size() != 0) {
-                            StringBuilder sbm = new StringBuilder();
-                            sbm.append("The following file are missing...\n");
-                            for (int i = 0; i < missingfList.size(); i++) {
-                                sbm.append(missingfList.get(i) + " , " + "\n");
-                            }
-                            showAlert(sbm.toString());
-                        } else {
-                            Intent i = new Intent(mycontext, FlashCardActivity.class);
-                            i.putExtra("testId",testList.get(position).getTestid());
-                            mycontext.startActivity(i);
-                        }
-                    } else {
-                        Log.e("FlashCardActivity---", "No Questions to Display");
-                    }
+//                    if (fimageList.size() != 0) {
+//
+//                        ArrayList<String> missingfList = new ArrayList<>();
+//
+//                        for (int i = 0; i < fimageList.size(); i++) {
+//                            File myFile = new File(URLClass.mainpath + fimageList.get(i));
+//                            if (myFile.exists()) {
+//
+//                            } else {
+//                                missingfList.add(fimageList.get(i));
+//                            }
+//                        }
+//
+//                        if (missingfList.size() != 0) {
+//                            StringBuilder sbm = new StringBuilder();
+//                            sbm.append("The following file are missing...\n");
+//                            for (int i = 0; i < missingfList.size(); i++) {
+//                                sbm.append(missingfList.get(i) + " , " + "\n");
+//                            }
+//                            showAlert(sbm.toString());
+//                        } else {
+//                            Intent i = new Intent(mycontext, FlashCardActivity.class);
+//                            i.putExtra("testId",testList.get(position).getTestid());
+//                            i.putExtra("testPath",tPath);
+//                            mycontext.startActivity(i);
+//                        }
+//                    } else {
+//                        Log.e("FlashCardActivity---", "No Questions to Display");
+//                    }
+                    Intent i = new Intent(mycontext, FlashCardActivity.class);
+                    i.putExtra("testId",testList.get(position).getTestid());
+                    i.putExtra("testPath",tPath);
+                    mycontext.startActivity(i);
 
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -371,9 +376,9 @@ public class TestAdapter extends RecyclerView.Adapter<TestAdapter.MyViewHolder> 
         try {
             mainObj = new JSONObject(filedata);
 
-            testid = mainObj.getString("sptu_ID");
+            testid = mainObj.getString("ptu_test_ID");
 
-            Log.e("JSON--", mainObj.getString("sptu_ID"));
+            Log.e("JSON--", mainObj.getString("ptu_test_ID"));
 
             ja_sections = mainObj.getJSONArray("Sections");
 
@@ -381,8 +386,8 @@ public class TestAdapter extends RecyclerView.Adapter<TestAdapter.MyViewHolder> 
             for (int i = 0; i < ja_sections.length(); i++) {
 
                 secObj = ja_sections.getJSONObject(i);
-                section = secObj.getString("Ptu_section_name");
-                sectionid = secObj.getString("Ptu_section_ID");
+                section = secObj.getString("ptu_section_name");
+                sectionid = secObj.getString("ptu_section_ID");
                 ja_questions = secObj.getJSONArray("Questions");
 
                 Log.e("QuesArray Length---", "" + ja_questions.length());
@@ -423,7 +428,7 @@ public class TestAdapter extends RecyclerView.Adapter<TestAdapter.MyViewHolder> 
                         downloadfileList.add(singlequesObj.getString("qbm_Additional_Image_ref"));
                     }
 
-                    optionsArray = singlequesObj.getJSONArray("options");
+                    optionsArray = singlequesObj.getJSONArray("Options");
                     for (int j = 0; j < optionsArray.length(); j++) {
 
                         optionsObj = optionsArray.getJSONObject(j);
@@ -435,7 +440,7 @@ public class TestAdapter extends RecyclerView.Adapter<TestAdapter.MyViewHolder> 
                         }
                     }
 
-                    additionsArray = singlequesObj.getJSONArray("additions");
+                    additionsArray = singlequesObj.getJSONArray("Review");
                     for (int k = 0; k < additionsArray.length(); k++) {
 
                         additionsObj = additionsArray.getJSONObject(k);
