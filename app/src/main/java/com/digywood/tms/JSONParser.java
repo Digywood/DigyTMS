@@ -79,7 +79,10 @@ public class JSONParser extends AppCompatActivity{
 
             cmainObj=new JSONObject();
             testid=mainObj.getString("ptu_test_ID");
-            cmainObj.put("sptu_ID",mainObj.getString("ptu_test_ID"));
+            cmainObj.put("ptu_test_ID",mainObj.getString("ptu_test_ID"));
+            cmainObj.put("ptu_positive_marks",mainObj.getString("ptu_positive_marks"));
+            cmainObj.put("ptu_marksnegative_apply",mainObj.getString("ptu_marksnegative_apply"));
+            cmainObj.put("ptu_negative_marks",mainObj.getString("ptu_negative_marks"));
 
             scConfigList.clear();
             scConfigList=myhelper.getSubcatData(testid);
@@ -104,10 +107,11 @@ public class JSONParser extends AppCompatActivity{
                 freeSubcatList.clear();
                 secObj=ja_sections.getJSONObject(i);
                 csecObj=new JSONObject();
-                section=secObj.getString("ptu_section_name");
                 sectionid=secObj.getString("ptu_section_ID");
-                csecObj.put("Ptu_section_ID",secObj.getString("ptu_section_ID"));
-                csecObj.put("Ptu_section_name",secObj.getString("ptu_section_name"));
+                section=secObj.getString("ptu_section_name");
+
+                csecObj.put("ptu_section_ID",secObj.getString("ptu_section_ID"));
+                csecObj.put("ptu_section_name",secObj.getString("ptu_section_name"));
                 ja_questions=secObj.getJSONArray("Questions");
                 Log.e("QuesArray Length---",""+ja_questions.length());
 
@@ -347,9 +351,13 @@ public class JSONParser extends AppCompatActivity{
                                 cquesObj.put("qbm_ReferenceID",quesObj.get("qbm_ReferenceID"));
                                 cquesObj.put("qbm_Description",quesObj.get("qbm_Description"));
                                 cquesObj.put("qbm_SubjectID",quesObj.get("qbm_SubjectID"));
+                                cquesObj.put("qbm_Subjectname",quesObj.get("qbm_Subjectname"));
                                 cquesObj.put("qbm_Paper_ID",quesObj.get("qbm_Paper_ID"));
+                                cquesObj.put("qbm_Paper_name",quesObj.get("qbm_Paper_name"));
                                 cquesObj.put("qbm_ChapterID",quesObj.get("qbm_ChapterID"));
+                                cquesObj.put("qbm_Chapter_name",quesObj.get("qbm_Chapter_name"));
                                 cquesObj.put("qbm_Sub_CategoryID",quesObj.get("qbm_Sub_CategoryID"));
+                                cquesObj.put("qbm_Sub_CategoryName",quesObj.get("qbm_Sub_CategoryName"));
                                 cquesObj.put("qbm_level",quesObj.get("qbm_level"));
                                 cquesObj.put("qbm_Type",quesObj.get("qbm_Type"));
                                 cquesObj.put("qbm_marks",quesObj.get("qbm_marks"));
@@ -374,9 +382,16 @@ public class JSONParser extends AppCompatActivity{
                                 cquesObj.put("gbg_media_type",quesObj.get("gbg_media_type"));
                                 cquesObj.put("gbg_media_file",quesObj.get("gbg_media_file"));
                                 cquesObj.put("gbg_text",quesObj.get("gbg_text"));
+                                cquesObj.put("gbg_no_questions",quesObj.get("gbg_no_questions"));
+                                cquesObj.put("gbg_no_pick",quesObj.get("gbg_no_pick"));
                                 cquesObj.put("qbm_jumbling_flag",quesObj.get("qbm_jumbling_flag"));
                                 cquesObj.put("qbm_flash_image",quesObj.get("qbm_flash_image"));
-                                cquesObj.put("gbg_no_questions",quesObj.get("gbg_no_questions"));
+                                cquesObj.put("qbm_QAdditional_type",quesObj.get("qbm_QAdditional_type"));
+                                cquesObj.put("qbm_QAdditional_Image",quesObj.get("qbm_QAdditional_Image"));
+                                cquesObj.put("qbm_QAdditional_Flag",quesObj.get("qbm_QAdditional_Flag"));
+                                cquesObj.put("qbm_support_flag",quesObj.get("qbm_support_flag"));
+                                cquesObj.put("qbm_support_type",quesObj.get("qbm_support_type"));
+                                cquesObj.put("qbm_support_image_file",quesObj.get("qbm_support_image_file"));
 
                                 ja_options=ja_questions.getJSONObject(q).getJSONArray("Options");
                                 JSONArray cja_options =new JSONArray();
@@ -410,16 +425,18 @@ public class JSONParser extends AppCompatActivity{
 
                                 cquesObj.put("Options",cja_options);
                                 JSONArray cja_additions=new JSONArray();
-                                ja_additions=quesObj.getJSONArray("additions");
+                                ja_additions=quesObj.getJSONArray("Review");
                                 for(int p=0;p<ja_additions.length();p++){
                                     additionsObj=ja_additions.getJSONObject(p);
                                     cadditionsObj=new JSONObject();
+                                    cadditionsObj.put("qba_ID",additionsObj.get("qba_ID"));
                                     cadditionsObj.put("qba_sequence",additionsObj.get("qba_sequence"));
                                     cadditionsObj.put("qba_type",additionsObj.get("qba_type"));
                                     cadditionsObj.put("qba_media_file",additionsObj.get("qba_media_file"));
                                     cja_additions.put(cadditionsObj);
                                 }
-                                cquesObj.put("additions",cja_additions);
+
+                                cquesObj.put("Review",cja_additions);
                                 cja_questions.put(cquesObj);
 
                             }else{
@@ -438,9 +455,13 @@ public class JSONParser extends AppCompatActivity{
                                 cquesObj.put("qbm_ReferenceID",quesObj.get("qbm_ReferenceID"));
                                 cquesObj.put("qbm_Description",quesObj.get("qbm_Description"));
                                 cquesObj.put("qbm_SubjectID",quesObj.get("qbm_SubjectID"));
+                                cquesObj.put("qbm_Subjectname",quesObj.get("qbm_Subjectname"));
                                 cquesObj.put("qbm_Paper_ID",quesObj.get("qbm_Paper_ID"));
+                                cquesObj.put("qbm_Paper_name",quesObj.get("qbm_Paper_name"));
                                 cquesObj.put("qbm_ChapterID",quesObj.get("qbm_ChapterID"));
+                                cquesObj.put("qbm_Chapter_name",quesObj.get("qbm_Chapter_name"));
                                 cquesObj.put("qbm_Sub_CategoryID",quesObj.get("qbm_Sub_CategoryID"));
+                                cquesObj.put("qbm_Sub_CategoryName",quesObj.get("qbm_Sub_CategoryName"));
                                 cquesObj.put("qbm_level",quesObj.get("qbm_level"));
                                 cquesObj.put("qbm_Type",quesObj.get("qbm_Type"));
                                 cquesObj.put("qbm_marks",quesObj.get("qbm_marks"));
@@ -465,9 +486,16 @@ public class JSONParser extends AppCompatActivity{
                                 cquesObj.put("gbg_media_type",quesObj.get("gbg_media_type"));
                                 cquesObj.put("gbg_media_file",quesObj.get("gbg_media_file"));
                                 cquesObj.put("gbg_text",quesObj.get("gbg_text"));
-                                cquesObj.put("qbm_jumbling_flag",quesObj.get("qbm_jumbling_flag"));
-                                cquesObj.put("qbm_flash_image",testfimages.get(g));
                                 cquesObj.put("gbg_no_questions",quesObj.get("gbg_no_questions"));
+                                cquesObj.put("gbg_no_pick",quesObj.get("gbg_no_pick"));
+                                cquesObj.put("qbm_jumbling_flag",quesObj.get("qbm_jumbling_flag"));
+                                cquesObj.put("qbm_flash_image",quesObj.get("qbm_flash_image"));
+                                cquesObj.put("qbm_QAdditional_type",quesObj.get("qbm_QAdditional_type"));
+                                cquesObj.put("qbm_QAdditional_Image",quesObj.get("qbm_QAdditional_Image"));
+                                cquesObj.put("qbm_QAdditional_Flag",quesObj.get("qbm_QAdditional_Flag"));
+                                cquesObj.put("qbm_support_flag",quesObj.get("qbm_support_flag"));
+                                cquesObj.put("qbm_support_type",quesObj.get("qbm_support_type"));
+                                cquesObj.put("qbm_support_image_file",quesObj.get("qbm_support_image_file"));
 
                                 ja_options=ja_questions.getJSONObject(q).getJSONArray("Options");
                                 JSONArray cja_options =new JSONArray();
@@ -503,16 +531,17 @@ public class JSONParser extends AppCompatActivity{
 
                                 cquesObj.put("Options",cja_options);
                                 JSONArray cja_additions=new JSONArray();
-                                ja_additions=quesObj.getJSONArray("additions");
+                                ja_additions=quesObj.getJSONArray("Review");
                                 for(int p=0;p<ja_additions.length();p++){
                                     additionsObj=ja_additions.getJSONObject(p);
                                     cadditionsObj=new JSONObject();
+                                    cadditionsObj.put("qba_ID",additionsObj.get("qba_ID"));
                                     cadditionsObj.put("qba_sequence",additionsObj.get("qba_sequence"));
                                     cadditionsObj.put("qba_type",additionsObj.get("qba_type"));
                                     cadditionsObj.put("qba_media_file",additionsObj.get("qba_media_file"));
                                     cja_additions.put(cadditionsObj);
                                 }
-                                cquesObj.put("additions",cja_additions);
+                                cquesObj.put("Review",cja_additions);
                                 cja_questions.put(cquesObj);
 
                             }else{

@@ -59,7 +59,7 @@ public class FlashCardActivity extends AppCompatActivity {
     Spinner sp_sections;
     RecyclerView question_scroll;
     ImageView iv_quesimg,iv_fullscreen;
-    String filedata,status="",testId="",studentid="",enrollid="",courseid="",subjectid="",paperid="",startDttm="",endDttm="";
+    String filedata,status="",testId="",testPath="",studentid="",enrollid="",courseid="",subjectid="",paperid="",startDttm="",endDttm="";
     int d=0,pos=0,secpos=0;
     GridView gridView;
     private PopupWindow pw;
@@ -169,6 +169,7 @@ public class FlashCardActivity extends AppCompatActivity {
         Intent cmgintent=getIntent();
         if(cmgintent!=null){
             testId=cmgintent.getStringExtra("testId");
+            testPath=cmgintent.getStringExtra("testPath");
         }
 
         if(testId!=null){
@@ -208,7 +209,7 @@ public class FlashCardActivity extends AppCompatActivity {
         startDttm= new java.text.SimpleDateFormat("yyyy-MM-dd hh:mm:ss").format(Calendar.getInstance(TimeZone.getDefault()).getTime());
 
         try{
-            BufferedReader br = new BufferedReader(new FileReader(URLClass.mainpath+"sample"+".json"));
+            BufferedReader br = new BufferedReader(new FileReader(testPath+"flashAttempts/"+testId+"_01.json"));
 //            BufferedReader br = new BufferedReader(new FileReader(URLClass.mainpath+"EAAA000009/SSCT1001/SSCS0002/PAA002/PTU0002/"+"PTU0002_01"+".json"));
             StringBuilder sb = new StringBuilder();
             String line = br.readLine();
@@ -221,42 +222,6 @@ public class FlashCardActivity extends AppCompatActivity {
             filedata=sb.toString();
             br.close();
             fimageList=readJson(filedata);
-
-//            questionList=baseQList.get(0);
-
-//            if(fimageList.size()!=0){
-//
-//                ArrayList<String> missingfList=new ArrayList<>();
-//
-//                for(int i=0;i<fimageList.size();i++){
-//                    File myFile = new File(URLClass.mainpath+fimageList.get(i));
-//                    if(myFile.exists()){
-//
-//                    }else{
-//                        missingfList.add(fimageList.get(i));
-//                    }
-//                }
-//
-//                if(missingfList.size()!=0){
-//                    StringBuilder sbm=new StringBuilder();
-//                    sbm.append("The following file are missing...\n");
-//                    for(int i=0;i<missingfList.size();i++){
-//                        sbm.append(missingfList.get(i)+" , "+"\n");
-//                    }
-//                    showAlert(sbm.toString());
-//                }else{
-//                    try {
-//                        Log.e("Image Path :--",URLClass.mainpath+fimageList.get(d));
-//                        Bitmap bmp = BitmapFactory.decodeFile(URLClass.mainpath+fimageList.get(d));
-//                        iv_quesimg.setImageBitmap(bmp);
-//                    }catch (Exception e){
-//                        e.printStackTrace();
-//                        Log.e("ViewLotInfo---",e.toString());
-//                    }
-//                }
-//            }else{
-//                Log.e("FlashCardActivity---","No Questions to Display");
-//            }
         }catch (Exception e){
             e.printStackTrace();
             Log.e("TestActivity1-----",e.toString());
@@ -600,6 +565,7 @@ public class FlashCardActivity extends AppCompatActivity {
                             Log.e("ViewLotInfo---",e.toString());
                         }
                     }
+
                 }else{
 
                     if(status.equalsIgnoreCase("")){
@@ -614,12 +580,10 @@ public class FlashCardActivity extends AppCompatActivity {
                             tv_skipped.setText(count);
 
                             if(knownList.contains(questionList.get(pos).getQnum())){
-//                            int index=knownList.indexOf(pos);
                                 knowcount--;
                                 knownList.remove(questionList.get(pos).getQnum());
                                 tv_iknow.setText(String.format("%03d",knowcount));
                             }else{
-//                            int index=knownList.indexOf(pos);
                                 donknowcount--;
                                 donknowList.remove(questionList.get(pos).getQnum());
                                 tv_idonknow.setText(String.format("%03d",donknowcount));
@@ -639,12 +603,10 @@ public class FlashCardActivity extends AppCompatActivity {
                                 tv_iknow.setText(count);
 
                                 if(skipList.contains(questionList.get(pos).getQnum())){
-//                                int index=knownList.indexOf(pos);
                                     skipcount--;
                                     skipList.remove(questionList.get(pos).getQnum());
                                     tv_skipped.setText(String.format("%03d",knowcount));
                                 }else{
-//                                int index=knownList.indexOf(pos);
                                     donknowcount--;
                                     donknowList.remove(questionList.get(pos).getQnum());
                                     tv_idonknow.setText(String.format("%03d",donknowcount));
@@ -664,12 +626,10 @@ public class FlashCardActivity extends AppCompatActivity {
                                 tv_idonknow.setText(count);
 
                                 if(skipList.contains(questionList.get(pos).getQnum())){
-//                                int index=knownList.indexOf(pos);
                                     skipcount--;
                                     skipList.remove(questionList.get(pos).getQnum());
                                     tv_skipped.setText(String.format("%03d",skipcount));
                                 }else{
-//                                int index=knownList.indexOf(pos);
                                     knowcount--;
                                     knownList.remove(questionList.get(pos).getQnum());
                                     tv_iknow.setText(String.format("%03d",knowcount));
