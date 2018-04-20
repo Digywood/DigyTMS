@@ -3,9 +3,7 @@ package com.digywood.tms.AsynTasks;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
-
 import com.digywood.tms.INetStatus;
-
 import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.URL;

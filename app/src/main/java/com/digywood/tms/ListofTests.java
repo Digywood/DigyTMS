@@ -376,8 +376,8 @@ public class ListofTests extends AppCompatActivity {
 
                     if (obj1 instanceof JSONArray)
                     {
-                        long prefdelcount=myhelper.deleteAllEnrollments();
-                        Log.e("groupcount---",""+prefdelcount);
+                        long Qgroupdelcount=myhelper.deleteTestGroups(testid);
+                        Log.e("groupdelcount---",""+Qgroupdelcount);
                         groupArray=myObj.getJSONArray("qbgroup");
                         if(groupArray!=null && groupArray.length()>0){
                             Log.e("groupLength---",""+groupArray.length());
@@ -407,8 +407,8 @@ public class ListofTests extends AppCompatActivity {
 
                     if (obj2 instanceof JSONArray)
                     {
-                        long subdelcount=myhelper.deleteAllSubjects();
-                        Log.e("QuesConDelCount---",""+subdelcount);
+                        long Qconfigcount=myhelper.deleteQuesConfig(testid);
+                        Log.e("QuesConDelCount---",""+Qconfigcount);
                         quesConfigArray=myObj.getJSONArray("ques_config");
                         if(quesConfigArray!=null && quesConfigArray.length()>0){
                             Log.e("QuesConLength---",""+quesConfigArray.length());
@@ -437,8 +437,8 @@ public class ListofTests extends AppCompatActivity {
 
                     if (obj3 instanceof JSONArray)
                     {
-                        long paperdelcount=myhelper.deleteAllPapers();
-                        Log.e("groupcondelcount---",""+paperdelcount);
+                        long Gconfigdelcount=myhelper.deleteGroupsConfig(testid);
+                        Log.e("groupcondelcount---",""+Gconfigdelcount);
                         groupConfigArray=myObj.getJSONArray("groupques_config");
                         if(groupConfigArray!=null && groupConfigArray.length()>0){
                             Log.e("groupconLength---",""+groupConfigArray.length());
