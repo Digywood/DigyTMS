@@ -47,15 +47,15 @@ public class CardQuestionAdapter extends RecyclerView.Adapter<CardQuestionAdapte
         return new CardQuestionAdapter.MyViewHolder(itemView);
     }
 
-        @Override
-        public void onBindViewHolder(final MyViewHolder holder, int position) {
-            holder.Q_num.setText(q_list.get(position).getQseqnum());
-            holder.Q_num.setBackgroundResource(setResource(size,q_list.get(position).getQstatus()));
-            if(index == position){
-                holder.Q_pointer.setVisibility(View.VISIBLE);
-            }
-            else
-                holder.Q_pointer.setVisibility(View.INVISIBLE);
+    @Override
+    public void onBindViewHolder(final MyViewHolder holder, int position) {
+        holder.Q_num.setText(q_list.get(position).getQseqnum());
+        holder.Q_num.setBackgroundResource(setResource(size,q_list.get(position).getQstatus()));
+        if(index == position){
+            holder.Q_pointer.setVisibility(View.VISIBLE);
+        }
+        else
+            holder.Q_pointer.setVisibility(View.INVISIBLE);
     }
 
     @Override
@@ -83,15 +83,15 @@ public class CardQuestionAdapter extends RecyclerView.Adapter<CardQuestionAdapte
         if(size == Configuration.SCREENLAYOUT_SIZE_LARGE){
             switch (status){
                 case "NOT_ATTEMPTED": resource = R.drawable.number_background_large;
-                                        break;
+                    break;
                 case "IKNOW": resource = R.drawable.number_confirm_large;
-                                        break;
+                    break;
                 case "IDONKNOW": resource = R.drawable.number_bookmark_large;
-                                        break;
+                    break;
                 case "SKIPPED": resource =R.drawable.number_skipped_large;
-                                        break;
+                    break;
                 default: resource = R.drawable.number_background_large;
-                                        break;
+                    break;
             }
         }
         else if(size == Configuration.SCREENLAYOUT_SIZE_NORMAL ){

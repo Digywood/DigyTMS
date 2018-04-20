@@ -71,7 +71,7 @@ public class FlashCardActivity extends AppCompatActivity {
     static int screensize=0;
     Dialog mydialog;
     DBHelper myhelper;
-//    FloatingActionButton fab_fgroupQview;
+    //    FloatingActionButton fab_fgroupQview;
     int attemptcount=0,knowcount=0,donknowcount=0,skipcount=0,Qcount=0;
     TextView tv_attempted,tv_iknow,tv_idonknow,tv_skipped;
     ArrayList<String> knownList=new ArrayList<>();
@@ -101,7 +101,7 @@ public class FlashCardActivity extends AppCompatActivity {
      */
     private static final int UI_ANIMATION_DELAY = 300;
     private final Handler mHideHandler = new Handler();
-//    private View mContentView;
+    //    private View mContentView;
     private final Runnable mHidePart2Runnable = new Runnable() {
         @SuppressLint("InlinedApi")
         @Override
@@ -119,7 +119,7 @@ public class FlashCardActivity extends AppCompatActivity {
                     | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION);
         }
     };
-//    private View mControlsView;
+    //    private View mControlsView;
     RelativeLayout myrlayout;
     private final Runnable mShowPart2Runnable = new Runnable() {
         @Override

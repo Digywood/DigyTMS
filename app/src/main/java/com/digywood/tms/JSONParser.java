@@ -107,6 +107,7 @@ public class JSONParser extends AppCompatActivity{
                 freeSubcatList.clear();
                 secObj=ja_sections.getJSONObject(i);
                 csecObj=new JSONObject();
+                section=secObj.getString("ptu_section_name");
                 sectionid=secObj.getString("ptu_section_ID");
                 section=secObj.getString("ptu_section_name");
 
@@ -382,6 +383,8 @@ public class JSONParser extends AppCompatActivity{
                                 cquesObj.put("gbg_media_type",quesObj.get("gbg_media_type"));
                                 cquesObj.put("gbg_media_file",quesObj.get("gbg_media_file"));
                                 cquesObj.put("gbg_text",quesObj.get("gbg_text"));
+                                cquesObj.put("qbm_jumbling_flag",quesObj.get("qbm_jumbling_flag"));
+                                cquesObj.put("qbm_flash_image",quesObj.get("qbm_flash_image"));
                                 cquesObj.put("gbg_no_questions",quesObj.get("gbg_no_questions"));
                                 cquesObj.put("gbg_no_pick",quesObj.get("gbg_no_pick"));
                                 cquesObj.put("qbm_jumbling_flag",quesObj.get("qbm_jumbling_flag"));
@@ -588,10 +591,22 @@ public class JSONParser extends AppCompatActivity{
                 FileOutputStream out = new FileOutputStream(file);
                 out.write(bytes);
                 out.close();
-            }else{
+            }else {
 
+                File folder = new File(dwdpath);
+                if (!folder.exists()) {
+                    folder.mkdirs();
+                }
+
+                File file = new File(dwdpath + testid + ".json");
+                if (!file.exists()) {
+                    file.createNewFile();
+                }
+                byte[] bytes = cmainObj.toString().getBytes("UTF-8");
+                FileOutputStream out = new FileOutputStream(dwdpath + testid + ".json");
+                out.write(bytes);
+                out.close();
             }
-
             Log.e("TestQSize---",""+testqcount);
 
         }catch (Exception e){

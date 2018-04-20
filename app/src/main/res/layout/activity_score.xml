@@ -153,6 +153,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="5dp"
+                    android:layout_marginTop="5dp"
                     android:layout_below="@id/tv_attempted_label"
                     android:layout_toEndOf="@id/tv_skipped_label"
                     android:textColor="@android:color/black"

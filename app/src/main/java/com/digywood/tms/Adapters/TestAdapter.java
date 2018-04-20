@@ -49,7 +49,7 @@ public class TestAdapter extends RecyclerView.Adapter<TestAdapter.MyViewHolder> 
     DBHelper myhelper;
     Boolean value = false;
     JSONParser myparser;
-    String filedata = "", path, jsonPath, attemptPath, photoPath, enrollid, courseid, subjectId, paperid, testid, attempt ,json;
+    String filedata = "", path, jsonPath, attemptPath, photoPath, enrollid, courseid, subjectId, paperid, testid,fullTest ,attempt ,json;
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
 
@@ -103,7 +103,7 @@ public class TestAdapter extends RecyclerView.Adapter<TestAdapter.MyViewHolder> 
                     @Override
                     public void onClick(View v) {
                         try {
-                            attempt = new String(SaveJSONdataToFile.bytesFromFile(getExternalPath(mycontext,singletest)), "UTF-8");
+                            attempt = new String(SaveJSONdataToFile.bytesFromFile(getExternalPath(mycontext,singletest,"ATTEMPT")+ testid + ".json"), "UTF-8");
                             Log.e("Attempt_testadapter",attempt.toString());
                             Intent i = new Intent(mycontext, TestActivity.class);
                             i.putExtra("json", attempt);
@@ -121,7 +121,7 @@ public class TestAdapter extends RecyclerView.Adapter<TestAdapter.MyViewHolder> 
                     @Override
                     public void onClick(View v) {
                         try {
-                            attempt = new String(SaveJSONdataToFile.bytesFromFile(getExternalPath(mycontext,singletest)), "UTF-8");
+                            attempt = new String(SaveJSONdataToFile.bytesFromFile(getExternalPath(mycontext,singletest,"ATTEMPT")+ testid + ".json"), "UTF-8");
                             Intent i = new Intent(mycontext, ReviewActivity.class);
                             i.putExtra("test",testid);
                             i.putExtra("json", attempt);
@@ -157,8 +157,9 @@ public class TestAdapter extends RecyclerView.Adapter<TestAdapter.MyViewHolder> 
                 attemptPath = URLClass.mainpath + path + "Attempt/" + testid + ".json";
                 jsonPath = URLClass.mainpath + path + testid + ".json";*/
                 try {
-                    attempt = new String(SaveJSONdataToFile.bytesFromFile(getExternalPath(mycontext,singletest)), "UTF-8");
-                    Log.e("Attempt_testadapter",attempt.toString());
+                    fullTest = new String(SaveJSONdataToFile.bytesFromFile(getExternalPath(mycontext,singletest,"BASE")+ testid + ".json"), "UTF-8");
+                    JSONParser obj = new JSONParser(fullTest,getExternalPath(mycontext,singletest,"ATTEMPT"),"PRACTICE",mycontext);
+                    attempt = new String(SaveJSONdataToFile.bytesFromFile(getExternalPath(mycontext,singletest,"ATTEMPT")+ testid + ".json"), "UTF-8");
                     Intent i = new Intent(mycontext, TestActivity.class);
                     i.putExtra("json", attempt);
                     i.putExtra("test",testid);
@@ -339,7 +340,7 @@ public class TestAdapter extends RecyclerView.Adapter<TestAdapter.MyViewHolder> 
         alert.show();
     }
 
-    public String getExternalPath(Context context, SingleTest singletest){
+    public String getExternalPath(Context context, SingleTest singletest,String type){
         DBHelper dataObj = new DBHelper(context);
         testid = singletest.getTestid();
         Cursor cursor = dataObj.getSingleStudentTests(testid);
@@ -356,9 +357,13 @@ public class TestAdapter extends RecyclerView.Adapter<TestAdapter.MyViewHolder> 
         Log.e("path_vars", enrollid + " " + courseid + " " + subjectId + " " + paperid + " " + testid);
         path = enrollid + "/" + courseid + "/" + subjectId + "/" + paperid + "/" + testid + "/";
         photoPath = URLClass.mainpath + path;
-        attemptPath = URLClass.mainpath + path + "Attempt/" + testid + ".json";
-        jsonPath = URLClass.mainpath + path + testid + ".json";
-        return attemptPath;
+        attemptPath = URLClass.mainpath + path + "Attempt/";
+        jsonPath = URLClass.mainpath + path ;
+        if(type.equals("BASE")){
+            return jsonPath;
+        }
+        else
+            return attemptPath;
     }
 
 
