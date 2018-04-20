@@ -267,6 +267,8 @@ public class TestActivity extends AppCompatActivity implements
         });
 
         try {
+            Log.e("no of columns","reched");
+
             count = dataObj.getAttempCount() - 1 ;
             c = dataObj.getAttempt(count);
             //if cursor has values then the test is being resumed and data is retrieved from database
@@ -1194,7 +1196,6 @@ public class TestActivity extends AppCompatActivity implements
                 Log.e("array2",""+array2.length());
                 for (int j = 0; j < array2.length(); j++) {
                     if(statusList.get(i) != null) {
-
                         qListObj = new SingleQuestionList(array2.getJSONObject(j).getString("qbm_SequenceId"), statusList.get(max));
                     }
                     max++;

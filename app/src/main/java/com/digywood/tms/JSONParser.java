@@ -47,7 +47,7 @@ public class JSONParser extends AppCompatActivity{
     JSONObject cmainObj,csecObj,cquesObj,coptionObj,cadditionsObj;
     String section="",sectionid="",testid="",dwdpath="";
 
-    public JSONParser(String JSON,String dwdPath,Context c){
+    public JSONParser(String JSON,String dwdPath, String filename ,Context c){
 
         this.dwdpath=dwdPath;
         this.myhelper=new DBHelper(c.getApplicationContext());
@@ -537,13 +537,18 @@ public class JSONParser extends AppCompatActivity{
 
             Log.e("SLength",""+cja_sections.length());
 
-            File file = new File(dwdpath+"sample.json");
-            if (!file.exists()) {
+            File folder = new File(dwdpath);
+            if(!folder.exists()){
+                folder.mkdirs();
+            }
+
+            File file = new File(dwdpath+filename);
+            if(!file.exists()){
                 file.createNewFile();
             }
 
             byte[] bytes = cmainObj.toString().getBytes("UTF-8");
-            FileOutputStream out = new FileOutputStream(dwdpath+"PTU0002_01.json");
+            FileOutputStream out = new FileOutputStream(dwdpath+filename);
             out.write(bytes);
             out.close();
 
