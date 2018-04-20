@@ -27,7 +27,7 @@
         <activity
             android:name=".RegistrationActivity"
             android:label="@string/reglabel"
-            android:screenOrientation="landscape" />
+            android:screenOrientation="portrait" />
         <activity
             android:name=".LandingActivity"
             android:screenOrientation="landscape" />

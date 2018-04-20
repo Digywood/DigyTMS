@@ -52,7 +52,7 @@ public class FlashAttemptDataActivity extends AppCompatActivity {
     public void getFlashAttemptData(String testId){
 
         Double minscore=0.0,maxscore=0.0,avgscore=0.0;
-        Cursor cur=myhelper.getTestFlashData("PTU0002");
+        Cursor cur=myhelper.getTestFlashData(testId);
         if(cur.getCount()>0){
             while (cur.moveToNext()){
                 minscore=cur.getDouble(cur.getColumnIndex("min_flashScore"));
@@ -67,7 +67,7 @@ public class FlashAttemptDataActivity extends AppCompatActivity {
         tv_maxscore.setText(String.valueOf(maxscore)+" %");
         tv_avgscore.setText(String.valueOf(avgscore)+" %");
 
-        Cursor mycursor=myhelper.getFlashTestData("PTU0002");
+        Cursor mycursor=myhelper.getFlashTestData(testId);
         if(mycursor.getCount()>0){
             while(mycursor.moveToNext()){
                 fattemptList.add(new SingleFlashAttempt(mycursor.getString(mycursor.getColumnIndex("startDttm")),mycursor.getInt(mycursor.getColumnIndex("iknowCount")),mycursor.getInt(mycursor.getColumnIndex("donknowCount")),mycursor.getInt(mycursor.getColumnIndex("skipCount")),mycursor.getDouble(mycursor.getColumnIndex("percentageObtain"))));

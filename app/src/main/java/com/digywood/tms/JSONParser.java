@@ -45,11 +45,12 @@ public class JSONParser extends AppCompatActivity{
     Context mycontext;
     int count=0,maxcount=0,quescount=0,totalsubcatCount=22,testqcount=0;
     JSONObject cmainObj,csecObj,cquesObj,coptionObj,cadditionsObj;
-    String section="",sectionid="",testid="",dwdpath="";
+    String section="",sectionid="",testid="",dwdpath="",testType="";
 
-    public JSONParser(String JSON,String dwdPath,Context c){
+    public JSONParser(String JSON,String dwdPath,String type,Context c){
 
         this.dwdpath=dwdPath;
+        this.testType=type;
         this.myhelper=new DBHelper(c.getApplicationContext());
 //        this.myhelper=new DBHelper(JSONParser.this);
 
@@ -537,15 +538,28 @@ public class JSONParser extends AppCompatActivity{
 
             Log.e("SLength",""+cja_sections.length());
 
-            File file = new File(dwdpath+"sample.json");
-            if (!file.exists()) {
-                file.createNewFile();
-            }
+            if(testType.equalsIgnoreCase("FLASH")){
+                File dir = new File(dwdpath);
+                if (!dir.exists()) {
+                    dir.mkdirs();
+                }
 
-            byte[] bytes = cmainObj.toString().getBytes("UTF-8");
-            FileOutputStream out = new FileOutputStream(dwdpath+"PTU0002_01.json");
-            out.write(bytes);
-            out.close();
+                File file = new File(dwdpath+testid+"_01.json");
+                if (!file.exists()) {
+                    file.createNewFile();
+                }else{
+                    file.delete();
+                    file.createNewFile();
+                }
+
+                byte[] bytes = cmainObj.toString().getBytes("UTF-8");
+//            FileOutputStream out = new FileOutputStream(dwdpath+"PTU0002_01.json");
+                FileOutputStream out = new FileOutputStream(file);
+                out.write(bytes);
+                out.close();
+            }else{
+
+            }
 
             Log.e("TestQSize---",""+testqcount);
 

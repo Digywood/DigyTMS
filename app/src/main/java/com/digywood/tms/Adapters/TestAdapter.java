@@ -4,8 +4,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.RecyclerView;
 import android.text.Html;
@@ -16,8 +14,6 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.TextView;
-import android.widget.Toast;
-
 import com.digywood.tms.FlashAttemptDataActivity;
 import com.digywood.tms.FlashCardActivity;
 import com.digywood.tms.JSONParser;
@@ -50,6 +46,7 @@ public class TestAdapter extends RecyclerView.Adapter<TestAdapter.MyViewHolder> 
     ArrayList<String> chktestList = new ArrayList<>();
     ArrayList<String> fimageList = new ArrayList<>();
     Context mycontext;
+    DBHelper myhelper;
     Boolean value = false;
     JSONParser myparser;
     String filedata = "", path, jsonPath, attemptPath, photoPath, enrollid, courseid, subjectId, paperid, testid, attempt ,json;
@@ -75,6 +72,7 @@ public class TestAdapter extends RecyclerView.Adapter<TestAdapter.MyViewHolder> 
     public TestAdapter(ArrayList<SingleTest> testList, Context c) {
         this.testList = testList;
         this.mycontext = c;
+        myhelper=new DBHelper(c);
     }
 
     @Override
@@ -180,19 +178,46 @@ public class TestAdapter extends RecyclerView.Adapter<TestAdapter.MyViewHolder> 
         holder.btn_fstart.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                try {
-                    BufferedReader br = new BufferedReader(new FileReader(URLClass.mainpath +"EAAA000009/SSCT1001/SSCS0002/PAA002/PTU0002/"+"PTU0002_01"+".json"));
-                    StringBuilder sb = new StringBuilder();
-                    String line = br.readLine();
 
-                    while (line != null) {
-                        sb.append(line);
-                        sb.append("\n");
-                        line = br.readLine();
+                Cursor mycursor=myhelper.getSingleTestData(singletest.getTestid());
+                if(mycursor.getCount()>0){
+                    while(mycursor.moveToNext()){
+
+//                        studentid=mycursor.getString(mycursor.getColumnIndex("sptu_student_ID"));
+                        enrollid=mycursor.getString(mycursor.getColumnIndex("sptu_entroll_id"));
+                        courseid=mycursor.getString(mycursor.getColumnIndex("sptu_course_id"));
+                        subjectId=mycursor.getString(mycursor.getColumnIndex("sptu_subjet_ID"));
+                        paperid=mycursor.getString(mycursor.getColumnIndex("sptu_paper_ID"));
+
                     }
-                    filedata = sb.toString();
-                    br.close();
-                    fimageList = readJson(filedata);
+                }else{
+                    mycursor.close();
+                }
+
+                try {
+                    String tPath=URLClass.mainpath+enrollid+"/"+courseid+"/"+subjectId+"/"+paperid+"/"+singletest.getTestid()+"/";
+
+                    File file = new File(tPath+singletest.getTestid()+".json");
+                    if (!file.exists()) {
+                        showAlert("Main JSON file for test "+singletest.getTestid()+" is not found! \n Please download test data if not ");
+                    }else{
+                        BufferedReader br = new BufferedReader(new FileReader(tPath+singletest.getTestid()+".json"));
+//                    BufferedReader br = new BufferedReader(new FileReader(URLClass.mainpath+enrollid+"/"+courseid+"/"+subjectId+"/"+paperid+"/"+singletest.getTestid()+"/"+singletest.getTestid()+"EAAA000009/SSCT1001/SSCS0002/PAA002/PTU0002/"+"PTU0002_01"+".json"));
+                        StringBuilder sb = new StringBuilder();
+                        String line = br.readLine();
+
+                        while (line != null) {
+                            sb.append(line);
+                            sb.append("\n");
+                            line = br.readLine();
+                        }
+                        filedata = sb.toString();
+                        fimageList = readJson(filedata);
+                        br.close();
+
+                        myparser=new JSONParser(filedata,tPath+"/flashAttempts/","FLASH",mycontext);
+                    }
+
                     if (fimageList.size() != 0) {
 
                         ArrayList<String> missingfList = new ArrayList<>();
@@ -216,11 +241,13 @@ public class TestAdapter extends RecyclerView.Adapter<TestAdapter.MyViewHolder> 
                         } else {
                             Intent i = new Intent(mycontext, FlashCardActivity.class);
                             i.putExtra("testId",testList.get(position).getTestid());
+                            i.putExtra("testPath",tPath);
                             mycontext.startActivity(i);
                         }
                     } else {
                         Log.e("FlashCardActivity---", "No Questions to Display");
                     }
+
                 } catch (Exception e) {
                     e.printStackTrace();
                     Log.e("TestActivity1-----", e.toString());
@@ -236,6 +263,7 @@ public class TestAdapter extends RecyclerView.Adapter<TestAdapter.MyViewHolder> 
                 mycontext.startActivity(i);
             }
         });
+
         holder.cb_download.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
