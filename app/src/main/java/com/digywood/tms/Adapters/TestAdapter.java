@@ -160,7 +160,7 @@ public class TestAdapter extends RecyclerView.Adapter<TestAdapter.MyViewHolder> 
                 jsonPath = URLClass.mainpath + path + testid + ".json";*/
                 try {
                     fullTest = new String(SaveJSONdataToFile.bytesFromFile(getExternalPath(mycontext,singletest,"BASE")+ testid + ".json"), "UTF-8");
-                    JSONParser obj = new JSONParser(fullTest,getExternalPath(mycontext,singletest,"ATTEMPT"),testid + ".json",mycontext);
+                    JSONParser obj = new JSONParser(fullTest,getExternalPath(mycontext,singletest,"ATTEMPT"),"PRACTICE",mycontext);
                     attempt = new String(SaveJSONdataToFile.bytesFromFile(getExternalPath(mycontext,singletest,"ATTEMPT")+ testid + ".json"), "UTF-8");
                     Intent i = new Intent(mycontext, TestActivity.class);
                     i.putExtra("json", attempt);

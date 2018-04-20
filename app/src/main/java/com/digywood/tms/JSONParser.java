@@ -45,11 +45,12 @@ public class JSONParser extends AppCompatActivity{
     Context mycontext;
     int count=0,maxcount=0,quescount=0,totalsubcatCount=22,testqcount=0;
     JSONObject cmainObj,csecObj,cquesObj,coptionObj,cadditionsObj;
-    String section="",sectionid="",testid="",dwdpath="";
+    String section="",sectionid="",testid="",dwdpath="",testType="";
 
-    public JSONParser(String JSON,String dwdPath, String filename ,Context c){
+    public JSONParser(String JSON,String dwdPath ,String type,Context c){
 
         this.dwdpath=dwdPath;
+        this.testType=type;
         this.myhelper=new DBHelper(c.getApplicationContext());
 //        this.myhelper=new DBHelper(JSONParser.this);
 
@@ -145,8 +146,6 @@ public class JSONParser extends AppCompatActivity{
                                 groupcloseList.add(quesObj.getString("gbg_id"));
                             }
                         }
-
-
 //                        if(groupList.contains(quesObj.getString("gbg_id"))){
 //
 //                        }else{
@@ -537,21 +536,41 @@ public class JSONParser extends AppCompatActivity{
 
             Log.e("SLength",""+cja_sections.length());
 
-            File folder = new File(dwdpath);
-            if(!folder.exists()){
-                folder.mkdirs();
+            if(testType.equalsIgnoreCase("FLASH")){
+                File dir = new File(dwdpath);
+                if (!dir.exists()) {
+                    dir.mkdirs();
+                }
+
+                File file = new File(dwdpath+testid+"_01.json");
+                if (!file.exists()) {
+                    file.createNewFile();
+                }else{
+                    file.delete();
+                    file.createNewFile();
+                }
+
+                byte[] bytes = cmainObj.toString().getBytes("UTF-8");
+//            FileOutputStream out = new FileOutputStream(dwdpath+"PTU0002_01.json");
+                FileOutputStream out = new FileOutputStream(file);
+                out.write(bytes);
+                out.close();
+            }else {
+
+                File folder = new File(dwdpath);
+                if (!folder.exists()) {
+                    folder.mkdirs();
+                }
+
+                File file = new File(dwdpath + testid + ".json");
+                if (!file.exists()) {
+                    file.createNewFile();
+                }
+                byte[] bytes = cmainObj.toString().getBytes("UTF-8");
+                FileOutputStream out = new FileOutputStream(dwdpath + testid + ".json");
+                out.write(bytes);
+                out.close();
             }
-
-            File file = new File(dwdpath+filename);
-            if(!file.exists()){
-                file.createNewFile();
-            }
-
-            byte[] bytes = cmainObj.toString().getBytes("UTF-8");
-            FileOutputStream out = new FileOutputStream(dwdpath+filename);
-            out.write(bytes);
-            out.close();
-
             Log.e("TestQSize---",""+testqcount);
 
         }catch (Exception e){
