@@ -385,8 +385,8 @@ public class JSONParser extends AppCompatActivity{
                                 cquesObj.put("gbg_no_questions",quesObj.get("gbg_no_questions"));
                                 cquesObj.put("gbg_no_pick",quesObj.get("gbg_no_pick"));
                                 cquesObj.put("qbm_jumbling_flag",quesObj.get("qbm_jumbling_flag"));
-//                                cquesObj.put("qbm_flash_image",quesObj.get("qbm_flash_image"));
-                                cquesObj.put("qbm_flash_image",testfimages.get(g));
+                                cquesObj.put("qbm_flash_image",quesObj.get("qbm_flash_image"));
+//                                cquesObj.put("qbm_flash_image",testfimages.get(g));
 //                                cquesObj.put("qbm_QAdditional_type",quesObj.get("qbm_QAdditional_type"));
 //                                cquesObj.put("qbm_QAdditional_Image",quesObj.get("qbm_QAdditional_Image"));
 //                                cquesObj.put("qbm_QAdditional_Flag",quesObj.get("qbm_QAdditional_Flag"));
@@ -490,8 +490,8 @@ public class JSONParser extends AppCompatActivity{
                                 cquesObj.put("gbg_no_questions",quesObj.get("gbg_no_questions"));
                                 cquesObj.put("gbg_no_pick",quesObj.get("gbg_no_pick"));
                                 cquesObj.put("qbm_jumbling_flag",quesObj.get("qbm_jumbling_flag"));
-//                                cquesObj.put("qbm_flash_image",quesObj.get("qbm_flash_image"));
-                                cquesObj.put("qbm_flash_image",testfimages.get(g));
+                                cquesObj.put("qbm_flash_image",quesObj.get("qbm_flash_image"));
+//                                cquesObj.put("qbm_flash_image",testfimages.get(g));
 //                                cquesObj.put("qbm_QAdditional_type",quesObj.get("qbm_QAdditional_type"));
 //                                cquesObj.put("qbm_QAdditional_Image",quesObj.get("qbm_QAdditional_Image"));
 //                                cquesObj.put("qbm_QAdditional_Flag",quesObj.get("qbm_QAdditional_Flag"));
