@@ -138,7 +138,7 @@ public class TestAdapter extends RecyclerView.Adapter<TestAdapter.MyViewHolder> 
             @Override
             public void onClick(View v) {
                 dataObj.Destroy("attempt_data");
-//                dataObj.Destroy("attempt_list");
+                dataObj.Destroy("attempt_list");
                 /*testid = singletest.getTestid();
                 Cursor cursor = dataObj.getSingleStudentTests(testid);
 

@@ -267,20 +267,21 @@ public class TestActivity extends AppCompatActivity implements
         });
 
         try {
-            Log.e("no of columns","reched");
 
             count = dataObj.getAttempCount() - 1 ;
             c = dataObj.getAttempt(count);
+//            Log.e("no of columns",""+c.getInt(c.getColumnIndex("Attempt_Status")));
             //if cursor has values then the test is being resumed and data is retrieved from database
             if(c.getCount()> 0) {
                 c.moveToLast();
                 if (c.getInt(c.getColumnIndex("Attempt_Status")) == 1) {
+                    Log.e("TestingJson","reached");
                     millisStart = c.getLong(c.getColumnIndex("Attempt_RemainingTime")) ;
 //                    String json = new String(SaveJSONdataToFile.bytesFromFile(URLClass.mainpath + path + "Attempt/"+ testid + ".json"), "UTF-8");
                     attempt = new JSONObject(getIntent().getStringExtra("json"));
                     attemptsectionarray = new JSONArray();
                     attemptsectionarray = attempt.getJSONArray("Sections");
-//                    Log.e("TestingJson",""+attempt.toString());
+
                     parseJson(attempt);
                     restoreSections(dataObj.getQuestionStatus(),attempt);
                     buffer = generateArray(attempt.getJSONArray("Sections").getJSONObject(pos));
@@ -916,8 +917,8 @@ public class TestActivity extends AppCompatActivity implements
                 section = new SingleSections();
                 sectionobj = sectionArray.getJSONObject(i);
                 array = new JSONArray();
-                section.setSec_ID(sectionobj.getString("Ptu_section_ID"));
-                section.setSec_Name(sectionobj.getString("Ptu_section_ID"));
+                section.setSec_ID(sectionobj.getString("ptu_section_ID"));
+                section.setSec_Name(sectionobj.getString("ptu_section_ID"));
                 array = sectionobj.optJSONArray("Questions");
 
                 for (int j = 0; j < array.length(); j++) {
@@ -1097,7 +1098,7 @@ public class TestActivity extends AppCompatActivity implements
         }
         qAdapter.setPointer(index);
         questionobj = array.getJSONObject(index);
-        /*if (questionobj.getString("qbm_QAdditional_Flag").equals("YES")) {
+        if (questionobj.getString("qbm_QAdditional_Flag").equals("YES")) {
             btn_qadditional.setEnabled(true);
             btn_qadditional.setClickable(true);
             btn_qadditional.setBackgroundColor(getResources().getColor(R.color.dull_yellow));
@@ -1106,7 +1107,7 @@ public class TestActivity extends AppCompatActivity implements
             btn_qadditional.setClickable(false);
             btn_qadditional.setBackgroundColor(0);
 
-        }*/
+        }
         Log.e("Setquestions",questionobj.getString("qbm_image_file"));
         if (!edit) {
             if (questionobj.getString("qbm_review_flag").equals("YES")) {
@@ -1158,7 +1159,7 @@ public class TestActivity extends AppCompatActivity implements
         try {
             listOfLists = new ArrayList<>();
             for (int i = 0; i < attempt.getJSONArray("Sections").length(); i++) {
-                categories.add(attempt.getJSONArray("Sections").getJSONObject(i).getString("Ptu_section_name"));
+                categories.add(attempt.getJSONArray("Sections").getJSONObject(i).getString("ptu_section_name"));
                 JSONArray array2 = attempt.getJSONArray("Sections").getJSONObject(i).getJSONArray("Questions");
                 questionOpList = new ArrayList<>();
                 for (int j = 0; j < array2.length(); j++) {
@@ -1185,7 +1186,7 @@ public class TestActivity extends AppCompatActivity implements
             int max = 0;
             listOfLists = new ArrayList<>();
             for (int i = 0; i < attempt.getJSONArray("Sections").length(); i++) {
-                categories.add(attempt.getJSONArray("Sections").getJSONObject(i).getString("Ptu_section_name"));
+                categories.add(attempt.getJSONArray("Sections").getJSONObject(i).getString("ptu_section_name"));
                 JSONArray array2 = attempt.getJSONArray("Sections").getJSONObject(i).getJSONArray("Questions");
                 Log.e("sequence",""+categories.size());
                 questionOpList = new ArrayList<>();
