@@ -22,6 +22,7 @@ public class FlashAttemptDataActivity extends AppCompatActivity {
     RecyclerView rv_fattemptdata;
     TextView tv_emptyflashdata;
     FlashAttemptAdapter fAdp;
+    TextView tv_testid,tv_minscore,tv_maxscore,tv_avgscore;
     LinearLayoutManager myLayoutManager;
     ArrayList<SingleFlashAttempt> fattemptList=new ArrayList<>();
 
@@ -36,6 +37,11 @@ public class FlashAttemptDataActivity extends AppCompatActivity {
         }
 
         myhelper=new DBHelper(this);
+        tv_testid=findViewById(R.id.tv_ftestid);
+        tv_testid.setText(testId);
+        tv_minscore=findViewById(R.id.tv_minpercent);
+        tv_maxscore=findViewById(R.id.tv_maxpercent);
+        tv_avgscore=findViewById(R.id.tv_avgpercent);
         rv_fattemptdata=findViewById(R.id.rv_flashattempts);
         tv_emptyflashdata=findViewById(R.id.tv_flashemptydata);
 
@@ -45,7 +51,7 @@ public class FlashAttemptDataActivity extends AppCompatActivity {
 
     public void getFlashAttemptData(String testId){
 
-        Double minscore,maxscore,avgscore;
+        Double minscore=0.0,maxscore=0.0,avgscore=0.0;
         Cursor cur=myhelper.getTestFlashData("PTU0002");
         if(cur.getCount()>0){
             while (cur.moveToNext()){
@@ -57,7 +63,9 @@ public class FlashAttemptDataActivity extends AppCompatActivity {
             cur.close();
         }
 
-
+        tv_minscore.setText(String.valueOf(minscore)+" %");
+        tv_maxscore.setText(String.valueOf(maxscore)+" %");
+        tv_avgscore.setText(String.valueOf(avgscore)+" %");
 
         Cursor mycursor=myhelper.getFlashTestData("PTU0002");
         if(mycursor.getCount()>0){
