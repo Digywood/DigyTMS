@@ -275,21 +275,17 @@ public class TestActivity extends AppCompatActivity implements
             if(c.getCount()> 0) {
                 c.moveToLast();
                 if (c.getInt(c.getColumnIndex("Attempt_Status")) == 1) {
-                    try {
-                        millisStart = c.getLong(c.getColumnIndex("Attempt_RemainingTime")) ;
-                        String json = new String(SaveJSONdataToFile.bytesFromFile(URLClass.mainpath + path + "Attempt/"+ testid + ".json"), "UTF-8");
-                        attempt = new JSONObject(json);
-                        attemptsectionarray = new JSONArray();
-                        attemptsectionarray = attempt.getJSONArray("Sections");
-                        Log.e("TestingJsonif",""+attempt.toString());
-                        parseJson(attempt);
-                        restoreSections(dataObj.getQuestionStatus(),attempt);
-                        index = c.getInt(c.getColumnIndex("Attempt_LastQuestion"));
-                        pos = c.getInt(c.getColumnIndex("Attempt_LastSection"));
-                        buffer = attempt.getJSONArray("Sections").getJSONObject(pos).getJSONArray("Questions");
-                    } catch (IOException | ClassNotFoundException e) {
-                        e.printStackTrace();
-                    }
+                    millisStart = c.getLong(c.getColumnIndex("Attempt_RemainingTime")) ;
+//                    String json = new String(SaveJSONdataToFile.bytesFromFile(URLClass.mainpath + path + "Attempt/"+ testid + ".json"), "UTF-8");
+                    attempt = new JSONObject(getIntent().getStringExtra("json"));
+                    attemptsectionarray = new JSONArray();
+                    attemptsectionarray = attempt.getJSONArray("Sections");
+//                    Log.e("TestingJson",""+attempt.toString());
+                    parseJson(attempt);
+                    restoreSections(dataObj.getQuestionStatus(),attempt);
+                    buffer = generateArray(attempt.getJSONArray("Sections").getJSONObject(pos));
+                    index = c.getInt(c.getColumnIndex("Attempt_LastQuestion"));
+                    pos = c.getInt(c.getColumnIndex("Attempt_LastSection"));
                 }
             }
             //else cursor doesn't have values then the test is started fresh

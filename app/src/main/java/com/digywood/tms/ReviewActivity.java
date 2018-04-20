@@ -264,17 +264,21 @@ public class ReviewActivity extends AppCompatActivity implements
             if(c.getCount()> 0) {
                 c.moveToLast();
                 if (c.getInt(c.getColumnIndex("Attempt_Status")) == 2) {
-                    attempt = new JSONObject(getIntent().getStringExtra("json"));
-                    parseJson(attempt);
-                    buffer = attempt.getJSONArray("Sections").getJSONObject(pos).getJSONArray("Questions");
-                    restoreSections(dataObj.getQuestionStatus(),attempt);
-                    Log.e("Resume-cursor",""+listOfLists.size());
-                    CorrectOptions = dataObj.getCorrectOptions();
-                    statusList = dataObj.getQuestionStatus();
-                    setScrollbar(pos);
-                    setQuestion(pos,index,edit);
-//                    scrollAdapter.updateList(listOfLists.get(pos));
-
+                    try {
+                        String json = new String(SaveJSONdataToFile.bytesFromFile(URLClass.mainpath + path + "Attempt/"+ testid + ".json"), "UTF-8");
+                        attempt = new JSONObject(json);
+                        parseJson(attempt);
+                        buffer = generateArray(attempt.getJSONArray("Sections").getJSONObject(pos));
+                        Log.e("Resume-cursor",""+attempt.toString());
+                        restoreSections(dataObj.getQuestionStatus(),attempt);
+                        CorrectOptions = dataObj.getCorrectOptions();
+                        statusList = dataObj.getQuestionStatus();
+                        setScrollbar(pos);
+                        setQuestion(pos,index,edit);
+                        scrollAdapter.updateList(listOfLists.get(pos));
+                    }catch (IOException| ClassNotFoundException e ){
+                        e.printStackTrace();
+                    }
 
                 }
             }
@@ -836,6 +840,7 @@ public class ReviewActivity extends AppCompatActivity implements
                     question.setQbm_Group_Flag(questionobj.getString("qbm_group_flag"));
 //                    question.setQbm_Group_ID(questionobj.getString("qbm_Group_ID"));
 //                    question.setQbm_Group_q_no(questionobj.getString("qbm_Group_q_no"));
+
                     question.setQbm_answer(questionobj.getString("qbm_answer"));
                     question.setQbm_review_flag(questionobj.getString("qbm_review_flag"));
                     question.setQbm_Review_Type(questionobj.getString("qbm_Review_Type"));

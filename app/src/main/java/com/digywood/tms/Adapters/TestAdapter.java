@@ -31,6 +31,7 @@ import com.digywood.tms.URLClass;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
@@ -58,6 +59,7 @@ public class TestAdapter extends RecyclerView.Adapter<TestAdapter.MyViewHolder> 
 
         public TextView tv_testid, tv_teststatus;
         public Button btn_start, btn_resume,btn_fstart,btn_fattempthistory;
+
         public CheckBox cb_download;
 
         public MyViewHolder(View view) {
@@ -122,6 +124,7 @@ public class TestAdapter extends RecyclerView.Adapter<TestAdapter.MyViewHolder> 
                 holder.btn_resume.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
+
                         try {
                             attempt = new String(SaveJSONdataToFile.bytesFromFile(getExternalPath(mycontext,singletest,"ATTEMPT")+ testid + ".json"), "UTF-8");
                             Intent i = new Intent(mycontext, ReviewActivity.class);
@@ -131,6 +134,7 @@ public class TestAdapter extends RecyclerView.Adapter<TestAdapter.MyViewHolder> 
                         } catch (IOException | ClassNotFoundException e) {
                             e.printStackTrace();
                         }
+
                     }
                 });
             }
@@ -185,18 +189,7 @@ public class TestAdapter extends RecyclerView.Adapter<TestAdapter.MyViewHolder> 
                     BufferedReader br = new BufferedReader(new FileReader(URLClass.mainpath +"EAAA000009/SSCT1001/SSCS0002/PAA002/PTU0002/"+"PTU0002_01"+".json"));
                     StringBuilder sb = new StringBuilder();
                     String line = br.readLine();
-
-                    while (line != null) {
-                        sb.append(line);
-                        sb.append("\n");
-                        line = br.readLine();
-                    }
-                    filedata = sb.toString();
-                    br.close();
-                    fimageList = readJson(filedata);
-                    if (fimageList.size() != 0) {
-
-                        ArrayList<String> missingfList = new ArrayList<>();
+                     ArrayList<String> missingfList = new ArrayList<>();
 
                         for (int i = 0; i < fimageList.size(); i++) {
                             File myFile = new File(URLClass.mainpath + fimageList.get(i));
@@ -219,9 +212,6 @@ public class TestAdapter extends RecyclerView.Adapter<TestAdapter.MyViewHolder> 
                             i.putExtra("testId",testList.get(position).getTestid());
                             mycontext.startActivity(i);
                         }
-                    } else {
-                        Log.e("FlashCardActivity---", "No Questions to Display");
-                    }
                 } catch (Exception e) {
                     e.printStackTrace();
                     Log.e("TestActivity1-----", e.toString());

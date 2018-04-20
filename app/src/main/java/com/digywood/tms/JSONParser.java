@@ -86,6 +86,7 @@ public class JSONParser extends AppCompatActivity{
 
             Log.e("JSON--",mainObj.getString("ptu_test_ID"));
 
+
             ja_sections=mainObj.getJSONArray("Sections");
 
             JSONArray cja_sections=new JSONArray();
@@ -187,8 +188,6 @@ public class JSONParser extends AppCompatActivity{
 
                             int groupquescount=myhelper.getGroupQPickCount(finalgroupList.get(d));
 
-//                            int groupquescount=1;
-
                             if(gquesList.size()>=groupquescount){
                                 getGroupQues(gquesList,groupquescount);
                             }else{
@@ -233,8 +232,6 @@ public class JSONParser extends AppCompatActivity{
                             Log.e("GroupId: --",""+finalgroupList.get(d));
 
                             int groupquescount=myhelper.getGroupQPickCount(finalgroupList.get(d));
-
-//                            int groupquescount=6;
 
                             if(gquesList.size()>=groupquescount){
                                 getGroupQues(gquesList,groupquescount);
@@ -464,7 +461,7 @@ public class JSONParser extends AppCompatActivity{
                                 cquesObj.put("gbg_media_file",quesObj.get("gbg_media_file"));
                                 cquesObj.put("gbg_text",quesObj.get("gbg_text"));
                                 cquesObj.put("qbm_jumbling_flag",quesObj.get("qbm_jumbling_flag"));
-                                cquesObj.put("qbm_flash_image",testfimages.get(g));
+                                cquesObj.put("qbm_flash_image",quesObj.get("qbm_flash_image"));
                                 cquesObj.put("gbg_no_questions",quesObj.get("gbg_no_questions"));
 
                                 ja_options=ja_questions.getJSONObject(q).getJSONArray("Options");

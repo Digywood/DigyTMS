@@ -71,7 +71,7 @@ public class FlashCardActivity extends AppCompatActivity {
     static int screensize=0;
     Dialog mydialog;
     DBHelper myhelper;
-//    FloatingActionButton fab_fgroupQview;
+    //    FloatingActionButton fab_fgroupQview;
     int attemptcount=0,knowcount=0,donknowcount=0,skipcount=0,Qcount=0;
     TextView tv_attempted,tv_iknow,tv_idonknow,tv_skipped;
     ArrayList<String> knownList=new ArrayList<>();
@@ -101,7 +101,7 @@ public class FlashCardActivity extends AppCompatActivity {
      */
     private static final int UI_ANIMATION_DELAY = 300;
     private final Handler mHideHandler = new Handler();
-//    private View mContentView;
+    //    private View mContentView;
     private final Runnable mHidePart2Runnable = new Runnable() {
         @SuppressLint("InlinedApi")
         @Override
@@ -119,7 +119,7 @@ public class FlashCardActivity extends AppCompatActivity {
                     | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION);
         }
     };
-//    private View mControlsView;
+    //    private View mControlsView;
     RelativeLayout myrlayout;
     private final Runnable mShowPart2Runnable = new Runnable() {
         @Override
@@ -224,42 +224,39 @@ public class FlashCardActivity extends AppCompatActivity {
 
 //            questionList=baseQList.get(0);
 
-            if(fimageList.size()!=0){
-
-                ArrayList<String> missingfList=new ArrayList<>();
-
-                for(int i=0;i<fimageList.size();i++){
-                    File myFile = new File(URLClass.mainpath+fimageList.get(i));
-                    if(myFile.exists()){
-
-                    }else{
-                        missingfList.add(fimageList.get(i));
-                    }
-                }
-
-                if(missingfList.size()!=0){
-                    StringBuilder sbm=new StringBuilder();
-                    sbm.append("The following file are missing...\n");
-                    for(int i=0;i<missingfList.size();i++){
-                        sbm.append(missingfList.get(i)+" , "+"\n");
-                    }
-                    showAlert(sbm.toString());
-                }else{
-                    try {
-                        Log.e("Image Path :--",URLClass.mainpath+fimageList.get(d));
-                        Bitmap bmp = BitmapFactory.decodeFile(URLClass.mainpath+fimageList.get(d));
-                        iv_quesimg.setImageBitmap(bmp);
-                    }catch (Exception e){
-                        e.printStackTrace();
-                        Log.e("ViewLotInfo---",e.toString());
-                    }
-                }
-//                for(int i=0;i<fimageList.size();i++){
+//            if(fimageList.size()!=0){
 //
+//                ArrayList<String> missingfList=new ArrayList<>();
+//
+//                for(int i=0;i<fimageList.size();i++){
+//                    File myFile = new File(URLClass.mainpath+fimageList.get(i));
+//                    if(myFile.exists()){
+//
+//                    }else{
+//                        missingfList.add(fimageList.get(i));
+//                    }
 //                }
-            }else{
-                Log.e("FlashCardActivity---","No Questions to Display");
-            }
+//
+//                if(missingfList.size()!=0){
+//                    StringBuilder sbm=new StringBuilder();
+//                    sbm.append("The following file are missing...\n");
+//                    for(int i=0;i<missingfList.size();i++){
+//                        sbm.append(missingfList.get(i)+" , "+"\n");
+//                    }
+//                    showAlert(sbm.toString());
+//                }else{
+//                    try {
+//                        Log.e("Image Path :--",URLClass.mainpath+fimageList.get(d));
+//                        Bitmap bmp = BitmapFactory.decodeFile(URLClass.mainpath+fimageList.get(d));
+//                        iv_quesimg.setImageBitmap(bmp);
+//                    }catch (Exception e){
+//                        e.printStackTrace();
+//                        Log.e("ViewLotInfo---",e.toString());
+//                    }
+//                }
+//            }else{
+//                Log.e("FlashCardActivity---","No Questions to Display");
+//            }
         }catch (Exception e){
             e.printStackTrace();
             Log.e("TestActivity1-----",e.toString());
@@ -285,6 +282,13 @@ public class FlashCardActivity extends AppCompatActivity {
                     Log.e("Image Path :--",URLClass.mainpath+imagefile);
                     Bitmap bmp = BitmapFactory.decodeFile(URLClass.mainpath+imagefile);
                     iv_quesimg.setImageBitmap(bmp);
+
+                    String gFlag=qObj.getString("qbm_group_flag");
+                    if(gFlag.equalsIgnoreCase("YES")){
+                        btn_gQues.setVisibility(View.VISIBLE);
+                    }else{
+                        btn_gQues.setVisibility(View.GONE);
+                    }
 
                     myLayoutManager.scrollToPosition(position);
 //                    rv_quesnum.scrollBy(position,0);
@@ -314,9 +318,22 @@ public class FlashCardActivity extends AppCompatActivity {
 
                     JSONObject secObj=gja_sections.getJSONObject(position);
 
-                    ArrayList<SingleFlashQuestion> tempList;
+                    gja_questions=secObj.getJSONArray("Questions");
 
-//                    questionList = new ArrayList<>(tempList);
+                    JSONObject qObj=gja_questions.getJSONObject(position);
+                    String imagefile=qObj.getString("qbm_flash_image");
+                    Log.e("Image Path :--",URLClass.mainpath+imagefile);
+                    Bitmap bmp = BitmapFactory.decodeFile(URLClass.mainpath+imagefile);
+                    iv_quesimg.setImageBitmap(bmp);
+
+                    String gFlag=qObj.getString("qbm_group_flag");
+                    if(gFlag.equalsIgnoreCase("YES")){
+                        btn_gQues.setVisibility(View.VISIBLE);
+                    }else{
+                        btn_gQues.setVisibility(View.GONE);
+                    }
+
+                    ArrayList<SingleFlashQuestion> tempList;
 
                     tempList=baseQList.get(position);
 
@@ -357,7 +374,7 @@ public class FlashCardActivity extends AppCompatActivity {
                 ImageView iv_dialogclose = mydialog.findViewById(R.id.iv_close);
 
                 try {
-                    String filename=gja_questions.getJSONObject(d).getString("qbm_flash_image");
+                    String filename=gja_questions.getJSONObject(d).getString("gbg_media_file");
                     Log.e("Image Path :--",filename);
                     Bitmap bmp = BitmapFactory.decodeFile(URLClass.mainpath+filename);
                     iv_answerimg.setImageBitmap(bmp);
@@ -403,6 +420,14 @@ public class FlashCardActivity extends AppCompatActivity {
                     Log.e("Image Path :--",filename);
                     Bitmap bmp = BitmapFactory.decodeFile(URLClass.mainpath+filename);
                     iv_answerimg.setImageBitmap(bmp);
+
+                    String gFlag=gja_questions.getJSONObject(d).getString("qbm_group_flag");
+                    if(gFlag.equalsIgnoreCase("YES")){
+                        btn_gQues.setVisibility(View.VISIBLE);
+                    }else{
+                        btn_gQues.setVisibility(View.GONE);
+                    }
+
                     cAdp.setPoiner(d);
                 }catch (Exception e){
                     e.printStackTrace();
@@ -434,6 +459,14 @@ public class FlashCardActivity extends AppCompatActivity {
                         Log.e("Image Path :--",filename);
                         Bitmap bmp = BitmapFactory.decodeFile(URLClass.mainpath+filename);
                         iv_quesimg.setImageBitmap(bmp);
+
+                        String gFlag=gja_questions.getJSONObject(d).getString("qbm_group_flag");
+                        if(gFlag.equalsIgnoreCase("YES")){
+                            btn_gQues.setVisibility(View.VISIBLE);
+                        }else{
+                            btn_gQues.setVisibility(View.GONE);
+                        }
+
                         cAdp.setPoiner(d);
                     }catch (Exception e){
                         e.printStackTrace();
@@ -450,6 +483,14 @@ public class FlashCardActivity extends AppCompatActivity {
                             Log.e("Image Path :--",filename);
                             Bitmap bmp = BitmapFactory.decodeFile(URLClass.mainpath+filename);
                             iv_quesimg.setImageBitmap(bmp);
+
+                            String gFlag=gja_questions.getJSONObject(d).getString("qbm_group_flag");
+                            if(gFlag.equalsIgnoreCase("YES")){
+                                btn_gQues.setVisibility(View.VISIBLE);
+                            }else{
+                                btn_gQues.setVisibility(View.GONE);
+                            }
+
                             cAdp.setPoiner(d);
                         }catch (Exception e){
                             e.printStackTrace();
@@ -519,6 +560,14 @@ public class FlashCardActivity extends AppCompatActivity {
                                 Log.e("Image Path :--",filename);
                                 Bitmap bmp = BitmapFactory.decodeFile(URLClass.mainpath+filename);
                                 iv_quesimg.setImageBitmap(bmp);
+
+                                String gFlag=gja_questions.getJSONObject(d).getString("qbm_group_flag");
+                                if(gFlag.equalsIgnoreCase("YES")){
+                                    btn_gQues.setVisibility(View.VISIBLE);
+                                }else{
+                                    btn_gQues.setVisibility(View.GONE);
+                                }
+
                                 cAdp.setPoiner(d);
                             }catch (Exception e){
                                 e.printStackTrace();
@@ -537,6 +586,14 @@ public class FlashCardActivity extends AppCompatActivity {
                             Log.e("Image Path :--",filename);
                             Bitmap bmp = BitmapFactory.decodeFile(URLClass.mainpath+filename);
                             iv_quesimg.setImageBitmap(bmp);
+
+                            String gFlag=gja_questions.getJSONObject(d).getString("qbm_group_flag");
+                            if(gFlag.equalsIgnoreCase("YES")){
+                                btn_gQues.setVisibility(View.VISIBLE);
+                            }else{
+                                btn_gQues.setVisibility(View.GONE);
+                            }
+
                             cAdp.setPoiner(d);
                         }catch (Exception e){
                             e.printStackTrace();
@@ -635,6 +692,14 @@ public class FlashCardActivity extends AppCompatActivity {
                                 Log.e("Image Path :--",filename);
                                 Bitmap bmp = BitmapFactory.decodeFile(URLClass.mainpath+filename);
                                 iv_quesimg.setImageBitmap(bmp);
+
+                                String gFlag=gja_questions.getJSONObject(d).getString("qbm_group_flag");
+                                if(gFlag.equalsIgnoreCase("YES")){
+                                    btn_gQues.setVisibility(View.VISIBLE);
+                                }else{
+                                    btn_gQues.setVisibility(View.GONE);
+                                }
+
                                 cAdp.setPoiner(d);
                             }catch (Exception e){
                                 e.printStackTrace();
@@ -653,6 +718,14 @@ public class FlashCardActivity extends AppCompatActivity {
                             Log.e("Image Path :--",filename);
                             Bitmap bmp = BitmapFactory.decodeFile(URLClass.mainpath+filename);
                             iv_quesimg.setImageBitmap(bmp);
+
+                            String gFlag=gja_questions.getJSONObject(d).getString("qbm_group_flag");
+                            if(gFlag.equalsIgnoreCase("YES")){
+                                btn_gQues.setVisibility(View.VISIBLE);
+                            }else{
+                                btn_gQues.setVisibility(View.GONE);
+                            }
+
                             cAdp.setPoiner(d);
                         }catch (Exception e){
                             e.printStackTrace();
