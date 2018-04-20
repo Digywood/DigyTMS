@@ -47,7 +47,7 @@ public class JSONParser extends AppCompatActivity{
     JSONObject cmainObj,csecObj,cquesObj,coptionObj,cadditionsObj;
     String section="",sectionid="",testid="",dwdpath="",testType="";
 
-    public JSONParser(String JSON,String dwdPath ,String type,Context c){
+    public JSONParser(String JSON,String dwdPath,String type,Context c){
 
         this.dwdpath=dwdPath;
         this.testType=type;
@@ -85,7 +85,6 @@ public class JSONParser extends AppCompatActivity{
             scConfigList=myhelper.getSubcatData(testid);
 
             Log.e("JSON--",mainObj.getString("ptu_test_ID"));
-
 
             ja_sections=mainObj.getJSONArray("Sections");
 
@@ -147,6 +146,8 @@ public class JSONParser extends AppCompatActivity{
                                 groupcloseList.add(quesObj.getString("gbg_id"));
                             }
                         }
+
+
 //                        if(groupList.contains(quesObj.getString("gbg_id"))){
 //
 //                        }else{
@@ -187,6 +188,8 @@ public class JSONParser extends AppCompatActivity{
                             Log.e("GroupId: --",""+finalgroupList.get(d));
 
                             int groupquescount=myhelper.getGroupQPickCount(finalgroupList.get(d));
+
+//                            int groupquescount=1;
 
                             if(gquesList.size()>=groupquescount){
                                 getGroupQues(gquesList,groupquescount);
@@ -232,6 +235,8 @@ public class JSONParser extends AppCompatActivity{
                             Log.e("GroupId: --",""+finalgroupList.get(d));
 
                             int groupquescount=myhelper.getGroupQPickCount(finalgroupList.get(d));
+
+//                            int groupquescount=6;
 
                             if(gquesList.size()>=groupquescount){
                                 getGroupQues(gquesList,groupquescount);

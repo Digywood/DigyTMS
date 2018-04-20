@@ -167,23 +167,23 @@ public class MainActivity extends AppCompatActivity {
 //                Intent i=new Intent(getApplicationContext(),RegistrationActivity.class);
 //                startActivity(i);
 
-                try{
-                    BufferedReader br = new BufferedReader(new FileReader(URLClass.mainpath+"EAAA000009/SSCT1001/SSCS0002/PAA002/PTU0002/"+"PTU0002"+".json"));
-                    StringBuilder sb = new StringBuilder();
-                    String line = br.readLine();
-
-                    while (line != null) {
-                        sb.append(line);
-                        sb.append("\n");
-                        line = br.readLine();
-                    }
-                    filedata=sb.toString();
-                    br.close();
-                }catch (Exception e){
-                    e.printStackTrace();
-                    Log.e("TestActivity1-----",e.toString());
-                }
-
+//                try{
+//                    BufferedReader br = new BufferedReader(new FileReader(URLClass.mainpath+"EAAA000009/SSCT1001/SSCS0002/PAA002/PTU0002/"+"PTU0002"+".json"));
+//                    StringBuilder sb = new StringBuilder();
+//                    String line = br.readLine();
+//
+//                    while (line != null) {
+//                        sb.append(line);
+//                        sb.append("\n");
+//                        line = br.readLine();
+//                    }
+//                    filedata=sb.toString();
+//                    br.close();
+//                }catch (Exception e){
+//                    e.printStackTrace();
+//                    Log.e("TestActivity1-----",e.toString());
+//                }
+//
 //                myparser=new JSONParser(filedata,URLClass.mainpath);
 
 //                getTestConfig("PTAA00002","'GAA0001','GAA0004','GAA0006','GAA0008'");

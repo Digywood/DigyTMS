@@ -42,7 +42,7 @@ public class DownloadFileAsync extends AsyncTask<Void,String, String> {
     String log_status = null;
     DBHelper helper;
 
-    public DownloadFileAsync(Context c, String path,String[] urlslist,String[] nameslist,IDownloadStatus iDownloadStatus) {
+    public DownloadFileAsync(Context c,String path,String[] urlslist,String[] nameslist,IDownloadStatus iDownloadStatus) {
         super();
         this.context=c;
         this.filePath=path;
