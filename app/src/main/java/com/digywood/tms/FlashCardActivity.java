@@ -782,9 +782,9 @@ public class FlashCardActivity extends AppCompatActivity {
         try{
             mainObj=new JSONObject(filedata);
 
-            testid=mainObj.getString("sptu_ID");
+            testid=mainObj.getString("ptu_test_ID");
 
-            Log.e("JSON--",mainObj.getString("sptu_ID"));
+            Log.e("JSON--",mainObj.getString("ptu_test_ID"));
 
             ja_sections=mainObj.getJSONArray("Sections");
             gja_sections=mainObj.getJSONArray("Sections");
@@ -802,9 +802,9 @@ public class FlashCardActivity extends AppCompatActivity {
 
                 baseQList.add(tempList);
 
-                section=secObj.getString("Ptu_section_name");
+                section=secObj.getString("ptu_section_name");
                 sectionList.add(section);
-                sectionid=secObj.getString("Ptu_section_ID");
+                sectionid=secObj.getString("ptu_section_ID");
                 ja_questions=secObj.getJSONArray("Questions");
 
                 gja_questions=secObj.getJSONArray("Questions");
