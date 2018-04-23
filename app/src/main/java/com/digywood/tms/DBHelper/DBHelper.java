@@ -189,8 +189,8 @@ public class DBHelper extends SQLiteOpenHelper {
                 "  `qbg_media_type` text DEFAULT NULL,`qbg_media_file` text DEFAULT NULL,\n" +
                 "  `qbg_text` text DEFAULT NULL,`qbg_no_questions` int(4),`qbg_pickup_count` int(4),\n" +
                 "  `qbg_status` text DEFAULT NULL,`qbg_created_by` text DEFAULT NULL,\n" +
-                "  `qbg_created_dttm` datetime DEFAULT NULL,\n" +
-                "  `qbg_mod_by` varchar(20) DEFAULT NULL,`qbg_mod_dttm` datetime DEFAULT NULL)";
+                "  `qbg_created_dttm` datetime DEFAULT NULL,`qbg_mod_by` varchar(20) DEFAULT NULL," +
+                "  `qbg_mod_dttm` datetime DEFAULT NULL,`qbg_type` varchar(45) DEFAULT NULL)";
         db.execSQL(tblqbgroup);
 
         String tblquesconfig="CREATE TABLE `ques_config` (\n" +
