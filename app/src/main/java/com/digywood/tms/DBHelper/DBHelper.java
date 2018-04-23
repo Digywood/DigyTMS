@@ -6,10 +6,8 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
-
 import com.digywood.tms.Pojo.SingleEnrollment;
 import com.digywood.tms.Pojo.SingleSubcatConfig;
-
 import java.util.ArrayList;
 
 /**
