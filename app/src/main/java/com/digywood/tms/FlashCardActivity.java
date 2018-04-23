@@ -291,6 +291,7 @@ public class FlashCardActivity extends AppCompatActivity {
                     String imagefile=qObj.getString("qbm_flash_image");
                     Log.e("Image Path :--",testPath+imagefile);
                     Bitmap bmp = BitmapFactory.decodeFile(testPath+imagefile);
+//                    Bitmap bmp = BitmapFactory.decodeFile(testPath+"SSC01ENC01Q0001_QF.png");
                     iv_quesimg.setImageBitmap(bmp);
 
                     String gFlag=qObj.getString("qbm_group_flag");
