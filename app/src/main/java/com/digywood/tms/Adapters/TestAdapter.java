@@ -217,9 +217,9 @@ public class TestAdapter extends RecyclerView.Adapter<TestAdapter.MyViewHolder> 
                         br.close();
 
                         myparser=new JSONParser(filedata,tPath+"/flashAttempts/","FLASH",mycontext);
-                    }
 
-//                    if (fimageList.size() != 0) {
+
+                        //                    if (fimageList.size() != 0) {
 //
 //                        ArrayList<String> missingfList = new ArrayList<>();
 //
@@ -248,10 +248,12 @@ public class TestAdapter extends RecyclerView.Adapter<TestAdapter.MyViewHolder> 
 //                    } else {
 //                        Log.e("FlashCardActivity---", "No Questions to Display");
 //                    }
-                    Intent i = new Intent(mycontext, FlashCardActivity.class);
-                    i.putExtra("testId",testList.get(position).getTestid());
-                    i.putExtra("testPath",tPath);
-                    mycontext.startActivity(i);
+                        Intent i = new Intent(mycontext, FlashCardActivity.class);
+                        i.putExtra("testId",testList.get(position).getTestid());
+                        i.putExtra("testPath",tPath);
+                        mycontext.startActivity(i);
+
+                    }
 
                 } catch (Exception e) {
                     e.printStackTrace();
