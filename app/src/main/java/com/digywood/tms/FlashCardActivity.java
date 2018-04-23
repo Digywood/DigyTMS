@@ -298,7 +298,7 @@ public class FlashCardActivity extends AppCompatActivity {
                     if(gFlag.equalsIgnoreCase("YES")){
                         btn_gQues.setVisibility(View.VISIBLE);
                     }else{
-                        btn_gQues.setVisibility(View.VISIBLE);
+                        btn_gQues.setVisibility(View.GONE);
                     }
 
                     ArrayList<SingleFlashQuestion> tempList;
@@ -358,6 +358,7 @@ public class FlashCardActivity extends AppCompatActivity {
                     @Override
                     public void onClick(View view) {
                         mydialog.dismiss();
+                        mHideRunnable.run();
                     }
                 });
 
@@ -395,7 +396,7 @@ public class FlashCardActivity extends AppCompatActivity {
                     if(gFlag.equalsIgnoreCase("YES")){
                         btn_gQues.setVisibility(View.VISIBLE);
                     }else{
-                        btn_gQues.setVisibility(View.VISIBLE);
+                        btn_gQues.setVisibility(View.GONE);
                     }
 
                     cAdp.setPoiner(d);
@@ -408,6 +409,7 @@ public class FlashCardActivity extends AppCompatActivity {
                     @Override
                     public void onClick(View view) {
                         mydialog.dismiss();
+                        mHideRunnable.run();
                     }
                 });
 
@@ -434,7 +436,7 @@ public class FlashCardActivity extends AppCompatActivity {
                         if(gFlag.equalsIgnoreCase("YES")){
                             btn_gQues.setVisibility(View.VISIBLE);
                         }else{
-                            btn_gQues.setVisibility(View.VISIBLE);
+                            btn_gQues.setVisibility(View.GONE);
                         }
 
                         cAdp.setPoiner(d);
@@ -458,7 +460,7 @@ public class FlashCardActivity extends AppCompatActivity {
                             if(gFlag.equalsIgnoreCase("YES")){
                                 btn_gQues.setVisibility(View.VISIBLE);
                             }else{
-                                btn_gQues.setVisibility(View.VISIBLE);
+                                btn_gQues.setVisibility(View.GONE);
                             }
 
                             cAdp.setPoiner(d);
@@ -610,7 +612,7 @@ public class FlashCardActivity extends AppCompatActivity {
                             if(gFlag.equalsIgnoreCase("YES")){
                                 btn_gQues.setVisibility(View.VISIBLE);
                             }else{
-                                btn_gQues.setVisibility(View.VISIBLE);
+                                btn_gQues.setVisibility(View.GONE);
                             }
 
                             cAdp.setPoiner(d);
@@ -636,7 +638,7 @@ public class FlashCardActivity extends AppCompatActivity {
                         if(gFlag.equalsIgnoreCase("YES")){
                             btn_gQues.setVisibility(View.VISIBLE);
                         }else{
-                            btn_gQues.setVisibility(View.VISIBLE);
+                            btn_gQues.setVisibility(View.GONE);
                         }
 
                         cAdp.setPoiner(d);
@@ -886,6 +888,7 @@ public class FlashCardActivity extends AppCompatActivity {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         dialog.cancel();
+                        mHideRunnable.run();
                     }
                 });
         AlertDialog alert = builder.create();
@@ -962,6 +965,7 @@ public class FlashCardActivity extends AppCompatActivity {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         dialog.cancel();
+                        mHideRunnable.run();
                     }
                 });
         AlertDialog alert = builder.create();
