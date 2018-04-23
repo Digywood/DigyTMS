@@ -891,7 +891,7 @@ public class ReviewActivity extends AppCompatActivity implements
                 categories.add(attempt.getJSONArray("Sections").getJSONObject(i).getString("Ptu_section_name"));
                 JSONArray array2 = attempt.getJSONArray("Sections").getJSONObject(i).getJSONArray("Questions");
                 questionOpList = new ArrayList<>();
-                Log.e("RestoreSections",""+array2.length());
+                Log.e("RestoreSections",""+categories.size());
                 Log.e("Review_array2",""+array2.length());
                 for (int j = 0; j < array2.length(); j++) {
                     if(statusList.get(j) != null) {

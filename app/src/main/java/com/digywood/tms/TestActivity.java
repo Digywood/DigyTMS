@@ -24,6 +24,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.transition.Slide;
+import android.transition.TransitionInflater;
 import android.util.Log;
 import android.view.GestureDetector;
 import android.view.Gravity;
@@ -1088,7 +1090,7 @@ public class TestActivity extends AppCompatActivity implements
         array = attempt.getJSONArray("Sections").getJSONObject(pos).getJSONArray("Questions");
         myLayoutManager.scrollToPositionWithOffset(index, 500);
         questionobj = array.getJSONObject(index);
-        q_no.setText(questionobj.getString("qbm_SequenceId"));
+//        q_no.setText(questionobj.getString("qbm_SequenceId"));
         if (questionobj.getString("qbm_group_flag").equals("YES")) {
             groupId = questionobj.getString("gbg_id");
             btn_group_info.setEnabled(true);
@@ -1158,6 +1160,11 @@ public class TestActivity extends AppCompatActivity implements
             e.printStackTrace();
         }
     }
+
+/*    private void setupWindowAnimations() {
+        Slide slide = (Slide) TransitionInflater.from(this).inflateTransition(R.transition.activity_slide);
+        getWindow().setExitTransition(slide);
+    }*/
 
     //method to store the number of questions in each section{
     public void storeSections() {

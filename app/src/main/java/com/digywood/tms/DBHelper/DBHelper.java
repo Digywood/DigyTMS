@@ -155,9 +155,16 @@ public class DBHelper extends SQLiteOpenHelper {
         db.execSQL(AttemptList);
 
         String AttemptData=" CREATE TABLE `attempt_data` (\n"+
+                "   `Test_ID` varchar(15),\n" +
+                "   `Attempt_ID` INTEGER,\n"+
                 "   `Question_ID` varchar(15),\n" +
                 "   `Question_Seq_No` varchar(15) DEFAULT NULL,\n" +
+                "   `Question_Category` varchar(15) DEFAULT NULL,\n" +
+                "   `Question_SubCategory` varchar(15) DEFAULT NULL,\n" +
                 "   `Question_Max_Marks` int(15) DEFAULT NULL,\n"+
+                "   `Question_Negative_Marks` int(15) DEFAULT NULL,\n"+
+                "   `Question_Marks_Obtained` int(15) DEFAULT NULL,\n"+
+                "   `Question_Negative_Applied` int(15) DEFAULT NULL,\n"+
                 "   `Question_Option` int(15) DEFAULT NULL,\n"+
                 "   `Question_Status` varchar(20) DEFAULT NULL,\n"+
                 "   `Question_Option_Sequence` varchar(20) DEFAULT NULL,\n"+
