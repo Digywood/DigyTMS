@@ -65,7 +65,8 @@ public class FlashAttemptDataActivity extends AppCompatActivity {
 
         tv_minscore.setText(String.valueOf(minscore)+" %");
         tv_maxscore.setText(String.valueOf(maxscore)+" %");
-        tv_avgscore.setText(String.valueOf(avgscore)+" %");
+        Double avgpercent=round(avgscore,2);
+        tv_avgscore.setText(String.valueOf(avgpercent)+" %");
 
         Cursor mycursor=myhelper.getFlashTestData(testId);
         if(mycursor.getCount()>0){
@@ -88,5 +89,14 @@ public class FlashAttemptDataActivity extends AppCompatActivity {
             tv_emptyflashdata.setText("No Flash Attempt History");
             tv_emptyflashdata.setVisibility(View.VISIBLE);
         }
+    }
+
+    public static double round(double value, int places) {
+        if (places < 0) throw new IllegalArgumentException();
+
+        long factor = (long) Math.pow(10, places);
+        value = value * factor;
+        long tmp = Math.round(value);
+        return (double) tmp / factor;
     }
 }

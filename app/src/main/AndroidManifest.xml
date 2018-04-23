@@ -60,7 +60,7 @@
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:label="@string/title_activity_flash_card"
             android:screenOrientation="landscape"
-            android:theme="@style/FullscreenTheme" />
+            android:theme="@style/AppTheme.NoActionBar"/>
         <activity android:name=".FlashAttemptDataActivity"
             android:screenOrientation="landscape"></activity>
     </application>

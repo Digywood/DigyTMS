@@ -16,18 +16,19 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:orientation="vertical">
 
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
+                android:padding="3dp"
                 android:background="#000000"
                 android:orientation="horizontal">
 
                 <TextView
-                    android:layout_width="wrap_content"
+                    android:layout_width="150dp"
                     android:layout_height="wrap_content"
                     android:text="Test Id"
                     android:textStyle="bold"
@@ -37,7 +38,7 @@
                     android:textSize="16sp"/>
 
                 <TextView
-                    android:layout_width="wrap_content"
+                    android:layout_width="150dp"
                     android:layout_height="wrap_content"
                     android:text="Start"
                     android:textStyle="bold"
@@ -47,7 +48,7 @@
                     android:textSize="16sp"/>
 
                 <TextView
-                    android:layout_width="wrap_content"
+                    android:layout_width="150dp"
                     android:layout_height="wrap_content"
                     android:text="Resume"
                     android:textStyle="bold"
@@ -57,27 +58,27 @@
                     android:textSize="16sp"/>
 
                 <TextView
-                    android:layout_width="wrap_content"
+                    android:layout_width="150dp"
                     android:layout_height="wrap_content"
                     android:text="Download \n Selection"
                     android:gravity="center_vertical"
-                    android:textStyle="bold"
                     android:textColor="#FFFFFF"
+                    android:textStyle="bold"
                     android:layout_weight="1"
                     android:textSize="12sp"/>
 
                 <TextView
-                    android:layout_width="wrap_content"
+                    android:layout_width="150dp"
                     android:layout_height="wrap_content"
                     android:text="Download \n Status"
                     android:gravity="center_vertical"
-                    android:textStyle="bold"
                     android:textColor="#FFFFFF"
+                    android:textStyle="bold"
                     android:layout_weight="1"
                     android:textSize="12sp"/>
 
                 <TextView
-                    android:layout_width="wrap_content"
+                    android:layout_width="150dp"
                     android:layout_height="wrap_content"
                     android:text="FlashCard"
                     android:gravity="center_vertical"
@@ -87,7 +88,7 @@
                     android:textSize="16sp"/>
 
                 <TextView
-                    android:layout_width="wrap_content"
+                    android:layout_width="150dp"
                     android:layout_height="wrap_content"
                     android:text="FlashCard History"
                     android:gravity="center_vertical"

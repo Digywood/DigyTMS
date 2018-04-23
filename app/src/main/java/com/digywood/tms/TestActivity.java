@@ -506,6 +506,7 @@ public class TestActivity extends AppCompatActivity implements
 
             }
         });
+
         question_scroll.addOnItemTouchListener(new RecyclerTouchListener(getApplicationContext(), question_scroll, new RecyclerTouchListener.OnItemClickListener() {
             @Override
             public void onClick(View view, int in) {
@@ -1123,6 +1124,7 @@ public class TestActivity extends AppCompatActivity implements
                 btn_review.setBackgroundColor(0);
             }
         }
+
         b = BitmapFactory.decodeFile(photoPath + questionobj.getString("qbm_image_file"));
         Log.e("qimage",photoPath + questionobj.getString("qbm_image_file"));
         question_img.setImageBitmap(b);

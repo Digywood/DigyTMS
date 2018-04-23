@@ -29,8 +29,10 @@ import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.FrameLayout;
 import android.widget.GridView;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
 import android.widget.Spinner;
@@ -120,7 +122,7 @@ public class FlashCardActivity extends AppCompatActivity {
         }
     };
     //    private View mControlsView;
-    RelativeLayout myrlayout;
+    LinearLayout myrlayout;
     private final Runnable mShowPart2Runnable = new Runnable() {
         @Override
         public void run() {
@@ -158,7 +160,7 @@ public class FlashCardActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        setContentView(R.layout.activity_flash_card);
+        setContentView(R.layout.activity_sample);
 
         mVisible = true;
 //        myrlayout = findViewById(R.id.header);
@@ -227,13 +229,13 @@ public class FlashCardActivity extends AppCompatActivity {
             Log.e("TestActivity1-----",e.toString());
         }
 
-        // Set up the user interaction to manually show or hide the system UI.
-        myrlayout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                toggle();
-            }
-        });
+//        // Set up the user interaction to manually show or hide the system UI.
+//        myrlayout.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                toggle();
+//            }
+//        });
 
         question_scroll.addOnItemTouchListener(new RecyclerTouchListener(FlashCardActivity.this,question_scroll,new RecyclerTouchListener.OnItemClickListener() {
             @Override
@@ -295,7 +297,7 @@ public class FlashCardActivity extends AppCompatActivity {
                     if(gFlag.equalsIgnoreCase("YES")){
                         btn_gQues.setVisibility(View.VISIBLE);
                     }else{
-                        btn_gQues.setVisibility(View.GONE);
+                        btn_gQues.setVisibility(View.VISIBLE);
                     }
 
                     ArrayList<SingleFlashQuestion> tempList;
@@ -309,6 +311,7 @@ public class FlashCardActivity extends AppCompatActivity {
                     e.printStackTrace();
                     Log.e("FlashCardActivity----",e.toString());
                 }
+                mHideRunnable.run();
             }
 
             @Override
@@ -320,6 +323,7 @@ public class FlashCardActivity extends AppCompatActivity {
         iv_fullscreen.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+//                disableEnableViews(myrlayout);
                 initiatePopupWindow(v);
             }
         });
@@ -390,7 +394,7 @@ public class FlashCardActivity extends AppCompatActivity {
                     if(gFlag.equalsIgnoreCase("YES")){
                         btn_gQues.setVisibility(View.VISIBLE);
                     }else{
-                        btn_gQues.setVisibility(View.GONE);
+                        btn_gQues.setVisibility(View.VISIBLE);
                     }
 
                     cAdp.setPoiner(d);
@@ -429,7 +433,7 @@ public class FlashCardActivity extends AppCompatActivity {
                         if(gFlag.equalsIgnoreCase("YES")){
                             btn_gQues.setVisibility(View.VISIBLE);
                         }else{
-                            btn_gQues.setVisibility(View.GONE);
+                            btn_gQues.setVisibility(View.VISIBLE);
                         }
 
                         cAdp.setPoiner(d);
@@ -453,7 +457,7 @@ public class FlashCardActivity extends AppCompatActivity {
                             if(gFlag.equalsIgnoreCase("YES")){
                                 btn_gQues.setVisibility(View.VISIBLE);
                             }else{
-                                btn_gQues.setVisibility(View.GONE);
+                                btn_gQues.setVisibility(View.VISIBLE);
                             }
 
                             cAdp.setPoiner(d);
@@ -512,59 +516,6 @@ public class FlashCardActivity extends AppCompatActivity {
                     cAdp.updateList(questionList);
 
                     status="";
-
-                    if(pos>=questionList.size()-1){
-
-                        if(secpos<gja_sections.length()-1){
-                            secpos=secpos+1;
-                            sp_sections.setSelection(secpos);
-                            d=0;
-                            pos=d;
-                            try {
-                                String filename=gja_questions.getJSONObject(d).getString("qbm_flash_image");
-                                Log.e("Image Path :--",filename);
-                                Bitmap bmp = BitmapFactory.decodeFile(testPath+filename);
-                                iv_quesimg.setImageBitmap(bmp);
-
-                                String gFlag=gja_questions.getJSONObject(d).getString("qbm_group_flag");
-                                if(gFlag.equalsIgnoreCase("YES")){
-                                    btn_gQues.setVisibility(View.VISIBLE);
-                                }else{
-                                    btn_gQues.setVisibility(View.GONE);
-                                }
-
-                                cAdp.setPoiner(d);
-                            }catch (Exception e){
-                                e.printStackTrace();
-                                Log.e("ViewLotInfo---",e.toString());
-                            }
-                        }else{
-                            showAlert("Would you like to end the test?");
-                        }
-
-                    }else{
-                        d++;
-                        pos=d;
-                        myLayoutManager.scrollToPosition(d);
-                        try {
-                            String filename=gja_questions.getJSONObject(d).getString("qbm_flash_image");
-                            Log.e("Image Path :--",filename);
-                            Bitmap bmp = BitmapFactory.decodeFile(testPath+filename);
-                            iv_quesimg.setImageBitmap(bmp);
-
-                            String gFlag=gja_questions.getJSONObject(d).getString("qbm_group_flag");
-                            if(gFlag.equalsIgnoreCase("YES")){
-                                btn_gQues.setVisibility(View.VISIBLE);
-                            }else{
-                                btn_gQues.setVisibility(View.GONE);
-                            }
-
-                            cAdp.setPoiner(d);
-                        }catch (Exception e){
-                            e.printStackTrace();
-                            Log.e("ViewLotInfo---",e.toString());
-                        }
-                    }
 
                 }else{
 
@@ -639,40 +590,15 @@ public class FlashCardActivity extends AppCompatActivity {
                     }
 
                     status="";
+                }
 
-                    if(pos>=questionList.size()-1){
+                if(pos>=questionList.size()-1){
 
-                        if(secpos<gja_sections.length()-1){
-                            secpos=secpos+1;
-                            sp_sections.setSelection(secpos);
-                            d=0;
-                            pos=d;
-                            try {
-                                String filename=gja_questions.getJSONObject(d).getString("qbm_flash_image");
-                                Log.e("Image Path :--",filename);
-                                Bitmap bmp = BitmapFactory.decodeFile(testPath+filename);
-                                iv_quesimg.setImageBitmap(bmp);
-
-                                String gFlag=gja_questions.getJSONObject(d).getString("qbm_group_flag");
-                                if(gFlag.equalsIgnoreCase("YES")){
-                                    btn_gQues.setVisibility(View.VISIBLE);
-                                }else{
-                                    btn_gQues.setVisibility(View.GONE);
-                                }
-
-                                cAdp.setPoiner(d);
-                            }catch (Exception e){
-                                e.printStackTrace();
-                                Log.e("ViewLotInfo---",e.toString());
-                            }
-                        }else{
-                            showAlert("Would you like to end the test?");
-                        }
-
-                    }else{
-                        d++;
+                    if(secpos<gja_sections.length()-1){
+                        secpos=secpos+1;
+                        sp_sections.setSelection(secpos);
+                        d=0;
                         pos=d;
-                        myLayoutManager.scrollToPosition(d);
                         try {
                             String filename=gja_questions.getJSONObject(d).getString("qbm_flash_image");
                             Log.e("Image Path :--",filename);
@@ -683,7 +609,7 @@ public class FlashCardActivity extends AppCompatActivity {
                             if(gFlag.equalsIgnoreCase("YES")){
                                 btn_gQues.setVisibility(View.VISIBLE);
                             }else{
-                                btn_gQues.setVisibility(View.GONE);
+                                btn_gQues.setVisibility(View.VISIBLE);
                             }
 
                             cAdp.setPoiner(d);
@@ -691,8 +617,34 @@ public class FlashCardActivity extends AppCompatActivity {
                             e.printStackTrace();
                             Log.e("ViewLotInfo---",e.toString());
                         }
+                    }else{
+                        showAlert("Would you like to end the test?");
+                    }
+
+                }else{
+                    d++;
+                    pos=d;
+                    myLayoutManager.scrollToPosition(d);
+                    try {
+                        String filename=gja_questions.getJSONObject(d).getString("qbm_flash_image");
+                        Log.e("Image Path :--",filename);
+                        Bitmap bmp = BitmapFactory.decodeFile(testPath+filename);
+                        iv_quesimg.setImageBitmap(bmp);
+
+                        String gFlag=gja_questions.getJSONObject(d).getString("qbm_group_flag");
+                        if(gFlag.equalsIgnoreCase("YES")){
+                            btn_gQues.setVisibility(View.VISIBLE);
+                        }else{
+                            btn_gQues.setVisibility(View.VISIBLE);
+                        }
+
+                        cAdp.setPoiner(d);
+                    }catch (Exception e){
+                        e.printStackTrace();
+                        Log.e("ViewLotInfo---",e.toString());
                     }
                 }
+
             }
         });
 
@@ -773,6 +725,11 @@ public class FlashCardActivity extends AppCompatActivity {
         mHideHandler.postDelayed(mHideRunnable, delayMillis);
     }
 
+    @Override
+    public void onBackPressed() {
+        exitAlert("Would you like exit Test Session?");
+    }
+
     public ArrayList<String> readJson(String filedata){
         ArrayList<String> flashimageList=new ArrayList();
         JSONObject mainObj=null,secObj=null,quesObj=null;
@@ -818,15 +775,6 @@ public class FlashCardActivity extends AppCompatActivity {
                 }
 
             }
-
-//            questionList.clear();
-//            questionList=baseQList.get(0);
-
-//            ArrayList<SingleFlashQuestion> tempList1;
-//
-//            tempList1=baseQList.get(0);
-//
-//            questionList = (ArrayList<SingleFlashQuestion>)tempList1.clone();
 
             setData();
 
@@ -876,6 +824,7 @@ public class FlashCardActivity extends AppCompatActivity {
                 @Override
                 public void onClick(View v) {
                     pw.dismiss();
+//                    disableEnableViews(myrlayout);
                     mHideRunnable.run();
                 }
             });
@@ -945,12 +894,62 @@ public class FlashCardActivity extends AppCompatActivity {
         alert.show();
     }
 
+    public static void disableEnableViews(ViewGroup layout) {
+        layout.setEnabled(false);
+        for (int i = 0; i < layout.getChildCount(); i++) {
+            View child = layout.getChildAt(i);
+            if (child instanceof ViewGroup) {
+                disableEnableViews((ViewGroup) child);
+            } else {
+                if(child.isEnabled()){
+                    child.setEnabled(false);
+                } else {
+                    child.setEnabled(true);
+                }
+            }
+        }
+    }
+
     public  void exitAlert(String messege){
         AlertDialog.Builder builder = new AlertDialog.Builder(FlashCardActivity.this,R.style.ALERT_THEME);
         builder.setMessage(Html.fromHtml("<font color='#FFFFFF'>"+messege+"</font>"))
                 .setCancelable(false)
                 .setPositiveButton("Ok",new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
+
+                        int attemptcount=myhelper.getFlashAttemptNum(testId);
+                        attemptcount=attemptcount+1;
+                        Double kcount=Double.parseDouble(String.valueOf(knowcount));
+                        Double percent=kcount/Qcount;
+//                        Double percentage=Double.parseDouble(String.valueOf(percent));
+                        percent=percent*100;
+                        percent=round(percent,2);
+                        endDttm= new java.text.SimpleDateFormat("yyyy-MM-dd hh:mm:ss").format(Calendar.getInstance(TimeZone.getDefault()).getTime());
+                        long iFlag=myhelper.insertFlashAttempt(studentid,enrollid,courseid,subjectid,paperid,testId,attemptcount,startDttm,endDttm,knowcount,donknowcount,skipcount,percent,"Completed");
+                        if(iFlag>0){
+                            Log.e("FlashCardActivity----","Attempt Inserted");
+
+                            Double minscore=0.0,maxscore=0.0,avgscore=0.0;
+                            Cursor mycursor=myhelper.getFlashRawData(testId);
+                            if(mycursor.getCount()>0){
+                                while (mycursor.moveToNext()){
+                                    minscore=mycursor.getDouble(mycursor.getColumnIndex("minscore"));
+                                    maxscore=mycursor.getDouble(mycursor.getColumnIndex("maxscore"));
+                                    avgscore=mycursor.getDouble(mycursor.getColumnIndex("avgscore"));
+                                }
+                                Log.e("Scores:---","min:--"+minscore+"  max--"+maxscore+"  avg----"+avgscore);
+                                long uFlag=myhelper.updateTestStatus(testId,attemptcount,minscore,maxscore,avgscore,endDttm,percent);
+                                if(uFlag>0){
+                                    Log.e("FlashCardActivity----","Test Updated");
+                                }else{
+                                    Log.e("FlashCardActivity----","Unable to update Test");
+                                }
+                            }else{
+
+                            }
+                        }else{
+                            Log.e("FlashCardActivity----","Unable to Insert Attempt");
+                        }
 
                         dialog.cancel();
 
