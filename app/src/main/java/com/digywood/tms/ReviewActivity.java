@@ -66,7 +66,7 @@ import static com.digywood.tms.TestActivity.count;
 public class ReviewActivity extends AppCompatActivity implements
         AdapterView.OnItemSelectedListener {
 
-    TextView timer;
+    TextView timer,q_no;
     public static File file;
     ImageView fullscreen, menu,limg;
     private PopupWindow pw;
@@ -197,6 +197,7 @@ public class ReviewActivity extends AppCompatActivity implements
         btn_qadditional = findViewById(R.id.btn_qadditional);
         btn_review = findViewById(R.id.btn_review_info);
         timer = findViewById(R.id.timer);
+        q_no = findViewById(R.id.tv_Question_no);
         sections = findViewById(R.id.sections);
         fullscreen = findViewById(R.id.fullscreen);
         menu = findViewById(R.id.menu);
@@ -275,6 +276,7 @@ public class ReviewActivity extends AppCompatActivity implements
                         statusList = dataObj.getQuestionStatus();
                         setScrollbar(pos);
                         setQuestion(pos,index,edit);
+                        scrollAdapter = new ScrollGridAdapter(ReviewActivity.this, attempt.getJSONArray("Sections").getJSONObject(pos).getJSONArray("Questions"),listOfLists.get(pos),getScreenSize());
                         scrollAdapter.updateList(listOfLists.get(pos));
                     }catch (IOException| ClassNotFoundException e ){
                         e.printStackTrace();
@@ -374,7 +376,7 @@ public class ReviewActivity extends AppCompatActivity implements
                             setQBackground(pos,index);
                             if (pos == listOfLists.size() - 1) {
                                 btn_next.setText("Finish");
-                                writeOption(opAdapter.getSelectedItem());
+//                                writeOption(opAdapter.getSelectedItem());
                                 AlertDialog alertbox = new AlertDialog.Builder(ReviewActivity.this)
                                         .setMessage("Do you want to finish Review?" + " " + dataObj.getQuestionCount())
                                         .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
@@ -505,7 +507,7 @@ public class ReviewActivity extends AppCompatActivity implements
     public void gotoQuestion(int in){
         try {
             setQBackground(pos,index);
-            writeOption(opAdapter.getSelectedItem());
+//            writeOption(opAdapter.getSelectedItem());
 
             index = in;
             setQuestion(pos,index,edit);
@@ -598,7 +600,7 @@ public class ReviewActivity extends AppCompatActivity implements
     }
 
 
-    //method to store the selected option in the local database
+/*    //method to store the selected option in the local database
     public void writeOption(int indx) {
 //        RadioButton random = findViewById(group.getCheckedRadioButtonId());
         try {
@@ -616,7 +618,7 @@ public class ReviewActivity extends AppCompatActivity implements
         } catch (JSONException e) {
             e.printStackTrace();
         }
-    }
+    }*/
 
     //method to create a menu window
     public void initiateMenuWindow(View v) {
@@ -888,10 +890,10 @@ public class ReviewActivity extends AppCompatActivity implements
             listOfLists = new ArrayList<>();
             int max = 0;
             for (int i = 0; i < attempt.getJSONArray("Sections").length(); i++) {
-                categories.add(attempt.getJSONArray("Sections").getJSONObject(i).getString("Ptu_section_name"));
+                categories.add(attempt.getJSONArray("Sections").getJSONObject(i).getString("ptu_section_name"));
                 JSONArray array2 = attempt.getJSONArray("Sections").getJSONObject(i).getJSONArray("Questions");
                 questionOpList = new ArrayList<>();
-                Log.e("RestoreSections",""+categories.size());
+
                 Log.e("Review_array2",""+array2.length());
                 for (int j = 0; j < array2.length(); j++) {
                     if(statusList.get(j) != null) {
@@ -912,6 +914,7 @@ public class ReviewActivity extends AppCompatActivity implements
         array =  attempt.getJSONArray("Sections").getJSONObject(pos).getJSONArray("Questions");
         myLayoutManager.scrollToPositionWithOffset(index, 500);
         questionobj = array.getJSONObject(index);
+        q_no.setText(questionobj.getString("qbm_SequenceId"));
         if (questionobj.getString("qbm_group_flag").equals("YES")) {
             groupId = questionobj.getString("gbg_id");
             btn_group_info.setEnabled(true);
@@ -937,7 +940,7 @@ public class ReviewActivity extends AppCompatActivity implements
 
         if (!edit) {
             Log.e("QuestionImage", questionobj.getString("qbm_image_file"));
-            if (questionobj.getInt("qbm_Additional_Images_num") > 0) {
+            if (questionobj.getString("qbm_review_flag").equals("YES")) {
                 btn_review.setEnabled(true);
                 btn_review.setClickable(true);
                 btn_review.setBackgroundColor(getResources().getColor(R.color.dull_yellow));
@@ -974,6 +977,7 @@ public class ReviewActivity extends AppCompatActivity implements
             rv_option.setItemAnimator(new DefaultItemAnimator());
             rv_option.setAdapter(opAdapter);
             opAdapter.setOptionsEditable(edit);
+            opAdapter.runLayoutAnimation(rv_option);
         } catch (NullPointerException e) {
             e.printStackTrace();
         }

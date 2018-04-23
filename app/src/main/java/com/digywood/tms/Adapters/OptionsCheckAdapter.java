@@ -9,6 +9,8 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.AnimationUtils;
+import android.view.animation.LayoutAnimationController;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.RadioButton;
@@ -100,6 +102,7 @@ public class OptionsCheckAdapter extends RecyclerView.Adapter<OptionsCheckAdapte
             holder.iv_opmedia.setScaleType(ImageView.ScaleType.FIT_XY);
             holder.rb_option.setChecked(position == mSelectedItem);
             flag = optionsList.get(position).getQbo_answer_flag();
+
             if(flag.equals("YES")){
                 mCorrectItem = position;
             }
@@ -162,6 +165,16 @@ public class OptionsCheckAdapter extends RecyclerView.Adapter<OptionsCheckAdapte
     public Bitmap getOptionImage(String file){
         Bitmap b =  BitmapFactory.decodeFile(path + file);
         return b ;
+    }
+
+    public void runLayoutAnimation(final RecyclerView recyclerView) {
+        final Context context = recyclerView.getContext();
+        final LayoutAnimationController controller =
+                AnimationUtils.loadLayoutAnimation(context, R.anim.layout_animation_slide_right);
+
+        recyclerView.setLayoutAnimation(controller);
+        recyclerView.getAdapter().notifyDataSetChanged();
+        recyclerView.scheduleLayoutAnimation();
     }
 
 
