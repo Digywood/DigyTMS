@@ -593,7 +593,6 @@ public class FlashCardActivity extends AppCompatActivity {
                     status="";
                 }
 
-
                 if(pos>=questionList.size()-1){
 
                     if(secpos<gja_sections.length()-1){

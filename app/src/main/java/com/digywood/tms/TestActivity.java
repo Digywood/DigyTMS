@@ -69,7 +69,7 @@ import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
 public class TestActivity extends AppCompatActivity implements
         AdapterView.OnItemSelectedListener {
 
-    TextView timer;
+    TextView timer, q_no;
     public static File file;
     ImageView fullscreen;
     private PopupWindow pw;
@@ -205,6 +205,7 @@ public class TestActivity extends AppCompatActivity implements
         btn_review = findViewById(R.id.btn_review_info);
         timer = findViewById(R.id.timer);
         sections = findViewById(R.id.sections);
+        q_no = findViewById(R.id.tv_Question_no);
         fullscreen = findViewById(R.id.fullscreen);
         menu = findViewById(R.id.menu);
 
@@ -536,13 +537,13 @@ public class TestActivity extends AppCompatActivity implements
             }
         }.start();
 
-        String MyDecImgs = android.os.Environment.getExternalStorageDirectory().toString() + "/DigyTMS/Decrypted/";
+/*        String MyDecImgs = android.os.Environment.getExternalStorageDirectory().toString() + "/DigyTMS/Decrypted/";
         File decdir = new File(MyDecImgs);
         if (!decdir.exists()) {
             boolean res = decdir.mkdirs();
-        }
+        }*/
 
-        String MyImgs = android.os.Environment.getExternalStorageDirectory().toString() + "/DigyTMS/Encrypted/";
+/*        String MyImgs = android.os.Environment.getExternalStorageDirectory().toString() + "/DigyTMS/Encrypted/";
         File dir = new File(MyImgs);
         if (!dir.exists()) {
             boolean res = dir.mkdirs();
@@ -553,7 +554,7 @@ public class TestActivity extends AppCompatActivity implements
             } else {
                 Toast.makeText(TestActivity.this, "File Not Found", Toast.LENGTH_LONG).show();
             }
-        }
+        }*/
 
     }
 
@@ -1087,6 +1088,7 @@ public class TestActivity extends AppCompatActivity implements
         array = attempt.getJSONArray("Sections").getJSONObject(pos).getJSONArray("Questions");
         myLayoutManager.scrollToPositionWithOffset(index, 500);
         questionobj = array.getJSONObject(index);
+        q_no.setText(questionobj.getString("qbm_SequenceId"));
         if (questionobj.getString("qbm_group_flag").equals("YES")) {
             groupId = questionobj.getString("gbg_id");
             btn_group_info.setEnabled(true);
@@ -1099,7 +1101,7 @@ public class TestActivity extends AppCompatActivity implements
         }
         qAdapter.setPointer(index);
         questionobj = array.getJSONObject(index);
-        if (questionobj.getString("qbm_QAdditional_Flag").equals("YES")) {
+/*        if (questionobj.getString("qbm_QAdditional_Flag").equals("YES")) {
             btn_qadditional.setEnabled(true);
             btn_qadditional.setClickable(true);
             btn_qadditional.setBackgroundColor(getResources().getColor(R.color.dull_yellow));
@@ -1108,7 +1110,8 @@ public class TestActivity extends AppCompatActivity implements
             btn_qadditional.setClickable(false);
             btn_qadditional.setBackgroundColor(0);
 
-        }
+        }*/
+
         Log.e("Setquestions",questionobj.getString("qbm_image_file"));
         if (!edit) {
             if (questionobj.getString("qbm_review_flag").equals("YES")) {
@@ -1123,6 +1126,7 @@ public class TestActivity extends AppCompatActivity implements
         }
 
         b = BitmapFactory.decodeFile(photoPath + questionobj.getString("qbm_image_file"));
+        Log.e("qimage",photoPath + questionobj.getString("qbm_image_file"));
         question_img.setImageBitmap(b);
         question_img.setOnTouchListener(new View.OnTouchListener() {
             @Override
