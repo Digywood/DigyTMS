@@ -97,6 +97,25 @@
             android:layout_toStartOf="@id/time_layout"
             android:visibility="visible"
             app:srcCompat="@drawable/ic_info_black_40dp" />-->
+        <TextView
+            android:id="@+id/tv_Question_no_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@+id/time_layout"
+            android:layout_marginStart="180sp"
+            android:textSize="20sp"
+            android:textColor="@android:color/black"
+            android:layout_toEndOf="@+id/btn_review_info"
+            android:text="Question no." />
+        <TextView
+            android:id="@+id/tv_Question_no"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@+id/time_layout"
+            android:layout_marginStart="10sp"
+            android:textSize="20sp"
+            android:textColor="@android:color/black"
+            android:layout_toEndOf="@+id/tv_Question_no_label" />
         <android.support.design.widget.FloatingActionButton
             android:id="@+id/menu"
             android:layout_width="40dp"

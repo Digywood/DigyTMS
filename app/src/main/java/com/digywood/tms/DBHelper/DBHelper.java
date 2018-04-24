@@ -153,9 +153,16 @@ public class DBHelper extends SQLiteOpenHelper {
         db.execSQL(AttemptList);
 
         String AttemptData=" CREATE TABLE `attempt_data` (\n"+
+                "   `Test_ID` varchar(15),\n" +
+                "   `Attempt_ID` INTEGER,\n"+
                 "   `Question_ID` varchar(15),\n" +
                 "   `Question_Seq_No` varchar(15) DEFAULT NULL,\n" +
-                "   `Question_Max_Marks` int(15) DEFAULT NULL,\n"+
+                "   `Question_Category` varchar(15) DEFAULT NULL,\n" +
+                "   `Question_SubCategory` varchar(15) DEFAULT NULL,\n" +
+                "   `Question_Max_Marks` double(15) DEFAULT NULL,\n"+
+                "   `Question_Negative_Marks` double(15) DEFAULT NULL,\n"+
+                "   `Question_Marks_Obtained` double(15) DEFAULT NULL,\n"+
+                "   `Question_Negative_Applied` double(15) DEFAULT NULL,\n"+
                 "   `Question_Option` int(15) DEFAULT NULL,\n"+
                 "   `Question_Status` varchar(20) DEFAULT NULL,\n"+
                 "   `Question_Option_Sequence` varchar(20) DEFAULT NULL,\n"+
@@ -714,14 +721,19 @@ public class DBHelper extends SQLiteOpenHelper {
         }
         return AdvtprefList;
     }
-    public long InsertQuestion(String qId,String qSeq, int maxMarks, int option,String status,String oSeq,String flag){
+    public long InsertQuestion(String testId,int attemptId,String qId,String qSeq, double maxMarks,double negMarks,double marksObtained,double negApplied, int option,String status,String oSeq,String flag){
 
         long insertFlag=0;
 
         ContentValues cv = new ContentValues();
+        cv.put("Test_ID", testId);
+        cv.put("Attempt_ID", attemptId);
         cv.put("Question_ID", qId);
         cv.put("Question_Seq_No", qSeq);
         cv.put("Question_Max_Marks",maxMarks );
+        cv.put("Question_Negative_Marks",negMarks );
+        cv.put("Question_Marks_Obtained",marksObtained );
+        cv.put("Question_Negative_Applied",negApplied );
         cv.put("Question_Option",option );
         cv.put("Question_Status",status );
         cv.put("Question_Option_Sequence",oSeq );
@@ -733,14 +745,19 @@ public class DBHelper extends SQLiteOpenHelper {
         return insertFlag;
     }
 
-    public long UpdateQuestion(String qId,String qSeq, int maxMarks, int option,String status,String oSeq,String flag){
+    public long UpdateQuestion(String testId,int attemptId,String qId,String qSeq, double maxMarks,double negMarks,double marksObtained,double negApplied, int option,String status,String oSeq,String flag){
 
         long updateFlag=0;
 
         ContentValues cv = new ContentValues();
+        cv.put("Test_ID", testId);
+        cv.put("Attempt_ID", attemptId);
         cv.put("Question_ID", qId);
         cv.put("Question_Seq_No", qSeq);
         cv.put("Question_Max_Marks",maxMarks );
+        cv.put("Question_Negative_Marks",negMarks );
+        cv.put("Question_Marks_Obtained",marksObtained );
+        cv.put("Question_Negative_Applied",negApplied );
         cv.put("Question_Option",option );
         cv.put("Question_Status",status );
         cv.put("Question_Option_Sequence",oSeq );
@@ -833,10 +850,30 @@ public class DBHelper extends SQLiteOpenHelper {
         return count;
     }
 
+    public int getCorrectSum(){
+        int sum = 0;
+        ArrayList<Integer> OptionList = new ArrayList<>();
+        String query ="SELECT  SUM(Question_Max_Marks) as SumPos FROM "+" attempt_data"+" WHERE Option_Answer_Flag = 'YES' and Question_Status <> 'SKIPPED'";
+        Cursor c=db.rawQuery(query,null);
+        sum = c.getInt(c.getColumnIndex("SumPos"));
+        c.close();
+        return sum;
+    }
+
+    public int getWrongSum(){
+        int sum = 0;
+        ArrayList<Integer> OptionList = new ArrayList<>();
+        String query ="SELECT  SUM(Question_Max_Marks) as SumNeg FROM "+" attempt_data"+" WHERE Option_Answer_Flag = 'NO' and Question_Status <> 'SKIPPED'";
+        Cursor c=db.rawQuery(query,null);
+        sum = c.getInt(c.getColumnIndex("SumNeg"));
+        c.close();
+        return sum;
+    }
+
     public int getWrongOptionsCount(){
         int count = 0;
         ArrayList<Integer> OptionList = new ArrayList<>();
-        String query ="SELECT  Question_Option FROM "+" attempt_data"+" WHERE Option_Answer_Flag = 'NO' and Question_Status <> 'SKIPPED'";
+        String query ="SELECT  Question_Option FROM "+" attempt_data"+" WHERE Option_Answer_Flag = 'NO' and Question_Status NOT IN ('NOT_ATTEMPTED','SKIPPED') ";
         Cursor c=db.rawQuery(query,null);
         count = c.getCount();
         c.close();
@@ -947,6 +984,18 @@ public class DBHelper extends SQLiteOpenHelper {
         Cursor c = db.rawQuery(countQuery, null);
         count=c.getCount();
         return count;
+    }
+
+    public int getLastAttempt(){
+        int attempt_id = 0;
+        String query = "select max(Attempt_ID) as last from attempt_list";
+        Cursor c = db.rawQuery(query,null);
+        if (c.getCount() >0) {
+            attempt_id = c.getInt(c.getColumnIndex("last"));
+        } else {
+            attempt_id = 0;
+        }
+        return attempt_id;
     }
 
     public Cursor getAttempt(int aID){

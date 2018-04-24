@@ -24,6 +24,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.transition.Slide;
+import android.transition.TransitionInflater;
 import android.util.Log;
 import android.view.GestureDetector;
 import android.view.Gravity;
@@ -734,12 +736,12 @@ public class TestActivity extends AppCompatActivity implements
                 Log.e("Option_Status",listOfLists.get(pos).get(index).getQ_status());
                 if (indx > -1) {
 
-                    result = dataObj.UpdateQuestion(Id, Seq, Integer.valueOf(questionobj.getString("qbm_marks")), indx, listOfLists.get(pos).get(index).getQ_status(),opAdapter.getSelectedSequence(),opAdapter.getFlag());
+                    result = dataObj.UpdateQuestion(attempt.getString("ptu_test_ID"),0,Id, Seq, Integer.valueOf(questionobj.getString("qbm_marks")),Double.valueOf(questionobj.getString("qbm_negative_mrk")),0,0, indx, listOfLists.get(pos).get(index).getQ_status(),opAdapter.getSelectedSequence(),opAdapter.getFlag());
                 }else{
-                    result = dataObj.UpdateQuestion(Id, Seq, Integer.valueOf(questionobj.getString("qbm_marks")), indx, listOfLists.get(pos).get(index).getQ_status(),opAdapter.getSelectedSequence(),opAdapter.getFlag());
+                    result = dataObj.UpdateQuestion(attempt.getString("ptu_test_ID"),0,Id, Seq, Integer.valueOf(questionobj.getString("qbm_marks")),Double.valueOf(questionobj.getString("qbm_negative_mrk")),0,0, indx, listOfLists.get(pos).get(index).getQ_status(),opAdapter.getSelectedSequence(),opAdapter.getFlag());
                 }
                 if(result == 0 ){
-                    dataObj.InsertQuestion(Id, Seq, Integer.valueOf(questionobj.getString("qbm_marks")), indx, listOfLists.get(pos).get(index).getQ_status(),opAdapter.getSelectedSequence(),opAdapter.getFlag());
+                    dataObj.InsertQuestion(attempt.getString("ptu_test_ID"),0,Id, Seq, Integer.valueOf(questionobj.getString("qbm_marks")),Double.valueOf(questionobj.getString("qbm_negative_mrk")),0,0, indx, listOfLists.get(pos).get(index).getQ_status(),opAdapter.getSelectedSequence(),opAdapter.getFlag());
                 }
                 Log.e("CurrentStatus",""+dataObj.getPosition(Id));
             }
@@ -760,7 +762,7 @@ public class TestActivity extends AppCompatActivity implements
             buffer = attempt.getJSONArray("Sections");
             Id = buffer.getJSONObject(index).getString("qbm_ID");
             Seq = buffer.getJSONObject(index).getString("qbm_SequenceId");
-            dataObj.UpdateQuestion(Id, Seq, Integer.valueOf(questionobj.getString("qbm_marks")), -1, "SKIPPED",opAdapter.getSelectedSequence(),opAdapter.getFlag());
+            dataObj.UpdateQuestion(attempt.getString("ptu_test_ID"),dataObj.getLastAttempt(),Id, Seq, Integer.valueOf(questionobj.getString("qbm_marks")),Double.valueOf(questionobj.getString("qbm_negative_mrk")),dataObj.getCorrectSum(),dataObj.getWrongSum(), -1, listOfLists.get(pos).get(index).getQ_status(),opAdapter.getSelectedSequence(),opAdapter.getFlag());
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -1153,11 +1155,17 @@ public class TestActivity extends AppCompatActivity implements
             rv_option.setItemAnimator(new DefaultItemAnimator());
             rv_option.setAdapter(opAdapter);
             opAdapter.setOptionsEditable(edit);
+            opAdapter.runLayoutAnimation(rv_option);
 //        opAdapter.notifyDataSetChanged();
         } catch (NullPointerException e) {
             e.printStackTrace();
         }
     }
+
+/*    private void setupWindowAnimations() {
+        Slide slide = (Slide) TransitionInflater.from(this).inflateTransition(R.transition.activity_slide);
+        getWindow().setExitTransition(slide);
+    }*/
 
     //method to store the number of questions in each section{
     public void storeSections() {
@@ -1173,7 +1181,7 @@ public class TestActivity extends AppCompatActivity implements
                     Seq = array2.getJSONObject(j).getString("qbm_SequenceId");
                     Log.e("sequence",Seq);
                     qListObj = new SingleQuestionList(array2.getJSONObject(j).getString("qbm_SequenceId"), "NOT_ATTEMPTED");
-                    dataObj.InsertQuestion(Id, Seq, 0, -1, "NOT_ATTEMPTED","-1","NO");
+                    dataObj.InsertQuestion(attempt.getString("ptu_test_ID"),0,Id, Seq, 0,0,0,0, -1, "NOT_ATTEMPTED","-1","NO");
                     questionOpList.add(qListObj);
                 }
                 listOfLists.add(questionOpList);
