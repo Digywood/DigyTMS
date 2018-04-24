@@ -1,16 +1,11 @@
 package com.digywood.tms.Adapters;
 
 import android.content.Context;
-import android.content.Intent;
-import android.content.res.ColorStateList;
-import android.graphics.Color;
-import android.graphics.PorterDuff;
-import android.graphics.drawable.Drawable;
+import android.content.res.Resources;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import com.digywood.tms.Pojo.SingleFlashAttempt;
@@ -67,9 +62,17 @@ public class FlashAttemptAdapter extends RecyclerView.Adapter<FlashAttemptAdapte
         Double d = new Double(singlefattempt.getPercent());
         int progress = d.intValue();
         holder.pb_progress.setProgress(progress);
+        Resources res=mycontext.getResources();
 
-        holder.pb_progress.getIndeterminateDrawable().setColorFilter(Color.parseColor("#00FF00"),
-                android.graphics.PorterDuff.Mode.MULTIPLY);
+        if(progress>70){
+            holder.pb_progress.setProgressDrawable(res.getDrawable(R.drawable.progress_max_color));
+        }else if(progress<70 && progress>30){
+            holder.pb_progress.setProgressDrawable(res.getDrawable(R.drawable.progress_mid_color));
+        }else if(progress<30){
+            holder.pb_progress.setProgressDrawable(res.getDrawable(R.drawable.progress_low_color));
+        }else{
+            holder.pb_progress.setProgressDrawable(res.getDrawable(R.drawable.progress_low_color));
+        }
 
     }
 

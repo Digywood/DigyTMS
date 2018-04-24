@@ -31,6 +31,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.GridView;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
@@ -61,18 +62,19 @@ public class FlashCardActivity extends AppCompatActivity {
     Spinner sp_sections;
     RecyclerView question_scroll;
     ImageView iv_quesimg,iv_fullscreen;
-    String filedata,status="",testId="",testPath="",studentid="",enrollid="",courseid="",subjectid="",paperid="",startDttm="",endDttm="";
-    int d=0,pos=0,secpos=0;
+    String filedata,status="",testId="",testPath="",studentid="",enrollid="",courseid="",subjectid="",paperid="",rfilename="",startDttm="",endDttm="";
+    int d=0,pos=0,secpos=0,z=0;
     GridView gridView;
     private PopupWindow pw;
     ScrollGridCardAdapter scrollAdapter;
     ArrayAdapter<String> sectionAdp;
     CardQuestionAdapter cAdp;
     LinearLayoutManager myLayoutManager;
-    JSONArray gja_sections,gja_questions;
+    JSONArray gja_sections,gja_questions,reviewArray;
     static int screensize=0;
     Dialog mydialog;
     DBHelper myhelper;
+    JSONObject reviewObj;
     //    FloatingActionButton fab_fgroupQview;
     int attemptcount=0,knowcount=0,donknowcount=0,skipcount=0,Qcount=0;
     TextView tv_attempted,tv_iknow,tv_idonknow,tv_skipped;
@@ -229,13 +231,13 @@ public class FlashCardActivity extends AppCompatActivity {
             Log.e("TestActivity1-----",e.toString());
         }
 
-//        // Set up the user interaction to manually show or hide the system UI.
-//        myrlayout.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                toggle();
-//            }
-//        });
+        // Set up the user interaction to manually show or hide the system UI.
+        myrlayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                toggle();
+            }
+        });
 
         question_scroll.addOnItemTouchListener(new RecyclerTouchListener(FlashCardActivity.this,question_scroll,new RecyclerTouchListener.OnItemClickListener() {
             @Override
@@ -336,12 +338,12 @@ public class FlashCardActivity extends AppCompatActivity {
                 mydialog = new Dialog(FlashCardActivity.this);
                 mydialog.getWindow();
                 mydialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-                mydialog.setContentView(R.layout.dialog_answer);
+                mydialog.setContentView(R.layout.dialog_groupimg);
                 mydialog.show();
                 mydialog.setCanceledOnTouchOutside(false);
 
-                ImageView iv_answerimg = mydialog.findViewById(R.id.iv_answer);
-                ImageView iv_dialogclose = mydialog.findViewById(R.id.iv_close);
+                ImageView iv_answerimg = mydialog.findViewById(R.id.iv_gQanswer);
+                ImageView iv_dialogclose = mydialog.findViewById(R.id.iv_gQclose);
 
                 try {
                     String filename=gja_questions.getJSONObject(d).getString("gbg_media_file");
@@ -383,23 +385,27 @@ public class FlashCardActivity extends AppCompatActivity {
                 mydialog.show();
                 mydialog.setCanceledOnTouchOutside(false);
 
+                z=0;
+
                 ImageView iv_answerimg = mydialog.findViewById(R.id.iv_answer);
                 ImageView iv_dialogclose = mydialog.findViewById(R.id.iv_close);
+                final ImageButton iv_left=mydialog.findViewById(R.id.img_left_arrow);
+                final ImageButton iv_right=mydialog.findViewById(R.id.img_right_arrow);
 
                 try {
-                    String filename=gja_questions.getJSONObject(d).getString("qbm_flash_image");
-                    Log.e("Image Path :--",filename);
-                    Bitmap bmp = BitmapFactory.decodeFile(testPath+filename);
-                    iv_answerimg.setImageBitmap(bmp);
+                    reviewArray=gja_questions.getJSONObject(d).getJSONArray("Review");
 
-                    String gFlag=gja_questions.getJSONObject(d).getString("qbm_group_flag");
-                    if(gFlag.equalsIgnoreCase("YES")){
-                        btn_gQues.setVisibility(View.VISIBLE);
+                    if(reviewArray.length()>0){
+                        JSONObject reviewObj=reviewArray.getJSONObject(z);
+                        rfilename=reviewObj.getString("qba_media_file");
+                        Log.e("Image Path :--",rfilename);
+                        Bitmap bmp = BitmapFactory.decodeFile(testPath+rfilename);
+                        iv_answerimg.setImageBitmap(bmp);
                     }else{
-                        btn_gQues.setVisibility(View.GONE);
+                        Toast.makeText(getApplicationContext(),"No Review Images",Toast.LENGTH_SHORT).show();
                     }
+//                    String filename=gja_questions.getJSONObject(d).getString("qbm_flash_image");
 
-                    cAdp.setPoiner(d);
                 }catch (Exception e){
                     e.printStackTrace();
                     Log.e("ViewLotInfo---",e.toString());
@@ -410,6 +416,42 @@ public class FlashCardActivity extends AppCompatActivity {
                     public void onClick(View view) {
                         mydialog.dismiss();
                         mHideRunnable.run();
+                    }
+                });
+
+                iv_left.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        try{
+                            if(z<=0){
+                                Toast.makeText(getApplicationContext(),"Start Position",Toast.LENGTH_SHORT).show();
+                            }else{
+                                z--;
+                                reviewObj=reviewArray.getJSONObject(z);
+                                rfilename=reviewObj.getString("qba_media_file");
+                            }
+                        }catch (Exception e){
+                            e.printStackTrace();
+                            Log.e("FlashCardActivity-----",e.toString());
+                        }
+                    }
+                });
+
+                iv_right.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        try{
+                            if(z>=reviewArray.length()-1){
+                               Toast.makeText(getApplicationContext(),"End Position",Toast.LENGTH_SHORT).show();
+                            }else{
+                                z++;
+                                reviewObj=reviewArray.getJSONObject(z);
+                                rfilename=reviewObj.getString("qba_media_file");
+                            }
+                        }catch (Exception e){
+                            e.printStackTrace();
+                            Log.e("FlashCardActivity-----",e.toString());
+                        }
                     }
                 });
 
