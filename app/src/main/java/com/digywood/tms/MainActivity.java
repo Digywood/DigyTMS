@@ -4,6 +4,8 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.graphics.Typeface;
+import android.os.Environment;
+import android.os.StatFs;
 import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -25,6 +27,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileReader;
 import java.util.HashMap;
 import java.util.Random;
@@ -168,39 +171,8 @@ public class MainActivity extends AppCompatActivity {
         tv_signup.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                Intent i=new Intent(getApplicationContext(),RegistrationActivity.class);
-//                startActivity(i);
-
-//                try{
-//                    BufferedReader br = new BufferedReader(new FileReader(URLClass.mainpath+"EAAA000009/SSCT1001/SSCS0002/PAA002/PTU0002/"+"PTU0002"+".json"));
-//                    StringBuilder sb = new StringBuilder();
-//                    String line = br.readLine();
-//
-//                    while (line != null) {
-//                        sb.append(line);
-//                        sb.append("\n");
-//                        line = br.readLine();
-//                    }
-//                    filedata=sb.toString();
-//                    br.close();
-//                }catch (Exception e){
-//                    e.printStackTrace();
-//                    Log.e("TestActivity1-----",e.toString());
-//                }
-//
-//                myparser=new JSONParser(filedata,URLClass.mainpath);
-
-//                getTestConfig("PTAA00002","'GAA0001','GAA0004','GAA0006','GAA0008'");
-
-//                Cursor mycursor=myhelper.getFlashTestData("PTU0002");
-//                if(mycursor.getCount()>0){
-//                    while(mycursor.moveToNext()){
-//                        Log.e("AttemptRecord:---","atemptno--"+mycursor.getInt(mycursor.getColumnIndex("attemptNumber"))+"  knowcount---"+mycursor.getInt(mycursor.getColumnIndex("iknowCount"))+"  donknowcount----"+mycursor.getInt(mycursor.getColumnIndex("donknowCount"))+"  skipcount"+mycursor.getInt(mycursor.getColumnIndex("skipCount"))+"  percent--"+mycursor.getDouble(mycursor.getColumnIndex("percentageObtain")));
-//                    }
-//                }else{
-//                    mycursor.close();
-//                }
-
+                Intent i=new Intent(getApplicationContext(),RegistrationActivity.class);
+                startActivity(i);
             }
         });
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);

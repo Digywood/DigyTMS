@@ -26,6 +26,8 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -75,6 +77,7 @@ public class FlashCardActivity extends AppCompatActivity {
     Dialog mydialog;
     DBHelper myhelper;
     JSONObject reviewObj;
+    Animation slideanim;
     //    FloatingActionButton fab_fgroupQview;
     int attemptcount=0,knowcount=0,donknowcount=0,skipcount=0,Qcount=0;
     TextView tv_attempted,tv_iknow,tv_idonknow,tv_skipped;
@@ -210,7 +213,9 @@ public class FlashCardActivity extends AppCompatActivity {
         tv_idonknow=findViewById(R.id.tv_idonknowcount);
         tv_skipped=findViewById(R.id.tv_skippedcount);
 
-        startDttm= new java.text.SimpleDateFormat("yyyy-MM-dd hh:mm:ss").format(Calendar.getInstance(TimeZone.getDefault()).getTime());
+//        slideanim=AnimationUtils.loadAnimation(FlashCardActivity.this,R.anim.layout_animation_slide_right);
+
+        startDttm= new java.text.SimpleDateFormat("yyyy-MM-dd kk:mm:ss").format(Calendar.getInstance(TimeZone.getDefault()).getTime());
 
         try{
             BufferedReader br = new BufferedReader(new FileReader(testPath+"flashAttempts/"+testId+"_01.json"));
@@ -251,6 +256,8 @@ public class FlashCardActivity extends AppCompatActivity {
                     Log.e("Image Path :--",testPath+imagefile);
                     Bitmap bmp = BitmapFactory.decodeFile(testPath+imagefile);
                     iv_quesimg.setImageBitmap(bmp);
+                    Animation rotateimage = AnimationUtils.loadAnimation(FlashCardActivity.this, R.anim.fade_in);
+                    iv_quesimg.startAnimation(rotateimage);
 
                     String gFlag=qObj.getString("qbm_group_flag");
                     if(gFlag.equalsIgnoreCase("YES")){
@@ -295,6 +302,8 @@ public class FlashCardActivity extends AppCompatActivity {
                     Bitmap bmp = BitmapFactory.decodeFile(testPath+imagefile);
 //                    Bitmap bmp = BitmapFactory.decodeFile(testPath+"SSC01ENC01Q0001_QF.png");
                     iv_quesimg.setImageBitmap(bmp);
+                    Animation rotateimage = AnimationUtils.loadAnimation(FlashCardActivity.this, R.anim.fade_in);
+                    iv_quesimg.startAnimation(rotateimage);
 
                     String gFlag=qObj.getString("qbm_group_flag");
                     if(gFlag.equalsIgnoreCase("YES")){
@@ -400,6 +409,7 @@ public class FlashCardActivity extends AppCompatActivity {
                         rfilename=reviewObj.getString("qba_media_file");
                         Log.e("Image Path :--",rfilename);
                         Bitmap bmp = BitmapFactory.decodeFile(testPath+rfilename);
+//                        iv_answerimg.setAnimation(slideanim);
                         iv_answerimg.setImageBitmap(bmp);
                     }else{
                         Toast.makeText(getApplicationContext(),"No Review Images",Toast.LENGTH_SHORT).show();
@@ -474,6 +484,9 @@ public class FlashCardActivity extends AppCompatActivity {
                         Bitmap bmp = BitmapFactory.decodeFile(testPath+filename);
                         iv_quesimg.setImageBitmap(bmp);
 
+                        Animation rotateimage = AnimationUtils.loadAnimation(FlashCardActivity.this, R.anim.fade_in);
+                        iv_quesimg.startAnimation(rotateimage);
+
                         String gFlag=gja_questions.getJSONObject(d).getString("qbm_group_flag");
                         if(gFlag.equalsIgnoreCase("YES")){
                             btn_gQues.setVisibility(View.VISIBLE);
@@ -497,6 +510,9 @@ public class FlashCardActivity extends AppCompatActivity {
                             Log.e("Image Path :--",filename);
                             Bitmap bmp = BitmapFactory.decodeFile(testPath+filename);
                             iv_quesimg.setImageBitmap(bmp);
+
+                            Animation rotateimage = AnimationUtils.loadAnimation(FlashCardActivity.this, R.anim.fade_in);
+                            iv_quesimg.startAnimation(rotateimage);
 
                             String gFlag=gja_questions.getJSONObject(d).getString("qbm_group_flag");
                             if(gFlag.equalsIgnoreCase("YES")){
@@ -565,26 +581,26 @@ public class FlashCardActivity extends AppCompatActivity {
                 }else{
 
                     if(status.equalsIgnoreCase("")){
-                        questionList.get(pos).setQstatus("SKIPPED");
-
-                        if(skipList.contains(questionList.get(pos).getQnum())){
-
-                        }else{
-                            skipcount++;
-                            skipList.add(questionList.get(pos).getQnum());
-                            String count=String.format("%03d",skipcount);
-                            tv_skipped.setText(count);
-
-                            if(knownList.contains(questionList.get(pos).getQnum())){
-                                knowcount--;
-                                knownList.remove(questionList.get(pos).getQnum());
-                                tv_iknow.setText(String.format("%03d",knowcount));
-                            }else{
-                                donknowcount--;
-                                donknowList.remove(questionList.get(pos).getQnum());
-                                tv_idonknow.setText(String.format("%03d",donknowcount));
-                            }
-                        }
+//                        questionList.get(pos).setQstatus("SKIPPED");
+//
+//                        if(skipList.contains(questionList.get(pos).getQnum())){
+//
+//                        }else{
+//                            skipcount++;
+//                            skipList.add(questionList.get(pos).getQnum());
+//                            String count=String.format("%03d",skipcount);
+//                            tv_skipped.setText(count);
+//
+//                            if(knownList.contains(questionList.get(pos).getQnum())){
+//                                knowcount--;
+//                                knownList.remove(questionList.get(pos).getQnum());
+//                                tv_iknow.setText(String.format("%03d",knowcount));
+//                            }else{
+//                                donknowcount--;
+//                                donknowList.remove(questionList.get(pos).getQnum());
+//                                tv_idonknow.setText(String.format("%03d",donknowcount));
+//                            }
+//                        }
 
                     }else{
                         if(status.equalsIgnoreCase("IKNOW")){
@@ -634,6 +650,8 @@ public class FlashCardActivity extends AppCompatActivity {
                         }
                     }
 
+//                    cAdp.updateList(questionList);
+
                     status="";
                 }
 
@@ -649,6 +667,9 @@ public class FlashCardActivity extends AppCompatActivity {
                             Log.e("Image Path :--",filename);
                             Bitmap bmp = BitmapFactory.decodeFile(testPath+filename);
                             iv_quesimg.setImageBitmap(bmp);
+
+                            Animation rotateimage = AnimationUtils.loadAnimation(FlashCardActivity.this, R.anim.fade_in);
+                            iv_quesimg.startAnimation(rotateimage);
 
                             String gFlag=gja_questions.getJSONObject(d).getString("qbm_group_flag");
                             if(gFlag.equalsIgnoreCase("YES")){
@@ -676,6 +697,9 @@ public class FlashCardActivity extends AppCompatActivity {
                         Bitmap bmp = BitmapFactory.decodeFile(testPath+filename);
                         iv_quesimg.setImageBitmap(bmp);
 
+                        Animation rotateimage = AnimationUtils.loadAnimation(FlashCardActivity.this, R.anim.fade_in);
+                        iv_quesimg.startAnimation(rotateimage);
+
                         String gFlag=gja_questions.getJSONObject(d).getString("qbm_group_flag");
                         if(gFlag.equalsIgnoreCase("YES")){
                             btn_gQues.setVisibility(View.VISIBLE);
@@ -700,7 +724,8 @@ public class FlashCardActivity extends AppCompatActivity {
                 status="IKNOW";
                 btn_idonknow.setBackgroundResource(R.drawable.test_button_normal);
                 btn_know.setBackgroundResource(R.drawable.test_button_pressed);
-//                questionList.get(pos).setQ_status(status);
+//                questionList.get(pos).setQstatus(status);
+
             }
         });
 
@@ -711,7 +736,7 @@ public class FlashCardActivity extends AppCompatActivity {
                 status="IDONKNOW";
                 btn_know.setBackgroundResource(R.drawable.test_button_normal);
                 btn_idonknow.setBackgroundResource(R.drawable.test_button_pressed);
-//                questionList.get(pos).setQ_status(status);
+//                questionList.get(pos).setQstatus(status);
             }
         });
 
@@ -893,7 +918,7 @@ public class FlashCardActivity extends AppCompatActivity {
 //                        Double percentage=Double.parseDouble(String.valueOf(percent));
                         percent=percent*100;
                         percent=round(percent,2);
-                        endDttm= new java.text.SimpleDateFormat("yyyy-MM-dd hh:mm:ss").format(Calendar.getInstance(TimeZone.getDefault()).getTime());
+                        endDttm= new java.text.SimpleDateFormat("yyyy-MM-dd kk:mm:ss").format(Calendar.getInstance(TimeZone.getDefault()).getTime());
                         long iFlag=myhelper.insertFlashAttempt(studentid,enrollid,courseid,subjectid,paperid,testId,attemptcount,startDttm,endDttm,knowcount,donknowcount,skipcount,percent,"Completed");
                         if(iFlag>0){
                             Log.e("FlashCardActivity----","Attempt Inserted");
@@ -970,7 +995,7 @@ public class FlashCardActivity extends AppCompatActivity {
 //                        Double percentage=Double.parseDouble(String.valueOf(percent));
                         percent=percent*100;
                         percent=round(percent,2);
-                        endDttm= new java.text.SimpleDateFormat("yyyy-MM-dd hh:mm:ss").format(Calendar.getInstance(TimeZone.getDefault()).getTime());
+                        endDttm= new java.text.SimpleDateFormat("yyyy-MM-dd kk:mm:ss").format(Calendar.getInstance(TimeZone.getDefault()).getTime());
                         long iFlag=myhelper.insertFlashAttempt(studentid,enrollid,courseid,subjectid,paperid,testId,attemptcount,startDttm,endDttm,knowcount,donknowcount,skipcount,percent,"Completed");
                         if(iFlag>0){
                             Log.e("FlashCardActivity----","Attempt Inserted");
