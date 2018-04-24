@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:layout_margin="30dp"
+    android:layout_width="1000dp"
+    android:layout_height="500dp"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@null">
 
     <RelativeLayout
         android:id="@+id/ralative_layout"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:orientation="vertical"
         android:layout_alignParentTop="true"
         android:layout_alignParentLeft="true"
@@ -18,17 +18,35 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:orientation="vertical"
             android:background="@drawable/text">
 
             <ImageView
                 android:id="@+id/iv_answer"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:scaleType="fitXY"/>
 
         </LinearLayout>
+
+        <ImageButton
+            android:id="@+id/img_left_arrow"
+            android:layout_width="50sp"
+            android:layout_height="100sp"
+            android:layout_alignParentStart="true"
+            android:layout_alignTop="@+id/img_right_arrow"
+            android:background="@drawable/left_navigate"
+            app:srcCompat="@drawable/ic_arrow_back_black_24dp" />
+
+        <ImageButton
+            android:id="@+id/img_right_arrow"
+            android:layout_width="50sp"
+            android:layout_height="100sp"
+            android:layout_alignParentEnd="true"
+            android:layout_marginTop="154dp"
+            android:background="@drawable/right_navigate"
+            app:srcCompat="@drawable/ic_arrow_forward_black_24dp" />
 
 
     </RelativeLayout>
