@@ -14,6 +14,7 @@
         android:id="@+id/tv_fdate"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:gravity="center_horizontal|center_vertical"
         android:textColor="#000000"
         android:textSize="16sp"
         android:layout_weight="1"
@@ -23,6 +24,7 @@
         android:id="@+id/tv_fknowcount"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:gravity="center_horizontal|center_vertical"
         android:textColor="#000000"
         android:textSize="16sp"
         android:layout_weight="1"
@@ -32,6 +34,7 @@
         android:id="@+id/tv_fdonknowcount"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:gravity="center_horizontal|center_vertical"
         android:textColor="#000000"
         android:textSize="16sp"
         android:layout_weight="1"
@@ -41,6 +44,7 @@
         android:id="@+id/tv_fskipcount"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:gravity="center_horizontal|center_vertical"
         android:textColor="#000000"
         android:textSize="16sp"
         android:layout_weight="1"
@@ -49,6 +53,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:gravity="center_horizontal|center_vertical"
         android:layout_weight="1">
 
         <ProgressBar
