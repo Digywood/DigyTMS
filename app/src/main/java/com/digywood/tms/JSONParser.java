@@ -1,6 +1,7 @@
 package com.digywood.tms;
 
 import android.content.Context;
+import android.net.http.LoggingEventHandler;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import com.digywood.tms.DBHelper.DBHelper;
@@ -45,7 +46,7 @@ public class JSONParser extends AppCompatActivity{
     Context mycontext;
     int count=0,maxcount=0,quescount=0,totalsubcatCount=22,testqcount=0;
     JSONObject cmainObj,csecObj,cquesObj,coptionObj,cadditionsObj;
-    String section="",sectionid="",testid="",dwdpath="",testType="";
+    String section="",sectionid="",testid="",dwdpath="",testType="",tfiledwdpath="";
 
     public JSONParser(String JSON,String dwdPath,String type,Context c){
 
@@ -317,6 +318,7 @@ public class JSONParser extends AppCompatActivity{
 
                 JSONArray cja_questions=new JSONArray();
 
+
                 if(testQuesList.size()<quescount){
 
                     if(freeSubcatList.size()>=quescount-testQuesList.size()){
@@ -331,6 +333,7 @@ public class JSONParser extends AppCompatActivity{
 
 
                 //Ques Object Creation
+                Log.e("QCOUNT-----",""+testQuesList.size());
 
                 for(int q=0;q<ja_questions.length();q++){
 
@@ -340,7 +343,6 @@ public class JSONParser extends AppCompatActivity{
                         String flag=quesObj.getString("qbm_group_flag");
 
                         if(flag.equalsIgnoreCase("No")){
-
 
                             if(testQuesList.contains(quesObj.get("qbm_ID"))){
 
@@ -666,8 +668,12 @@ public class JSONParser extends AppCompatActivity{
                 if(finalList.contains(queslist.get(i))){
 
                 }else{
-                    freeSubcatList.add(queslist.get(i));
-                    freeList.add(queslist.get(i));
+                    if(freeList.contains(queslist.get(i))){
+
+                    }else{
+                        freeSubcatList.add(queslist.get(i));
+                        freeList.add(queslist.get(i));
+                    }
                 }
             }else{
 
@@ -681,6 +687,10 @@ public class JSONParser extends AppCompatActivity{
     public void getShuffledQues(ArrayList<String> quesList,int count) {
 
         ArrayList<String> finalList=new ArrayList<>();
+
+//        for(int z=0;z<quesList.size();z++){
+//            Log.e("ITEM:---",quesList.get(z));
+//        }
 
         while (finalList.size()<count){
             int p=r.nextInt(quesList.size());

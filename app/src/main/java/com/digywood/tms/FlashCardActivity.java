@@ -31,6 +31,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.GridView;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
@@ -62,7 +63,7 @@ public class FlashCardActivity extends AppCompatActivity {
     RecyclerView question_scroll;
     ImageView iv_quesimg,iv_fullscreen;
     String filedata,status="",testId="",testPath="",studentid="",enrollid="",courseid="",subjectid="",paperid="",startDttm="",endDttm="";
-    int d=0,pos=0,secpos=0;
+    int d=0,pos=0,secpos=0,z=0;
     GridView gridView;
     private PopupWindow pw;
     ScrollGridCardAdapter scrollAdapter;
@@ -73,6 +74,7 @@ public class FlashCardActivity extends AppCompatActivity {
     static int screensize=0;
     Dialog mydialog;
     DBHelper myhelper;
+    ImageButton iv_left,iv_right;
     //    FloatingActionButton fab_fgroupQview;
     int attemptcount=0,knowcount=0,donknowcount=0,skipcount=0,Qcount=0;
     TextView tv_attempted,tv_iknow,tv_idonknow,tv_skipped;
@@ -383,23 +385,32 @@ public class FlashCardActivity extends AppCompatActivity {
                 mydialog.show();
                 mydialog.setCanceledOnTouchOutside(false);
 
+                z=0;
+                final JSONArray reviewArray;
+
                 ImageView iv_answerimg = mydialog.findViewById(R.id.iv_answer);
                 ImageView iv_dialogclose = mydialog.findViewById(R.id.iv_close);
+                iv_left=mydialog.findViewById(R.id.img_left_arrow);
+                iv_left.setEnabled(false);
+                iv_right=mydialog.findViewById(R.id.img_right_arrow);
 
                 try {
-                    String filename=gja_questions.getJSONObject(d).getString("qbm_flash_image");
+                    reviewArray=gja_questions.getJSONObject(d).getJSONArray("Review");
+
+                    if(reviewArray.length()>1){
+
+                    }else{
+                        iv_right.setEnabled(false);
+                    }
+
+                    JSONObject reviewObj=reviewArray.getJSONObject(z);
+                    String filename=reviewObj.getString("qba_media_file");
+
+//                    String filename=gja_questions.getJSONObject(d).getString("qbm_flash_image");
                     Log.e("Image Path :--",filename);
                     Bitmap bmp = BitmapFactory.decodeFile(testPath+filename);
                     iv_answerimg.setImageBitmap(bmp);
 
-                    String gFlag=gja_questions.getJSONObject(d).getString("qbm_group_flag");
-                    if(gFlag.equalsIgnoreCase("YES")){
-                        btn_gQues.setVisibility(View.VISIBLE);
-                    }else{
-                        btn_gQues.setVisibility(View.GONE);
-                    }
-
-                    cAdp.setPoiner(d);
                 }catch (Exception e){
                     e.printStackTrace();
                     Log.e("ViewLotInfo---",e.toString());
@@ -412,6 +423,24 @@ public class FlashCardActivity extends AppCompatActivity {
                         mHideRunnable.run();
                     }
                 });
+
+//                iv_left.setOnClickListener(new View.OnClickListener() {
+//                    @Override
+//                    public void onClick(View v) {
+//                        z--;
+//                        reviewObj=reviewArray.getJSONObject(z);
+//                        filename=reviewObj.getString("qba_media_file");
+//                    }
+//                });
+//
+//                iv_right.setOnClickListener(new View.OnClickListener() {
+//                    @Override
+//                    public void onClick(View v) {
+//                        z++;
+//                        reviewObj=reviewArray.getJSONObject(z);
+//                        filename=reviewObj.getString("qba_media_file");
+//                    }
+//                });
 
             }
         });

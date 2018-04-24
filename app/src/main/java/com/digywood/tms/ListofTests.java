@@ -55,7 +55,7 @@ public class ListofTests extends AppCompatActivity {
     ArrayList<SingleTest> dwdupdateList;
     FloatingActionButton fab_download;
     LinearLayoutManager myLayoutManager;
-    String enrollid="",courseid="",paperid="",subjectid="",downloadjsonpath="",path="",localpath="",filedata="",groupdata="";
+    String enrollid="",courseid="",paperid="",subjectid="",downloadjsonpath="",path="",localpath="",filedata="",groupdata="",tfiledwdpath="";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -156,6 +156,8 @@ public class ListofTests extends AppCompatActivity {
 //        finalPaths.add(URLClass.mainpath+enrollid+"/"+courseid+"/"+subjectid+"/"+paperid+"/"+selectedtestidList.get(i)+"/");
                         downloadjsonpath=URLClass.downloadjson+"courses/"+path+selectedtestidList.get(currentitem)+".json";
 
+                        tfiledwdpath=URLClass.downloadjson+"courses/"+path;
+
                         localpath=enrollid+"/"+courseid+"/"+subjectIds.get(currentitem)+"/"+paperid+"/"+selectedtestidList.get(currentitem)+"/";
 
                         File myFile1 = new File(URLClass.mainpath+localpath+selectedtestidList.get(currentitem)+".json");
@@ -213,14 +215,16 @@ public class ListofTests extends AppCompatActivity {
                                                     if(myFile1.exists()){
 
                                                     }else{
-                                                        finalUrls.add(URLClass.downloadurl+downloadfileList.get(i));
+//                                                        finalUrls.add(URLClass.downloadurl+downloadfileList.get(i));
+                                                        finalUrls.add(tfiledwdpath+downloadfileList.get(i));
                                                         finalNames.add(downloadfileList.get(i));
                                                     }
                                                 }
                                             }else{
                                                 for(int i=0;i<downloadfileList.size();i++){
 
-                                                    finalUrls.add(URLClass.downloadurl+downloadfileList.get(i));
+//                                                    finalUrls.add(URLClass.downloadurl+downloadfileList.get(i));
+                                                    finalUrls.add(tfiledwdpath+downloadfileList.get(i));
                                                     finalNames.add(downloadfileList.get(i));
 
                                                 }
@@ -614,6 +618,11 @@ public class ListofTests extends AppCompatActivity {
 
                     }else{
                         downloadfileList.add(singlequesObj.getString("qbm_Additional_Image_ref"));
+                    }
+                    if(downloadfileList.contains(singlequesObj.getString("qbm_flash_image"))){
+
+                    }else{
+                        downloadfileList.add(singlequesObj.getString("qbm_flash_image"));
                     }
 
                     optionsArray=singlequesObj.getJSONArray("Options");
