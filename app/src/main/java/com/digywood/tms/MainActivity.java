@@ -3,6 +3,7 @@ package com.digywood.tms;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
+import android.graphics.Typeface;
 import android.os.Environment;
 import android.os.StatFs;
 import android.preference.PreferenceManager;
@@ -61,7 +62,10 @@ public class MainActivity extends AppCompatActivity {
         myretrievepreferences= PreferenceManager.getDefaultSharedPreferences(getBaseContext());
         et_email.setText(myretrievepreferences.getString("number",""));
         et_password.setText(myretrievepreferences.getString("password",""));
-
+        Typeface font = Typeface.createFromAsset(getAssets(), "fonts/Raleway-Medium.ttf");
+        cb_remember.setTypeface(font);
+        tv_signup.setTypeface(font);
+        btn_login.setTypeface(font);
         mypreferences= PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
         editor = mypreferences.edit();
 

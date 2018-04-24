@@ -30,11 +30,11 @@
             </LinearLayout>
 
             <android.support.v7.widget.CardView
-                android:layout_width="250dp"
+                android:layout_width="400dp"
                 android:layout_height="wrap_content"
                 android:elevation="5dp"
                 app:cardElevation="5dp"
-                android:layout_marginEnd="300dp"
+                android:layout_marginEnd="500dp"
                 android:layout_gravity="center_horizontal|center_vertical"
                 app:cardUseCompatPadding="true">
 

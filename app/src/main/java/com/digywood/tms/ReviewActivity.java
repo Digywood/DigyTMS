@@ -20,6 +20,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SimpleItemAnimator;
 import android.util.Log;
 import android.view.GestureDetector;
 import android.view.Gravity;
@@ -592,6 +593,7 @@ public class ReviewActivity extends AppCompatActivity implements
             if (dataObj.getPosition(Id) > -1) {
                 opAdapter.setOptionsList(dataObj.getPosition(Id));
                 opAdapter.notifyDataSetChanged();
+                ((SimpleItemAnimator) rv_option.getItemAnimator()).setSupportsChangeAnimations(false);
             }
 
         } catch (JSONException | NullPointerException e) {
@@ -971,13 +973,13 @@ public class ReviewActivity extends AppCompatActivity implements
             optionsList.add(option);
         }
         try {
-            opAdapter = new OptionsCheckAdapter(optionsList, ReviewActivity.this, photoPath);
+            opAdapter = new OptionsCheckAdapter(optionsList, ReviewActivity.this, photoPath,rv_option);
             RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
             rv_option.setLayoutManager(mLayoutManager);
             rv_option.setItemAnimator(new DefaultItemAnimator());
             rv_option.setAdapter(opAdapter);
             opAdapter.setOptionsEditable(edit);
-            opAdapter.runLayoutAnimation(rv_option);
+            testObj.runLayoutAnimation(rv_option);
         } catch (NullPointerException e) {
             e.printStackTrace();
         }

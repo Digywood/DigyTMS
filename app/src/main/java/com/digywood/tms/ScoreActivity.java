@@ -1,6 +1,8 @@
 package com.digywood.tms;
 
+import android.animation.Animator;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -8,7 +10,11 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
+import android.view.ViewAnimationUtils;
+import android.view.ViewTreeObserver;
+import android.view.animation.AccelerateInterpolator;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.digywood.tms.DBHelper.DBHelper;
@@ -22,12 +28,12 @@ import java.util.ArrayList;
 public class ScoreActivity extends AppCompatActivity {
 
     DBHelper dataObj;
+    LinearLayout rootLayout;
     TextView tv_test,tv_course,tv_subject,tv_attempted,tv_skipped,tv_bookmarked,tv_totalQuestions,tv_totalCorrect,tv_totalWrong,tv_totalNegative,tv_totalPositive,tv_totalScore,tv_totalPercentage;
     Button btn_save;
     JSONObject attempt;
     Bundle bundle;
-    TestActivity testObj;
-    int CorrectCount = 0,WrongCount = 0,TotalPositive = 0, TotalNegative = 0,TotalCount = 0,TotalScore = 0 ,MaxMarks ;
+    int CorrectCount = 0,WrongCount = 0,TotalPositive = 0, TotalNegative = 0,TotalCount = 0,TotalScore = 0 ,MaxMarks ,revealX,revealY;
     float Percentage;
     ArrayList<Integer> OptionsList = new ArrayList<>();;
 
@@ -42,7 +48,31 @@ public class ScoreActivity extends AppCompatActivity {
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        testObj = new TestActivity();
+        Intent intent = getIntent();
+        rootLayout = findViewById(R.id.rootLayout);
+
+        if (savedInstanceState == null && Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP &&
+                intent.hasExtra("Xreveal") &&
+                intent.hasExtra("Yreveal")) {
+            rootLayout.setVisibility(View.INVISIBLE);
+
+            revealX = intent.getIntExtra("Xreveal", 0);
+            revealY = intent.getIntExtra("Yreveal", 0);
+
+            ViewTreeObserver viewTreeObserver = rootLayout.getViewTreeObserver();
+            if (viewTreeObserver.isAlive()) {
+                viewTreeObserver.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+                    @Override
+                    public void onGlobalLayout() {
+                        revealActivity(revealX, revealY);
+                        rootLayout.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+                    }
+                });
+            }
+        } else {
+            rootLayout.setVisibility(View.VISIBLE);
+        }
+
         tv_test = findViewById(R.id.tv_test);
         tv_course = findViewById(R.id.tv_course);
         tv_subject = findViewById(R.id.tv_subject);
@@ -58,7 +88,6 @@ public class ScoreActivity extends AppCompatActivity {
         tv_totalPercentage = findViewById(R.id.tv_totalPercentage);
         btn_save = findViewById(R.id.btn_save);
         dataObj = new DBHelper(ScoreActivity.this);
-        testObj.parseJson(attempt);
 
         CorrectCount = dataObj.getCorrectOptionsCount();
         TotalCount = dataObj.getQuestionAttempted()+dataObj.getQustionBookmarked();
@@ -74,10 +103,9 @@ public class ScoreActivity extends AppCompatActivity {
                 TotalNegative = Integer.valueOf(attempt.getString("sptu_negative_mrk"))* WrongCount;
                 MaxMarks = Integer.valueOf(attempt.getString("sptu_marks")) * dataObj.getQuestionCount();
                 Percentage = ( (float) TotalPositive /(float) MaxMarks )*100;
-                Log.e("Fraction",""+Percentage);
             }
             TotalScore = TotalPositive - TotalNegative;
-            tv_test.setText(attempt.getString("sptu_ID"));
+            tv_test.setText(attempt.getString("ptu_test_ID"));
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -93,7 +121,7 @@ public class ScoreActivity extends AppCompatActivity {
         tv_totalNegative.setText(String.valueOf(TotalNegative));
         tv_totalScore.setText(String.valueOf(TotalScore));
         tv_totalPercentage.setText(String.valueOf(Percentage) + " %");
-        Log.e("NumberofQuestionSkip :",""+dataObj.getQuestionAttempted());
+
 
         btn_save.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -103,6 +131,21 @@ public class ScoreActivity extends AppCompatActivity {
             }
         });
 
+    }
+    protected void revealActivity(int x, int y) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            float finalRadius = (float) (Math.max(rootLayout.getWidth(), rootLayout.getHeight()) * 1.1);
+
+            // create the animator for this view (the start radius is zero)
+            Animator circularReveal = ViewAnimationUtils.createCircularReveal(rootLayout, 0, y, 0, finalRadius);
+            circularReveal.setDuration(400);
+            circularReveal.setInterpolator(new AccelerateInterpolator());
+            // make the view visible and start the animation
+            rootLayout.setVisibility(View.VISIBLE);
+            circularReveal.start();
+        } else {
+            finish();
+        }
     }
 
 }
