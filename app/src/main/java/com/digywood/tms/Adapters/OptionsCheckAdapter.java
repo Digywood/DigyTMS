@@ -28,6 +28,7 @@ public class OptionsCheckAdapter extends RecyclerView.Adapter<OptionsCheckAdapte
     private String path,sequence = "-1",flag="NO";
     private int mSelectedItem = -1,mCorrectItem = -1;
     private  Boolean medit = true;
+    RecyclerView rv;
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
         public RelativeLayout option_layout;
@@ -47,6 +48,7 @@ public class OptionsCheckAdapter extends RecyclerView.Adapter<OptionsCheckAdapte
                     mSelectedItem = getAdapterPosition();
                     sequence = optionsList.get(mSelectedItem).getQbo_seq_no();
                     flag = optionsList.get(mSelectedItem).getQbo_answer_flag();
+                    rv.setItemAnimator(null);
                     notifyItemRangeChanged(0,optionsList.size());
                 }
             });
@@ -56,6 +58,7 @@ public class OptionsCheckAdapter extends RecyclerView.Adapter<OptionsCheckAdapte
                     mSelectedItem = getAdapterPosition();
                     sequence = optionsList.get(mSelectedItem).getQbo_seq_no();
                     flag = optionsList.get(mSelectedItem).getQbo_answer_flag();
+                    rv.setItemAnimator(null);
                     notifyItemRangeChanged(0,optionsList.size());
                 }
             });
@@ -78,10 +81,11 @@ public class OptionsCheckAdapter extends RecyclerView.Adapter<OptionsCheckAdapte
         return optionsList.size();
     }
 
-    public OptionsCheckAdapter(ArrayList<SingleOptions> optionsListList, Context c, String path) {
+    public OptionsCheckAdapter(ArrayList<SingleOptions> optionsListList, Context c, String path,RecyclerView rv) {
         this.optionsList = optionsListList;
         this.mycontext=c;
         this.path = path;
+        this.rv = rv;
     }
 
 
@@ -167,7 +171,7 @@ public class OptionsCheckAdapter extends RecyclerView.Adapter<OptionsCheckAdapte
         return b ;
     }
 
-    public void runLayoutAnimation(final RecyclerView recyclerView) {
+/*    public void runLayoutAnimation(final RecyclerView recyclerView) {
         final Context context = recyclerView.getContext();
         final LayoutAnimationController controller =
                 AnimationUtils.loadLayoutAnimation(context, R.anim.layout_animation_slide_right);
@@ -175,7 +179,7 @@ public class OptionsCheckAdapter extends RecyclerView.Adapter<OptionsCheckAdapte
         recyclerView.setLayoutAnimation(controller);
         recyclerView.getAdapter().notifyDataSetChanged();
         recyclerView.scheduleLayoutAnimation();
-    }
+    }*/
 
 
 }
