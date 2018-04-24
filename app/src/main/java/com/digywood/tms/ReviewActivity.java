@@ -912,7 +912,7 @@ public class ReviewActivity extends AppCompatActivity implements
     //method to set the questions and its options
     public void setQuestion(int pos, int index, Boolean edit) throws JSONException {
         array =  attempt.getJSONArray("Sections").getJSONObject(pos).getJSONArray("Questions");
-        myLayoutManager.scrollToPositionWithOffset(index, 500);
+        myLayoutManager.scrollToPositionWithOffset(index, 350);
         questionobj = array.getJSONObject(index);
         q_no.setText(questionobj.getString("qbm_SequenceId"));
         if (questionobj.getString("qbm_group_flag").equals("YES")) {
