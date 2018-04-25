@@ -27,5 +27,6 @@
     <string name="option_image">Option Image</string>
     <string name="close_text">Close</string>
     <string name="title_activity_flash_card">FlashCardActivity</string>
+    <string name="title_activity_dashboard">DashboardActivity</string>
 
 </resources>

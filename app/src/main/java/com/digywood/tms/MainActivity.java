@@ -139,7 +139,7 @@ public class MainActivity extends AppCompatActivity {
                                                             }
                                                         }
                                                         if(enterpwd.equalsIgnoreCase(pwd)){
-                                                            Intent i=new Intent(getApplicationContext(),LandingActivity.class);
+                                                            Intent i=new Intent(getApplicationContext(),DashboardActivity.class);
                                                             i.putExtra("studentid",studentid);
                                                             startActivity(i);
                                                             finish();
