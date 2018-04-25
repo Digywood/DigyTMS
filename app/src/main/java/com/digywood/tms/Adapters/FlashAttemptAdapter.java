@@ -61,18 +61,20 @@ public class FlashAttemptAdapter extends RecyclerView.Adapter<FlashAttemptAdapte
         holder.tv_fpercentage.setText(String.valueOf(singlefattempt.getPercent()));
         Double d = new Double(singlefattempt.getPercent());
         int progress = d.intValue();
-        holder.pb_progress.setProgress(progress);
         Resources res=mycontext.getResources();
 
         if(progress>70){
             holder.pb_progress.setProgressDrawable(res.getDrawable(R.drawable.progress_max_color));
         }else if(progress<70 && progress>30){
             holder.pb_progress.setProgressDrawable(res.getDrawable(R.drawable.progress_mid_color));
-        }else if(progress<30){
+        }else if(progress<30 && progress!=0){
             holder.pb_progress.setProgressDrawable(res.getDrawable(R.drawable.progress_low_color));
-        }else{
+        }else if(progress==0){
+            progress=100;
             holder.pb_progress.setProgressDrawable(res.getDrawable(R.drawable.progress_low_color));
         }
+
+        holder.pb_progress.setProgress(progress);
 
     }
 

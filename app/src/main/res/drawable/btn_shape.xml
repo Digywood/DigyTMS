@@ -10,5 +10,4 @@
         android:top="1dp"
         android:bottom="1dp"/>
     <solid android:color="#00000000"/>
-
 </shape>
