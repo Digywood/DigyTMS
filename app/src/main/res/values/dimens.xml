@@ -4,4 +4,6 @@
     <dimen name="popup_height">350dp</dimen>
     <dimen name="fullscreen_width">900dp</dimen>
     <dimen name="fullscreen_height">600dp</dimen>
+    <dimen name="button_pressed_z_material">6dp</dimen>
+    <dimen name="button_pressed_material">3dp</dimen>
 </resources>

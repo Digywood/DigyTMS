@@ -42,7 +42,7 @@
         <activity
             android:name=".TestActivity"
             android:screenOrientation="landscape"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".ScoreActivity"
             android:label="@string/title_activity_score"
@@ -60,9 +60,14 @@
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:label="@string/title_activity_flash_card"
             android:screenOrientation="landscape"
-            android:theme="@style/AppTheme.NoActionBar"/>
-        <activity android:name=".FlashAttemptDataActivity"
-            android:screenOrientation="landscape"></activity>
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".FlashAttemptDataActivity"
+            android:screenOrientation="landscape" />
+        <activity
+            android:name=".DashboardActivity"
+            android:label="@string/title_activity_dashboard"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 
 </manifest>
