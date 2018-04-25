@@ -140,6 +140,43 @@ public class DBHelper extends SQLiteOpenHelper {
                 "  `sptu_mod_dttm` datetime DEFAULT NULL)";
         db.execSQL(tbl_sptu_student);
 
+        String tbl_satu_student="CREATE TABLE IF NOT EXISTS `satu_student` (\n" +
+                "  `satu_key` integer PRIMARY KEY,\n" +
+                "  `satu_org_id` text DEFAULT NULL,\n" +
+                "  `satu_entroll_id` text DEFAULT NULL,\n" +
+                "  `satu_student_id` text DEFAULT NULL,\n" +
+                "  `satu_batch` text DEFAULT NULL,\n" +
+                "  `satu_ID` text DEFAULT NULL,\n" +
+                "  `satu_paper_ID` text DEFAULT NULL,\n" +
+                "  `satu_subjet_ID` text DEFAULT NULL,\n" +
+                "  `satu_course_id` text DEFAULT NULL,\n" +
+                "  `satu_start_date` datetime DEFAULT NULL,\n" +
+                "  `satu_end_date` datetime DEFAULT NULL,\n" +
+                "  `satu_dwnld_start_dttm` datetime DEFAULT NULL,\n" +
+                "  `satu_dwnld_completed_dttm` datetime DEFAULT NULL,\n" +
+                "  `satu_dwnld_status` text DEFAULT NULL,\n" +
+                "  `satu_no_of_questions` int(5) DEFAULT NULL,\n" +
+                "  `satu_path` text DEFAULT NULL,\n" +
+                "  `satu_file` text DEFAULT NULL,\n" +
+                "  `satu_exam_key` text DEFAULT NULL,\n" +
+                "  `satu_tot_marks` double DEFAULT NULL,\n" +
+                "  `satu_min_marks` double DEFAULT NULL,\n" +
+                "  `satu_max_marks` double DEFAULT NULL,\n" +
+                "  `satu_avg_marks` double DEFAULT NULL,\n" +
+                "  `satu_min_percent` double DEFAULT NULL,\n" +
+                "  `satu_max_percent` double DEFAULT NULL,\n" +
+                "  `satu_avg_percent` double DEFAULT NULL,\n" +
+                "  `satu_last_attempt_marks` double DEFAULT NULL,\n" +
+                "  `satu_last_attempt_percent` double DEFAULT NULL,\n" +
+                "  `satu_last_attempt_start_dttm` datetime DEFAULT NULL,\n" +
+                "  `satu_last_attempt_end_dttm` datetime DEFAULT NULL,\n" +
+                "  `satu_no_of_attempts` int(11) DEFAULT NULL,\n" +
+                "  `satu_created_by` text DEFAULT NULL,\n" +
+                "  `satu_created_dttm` datetime DEFAULT NULL,\n" +
+                "  `satu_mod_by` text DEFAULT NULL,\n" +
+                "  `satu_mod_dttm` datetime DEFAULT NULL)";
+        db.execSQL(tbl_satu_student);
+
         String AttemptList ="CREATE TABLE `attempt_list` (\n"+
                 "   `Attempt_ID` INTEGER,\n"+
                 "   `Attempt_Status` int(5) NOT NULL,\n"+

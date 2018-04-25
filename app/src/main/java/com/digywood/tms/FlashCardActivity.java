@@ -265,7 +265,7 @@ public class FlashCardActivity extends AppCompatActivity {
                     Log.e("Image Path :--",testPath+imagefile);
                     Bitmap bmp = BitmapFactory.decodeFile(testPath+imagefile);
                     iv_quesimg.setImageBitmap(bmp);
-                    Animation rotateimage = AnimationUtils.loadAnimation(FlashCardActivity.this, R.anim.fade_in);
+                    Animation rotateimage = AnimationUtils.loadAnimation(FlashCardActivity.this,R.anim.fade_in);
                     iv_quesimg.startAnimation(rotateimage);
 
                     String gFlag=qObj.getString("qbm_group_flag");
@@ -784,8 +784,6 @@ public class FlashCardActivity extends AppCompatActivity {
     }
 
     public  void flashQAttempt(){
-
-        Log.e("TEST:----","In Loop");
 
         if(tempString.equalsIgnoreCase("")){
 
