@@ -152,13 +152,30 @@ public class ListofTests extends AppCompatActivity {
 
                         }
 
-                        path=courseid+"/"+subjectIds.get(currentitem)+"/"+paperid+"/"+selectedtestidList.get(currentitem)+"/";
-//        finalPaths.add(URLClass.mainpath+enrollid+"/"+courseid+"/"+subjectid+"/"+paperid+"/"+selectedtestidList.get(i)+"/");
+                        Cursor mycursor=myhelper.getSingleTestData(selectedtestidList.get(currentitem));
+                        if(mycursor.getCount()>0){
+                            while(mycursor.moveToNext()){
+
+                                enrollid=mycursor.getString(mycursor.getColumnIndex("sptu_entroll_id"));
+                                courseid=mycursor.getString(mycursor.getColumnIndex("sptu_course_id"));
+                                subjectid=mycursor.getString(mycursor.getColumnIndex("sptu_subjet_ID"));
+                                paperid=mycursor.getString(mycursor.getColumnIndex("sptu_paper_ID"));
+
+                            }
+                        }else{
+                            mycursor.close();
+                        }
+
+//                        path=courseid+"/"+subjectIds.get(currentitem)+"/"+paperid+"/"+selectedtestidList.get(currentitem)+"/";
+                        path=courseid+"/"+subjectid+"/"+paperid+"/"+selectedtestidList.get(currentitem)+"/";
+
                         downloadjsonpath=URLClass.downloadjson+"courses/"+path+selectedtestidList.get(currentitem)+".json";
 
                         tfiledwdpath=URLClass.downloadjson+"courses/"+path;
 
-                        localpath=enrollid+"/"+courseid+"/"+subjectIds.get(currentitem)+"/"+paperid+"/"+selectedtestidList.get(currentitem)+"/";
+//                        localpath=enrollid+"/"+courseid+"/"+subjectIds.get(currentitem)+"/"+paperid+"/"+selectedtestidList.get(currentitem)+"/";
+                        localpath=enrollid+"/"+courseid+"/"+subjectid+"/"+paperid+"/"+selectedtestidList.get(currentitem)+"/";
+
 
                         File myFile1 = new File(URLClass.mainpath+localpath+selectedtestidList.get(currentitem)+".json");
                         if(myFile1.exists()){
