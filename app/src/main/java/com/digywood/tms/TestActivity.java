@@ -32,6 +32,7 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.view.animation.LayoutAnimationController;
 import android.widget.AdapterView;
@@ -408,8 +409,12 @@ public class TestActivity extends AppCompatActivity implements
                                             public void onClick(DialogInterface arg0, int arg1) {
 //                                            q_list.clear();
                                                 try {
+                                                    long value = dataObj.UpdateAttempt(count, 2, 0, 0, millisRemaining, index, pos);
+                                                    if (value >= 0) {
+                                                        dataObj.InsertAttempt(attempt.getString("ptu_section_ID"),2, 0, 0, millisRemaining, index, pos);
+                                                    }
                                                     SaveJSONdataToFile.objectToFile(URLClass.mainpath + path + "Attempt/" + testid + ".json", attempt.toString());
-                                                } catch (IOException e) {
+                                                } catch (JSONException|IOException e) {
                                                     e.printStackTrace();
                                                 }
 
@@ -419,14 +424,11 @@ public class TestActivity extends AppCompatActivity implements
                                                 int revealY = (int) (finish_view.getY() + finish_view.getHeight() / 2);
                                                 finish();
                                                 count = dataObj.getAttempCount() - 1;
-                                                long value = dataObj.UpdateAttempt(count, 2, 0, 0, millisRemaining, index, pos);
-                                                if (value >= 0) {
-                                                    dataObj.InsertAttempt(2, 0, 0, millisRemaining, index, pos);
-                                                }
-                                                c = dataObj.getAttempt(count);
-                                                c.moveToFirst();
-                                                if (c.getInt(c.getColumnIndex("Attempt_Status")) == 2)
-                                                    Log.e("Test", "Finished");
+
+/*                                                c = dataObj.getAttempt(count);
+                                                c.moveToFirst();*/
+/*                                                if (c.getInt(c.getColumnIndex("Attempt_Status")) == 2)
+                                                    Log.e("Test", "Finished");*/
 
                                                 Intent intent = new Intent(TestActivity.this, ScoreActivity.class);
                                                 bundle = new Bundle();
@@ -724,7 +726,7 @@ public class TestActivity extends AppCompatActivity implements
             // Saving time remaining
             long value = dataObj.UpdateAttempt(count, 1, 0, 0, millisRemaining, index, pos);
             if (value >= 0) {
-                dataObj.InsertAttempt(1, 0, 0, millisRemaining, index, pos);
+                dataObj.InsertAttempt(attempt.getString("ptu_section_ID"),1, 0, 0, millisRemaining, index, pos);
             }
             Log.e("WriteOption:", opAdapter.getSelectedSequence());
         } catch (JSONException e) {
@@ -772,8 +774,12 @@ public class TestActivity extends AppCompatActivity implements
                             public void onClick(DialogInterface arg0, int arg1) {
 //                                            q_list.clear();
                                 try {
+                                    long value = dataObj.UpdateAttempt(count, 2, 0, 0, millisRemaining, index, pos);
+                                    if (value >= 0) {
+                                        dataObj.InsertAttempt(attempt.getString("ptu_section_ID"),2, 0, 0, millisRemaining, index, pos);
+                                    }
                                     SaveJSONdataToFile.objectToFile(URLClass.mainpath + path + "Attempt/" + testid + ".json", attempt.toString());
-                                } catch (IOException e) {
+                                } catch (JSONException|IOException e) {
                                     e.printStackTrace();
                                 }
                                 ActivityOptionsCompat options = ActivityOptionsCompat.
@@ -782,10 +788,7 @@ public class TestActivity extends AppCompatActivity implements
                                 int revealY = (int) (finish_view.getY() + finish_view.getHeight() / 2);
                                 finish();
                                 count = dataObj.getAttempCount() - 1;
-                                long value = dataObj.UpdateAttempt(count, 2, 0, 0, millisRemaining, index, pos);
-                                if (value >= 0) {
-                                    dataObj.InsertAttempt(2, 0, 0, millisRemaining, index, pos);
-                                }
+
                                 c = dataObj.getAttempt(count);
                                 c.moveToFirst();
                                 Intent intent = new Intent(TestActivity.this, ScoreActivity.class);
@@ -931,6 +934,8 @@ public class TestActivity extends AppCompatActivity implements
         b = BitmapFactory.decodeFile(photoPath + questionobj.getString("qbm_image_file"));
         Log.e("qimage", photoPath + questionobj.getString("qbm_image_file"));
         question_img.setImageBitmap(b);
+/*        Animation fadeimage = AnimationUtils.loadAnimation(TestActivity.this, R.anim.fade_in);
+        question_img.startAnimation(fadeimage);*/
         question_img.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
@@ -1088,13 +1093,13 @@ public class TestActivity extends AppCompatActivity implements
 
                     // do something when the button is clicked
                     public void onClick(DialogInterface arg0, int arg1) {
-                        long value = dataObj.UpdateAttempt(count, 1, 0, 0, millisRemaining, index, pos);
-                        if (value >= 0) {
-                            dataObj.InsertAttempt(1, 0, 0, millisRemaining, index, pos);
-                        }
                         try {
+                            long value = dataObj.UpdateAttempt(count, 1, 0, 0, millisRemaining, index, pos);
+                            if (value >= 0) {
+                                dataObj.InsertAttempt(attempt.getString("ptu_section_ID"),1, 0, 0, millisRemaining, index, pos);
+                            }
                             SaveJSONdataToFile.objectToFile(URLClass.mainpath + path + "Attempt/" + testid + ".json", attempt.toString());
-                        } catch (IOException e) {
+                        } catch (JSONException|IOException e) {
                             e.printStackTrace();
                         }
                         Intent intent = new Intent(TestActivity.this, ListofTests.class);
@@ -1229,15 +1234,16 @@ public class TestActivity extends AppCompatActivity implements
         Log.d(TAG, "onPause:");
         dataObj = new DBHelper(TestActivity.this);
         try {
+            long value = dataObj.UpdateAttempt(count, 1, 0, 0, millisRemaining, index, pos);
+            if (value >= 0) {
+                dataObj.InsertAttempt(attempt.getString("ptu_section_ID"),1, 0, 0, millisRemaining, index, pos);
+            }
             SaveJSONdataToFile.objectToFile(URLClass.mainpath + path + "Attempt/" + testid + ".json", attempt.toString());
             Log.e("Attempt-Json", attempt.toString());
-        } catch (IOException e) {
+        } catch (JSONException|IOException e) {
             e.printStackTrace();
         }
-        long value = dataObj.UpdateAttempt(count, 1, 0, 0, millisRemaining, index, pos);
-        if (value >= 0) {
-            dataObj.InsertAttempt(1, 0, 0, millisRemaining, index, pos);
-        }
+
 
         super.onPause();
     }

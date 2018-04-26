@@ -12,6 +12,7 @@ import android.widget.Button;
 public class DashboardActivity extends AppCompatActivity {
 
     Button btn_next;
+    String studentId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -19,6 +20,7 @@ public class DashboardActivity extends AppCompatActivity {
         setContentView(R.layout.activity_dashboard);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        studentId = getIntent().getStringExtra("studentid");
         btn_next = findViewById(R.id.btn_next);
         btn_next.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -26,6 +28,7 @@ public class DashboardActivity extends AppCompatActivity {
 /*                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();*/
                 Intent intent = new Intent(DashboardActivity.this, LandingActivity.class);
+                intent.putExtra("studentid",studentId);
                 startActivity(intent);
             }
         });

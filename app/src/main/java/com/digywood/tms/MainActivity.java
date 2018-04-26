@@ -96,7 +96,7 @@ public class MainActivity extends AppCompatActivity {
                                 studentid=mycursor.getString(mycursor.getColumnIndex("StudentID"));
                             }
                             if(enterpwd.equalsIgnoreCase(localpwd)){
-                                Intent i=new Intent(getApplicationContext(),LandingActivity.class);
+                                Intent i=new Intent(getApplicationContext(),DashboardActivity.class);
                                 i.putExtra("studentid",studentid);
                                 startActivity(i);
                                 finish();

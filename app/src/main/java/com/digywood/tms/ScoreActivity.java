@@ -2,6 +2,7 @@ package com.digywood.tms;
 
 import android.animation.Animator;
 import android.content.Intent;
+import android.database.Cursor;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -16,6 +17,7 @@ import android.view.animation.AccelerateInterpolator;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.digywood.tms.DBHelper.DBHelper;
 
@@ -29,10 +31,12 @@ public class ScoreActivity extends AppCompatActivity {
 
     DBHelper dataObj;
     LinearLayout rootLayout;
+    String subject,course,testId;
     TextView tv_test,tv_course,tv_subject,tv_attempted,tv_skipped,tv_bookmarked,tv_totalQuestions,tv_totalCorrect,tv_totalWrong,tv_totalNegative,tv_totalPositive,tv_totalScore,tv_totalPercentage;
     Button btn_save;
     JSONObject attempt;
     Bundle bundle;
+    Double minscore = 0.0,maxscore = 0.0,avgscore = 0.0;
     int CorrectCount = 0,WrongCount = 0,TotalPositive = 0, TotalNegative = 0,TotalCount = 0,TotalScore = 0 ,MaxMarks ,revealX,revealY;
     float Percentage;
     ArrayList<Integer> OptionsList = new ArrayList<>();;
@@ -48,6 +52,8 @@ public class ScoreActivity extends AppCompatActivity {
         } catch (JSONException e) {
             e.printStackTrace();
         }
+        subject = bundle.getString("Subject");
+        course = bundle.getString("Course");
         Intent intent = getIntent();
         rootLayout = findViewById(R.id.rootLayout);
 
@@ -91,6 +97,7 @@ public class ScoreActivity extends AppCompatActivity {
 
         CorrectCount = dataObj.getCorrectOptionsCount();
         TotalCount = dataObj.getQuestionAttempted()+dataObj.getQustionBookmarked();
+
         WrongCount = dataObj.getWrongOptionsCount();
         try {
             if(dataObj.getQuestionAttempted() == 0){
@@ -99,18 +106,36 @@ public class ScoreActivity extends AppCompatActivity {
             }
             else
             {
-                TotalPositive = Integer.valueOf(attempt.getString("sptu_marks")) * CorrectCount;
-                TotalNegative = Integer.valueOf(attempt.getString("sptu_negative_mrk"))* WrongCount;
-                MaxMarks = Integer.valueOf(attempt.getString("sptu_marks")) * dataObj.getQuestionCount();
+                TotalPositive = Integer.valueOf(attempt.getString("ptu_positive_marks")) * CorrectCount;
+                TotalNegative = Integer.valueOf(attempt.getString("ptu_negative_marks"))* WrongCount;
+                MaxMarks = Integer.valueOf(attempt.getString("ptu_positive_marks")) * dataObj.getQuestionCount();
                 Percentage = ( (float) TotalPositive /(float) MaxMarks )*100;
             }
+
+            Cursor mycursor=dataObj.getTestRawData(testId);
+            if(mycursor.getCount()>0) {
+                while (mycursor.moveToNext()) {
+                    minscore = mycursor.getDouble(mycursor.getColumnIndex("minscore"));
+                    maxscore = mycursor.getDouble(mycursor.getColumnIndex("maxscore"));
+                    avgscore = mycursor.getDouble(mycursor.getColumnIndex("avgscore"));
+                }
+                Log.e("ScoreActivity-->","Data Exists");
+            }
             TotalScore = TotalPositive - TotalNegative;
-            tv_test.setText(attempt.getString("ptu_test_ID"));
+            testId = attempt.getString("ptu_test_ID");
+            long qflag = dataObj.updateTest(testId,subject,course,dataObj.getQuestionCount(),Double.valueOf(MaxMarks),minscore,maxscore,avgscore,Double.valueOf(Percentage));
+            if(qflag > 0){
+               Log.e("ScoreActivity-->","Update Successful");
+            }else
+                Log.e("ScoreActivity-->","Update Failed");
+
+            tv_test.setText(testId);
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        tv_course.setText(bundle.getString("Course"));
-        tv_subject.setText(bundle.getString("Subject"));
+
+        tv_course.setText(course);
+        tv_subject.setText(subject);
         tv_attempted.setText(String.valueOf(dataObj.getQuestionAttempted()));
         tv_skipped.setText(String.valueOf(dataObj.getQuestionSkipped()));
         tv_bookmarked.setText(String.valueOf(dataObj.getQustionBookmarked()));

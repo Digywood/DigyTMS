@@ -142,6 +142,7 @@ public class DBHelper extends SQLiteOpenHelper {
 
         String AttemptList ="CREATE TABLE `attempt_list` (\n"+
                 "   `Attempt_ID` INTEGER,\n"+
+                "   `Attempt_Test_ID` INTEGER,\n"+
                 "   `Attempt_Status` int(5) NOT NULL,\n"+
                 "   `Attempt_RemainingTime` int(5) DEFAULT NULL,\n"+
                 "   `Attempt_LastQuestion` int(5) DEFAULT NULL,\n"+
@@ -500,8 +501,23 @@ public class DBHelper extends SQLiteOpenHelper {
         cv.put("sptu_tot_marks",ttotalmarks);
         cv.put("stpu_min_marks",tminmarks);
         cv.put("sptu_max_marks",tmaxmarks);
+//        cv.put("sptu_avg_marks",tavgmarks);
         insertFlag = db.insert("sptu_student",null, cv);
         return insertFlag;
+    }
+
+    public long updateTest(String tID,String tsid,String tcid,int tnoofques,Double ttotalmarks,Double tminmarks,Double tmaxmarks,Double avgscore,Double percentage){
+        long updateFlag=0;
+        ContentValues cv = new ContentValues();
+        cv.put("sptu_subjet_ID",tsid);
+        cv.put("sptu_course_id",tcid);
+        cv.put("sptu_no_of_questions",tnoofques);
+        cv.put("sptu_tot_marks",ttotalmarks);
+        cv.put("stpu_min_marks",tminmarks);
+        cv.put("sptu_max_marks",tmaxmarks);
+        cv.put("sptu_avg_marks",avgscore);
+        updateFlag=db.update("sptu_student", cv,"sptu_ID='"+tID+"'",null);
+        return  updateFlag;
     }
 
     public long updateTestStatus(String testid,int attemptcount,Double minscore,Double maxscore,Double avgscore,String Dttm,Double lastAttemptscore){
@@ -949,11 +965,12 @@ public class DBHelper extends SQLiteOpenHelper {
 //        db.execSQL("TRUNCATE table " +table);
     }
 
-    public long InsertAttempt( int status, int aScore, int aperc,long aTime,int index,int pos){
+    public long InsertAttempt( String testID,int status, int aScore, int aperc,long aTime,int index,int pos){
 
         long insertFlag=0;
 
         ContentValues cv = new ContentValues();
+        cv.put("Attempt_Test_ID", testID);
         cv.put("Attempt_Status", status);
         cv.put("Attempt_Score",aScore );
         cv.put("Attempt_Percentage",aperc );
@@ -962,6 +979,12 @@ public class DBHelper extends SQLiteOpenHelper {
         cv.put("Attempt_LastSection",pos );
         insertFlag = db.insert("attempt_list",null, cv);
         return insertFlag;
+    }
+
+    public Cursor getTestRawData(String testId){
+        String query ="SELECT COUNT(*) as attemptcount,MIN(Attempt_Percentage) as minscore,MAX(Attempt_Percentage) as maxscore,AVG(Attempt_Percentage) as avgscore FROM "+" attempt_list"+" WHERE Attempt_Test_ID ='"+testId+"'";
+        Cursor c=db.rawQuery(query,null);
+        return c;
     }
 
     public long UpdateAttempt(int aID,int status, int aScore, int aperc, long aTime,int index,int pos){
@@ -977,6 +1000,11 @@ public class DBHelper extends SQLiteOpenHelper {
         updateFlag = db.update("attempt_list",cv,"Attempt_ID='"+aID+"'",null);
 
         return updateFlag;
+    }
+
+    public Cursor getTestAttemptData(String testId){
+        Cursor c =db.query("attempt_list", new String[] {"Attempt_ID,Attempt_Test_ID,Attempt_Status,Attempt_Score,Attempt_Percentage"},"Attempt_Test_ID='"+testId+"'", null, null, null,"startDttm DESC");
+        return  c;
     }
     public int getAttempCount(){
         int count=0;
