@@ -306,6 +306,42 @@ public class DBHelper extends SQLiteOpenHelper {
         super.onDowngrade(db, oldVersion, newVersion);
     }
 
+    public long insertAssesmentTest(int tkey,String torgid,String tenrollid,String tstudentid,String tbatch,String tid,String tpid,String tsid,String tcid,String tstartdate,String tenddate,String tdwdstatus,int tnoofques,String testfilename,String testKey,Double ttotalmarks,Double tminmarks,Double tmaxmarks){
+        long insertFlag=0;
+        ContentValues cv = new ContentValues();
+        cv.put("satu_key",tkey);
+        cv.put("satu_org_id",torgid);
+        cv.put("satu_entroll_id",tenrollid);
+        cv.put("satu_student_id",tstudentid);
+        cv.put("satu_batch",tbatch);
+        cv.put("satu_ID",tid);
+        cv.put("satu_paper_ID",tpid);
+        cv.put("satu_subjet_ID",tsid);
+        cv.put("satu_course_id",tcid);
+        cv.put("satu_start_date",tstartdate);
+        cv.put("satu_end_date",tenddate);
+        cv.put("satu_dwnld_status",tdwdstatus);
+        cv.put("satu_no_of_questions",tnoofques);
+        cv.put("satu_file",testfilename);
+        cv.put("satu_exam_key",testKey);
+        cv.put("satu_tot_marks",ttotalmarks);
+        cv.put("satu_min_marks",tminmarks);
+        cv.put("satu_max_marks",tmaxmarks);
+        insertFlag = db.insert("satu_student",null, cv);
+        return insertFlag;
+    }
+
+    public Cursor getAssesmentTestData(String testId){
+        Cursor c =db.query("satu_student", new String[] {"satu_course_id,satu_subjet_ID,satu_paper_ID,satu_entroll_id,satu_student_id,satu_batch"},"sptu_ID='"+testId+"'", null, null, null,null);
+        return c;
+    }
+
+    public long deleteAllAssesmentTests(){
+        long deleteFlag=0;
+        deleteFlag=db.delete("satu_student", null, null);
+        return  deleteFlag;
+    }
+
     public long insertFlashAttempt(String studentId,String enrollId,String courseId,String subjectId,String paperId,String fcardId,int attemptnum,String sdttm,String edttm,int iknowcount,int donknowcount,int skipcount,Double percentage,String status){
         long insertFlag=0;
         ContentValues cv = new ContentValues();
@@ -518,7 +554,7 @@ public class DBHelper extends SQLiteOpenHelper {
         return  deleteFlag;
     }
 
-    public long insertTest(int tkey,String torgid,String tenrollid,String tstudentid,String tbatch,String tid,String tpid,String tsid,String tcid,String tstartdate,String tenddate,String tdwdstatus,int tnoofques,Double ttotalmarks,Double tminmarks,Double tmaxmarks){
+    public long insertPractiseTest(int tkey,String torgid,String tenrollid,String tstudentid,String tbatch,String tid,String tpid,String tsid,String tcid,String tstartdate,String tenddate,String tdwdstatus,int tnoofques,Double ttotalmarks,Double tminmarks,Double tmaxmarks){
         long insertFlag=0;
         ContentValues cv = new ContentValues();
         cv.put("sptu_key",tkey);

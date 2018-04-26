@@ -138,8 +138,8 @@ public class LandingActivity extends AppCompatActivity {
         new BagroundTask(URLClass.hosturl +"getStudentFullData.php",hmap,LandingActivity.this, new IBagroundListener() {
             @Override
             public void bagroundData(String json) {
-                JSONArray ja_enrollments_table,ja_subjects_table,ja_papers_table,ja_tests_table;
-                JSONObject enrollObj,subjectObj,paperObj,testObj;
+                JSONArray ja_enrollments_table,ja_subjects_table,ja_papers_table,ja_tests_table,ja_assesmenttests;
+                JSONObject enrollObj,subjectObj,paperObj,testObj,assesmentObj;
 
                 try{
                     Log.e("MainActivity----","FullData"+json);
@@ -168,7 +168,7 @@ public class LandingActivity extends AppCompatActivity {
                                     q++;
                                 }
                             }
-                            Log.e("BackGroundTask--","Inserted: "+p);
+                            Log.e("Enrollments--","Inserted: "+p);
                         }else{
                             Log.e("Enrollments--","Empty Json Array: ");
                         }
@@ -198,7 +198,7 @@ public class LandingActivity extends AppCompatActivity {
                                     q++;
                                 }
                             }
-                            Log.e("BackGroundTask--","Inserted: "+p);
+                            Log.e("Subjects--","Inserted: "+p);
                         }else{
                             Log.e("Subjects--","Empty Json Array: ");
                         }
@@ -229,7 +229,7 @@ public class LandingActivity extends AppCompatActivity {
                                     q++;
                                 }
                             }
-                            Log.e("BackGroundTask--","Inserted: "+p);
+                            Log.e("Papers--","Inserted: "+p);
                         }else{
                             Log.e("Papers--","Empty Json Array: ");
                         }
@@ -251,7 +251,7 @@ public class LandingActivity extends AppCompatActivity {
                             for(int i=0;i<ja_tests_table.length();i++){
 
                                 testObj=ja_tests_table.getJSONObject(i);
-                                long insertFlag=myhelper.insertTest(testObj.getInt("sptu_key"),testObj.getString("sptu_org_id"),testObj.getString("sptu_entroll_id"),testObj.getString("sptu_student_ID"),
+                                long insertFlag=myhelper.insertPractiseTest(testObj.getInt("sptu_key"),testObj.getString("sptu_org_id"),testObj.getString("sptu_entroll_id"),testObj.getString("sptu_student_ID"),
                                         testObj.getString("sptu_batch"),testObj.getString("sptu_ID"),testObj.getString("sptu_paper_ID"),testObj.getString("sptu_subjet_ID"),
                                         testObj.getString("sptu_course_id"),testObj.getString("sptu_start_date"),testObj.getString("sptu_end_date"),testObj.getString("sptu_dwnld_status"),
                                         testObj.getInt("sptu_no_of_questions"),testObj.getDouble("sptu_tot_marks"),testObj.getDouble("stpu_min_marks"),testObj.getDouble("sptu_max_marks"));
@@ -261,13 +261,46 @@ public class LandingActivity extends AppCompatActivity {
                                     q++;
                                 }
                             }
-                            Log.e("BackGroundTask--","Inserted: "+p);
+                            Log.e("Tests--","Inserted: "+p);
                         }else{
                             Log.e("Tests--","Empty Json Array: ");
                         }
                     }
                     else {
                         Log.e("Tests--","No Tests: ");
+                    }
+
+                    Object obj5=myObj.get("assesmenttests");
+
+                    if (obj5 instanceof JSONArray)
+                    {
+                        long atestdelcount=myhelper.deleteAllAssesmentTests();
+                        Log.e("assesmentdelcount----",""+atestdelcount);
+                        ja_assesmenttests=myObj.getJSONArray("assesmenttests");
+                        if(ja_assesmenttests!=null && ja_assesmenttests.length()>0){
+                            Log.e("atestLength---",""+ja_assesmenttests.length());
+                            int p=0,q=0;
+                            for(int i=0;i<ja_assesmenttests.length();i++){
+
+                                assesmentObj=ja_assesmenttests.getJSONObject(i);
+                                long insertFlag=myhelper.insertAssesmentTest(assesmentObj.getInt("satu_key"),assesmentObj.getString("satu_org_id"),assesmentObj.getString("satu_entroll_id"),assesmentObj.getString("satu_student_id"),
+                                        assesmentObj.getString("satu_batch"),assesmentObj.getString("satu_ID"),assesmentObj.getString("satu_paper_ID"),assesmentObj.getString("satu_subjet_ID"),
+                                        assesmentObj.getString("satu_course_id"),assesmentObj.getString("satu_start_date"),assesmentObj.getString("satu_end_date"),assesmentObj.getString("satu_dwnld_status"),
+                                        assesmentObj.getInt("satu_no_of_questions"),assesmentObj.getString("satu_file"),assesmentObj.getString("satu_exam_key"),assesmentObj.getDouble("satu_tot_marks"),
+                                        assesmentObj.getDouble("satu_min_marks"),assesmentObj.getDouble("satu_max_marks"));
+                                if(insertFlag>0){
+                                    p++;
+                                }else {
+                                    q++;
+                                }
+                            }
+                            Log.e("AssesmentTests--","Inserted: "+p);
+                        }else{
+                            Log.e("AssesmentTests--","Empty Json Array: ");
+                        }
+                    }
+                    else {
+                        Log.e("AssesmentTests--","No AssesmentTests: ");
                     }
 
 
@@ -309,11 +342,6 @@ public class LandingActivity extends AppCompatActivity {
                 new AsyncCheckInternet(LandingActivity.this,new INetStatus() {
                     @Override
                     public void inetSatus(Boolean netStatus) {
-//                        if(netStatus){
-//                            getEnrolls();
-//                        }else{
-//                            Toast.makeText(getApplicationContext(),"No internet,Please Check your connection",Toast.LENGTH_SHORT).show();
-//                        }
                         if(netStatus){
                             getStudentAllData();
                         }else{
