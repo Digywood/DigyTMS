@@ -83,7 +83,7 @@ public class FlashCardActivity extends AppCompatActivity {
     private Matrix matrix = new Matrix();
     //    FloatingActionButton fab_fgroupQview;
     int attemptcount=0,knowcount=0,donknowcount=0,skipcount=0,Qcount=0;
-    TextView tv_attempted,tv_iknow,tv_idonknow,tv_skipped;
+    TextView tv_attempted,tv_iknow,tv_idonknow,tv_skipped,tv_Qid;
     ArrayList<String> knownList=new ArrayList<>();
     ArrayList<String> donknowList=new ArrayList<>();
     ArrayList<String> skipList=new ArrayList<>();
@@ -215,6 +215,7 @@ public class FlashCardActivity extends AppCompatActivity {
         tv_iknow=findViewById(R.id.tv_iknowcount);
         tv_idonknow=findViewById(R.id.tv_idonknowcount);
         tv_skipped=findViewById(R.id.tv_skippedcount);
+        tv_Qid=findViewById(R.id.tv_Qid);
 
 //        slideanim=AnimationUtils.loadAnimation(FlashCardActivity.this,R.anim.layout_animation_slide_right);
 
@@ -265,6 +266,7 @@ public class FlashCardActivity extends AppCompatActivity {
                     Log.e("Image Path :--",testPath+imagefile);
                     Bitmap bmp = BitmapFactory.decodeFile(testPath+imagefile);
                     iv_quesimg.setImageBitmap(bmp);
+                    tv_Qid.setText(qObj.getString("qbm_ID"));
                     Animation rotateimage = AnimationUtils.loadAnimation(FlashCardActivity.this,R.anim.fade_in);
                     iv_quesimg.startAnimation(rotateimage);
 
@@ -311,6 +313,7 @@ public class FlashCardActivity extends AppCompatActivity {
                     Bitmap bmp = BitmapFactory.decodeFile(testPath+imagefile);
 //                    Bitmap bmp = BitmapFactory.decodeFile(testPath+"SSC01ENC01Q0001_QF.png");
                     iv_quesimg.setImageBitmap(bmp);
+                    tv_Qid.setText(qObj.getString("qbm_ID"));
                     Animation rotateimage = AnimationUtils.loadAnimation(FlashCardActivity.this, R.anim.fade_in);
                     iv_quesimg.startAnimation(rotateimage);
 
@@ -502,6 +505,8 @@ public class FlashCardActivity extends AppCompatActivity {
                         Bitmap bmp = BitmapFactory.decodeFile(testPath+filename);
                         iv_quesimg.setImageBitmap(bmp);
 
+                        tv_Qid.setText(gja_questions.getJSONObject(d).getString("qbm_ID"));
+
                         Animation rotateimage = AnimationUtils.loadAnimation(FlashCardActivity.this, R.anim.fade_in);
                         iv_quesimg.startAnimation(rotateimage);
 
@@ -528,6 +533,7 @@ public class FlashCardActivity extends AppCompatActivity {
                             Log.e("Image Path :--",filename);
                             Bitmap bmp = BitmapFactory.decodeFile(testPath+filename);
                             iv_quesimg.setImageBitmap(bmp);
+                            tv_Qid.setText(gja_questions.getJSONObject(d).getString("qbm_ID"));
 
                             Animation rotateimage = AnimationUtils.loadAnimation(FlashCardActivity.this, R.anim.fade_in);
                             iv_quesimg.startAnimation(rotateimage);
@@ -572,6 +578,7 @@ public class FlashCardActivity extends AppCompatActivity {
                             Log.e("Image Path :--",filename);
                             Bitmap bmp = BitmapFactory.decodeFile(testPath+filename);
                             iv_quesimg.setImageBitmap(bmp);
+                            tv_Qid.setText(gja_questions.getJSONObject(d).getString("qbm_ID"));
 
                             Animation rotateimage = AnimationUtils.loadAnimation(FlashCardActivity.this, R.anim.fade_in);
                             iv_quesimg.startAnimation(rotateimage);
@@ -601,6 +608,7 @@ public class FlashCardActivity extends AppCompatActivity {
                         Log.e("Image Path :--",filename);
                         Bitmap bmp = BitmapFactory.decodeFile(testPath+filename);
                         iv_quesimg.setImageBitmap(bmp);
+                        tv_Qid.setText(gja_questions.getJSONObject(d).getString("qbm_ID"));
 
                         Animation rotateimage = AnimationUtils.loadAnimation(FlashCardActivity.this, R.anim.fade_in);
                         iv_quesimg.startAnimation(rotateimage);

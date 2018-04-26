@@ -336,6 +336,11 @@ public class DBHelper extends SQLiteOpenHelper {
         return c;
     }
 
+    public Cursor getStudentAssesmentTests(){
+        Cursor c =db.query("satu_student", new String[] {"satu_entroll_id,satu_student_id,satu_batch,satu_ID,satu_paper_ID,satu_subjet_ID,satu_course_id,satu_start_date,satu_end_date,satu_dwnld_status"},null, null, null, null,null);
+        return c;
+    }
+
     public long deleteAllAssesmentTests(){
         long deleteFlag=0;
         deleteFlag=db.delete("satu_student", null, null);
@@ -630,7 +635,7 @@ public class DBHelper extends SQLiteOpenHelper {
         return  updateFlag;
     }
 
-    public long insertQuesGroup(int qbkey,String qbid,String tid,String qbmtype,String qbmfile,String qbtext,int noofques,int pickupcount,String status,String createby,String createdttm,String modby,String moddttm){
+    public long insertQuesGroup(int qbkey,String qbid,String tid,String qbmtype,String qbmfile,String qbtext,int noofques,int pickupcount,String status,String createby,String createdttm,String modby,String moddttm,String grouptype){
         long insertFlag=0;
         ContentValues cv = new ContentValues();
         cv.put("qbg_key",qbkey);
@@ -646,6 +651,7 @@ public class DBHelper extends SQLiteOpenHelper {
         cv.put("qbg_created_dttm",createdttm);
         cv.put("qbg_mod_by",modby);
         cv.put("qbg_mod_dttm",moddttm);
+        cv.put("qbg_type",grouptype);
         insertFlag = db.insert("qb_group",null, cv);
         return insertFlag;
     }
