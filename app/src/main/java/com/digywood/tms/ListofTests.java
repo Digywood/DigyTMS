@@ -4,11 +4,15 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
+import android.graphics.PorterDuff;
+import android.graphics.drawable.Drawable;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
@@ -61,6 +65,22 @@ public class ListofTests extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_listoftests);
+
+        ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null) {
+            actionBar.show();
+            actionBar.setDisplayHomeAsUpEnabled(true);
+            actionBar.setHomeButtonEnabled(true);
+        }
+
+        if(Build.VERSION.SDK_INT>=21) {
+
+            final Drawable upArrow = getApplicationContext().getResources().getDrawable(R.drawable.abc_ic_ab_back_material);
+            upArrow.setColorFilter(getResources().getColor(R.color.white), PorterDuff.Mode.SRC_ATOP);
+            getSupportActionBar().setHomeAsUpIndicator(upArrow);
+
+        }
+
         rv_tests=findViewById(R.id.rv_listoftests);
         tv_emptytests=findViewById(R.id.tv_testemptydata);
         fab_download=findViewById(R.id.fab_download);
@@ -552,7 +572,7 @@ public class ListofTests extends AppCompatActivity {
                             if(checkFlag>0){
                                 Log.e("ListofTests----","Test Already Exists");
                             }else{
-                                long insertFlag=myhelper.insertTest(myObj.getInt("sptu_key"),myObj.getString("sptu_org_id"),myObj.getString("sptu_entroll_id"),myObj.getString("sptu_student_ID"),
+                                long insertFlag=myhelper.insertPractiseTest(myObj.getInt("sptu_key"),myObj.getString("sptu_org_id"),myObj.getString("sptu_entroll_id"),myObj.getString("sptu_student_ID"),
                                         myObj.getString("sptu_batch"),myObj.getString("sptu_ID"),myObj.getString("sptu_paper_ID"),myObj.getString("sptu_subjet_ID"),
                                         myObj.getString("sptu_course_id"),myObj.getString("sptu_start_date"),myObj.getString("sptu_end_date"),myObj.getString("sptu_dwnld_status"),
                                         myObj.getInt("sptu_no_of_questions"),myObj.getDouble("sptu_tot_marks"),myObj.getDouble("stpu_min_marks"),myObj.getDouble("sptu_max_marks"));
