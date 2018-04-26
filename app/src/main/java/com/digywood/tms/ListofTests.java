@@ -427,8 +427,8 @@ public class ListofTests extends AppCompatActivity {
 
                                 groupObj=groupArray.getJSONObject(i);
                                 long insertFlag=myhelper.insertQuesGroup(groupObj.getInt("qbg_key"),groupObj.getString("qbg_ID"),testid,groupObj.getString("qbg_media_type"),groupObj.getString("qbg_media_file"),
-                                        groupObj.getString("qbg_text"),groupObj.getInt("qbg_no_questions"),groupObj.getInt("qbg_pickup_count"),groupObj.getString("qbg_status"),
-                                        groupObj.getString("qbg_created_by"),groupObj.getString("qbg_created_dttm"),groupObj.getString("qbg_mod_by"),groupObj.getString("qbg_mod_dttm"));
+                                        groupObj.getString("qbg_text"),groupObj.getInt("qbg_no_questions"),groupObj.getInt("qbg_no_pick"),groupObj.getString("qbg_status"),
+                                        groupObj.getString("qbg_created_by"),groupObj.getString("qbg_created_dttm"),groupObj.getString("qbg_mod_by"),groupObj.getString("qbg_mod_dttm"),groupObj.getString("qbg_type"));
                                 if(insertFlag>0){
                                     p++;
                                 }else {
@@ -637,6 +637,12 @@ public class ListofTests extends AppCompatActivity {
                             groupIds.add(singlequesObj.getString("gbg_id"));
                         }
 
+                        if(downloadfileList.contains(singlequesObj.getString("gbg_media_file"))){
+
+                        }else{
+                            downloadfileList.add(singlequesObj.getString("gbg_media_file"));
+                        }
+
                     }else{
 
                     }
@@ -651,11 +657,7 @@ public class ListofTests extends AppCompatActivity {
                     }else{
                         downloadfileList.add(singlequesObj.getString("qbm_Review_Images"));
                     }
-                    if(downloadfileList.contains(singlequesObj.getString("qbm_Additional_Image_ref"))){
 
-                    }else{
-                        downloadfileList.add(singlequesObj.getString("qbm_Additional_Image_ref"));
-                    }
                     if(downloadfileList.contains(singlequesObj.getString("qbm_flash_image"))){
 
                     }else{

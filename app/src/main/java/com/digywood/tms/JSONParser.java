@@ -64,15 +64,6 @@ public class JSONParser extends AppCompatActivity{
         testfimages.add("Q008.PNG");
         testfimages.add("Q010.PNG");
 
-//        scConfigList.add(new SingleSubcatConfig("SSCE000101",5,3));
-//        scConfigList.add(new SingleSubcatConfig("SSCE000102",5,2));
-//        scConfigList.add(new SingleSubcatConfig("SSCR000101",5,3));
-//        scConfigList.add(new SingleSubcatConfig("SSCR000201",3,2));
-//        scConfigList.add(new SingleSubcatConfig("SSCR000301",4,2));
-//        scConfigList.add(new SingleSubcatConfig("SSCM000101",4,2));
-//        scConfigList.add(new SingleSubcatConfig("SSCM000201",3,2));
-//        scConfigList.add(new SingleSubcatConfig("SSCM000301",5,3));
-
         try{
             mainObj=new JSONObject(JSON);
 
@@ -153,12 +144,6 @@ public class JSONParser extends AppCompatActivity{
                             }
                         }
 
-
-//                        if(groupList.contains(quesObj.getString("gbg_id"))){
-//
-//                        }else{
-//                            groupList.add(quesObj.getString("gbg_id"));
-//                        }
                         groupmainList.add(new GroupQues(quesObj.getString("gbg_id"),quesObj.getString("qbm_ID")));
                     }
 
@@ -167,7 +152,9 @@ public class JSONParser extends AppCompatActivity{
 
                 finalgroupList.clear();
                 if(groupcompList.size()>0){
+
                     int finalcompgroupcount=myhelper.getCompGroupCount(testid,sectionid,"Comprehention");
+
                     finalgroupList=getFinalGroups(groupcompList,finalcompgroupcount);
                     if(finalgroupList.size()>0){
                         for(int d=0;d<finalgroupList.size();d++){
@@ -205,10 +192,10 @@ public class JSONParser extends AppCompatActivity{
 
                         }
                     }else{
-                        Log.e("GroupConfig: --","Empty Comprehention Groups");
+                        Log.e("GroupConfigIn: --","Empty Comprehention Groups");
                     }
                 }else{
-                    Log.e("GroupConfig: --","Empty Comprehention Groups");
+                    Log.e("GroupConfigOut: --","Empty Comprehention Groups");
                 }
 
 
@@ -252,10 +239,10 @@ public class JSONParser extends AppCompatActivity{
 
                         }
                     }else{
-                        Log.e("GroupConfig: --","Empty Closure Groups");
+                        Log.e("GroupConfigIn: --","Empty Closure Groups");
                     }
                 }else{
-                    Log.e("GroupConfig: --","Empty Closure Groups");
+                    Log.e("GroupConfigOut: --","Empty Closure Groups");
                 }
 
 

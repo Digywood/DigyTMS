@@ -97,11 +97,6 @@ public class LandingActivity extends AppCompatActivity {
                         }
                     }
                     getEnrollsFromLocal();
-//                    for(int i=0;i<enrollids.size();i++){
-//
-//                        enrollList.add(new SingleEnrollment(enrollids.get(i),enrollcourseids.get(i)));
-//
-//                    }
                 }catch (Exception e){
                     e.printStackTrace();
                     Log.e("LandingActivity----",e.toString());
