@@ -63,7 +63,8 @@
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".FlashAttemptDataActivity"
-            android:screenOrientation="landscape" />
+            android:screenOrientation="landscape"
+            android:parentActivityName=".FlashCardActivity"/>
         <activity
             android:name=".DashboardActivity"
             android:label="@string/title_activity_dashboard"

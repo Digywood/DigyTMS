@@ -140,6 +140,43 @@ public class DBHelper extends SQLiteOpenHelper {
                 "  `sptu_mod_dttm` datetime DEFAULT NULL)";
         db.execSQL(tbl_sptu_student);
 
+        String tbl_satu_student="CREATE TABLE IF NOT EXISTS `satu_student` (\n" +
+                "  `satu_key` integer PRIMARY KEY,\n" +
+                "  `satu_org_id` text DEFAULT NULL,\n" +
+                "  `satu_entroll_id` text DEFAULT NULL,\n" +
+                "  `satu_student_id` text DEFAULT NULL,\n" +
+                "  `satu_batch` text DEFAULT NULL,\n" +
+                "  `satu_ID` text DEFAULT NULL,\n" +
+                "  `satu_paper_ID` text DEFAULT NULL,\n" +
+                "  `satu_subjet_ID` text DEFAULT NULL,\n" +
+                "  `satu_course_id` text DEFAULT NULL,\n" +
+                "  `satu_start_date` datetime DEFAULT NULL,\n" +
+                "  `satu_end_date` datetime DEFAULT NULL,\n" +
+                "  `satu_dwnld_start_dttm` datetime DEFAULT NULL,\n" +
+                "  `satu_dwnld_completed_dttm` datetime DEFAULT NULL,\n" +
+                "  `satu_dwnld_status` text DEFAULT NULL,\n" +
+                "  `satu_no_of_questions` int(5) DEFAULT NULL,\n" +
+                "  `satu_path` text DEFAULT NULL,\n" +
+                "  `satu_file` text DEFAULT NULL,\n" +
+                "  `satu_exam_key` text DEFAULT NULL,\n" +
+                "  `satu_tot_marks` double DEFAULT NULL,\n" +
+                "  `satu_min_marks` double DEFAULT NULL,\n" +
+                "  `satu_max_marks` double DEFAULT NULL,\n" +
+                "  `satu_avg_marks` double DEFAULT NULL,\n" +
+                "  `satu_min_percent` double DEFAULT NULL,\n" +
+                "  `satu_max_percent` double DEFAULT NULL,\n" +
+                "  `satu_avg_percent` double DEFAULT NULL,\n" +
+                "  `satu_last_attempt_marks` double DEFAULT NULL,\n" +
+                "  `satu_last_attempt_percent` double DEFAULT NULL,\n" +
+                "  `satu_last_attempt_start_dttm` datetime DEFAULT NULL,\n" +
+                "  `satu_last_attempt_end_dttm` datetime DEFAULT NULL,\n" +
+                "  `satu_no_of_attempts` int(11) DEFAULT NULL,\n" +
+                "  `satu_created_by` text DEFAULT NULL,\n" +
+                "  `satu_created_dttm` datetime DEFAULT NULL,\n" +
+                "  `satu_mod_by` text DEFAULT NULL,\n" +
+                "  `satu_mod_dttm` datetime DEFAULT NULL)";
+        db.execSQL(tbl_satu_student);
+
         String AttemptList ="CREATE TABLE `attempt_list` (\n"+
                 "   `Attempt_ID` INTEGER,\n"+
                 "   `Attempt_Test_ID` INTEGER,\n"+
@@ -268,6 +305,42 @@ public class DBHelper extends SQLiteOpenHelper {
     @Override
     public void onDowngrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         super.onDowngrade(db, oldVersion, newVersion);
+    }
+
+    public long insertAssesmentTest(int tkey,String torgid,String tenrollid,String tstudentid,String tbatch,String tid,String tpid,String tsid,String tcid,String tstartdate,String tenddate,String tdwdstatus,int tnoofques,String testfilename,String testKey,Double ttotalmarks,Double tminmarks,Double tmaxmarks){
+        long insertFlag=0;
+        ContentValues cv = new ContentValues();
+        cv.put("satu_key",tkey);
+        cv.put("satu_org_id",torgid);
+        cv.put("satu_entroll_id",tenrollid);
+        cv.put("satu_student_id",tstudentid);
+        cv.put("satu_batch",tbatch);
+        cv.put("satu_ID",tid);
+        cv.put("satu_paper_ID",tpid);
+        cv.put("satu_subjet_ID",tsid);
+        cv.put("satu_course_id",tcid);
+        cv.put("satu_start_date",tstartdate);
+        cv.put("satu_end_date",tenddate);
+        cv.put("satu_dwnld_status",tdwdstatus);
+        cv.put("satu_no_of_questions",tnoofques);
+        cv.put("satu_file",testfilename);
+        cv.put("satu_exam_key",testKey);
+        cv.put("satu_tot_marks",ttotalmarks);
+        cv.put("satu_min_marks",tminmarks);
+        cv.put("satu_max_marks",tmaxmarks);
+        insertFlag = db.insert("satu_student",null, cv);
+        return insertFlag;
+    }
+
+    public Cursor getAssesmentTestData(String testId){
+        Cursor c =db.query("satu_student", new String[] {"satu_course_id,satu_subjet_ID,satu_paper_ID,satu_entroll_id,satu_student_id,satu_batch"},"sptu_ID='"+testId+"'", null, null, null,null);
+        return c;
+    }
+
+    public long deleteAllAssesmentTests(){
+        long deleteFlag=0;
+        deleteFlag=db.delete("satu_student", null, null);
+        return  deleteFlag;
     }
 
     public long insertFlashAttempt(String studentId,String enrollId,String courseId,String subjectId,String paperId,String fcardId,int attemptnum,String sdttm,String edttm,int iknowcount,int donknowcount,int skipcount,Double percentage,String status){
@@ -482,7 +555,7 @@ public class DBHelper extends SQLiteOpenHelper {
         return  deleteFlag;
     }
 
-    public long insertTest(int tkey,String torgid,String tenrollid,String tstudentid,String tbatch,String tid,String tpid,String tsid,String tcid,String tstartdate,String tenddate,String tdwdstatus,int tnoofques,Double ttotalmarks,Double tminmarks,Double tmaxmarks){
+    public long insertPractiseTest(int tkey,String torgid,String tenrollid,String tstudentid,String tbatch,String tid,String tpid,String tsid,String tcid,String tstartdate,String tenddate,String tdwdstatus,int tnoofques,Double ttotalmarks,Double tminmarks,Double tmaxmarks){
         long insertFlag=0;
         ContentValues cv = new ContentValues();
         cv.put("sptu_key",tkey);
