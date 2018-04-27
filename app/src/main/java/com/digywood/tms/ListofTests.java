@@ -35,8 +35,8 @@ import com.digywood.tms.AsynTasks.AsyncCheckInternet;
 import com.digywood.tms.AsynTasks.BagroundTask;
 import com.digywood.tms.AsynTasks.DownloadFileAsync;
 import com.digywood.tms.DBHelper.DBHelper;
+import com.digywood.tms.Pojo.SingleDWDQues;
 import com.digywood.tms.Pojo.SingleTest;
-
 import static android.Manifest.permission.READ_EXTERNAL_STORAGE;
 import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
 
@@ -55,7 +55,9 @@ public class ListofTests extends AppCompatActivity {
     TestAdapter tAdp;
     ArrayList<String> finalUrls,finalNames,finalPaths,selectedtestidList;
     ArrayList<String> downloadfileList;
-    ArrayList<String> chapterfileList;
+    ArrayList<SingleDWDQues> chapterFileList;
+    ArrayList<String> chapterList;
+    ArrayList<String> localPathList;
     ArrayList<String> alreadydwdList;
     ArrayList<SingleTest> dwdupdateList;
     FloatingActionButton fab_download;
@@ -94,7 +96,9 @@ public class ListofTests extends AppCompatActivity {
         selectedtestidList=new ArrayList<>();
         downloadfileList=new ArrayList<>();
         alreadydwdList=new ArrayList<>();
-        chapterfileList=new ArrayList<>();
+        chapterList=new ArrayList<>();
+        chapterFileList=new ArrayList<>();
+        localPathList=new ArrayList<>();
 
         myhelper=new DBHelper(this);
 
@@ -204,14 +208,10 @@ public class ListofTests extends AppCompatActivity {
                         }else{
                             finalUrls.add(downloadjsonpath);
                             finalNames.add(selectedtestidList.get(currentitem)+".json");
+                            localPathList.add(URLClass.mainpath+localpath);
                         }
 
-                        String[] urlList=new String[finalUrls.size()];
-                        urlList = finalUrls.toArray(urlList);
-                        String[] nameList = new String[finalNames.size()];
-                        nameList = finalNames.toArray(nameList);
-
-                        new DownloadFileAsync(ListofTests.this,URLClass.mainpath+localpath,finalUrls,finalNames,new IDownloadStatus() {
+                        new DownloadFileAsync(ListofTests.this,localPathList,finalUrls,finalNames,new IDownloadStatus() {
                             @Override
                             public void downloadStatus(String status) {
 
@@ -220,6 +220,8 @@ public class ListofTests extends AppCompatActivity {
 
                                         finalUrls.clear();
                                         finalNames.clear();
+                                        localPathList.clear();
+
                                         filedata="";
 
                                         try{
@@ -245,31 +247,25 @@ public class ListofTests extends AppCompatActivity {
 
                                         if(downloadfileList.size()!=0){
 
-                                            File myFile = new File(URLClass.mainpath+localpath);
-                                            if(myFile.exists()){
-                                                for(int i=0;i<downloadfileList.size();i++){
+                                            for(int i=0;i<chapterFileList.size();i++){
 
-                                                    File myFile1 = new File(URLClass.mainpath+localpath+downloadfileList.get(i));
-                                                    if(myFile1.exists()){
+                                                SingleDWDQues sdq=chapterFileList.get(i);
 
-                                                    }else{
+                                                File myFile1 = new File(URLClass.mainpath+enrollid+"/"+courseid+"/"+subjectid+"/"+sdq.getPaperId()+"/"+sdq.getChapterId()+"/"+sdq.getFileName());
+                                                if(myFile1.exists()){
 
-                                                        finalUrls.add(tfiledwdpath+downloadfileList.get(i));
-                                                        finalNames.add(downloadfileList.get(i));
-                                                    }
-                                                }
-                                            }else{
-                                                for(int i=0;i<downloadfileList.size();i++){
+                                                }else{
 
-                                                    finalUrls.add(tfiledwdpath+downloadfileList.get(i));
-                                                    finalNames.add(downloadfileList.get(i));
-
+                                                    String tPath=URLClass.downloadjson+"courses/"+courseid+"/"+subjectid+"/"+sdq.getPaperId()+"/";
+                                                    finalUrls.add(tPath+sdq.getChapterId()+"/"+sdq.getFileName());
+                                                    finalNames.add(sdq.getFileName());
+                                                    localPathList.add(URLClass.mainpath+enrollid+"/"+courseid+"/"+subjectid+"/"+sdq.getPaperId()+"/"+sdq.getChapterId()+"/");
                                                 }
                                             }
 
                                         }else{
+                                            currentitem=currentitem+1;
                                             if(currentitem<selectedtestidList.size()){
-                                                currentitem=currentitem+1;
                                                 downloadTest(selectedtestidList.get(currentitem));
                                             }else{
                                                 Toast.makeText(getApplicationContext(),"All Downloaded",Toast.LENGTH_SHORT).show();
@@ -279,14 +275,7 @@ public class ListofTests extends AppCompatActivity {
 
                                         if(finalNames.size()!=0){
 
-                                            String[] urlList=new String[finalUrls.size()];
-                                            urlList = finalUrls.toArray(urlList);
-                                            String[] nameList = new String[finalNames.size()];
-                                            nameList = finalNames.toArray(nameList);
-
-                                            Log.e("TestName---",testidList.get(0).getTestid());
-
-                                            new DownloadFileAsync(ListofTests.this,URLClass.mainpath+localpath,finalUrls,finalNames,new IDownloadStatus() {
+                                            new DownloadFileAsync(ListofTests.this,localPathList,finalUrls,finalNames,new IDownloadStatus() {
                                                 @Override
                                                 public void downloadStatus(String status) {
 
@@ -294,7 +283,7 @@ public class ListofTests extends AppCompatActivity {
                                                         if(status.equalsIgnoreCase("Completed")){
                                                             hmap.clear();
                                                             hmap.put("testid",selectedtestidList.get(currentitem));
-                                                            hmap.put("status","DOWNLOADED");
+                                                            hmap.put("status","Downloaded");
                                                             new BagroundTask(URLClass.hosturl +"updateTestStatus.php",hmap, ListofTests.this, new IBagroundListener() {
                                                                 @Override
                                                                 public void bagroundData(String json) {
@@ -309,9 +298,8 @@ public class ListofTests extends AppCompatActivity {
 
                                                                             }
 
-//                                                                            dwdupdateList.add(new SingleTest(selectedtestidList.get(currentitem),"","Downloaded"));
+                                                                            currentitem=currentitem+1;
                                                                             if(currentitem<selectedtestidList.size()){
-                                                                                currentitem=currentitem+1;
                                                                                 downloadTest(selectedtestidList.get(currentitem));
                                                                             }else{
                                                                                 Toast.makeText(getApplicationContext(),"All Downloaded",Toast.LENGTH_SHORT).show();
@@ -343,8 +331,8 @@ public class ListofTests extends AppCompatActivity {
 
                                         }else{
 
+                                            currentitem=currentitem+1;
                                             if(currentitem<selectedtestidList.size()){
-                                                currentitem=currentitem+1;
                                                 downloadTest(selectedtestidList.get(currentitem));
                                             }else{
                                                 Toast.makeText(getApplicationContext(),"All Downloaded",Toast.LENGTH_SHORT).show();
@@ -377,10 +365,9 @@ public class ListofTests extends AppCompatActivity {
     public void getTestIdsFromLocal(){
         testidList.clear();
         try {
-            Cursor mycursor=myhelper.getStudentTests();
+            Cursor mycursor=myhelper.getStudentTestsByEnroll(enrollid);
             if(mycursor.getCount()>0){
                 while (mycursor.moveToNext()) {
-                    Log.e("DBHelper-->",""+mycursor.getCount());
                     testidList.add(new SingleTest(mycursor.getString(mycursor.getColumnIndex("sptu_ID")),mycursor.getString(mycursor.getColumnIndex("sptu_subjet_ID")),mycursor.getString(mycursor.getColumnIndex("sptu_dwnld_status"))));
                     subjectIds.add(mycursor.getString(mycursor.getColumnIndex("sptu_subjet_ID")));
                 }
@@ -609,8 +596,10 @@ public class ListofTests extends AppCompatActivity {
     public void parseJson(String json){
 
         downloadfileList.clear();
+        chapterFileList.clear();
+        localPathList.clear();
 
-        JSONArray secArray,grpArray,grpquesArray,quesArray,optionsArray,additionsArray;
+        JSONArray secArray,quesArray,optionsArray,additionsArray;
         JSONObject mainObj,secObj,singlequesObj,optionsObj,additionsObj;
         try{
             mainObj=new JSONObject(json);
@@ -626,6 +615,10 @@ public class ListofTests extends AppCompatActivity {
                 for(int i=0;i<quesArray.length();i++){
 
                     singlequesObj=quesArray.getJSONObject(i);
+
+                    String chapterid=singlequesObj.getString("qbm_ChapterID");
+                    String paperid=singlequesObj.getString("qbm_Paper_ID");
+
                     if(singlequesObj.getString("qbm_group_flag").equalsIgnoreCase("YES")){
 
                         if(groupIds.contains(singlequesObj.getString("gbg_id"))){
@@ -638,6 +631,7 @@ public class ListofTests extends AppCompatActivity {
 
                         }else{
                             downloadfileList.add(singlequesObj.getString("gbg_media_file"));
+                            chapterFileList.add(new SingleDWDQues(chapterid,paperid,singlequesObj.getString("gbg_media_file")));
                         }
 
                     }else{
@@ -648,17 +642,21 @@ public class ListofTests extends AppCompatActivity {
 
                     }else{
                         downloadfileList.add(singlequesObj.getString("qbm_image_file"));
+                        chapterFileList.add(new SingleDWDQues(chapterid,paperid,singlequesObj.getString("qbm_image_file")));
                     }
+
                     if(downloadfileList.contains(singlequesObj.getString("qbm_Review_Images"))){
 
                     }else{
                         downloadfileList.add(singlequesObj.getString("qbm_Review_Images"));
+                        chapterFileList.add(new SingleDWDQues(chapterid,paperid,singlequesObj.getString("qbm_Review_Images")));
                     }
 
                     if(downloadfileList.contains(singlequesObj.getString("qbm_flash_image"))){
 
                     }else{
                         downloadfileList.add(singlequesObj.getString("qbm_flash_image"));
+                        chapterFileList.add(new SingleDWDQues(chapterid,paperid,singlequesObj.getString("qbm_flash_image")));
                     }
 
                     optionsArray=singlequesObj.getJSONArray("Options");
@@ -669,6 +667,7 @@ public class ListofTests extends AppCompatActivity {
 
                         }else{
                             downloadfileList.add(optionsObj.getString("qbo_media_file"));
+                            chapterFileList.add(new SingleDWDQues(chapterid,paperid,optionsObj.getString("qbo_media_file")));
                         }
                     }
 
@@ -680,6 +679,7 @@ public class ListofTests extends AppCompatActivity {
 
                         }else{
                             downloadfileList.add(additionsObj.getString("qba_media_file"));
+                            chapterFileList.add(new SingleDWDQues(chapterid,paperid,additionsObj.getString("qba_media_file")));
                         }
 
                     }
@@ -803,33 +803,5 @@ public class ListofTests extends AppCompatActivity {
         }
         return super.onKeyDown(keyCode, event);
     }
-
-
-
-
-//    public boolean onCreateOptionsMenu(Menu menu) {
-//        MenuInflater inflater = getMenuInflater();
-//        inflater.inflate(R.menu.menu_main, menu);
-//        return true;
-//    }
-//
-//    public boolean onOptionsItemSelected(MenuItem item) {
-//        switch (item.getItemId()) {
-//            case R.id.action_refresh:
-//                new AsyncCheckInternet(ListofTests.this,new INetStatus() {
-//                    @Override
-//                    public void inetSatus(Boolean netStatus) {
-//                        if(netStatus){
-//                            getTestIds();
-//                        }else{
-//                            Toast.makeText(getApplicationContext(),"No internet,Please Check your connection",Toast.LENGTH_SHORT).show();
-//                        }
-//                    }
-//                }).execute();
-//                return  true;
-//            default:
-//                return super.onOptionsItemSelected(item);
-//        }
-//    }
 
 }
