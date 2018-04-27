@@ -55,6 +55,7 @@ public class ListofTests extends AppCompatActivity {
     TestAdapter tAdp;
     ArrayList<String> finalUrls,finalNames,finalPaths,selectedtestidList;
     ArrayList<String> downloadfileList;
+    ArrayList<String> chapterfileList;
     ArrayList<String> alreadydwdList;
     ArrayList<SingleTest> dwdupdateList;
     FloatingActionButton fab_download;
@@ -93,6 +94,7 @@ public class ListofTests extends AppCompatActivity {
         selectedtestidList=new ArrayList<>();
         downloadfileList=new ArrayList<>();
         alreadydwdList=new ArrayList<>();
+        chapterfileList=new ArrayList<>();
 
         myhelper=new DBHelper(this);
 
@@ -100,7 +102,6 @@ public class ListofTests extends AppCompatActivity {
         if(cmgintent!=null){
             enrollid=cmgintent.getStringExtra("enrollid");
             courseid=cmgintent.getStringExtra("courseid");
-//            Log.e("ListofTests---",cmgintent.getStringExtra("paperid"));
             paperid=cmgintent.getStringExtra("paperid");
         }
 
@@ -210,7 +211,7 @@ public class ListofTests extends AppCompatActivity {
                         String[] nameList = new String[finalNames.size()];
                         nameList = finalNames.toArray(nameList);
 
-                        new DownloadFileAsync(ListofTests.this,URLClass.mainpath+localpath,urlList,nameList,new IDownloadStatus() {
+                        new DownloadFileAsync(ListofTests.this,URLClass.mainpath+localpath,finalUrls,finalNames,new IDownloadStatus() {
                             @Override
                             public void downloadStatus(String status) {
 
@@ -252,7 +253,7 @@ public class ListofTests extends AppCompatActivity {
                                                     if(myFile1.exists()){
 
                                                     }else{
-//                                                        finalUrls.add(URLClass.downloadurl+downloadfileList.get(i));
+
                                                         finalUrls.add(tfiledwdpath+downloadfileList.get(i));
                                                         finalNames.add(downloadfileList.get(i));
                                                     }
@@ -260,7 +261,6 @@ public class ListofTests extends AppCompatActivity {
                                             }else{
                                                 for(int i=0;i<downloadfileList.size();i++){
 
-//                                                    finalUrls.add(URLClass.downloadurl+downloadfileList.get(i));
                                                     finalUrls.add(tfiledwdpath+downloadfileList.get(i));
                                                     finalNames.add(downloadfileList.get(i));
 
@@ -286,7 +286,7 @@ public class ListofTests extends AppCompatActivity {
 
                                             Log.e("TestName---",testidList.get(0).getTestid());
 
-                                            new DownloadFileAsync(ListofTests.this,URLClass.mainpath+localpath,urlList,nameList,new IDownloadStatus() {
+                                            new DownloadFileAsync(ListofTests.this,URLClass.mainpath+localpath,finalUrls,finalNames,new IDownloadStatus() {
                                                 @Override
                                                 public void downloadStatus(String status) {
 
@@ -341,18 +341,15 @@ public class ListofTests extends AppCompatActivity {
                                                 }
                                             }).execute();
 
-//                            if(dwdupdateList.size()!=0){
-//
-//
-//
-//                            }else{
-//                                Toast.makeText(getApplicationContext(),"All Tests are not fully Downloaded",Toast.LENGTH_SHORT).show();
-//                            }
-
                                         }else{
-                                            currentitem=currentitem+1;
-                                            downloadTest(selectedtestidList.get(currentitem));
-                                            Log.e("LandingActivity----","All OwnAd Images Downloaded");
+
+                                            if(currentitem<selectedtestidList.size()){
+                                                currentitem=currentitem+1;
+                                                downloadTest(selectedtestidList.get(currentitem));
+                                            }else{
+                                                Toast.makeText(getApplicationContext(),"All Downloaded",Toast.LENGTH_SHORT).show();
+                                            }
+
                                         }
 
                                     }else{
