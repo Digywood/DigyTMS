@@ -164,29 +164,4 @@ public class CourseActivity extends AppCompatActivity {
         }).execute();
     }
 
-//    public boolean onCreateOptionsMenu(Menu menu) {
-//        MenuInflater inflater = getMenuInflater();
-//        inflater.inflate(R.menu.menu_main, menu);
-//        return true;
-//    }
-//
-//    public boolean onOptionsItemSelected(MenuItem item) {
-//        switch (item.getItemId()) {
-//            case R.id.action_refresh:
-//                new AsyncCheckInternet(CourseActivity.this, new INetStatus() {
-//                    @Override
-//                    public void inetSatus(Boolean netStatus) {
-//                        if(netStatus){
-//                            getPapersData();
-//                        }else{
-//                            Toast.makeText(getApplicationContext(),"No internet,Please Check your connection",Toast.LENGTH_SHORT).show();
-//                        }
-//                    }
-//                }).execute();
-//                return  true;
-//            default:
-//                return super.onOptionsItemSelected(item);
-//        }
-//    }
-
 }

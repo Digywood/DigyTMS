@@ -582,6 +582,27 @@ public class DBHelper extends SQLiteOpenHelper {
         return insertFlag;
     }
 
+    public long updatePractiseTestData(String torgid,String tenrollid,String tstudentid,String tbatch,String tid,String tpid,String tsid,String tcid,String tstartdate,String tenddate,String tdwdstatus,int tnoofques,Double ttotalmarks,Double tminmarks,Double tmaxmarks){
+        long updateFlag=0;
+        ContentValues cv = new ContentValues();
+        cv.put("sptu_org_id",torgid);
+        cv.put("sptu_entroll_id",tenrollid);
+        cv.put("sptu_student_ID",tstudentid);
+        cv.put("sptu_batch",tbatch);
+        cv.put("sptu_paper_ID",tpid);
+        cv.put("sptu_subjet_ID",tsid);
+        cv.put("sptu_course_id",tcid);
+        cv.put("sptu_start_date",tstartdate);
+        cv.put("sptu_end_date",tenddate);
+        cv.put("sptu_dwnld_status",tdwdstatus);
+        cv.put("sptu_no_of_questions",tnoofques);
+        cv.put("sptu_tot_marks",ttotalmarks);
+        cv.put("stpu_min_marks",tminmarks);
+        cv.put("sptu_max_marks",tmaxmarks);
+        updateFlag = db.update("sptu_student", cv,"sptu_ID='"+tid+"'",null);
+        return updateFlag;
+    }
+
     public long updateTestStatus(String testid,int attemptcount,Double minscore,Double maxscore,Double avgscore,String Dttm,Double lastAttemptscore){
         long updateFlag=0;
         ContentValues cv = new ContentValues();

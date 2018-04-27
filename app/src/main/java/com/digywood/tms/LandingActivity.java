@@ -1,6 +1,7 @@
 package com.digywood.tms;
 
 import android.content.Intent;
+import android.database.Cursor;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.DefaultItemAnimator;
@@ -237,26 +238,41 @@ public class LandingActivity extends AppCompatActivity {
 
                     if (obj4 instanceof JSONArray)
                     {
-                        long testdelcount=myhelper.deleteAllTests();
-                        Log.e("testdelcount---",""+testdelcount);
+//                        long testdelcount=myhelper.deleteAllTests();
+//                        Log.e("testdelcount---",""+testdelcount);
                         ja_tests_table=myObj.getJSONArray("tests");
                         if(ja_tests_table!=null && ja_tests_table.length()>0){
                             Log.e("testLength---",""+ja_tests_table.length());
-                            int p=0,q=0;
+                            int p=0,q=0,r=0,s=0;
                             for(int i=0;i<ja_tests_table.length();i++){
 
                                 testObj=ja_tests_table.getJSONObject(i);
-                                long insertFlag=myhelper.insertPractiseTest(testObj.getInt("sptu_key"),testObj.getString("sptu_org_id"),testObj.getString("sptu_entroll_id"),testObj.getString("sptu_student_ID"),
-                                        testObj.getString("sptu_batch"),testObj.getString("sptu_ID"),testObj.getString("sptu_paper_ID"),testObj.getString("sptu_subjet_ID"),
-                                        testObj.getString("sptu_course_id"),testObj.getString("sptu_start_date"),testObj.getString("sptu_end_date"),testObj.getString("sptu_dwnld_status"),
-                                        testObj.getInt("sptu_no_of_questions"),testObj.getDouble("sptu_tot_marks"),testObj.getDouble("stpu_min_marks"),testObj.getDouble("sptu_max_marks"));
-                                if(insertFlag>0){
-                                    p++;
-                                }else {
-                                    q++;
+
+                                Cursor mycursor=myhelper.getSingleTestData(testObj.getString("sptu_ID"));
+                                if(mycursor.getCount()>0){
+                                    long updateFlag=myhelper.updatePractiseTestData(testObj.getString("sptu_org_id"),testObj.getString("sptu_entroll_id"),testObj.getString("sptu_student_ID"),
+                                            testObj.getString("sptu_batch"),testObj.getString("sptu_ID"),testObj.getString("sptu_paper_ID"),testObj.getString("sptu_subjet_ID"),
+                                            testObj.getString("sptu_course_id"),testObj.getString("sptu_start_date"),testObj.getString("sptu_end_date"),testObj.getString("sptu_dwnld_status"),
+                                            testObj.getInt("sptu_no_of_questions"),testObj.getDouble("sptu_tot_marks"),testObj.getDouble("stpu_min_marks"),testObj.getDouble("sptu_max_marks"));
+                                    if(updateFlag>0){
+                                        r++;
+                                    }else {
+                                        s++;
+                                    }
+                                }else{
+                                    long insertFlag=myhelper.insertPractiseTest(testObj.getInt("sptu_key"),testObj.getString("sptu_org_id"),testObj.getString("sptu_entroll_id"),testObj.getString("sptu_student_ID"),
+                                            testObj.getString("sptu_batch"),testObj.getString("sptu_ID"),testObj.getString("sptu_paper_ID"),testObj.getString("sptu_subjet_ID"),
+                                            testObj.getString("sptu_course_id"),testObj.getString("sptu_start_date"),testObj.getString("sptu_end_date"),testObj.getString("sptu_dwnld_status"),
+                                            testObj.getInt("sptu_no_of_questions"),testObj.getDouble("sptu_tot_marks"),testObj.getDouble("stpu_min_marks"),testObj.getDouble("sptu_max_marks"));
+                                    if(insertFlag>0){
+                                        p++;
+                                    }else {
+                                        q++;
+                                    }
                                 }
+
                             }
-                            Log.e("Tests--","Inserted: "+p);
+                            Log.e("Tests--","Inserted: "+p+"-- Updated---"+r);
                         }else{
                             Log.e("Tests--","Empty Json Array: ");
                         }
