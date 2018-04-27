@@ -332,13 +332,21 @@ public class DBHelper extends SQLiteOpenHelper {
         return insertFlag;
     }
 
+    public long updateATestStatus(String testid,String status){
+        long updateFlag=0;
+        ContentValues cv = new ContentValues();
+        cv.put("satu_dwnld_status", status);
+        updateFlag=db.update("satu_student", cv, "satu_ID='"+testid+"'",null);
+        return  updateFlag;
+    }
+
     public Cursor getAssesmentTestData(String testId){
-        Cursor c =db.query("satu_student", new String[] {"satu_course_id,satu_subjet_ID,satu_paper_ID,satu_entroll_id,satu_student_id,satu_batch"},"sptu_ID='"+testId+"'", null, null, null,null);
+        Cursor c =db.query("satu_student", new String[] {"satu_course_id,satu_subjet_ID,satu_paper_ID,satu_entroll_id,satu_student_id,satu_batch"},"satu_ID='"+testId+"'", null, null, null,null);
         return c;
     }
 
-    public Cursor getStudentAssesmentTests(){
-        Cursor c =db.query("satu_student", new String[] {"satu_entroll_id,satu_student_id,satu_batch,satu_ID,satu_paper_ID,satu_subjet_ID,satu_course_id,satu_start_date,satu_end_date,satu_dwnld_status"},null, null, null, null,null);
+    public Cursor getAssesmentTestsByEnroll(String enrollId){
+        Cursor c =db.query("satu_student", new String[] {"satu_entroll_id,satu_student_id,satu_batch,satu_ID,satu_paper_ID,satu_subjet_ID,satu_course_id,satu_start_date,satu_end_date,satu_dwnld_status"},"satu_entroll_id='"+enrollId+"'", null, null, null,null);
         return c;
     }
 
@@ -655,7 +663,7 @@ public class DBHelper extends SQLiteOpenHelper {
         return  deleteFlag;
     }
 
-    public long updateTestStatus(String testid,String status){
+    public long updatePTestStatus(String testid,String status){
         long updateFlag=0;
         ContentValues cv = new ContentValues();
         cv.put("sptu_dwnld_status", status);

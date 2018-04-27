@@ -10,10 +10,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <HorizontalScrollView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -28,7 +24,7 @@
                 android:orientation="horizontal">
 
                 <TextView
-                    android:layout_width="150dp"
+                    android:layout_width="160dp"
                     android:layout_height="wrap_content"
                     android:text="Test Id"
                     android:textStyle="bold"
@@ -38,17 +34,7 @@
                     android:textSize="16sp"/>
 
                 <TextView
-                    android:layout_width="150dp"
-                    android:layout_height="wrap_content"
-                    android:text="New Test"
-                    android:textStyle="bold"
-                    android:gravity="center_vertical"
-                    android:textColor="#FFFFFF"
-                    android:layout_weight="1"
-                    android:textSize="16sp"/>
-
-                <TextView
-                    android:layout_width="150dp"
+                    android:layout_width="160dp"
                     android:layout_height="wrap_content"
                     android:text="Action"
                     android:textStyle="bold"
@@ -58,7 +44,17 @@
                     android:textSize="16sp"/>
 
                 <TextView
-                    android:layout_width="150dp"
+                    android:layout_width="160dp"
+                    android:layout_height="wrap_content"
+                    android:text="Action"
+                    android:textStyle="bold"
+                    android:gravity="center_vertical"
+                    android:textColor="#FFFFFF"
+                    android:layout_weight="1"
+                    android:textSize="16sp"/>
+
+                <TextView
+                    android:layout_width="160dp"
                     android:layout_height="wrap_content"
                     android:text="Download \n Selection"
                     android:gravity="center_vertical"
@@ -68,32 +64,12 @@
                     android:textSize="12sp"/>
 
                 <TextView
-                    android:layout_width="150dp"
+                    android:layout_width="160dp"
                     android:layout_height="wrap_content"
                     android:text="Download \n Status"
                     android:gravity="center_vertical"
                     android:textColor="#FFFFFF"
                     android:textStyle="bold"
-                    android:layout_weight="1"
-                    android:textSize="12sp"/>
-
-                <TextView
-                    android:layout_width="150dp"
-                    android:layout_height="wrap_content"
-                    android:text="FlashCard"
-                    android:gravity="center_vertical"
-                    android:textStyle="bold"
-                    android:textColor="#FFFFFF"
-                    android:layout_weight="1"
-                    android:textSize="16sp"/>
-
-                <TextView
-                    android:layout_width="150dp"
-                    android:layout_height="wrap_content"
-                    android:text="FlashCard History"
-                    android:gravity="center_vertical"
-                    android:textStyle="bold"
-                    android:textColor="#FFFFFF"
                     android:layout_weight="1"
                     android:textSize="12sp"/>
 
@@ -105,7 +81,7 @@
                 android:orientation="vertical">
 
                 <android.support.v7.widget.RecyclerView
-                    android:id="@+id/rv_listoftests"
+                    android:id="@+id/rv_listofatests"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:scrollbars="vertical"
@@ -113,7 +89,7 @@
                 </android.support.v7.widget.RecyclerView>
 
                 <TextView
-                    android:id="@+id/tv_testemptydata"
+                    android:id="@+id/tv_atestemptydata"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:textColor="@android:color/holo_red_light"
@@ -126,10 +102,8 @@
 
         </LinearLayout>
 
-    </HorizontalScrollView>
-
         <android.support.design.widget.FloatingActionButton
-            android:id="@+id/fab_download"
+            android:id="@+id/fab_atdownload"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="3"

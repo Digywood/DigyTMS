@@ -1,21 +1,20 @@
 package com.digywood.tms;
 
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
-import android.support.v7.app.AlertDialog;
+import android.graphics.PorterDuff;
+import android.graphics.drawable.Drawable;
+import android.os.Build;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.Spinner;
 import android.widget.Toast;
-import com.digywood.tms.AsynTasks.AsyncCheckInternet;
+
 import com.digywood.tms.AsynTasks.BagroundTask;
 import com.digywood.tms.DBHelper.DBHelper;
 import org.json.JSONArray;
@@ -38,6 +37,21 @@ public class CourseActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_course);
+
+        ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null) {
+            actionBar.show();
+            actionBar.setDisplayHomeAsUpEnabled(true);
+            actionBar.setHomeButtonEnabled(true);
+        }
+
+        if(Build.VERSION.SDK_INT>=21) {
+
+            final Drawable upArrow = getApplicationContext().getResources().getDrawable(R.drawable.abc_ic_ab_back_material);
+            upArrow.setColorFilter(getResources().getColor(R.color.white), PorterDuff.Mode.SRC_ATOP);
+            getSupportActionBar().setHomeAsUpIndicator(upArrow);
+
+        }
 
         btn_practise=findViewById(R.id.btn_practise);
         btn_asessment=findViewById(R.id.btn_asessment);
@@ -80,12 +94,21 @@ public class CourseActivity extends AppCompatActivity {
                 if(pos==0){
                     Toast.makeText(getApplicationContext(),"Please Choose Valid Paper",Toast.LENGTH_SHORT).show();
                 }else{
-                    Intent i=new Intent(getApplicationContext(),ListofTests.class);
-                    Log.e("JSON---",courseid+paperidList.get(pos-1));
-                    i.putExtra("enrollid",enrollid);
-                    i.putExtra("courseid",courseid);
-                    i.putExtra("paperid",paperidList.get(pos-1));
-                    startActivity(i);
+                    if(testtype.equalsIgnoreCase("practise")){
+                        Intent i=new Intent(getApplicationContext(),ListofPractiseTests.class);
+                        Log.e("JSON---",courseid+paperidList.get(pos-1));
+                        i.putExtra("enrollid",enrollid);
+                        i.putExtra("courseid",courseid);
+                        i.putExtra("paperid",paperidList.get(pos-1));
+                        startActivity(i);
+                    }else{
+                        Intent i=new Intent(getApplicationContext(),ListofAssesmentTests.class);
+                        Log.e("JSON---",courseid+paperidList.get(pos-1));
+                        i.putExtra("enrollid",enrollid);
+                        i.putExtra("courseid",courseid);
+                        i.putExtra("paperid",paperidList.get(pos-1));
+                        startActivity(i);
+                    }
                 }
             }
         });

@@ -30,13 +30,19 @@
             android:screenOrientation="portrait" />
         <activity
             android:name=".LandingActivity"
-            android:screenOrientation="landscape" />
+            android:screenOrientation="landscape"
+            android:parentActivityName=".MainActivity"/>
         <activity
             android:name=".CourseActivity"
-            android:screenOrientation="landscape" />
+            android:screenOrientation="landscape"
+            android:parentActivityName=".LandingActivity"/>
         <activity android:name=".EnrollRequestActivity" />
         <activity
-            android:name=".ListofTests"
+            android:name=".ListofPractiseTests"
+            android:parentActivityName=".CourseActivity"
+            android:screenOrientation="landscape" />
+        <activity
+            android:name=".ListofAssesmentTests"
             android:parentActivityName=".CourseActivity"
             android:screenOrientation="landscape" />
         <activity
