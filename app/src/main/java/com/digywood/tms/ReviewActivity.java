@@ -23,7 +23,6 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SimpleItemAnimator;
 import android.util.Log;
 import android.view.GestureDetector;
-import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -46,9 +45,7 @@ import org.json.JSONObject;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.Collections;
 
 import com.digywood.tms.Adapters.OptionsCheckAdapter;
 import com.digywood.tms.Adapters.QuestionListAdapter;
@@ -385,7 +382,7 @@ public class ReviewActivity extends AppCompatActivity implements
                                             public void onClick(DialogInterface arg0, int arg1) {
 //                                            q_list.clear();
                                                 finish();
-                                                Intent intent = new Intent(ReviewActivity.this, ListofTests.class);
+                                                Intent intent = new Intent(ReviewActivity.this, ListofPractiseTests.class);
                                                 startActivity(intent);
                                             }
                                         })
@@ -1050,7 +1047,7 @@ public class ReviewActivity extends AppCompatActivity implements
                     // do something when the button is clicked
                     public void onClick(DialogInterface arg0, int arg1) {
 
-                        Intent intent = new Intent(ReviewActivity.this, ListofTests.class);
+                        Intent intent = new Intent(ReviewActivity.this, ListofPractiseTests.class);
                         startActivity(intent);
 
                     }

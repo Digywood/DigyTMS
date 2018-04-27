@@ -10,7 +10,6 @@ import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.os.Handler;
@@ -39,7 +38,6 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.GridView;
 import android.widget.ImageView;
-import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -53,7 +51,6 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Locale;
 import java.util.concurrent.TimeUnit;
 
@@ -1097,7 +1094,7 @@ public class TestActivity extends AppCompatActivity implements
                         } catch (IOException e) {
                             e.printStackTrace();
                         }
-                        Intent intent = new Intent(TestActivity.this, ListofTests.class);
+                        Intent intent = new Intent(TestActivity.this, ListofPractiseTests.class);
                         startActivity(intent);
 
                     }
