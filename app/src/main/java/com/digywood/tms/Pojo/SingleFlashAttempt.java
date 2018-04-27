@@ -4,7 +4,7 @@ public class SingleFlashAttempt {
 
     private String date;
 
-    private int knowcount,donknowcount,skipcount;
+    private int attemptQcount,knowcount,donknowcount,skipcount;
 
     private Double percent;
 
@@ -12,14 +12,23 @@ public class SingleFlashAttempt {
 
     }
 
-    public SingleFlashAttempt(String dttm,int knowcount,int donknowcount,int skipcount,Double percentage){
+    public SingleFlashAttempt(String dttm,int aQcount,int knowcount,int donknowcount,int skipcount,Double percentage){
 
         this.date=dttm;
+        this.attemptQcount=aQcount;
         this.knowcount=knowcount;
         this.donknowcount=donknowcount;
         this.skipcount=skipcount;
         this.percent=percentage;
 
+    }
+
+    public int getAttemptQcount() {
+        return attemptQcount;
+    }
+
+    public void setAttemptQcount(int attemptQcount) {
+        this.attemptQcount = attemptQcount;
     }
 
     public String getDate() {

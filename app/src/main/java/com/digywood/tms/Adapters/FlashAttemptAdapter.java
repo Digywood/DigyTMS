@@ -20,12 +20,13 @@ public class FlashAttemptAdapter extends RecyclerView.Adapter<FlashAttemptAdapte
     private ArrayList<String> chknumberList=new ArrayList<>();
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
-        public TextView tv_fdate,tv_fknowcount,tv_fdonknowcount,tv_fskipcount,tv_fpercentage;
+        public TextView tv_fdate,tv_fQcount,tv_fknowcount,tv_fdonknowcount,tv_fskipcount,tv_fpercentage;
         public ProgressBar pb_progress;
 
         public MyViewHolder(View view) {
             super(view);
             tv_fdate =view.findViewById(R.id.tv_fdate);
+            tv_fQcount =view.findViewById(R.id.tv_fattemptQcount);
             tv_fknowcount =view.findViewById(R.id.tv_fknowcount);
             tv_fdonknowcount =view.findViewById(R.id.tv_fdonknowcount);
             tv_fskipcount =view.findViewById(R.id.tv_fskipcount);
@@ -55,6 +56,7 @@ public class FlashAttemptAdapter extends RecyclerView.Adapter<FlashAttemptAdapte
         final SingleFlashAttempt singlefattempt = fattemptList.get(position);
 
         holder.tv_fdate.setText(singlefattempt.getDate());
+        holder.tv_fQcount.setText(String.valueOf(singlefattempt.getAttemptQcount()));
         holder.tv_fknowcount.setText(String.valueOf(singlefattempt.getKnowcount()));
         holder.tv_fdonknowcount.setText(String.valueOf(singlefattempt.getDonknowcount()));
         holder.tv_fskipcount.setText(String.valueOf(singlefattempt.getSkipcount()));

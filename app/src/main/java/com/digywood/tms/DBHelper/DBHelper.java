@@ -219,6 +219,7 @@ public class DBHelper extends SQLiteOpenHelper {
                 "  `attemptNumber` int(5) DEFAULT NULL,\n" +
                 "  `startDttm` datetime DEFAULT NULL,\n" +
                 "  `endDttm` datetime DEFAULT NULL,\n" +
+                "  `attemptQCount` int(5) DEFAULT NULL,\n"+
                 "  `iknowCount` int(5) DEFAULT NULL,\n" +
                 "  `donknowCount` int(5) DEFAULT NULL,\n" +
                 "  `skipCount` int(5) DEFAULT NULL,\n" +
@@ -343,11 +344,11 @@ public class DBHelper extends SQLiteOpenHelper {
 
     public long deleteAllAssesmentTests(){
         long deleteFlag=0;
-        deleteFlag=db.delete("satu_student", null, null);
+        deleteFlag=db.delete("satu_student", null,null);
         return  deleteFlag;
     }
 
-    public long insertFlashAttempt(String studentId,String enrollId,String courseId,String subjectId,String paperId,String fcardId,int attemptnum,String sdttm,String edttm,int iknowcount,int donknowcount,int skipcount,Double percentage,String status){
+    public long insertFlashAttempt(String studentId,String enrollId,String courseId,String subjectId,String paperId,String fcardId,int attemptnum,String sdttm,String edttm,int attemptQcount,int iknowcount,int donknowcount,int skipcount,Double percentage,String status){
         long insertFlag=0;
         ContentValues cv = new ContentValues();
         cv.put("studentId",studentId);
@@ -359,6 +360,7 @@ public class DBHelper extends SQLiteOpenHelper {
         cv.put("attemptNumber",attemptnum);
         cv.put("startDttm",sdttm);
         cv.put("endDttm",edttm);
+        cv.put("attemptQCount",attemptQcount);
         cv.put("iknowCount",iknowcount);
         cv.put("donknowCount",donknowcount);
         cv.put("skipCount",skipcount);
@@ -375,7 +377,7 @@ public class DBHelper extends SQLiteOpenHelper {
     }
 
     public Cursor getFlashTestData(String testId){
-        Cursor c =db.query("flashcard_attempt", new String[] {"attemptNumber,startDttm,iknowCount,donknowCount,skipCount,percentageObtain"},"flashcardId='"+testId+"'", null, null, null,"startDttm DESC");
+        Cursor c =db.query("flashcard_attempt", new String[] {"attemptNumber,startDttm,attemptQCount,iknowCount,donknowCount,skipCount,percentageObtain"},"flashcardId='"+testId+"'", null, null, null,"startDttm DESC");
         return  c;
     }
 
@@ -629,6 +631,11 @@ public class DBHelper extends SQLiteOpenHelper {
     }
     public Cursor getStudentTests(){
         Cursor c =db.query("sptu_student", new String[] {"sptu_entroll_id,sptu_student_ID,sptu_ID,sptu_paper_ID,sptu_subjet_ID,sptu_course_id,sptu_dwnld_status"},null, null, null, null,null);
+        return c;
+    }
+
+    public Cursor getStudentTestsByEnroll(String enrollId){
+        Cursor c =db.query("sptu_student", new String[] {"sptu_entroll_id,sptu_student_ID,sptu_ID,sptu_paper_ID,sptu_subjet_ID,sptu_course_id,sptu_dwnld_status"},"sptu_entroll_id='"+enrollId+"'", null, null, null,null);
         return c;
     }
 

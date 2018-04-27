@@ -26,11 +26,10 @@ import java.util.ArrayList;
 
 public class DownloadFileAsync extends AsyncTask<Void,String, String> {
 
-    String filePath=null ;
     public static final int DIALOG_DOWNLOAD_PROGRESS = 0;
     Context context;
     private ProgressDialog mProgressDialog;
-    ArrayList<String> file_paths,file_names;
+    ArrayList<String> file_paths,file_names,dwd_paths;
     InputStream input;
     OutputStream output;
     HttpURLConnection con;
@@ -42,10 +41,10 @@ public class DownloadFileAsync extends AsyncTask<Void,String, String> {
     String log_status = null;
     DBHelper helper;
 
-    public DownloadFileAsync(Context c,String path,ArrayList<String> urlslist,ArrayList<String> nameslist,IDownloadStatus iDownloadStatus) {
+    public DownloadFileAsync(Context c,ArrayList<String> dwdpaths,ArrayList<String> urlslist,ArrayList<String> nameslist,IDownloadStatus iDownloadStatus) {
         super();
         this.context=c;
-        this.filePath=path;
+        this.dwd_paths=dwdpaths;
         this.dwdtask=this;
         mProgressDialog= new ProgressDialog(context);
         mProgressDialog.setCanceledOnTouchOutside(false);
@@ -143,7 +142,7 @@ public class DownloadFileAsync extends AsyncTask<Void,String, String> {
                 if (con != null)
                     con.disconnect();
             }
-            moveFile(temp_location,filename,filePath);
+            moveFile(temp_location,filename,dwd_paths.get(i));
         }
 
         return filename;
@@ -193,11 +192,6 @@ public class DownloadFileAsync extends AsyncTask<Void,String, String> {
         //((MainActivity)context). playCommertialAdds();
         mProgressDialog.dismiss();
         listner.downloadStatus("Completed");
-
-        /*Intent i = context.getPackageManager()
-                .getLaunchIntentForPackage( context.getPackageName() );
-        i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        context.startActivity(i);*/
     }
 
     private void moveFile(String inputPath,String inputFile,String outputPath) {
