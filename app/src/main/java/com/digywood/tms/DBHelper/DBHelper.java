@@ -178,16 +178,18 @@ public class DBHelper extends SQLiteOpenHelper {
         db.execSQL(tbl_satu_student);
 
         String AttemptList ="CREATE TABLE `attempt_list` (\n"+
-                "   `Attempt_ID` INTEGER,\n"+
+                "   `Attempt_ID` INTEGER PRIMARY KEY AUTOINCREMENT,\n"+
                 "   `Attempt_Test_ID` INTEGER,\n"+
                 "   `Attempt_Status` int(5) NOT NULL,\n"+
                 "   `Attempt_RemainingTime` int(5) DEFAULT NULL,\n"+
                 "   `Attempt_LastQuestion` int(5) DEFAULT NULL,\n"+
                 "   `Attempt_LastSection` int(5) DEFAULT NULL,\n"+
+                "   `Attempt_Confirmed` int(5) DEFAULT NULL,\n"+
+                "   `Attempt_Skipped` int(5) DEFAULT NULL,\n"+
+                "   `Attempt_Bookmarked` int(5) DEFAULT NULL,\n"+
+                "   `Attempt_UnAttempted` int(5) DEFAULT NULL,\n"+
                 "   `Attempt_Score` int(10) DEFAULT NULL,\n"+
-                "   `Attempt_Percentage` int(10) DEFAULT NULL,\n"+
-                "   PRIMARY KEY (`Attempt_ID`)\n"+
-                ")";
+                "   `Attempt_Percentage` int(10) DEFAULT NULL)";
         db.execSQL(AttemptList);
 
         String AttemptData=" CREATE TABLE `attempt_data` (\n"+
@@ -1038,13 +1040,17 @@ public class DBHelper extends SQLiteOpenHelper {
 //        db.execSQL("TRUNCATE table " +table);
     }
 
-    public long InsertAttempt( String testID,int status, int aScore, int aperc,long aTime,int index,int pos){
+    public long InsertAttempt( String testID,int status, int aScore, int attempted, int skipped, int bookmarked, int unattempted, int aperc,long aTime,int index,int pos){
 
         long insertFlag=0;
 
         ContentValues cv = new ContentValues();
         cv.put("Attempt_Test_ID", testID);
         cv.put("Attempt_Status", status);
+        cv.put("Attempt_Confirmed", attempted);
+        cv.put("Attempt_Skipped", skipped);
+        cv.put("Attempt_Bookmarked",bookmarked);
+        cv.put("Attempt_UnAttempted", unattempted);
         cv.put("Attempt_Score",aScore );
         cv.put("Attempt_Percentage",aperc );
         cv.put("Attempt_RemainingTime",aTime );
@@ -1054,34 +1060,49 @@ public class DBHelper extends SQLiteOpenHelper {
         return insertFlag;
     }
 
+
     public Cursor getTestRawData(String testId){
         String query ="SELECT COUNT(*) as attemptcount,MIN(Attempt_Percentage) as minscore,MAX(Attempt_Percentage) as maxscore,AVG(Attempt_Percentage) as avgscore FROM "+" attempt_list"+" WHERE Attempt_Test_ID ='"+testId+"'";
         Cursor c=db.rawQuery(query,null);
         return c;
     }
 
-    public long UpdateAttempt(int aID,int status, int aScore, int aperc, long aTime,int index,int pos){
+    public long UpdateAttempt(int aID,String testID,int status, int aScore, int attempted, int skipped, int bookmarked, int unattempted, int aperc,long aTime,int index,int pos){
 
         long updateFlag=0;
         ContentValues cv = new ContentValues();
         cv.put("Attempt_Status", status);
+        cv.put("Attempt_Test_ID", testID);
+        cv.put("Attempt_Confirmed", attempted);
+        cv.put("Attempt_Skipped", skipped);
+        cv.put("Attempt_Bookmarked",bookmarked);
+        cv.put("Attempt_UnAttempted", unattempted);
         cv.put("Attempt_Score",aScore );
         cv.put("Attempt_Percentage",aperc );
         cv.put("Attempt_RemainingTime",aTime );
         cv.put("Attempt_LastQuestion",index );
         cv.put("Attempt_LastSection",pos );
+
         updateFlag = db.update("attempt_list",cv,"Attempt_ID='"+aID+"'",null);
 
         return updateFlag;
     }
 
     public Cursor getTestAttemptData(String testId){
-        Cursor c =db.query("attempt_list", new String[] {"Attempt_ID,Attempt_Test_ID,Attempt_Status,Attempt_Score,Attempt_Percentage"},"Attempt_Test_ID='"+testId+"'", null, null, null,"startDttm DESC");
+        Cursor c =db.query("attempt_list", new String[] {"Attempt_ID,Attempt_Test_ID,Attempt_Status,Attempt_Confirmed,Attempt_Skipped,Attempt_Bookmarked,Attempt_UnAttempted,Attempt_Score,Attempt_Percentage"},"Attempt_Test_ID='"+testId+" and Attempt_Status = 2'", null, null, null,"Attempt_ID DESC");
         return  c;
     }
     public int getAttempCount(){
         int count=0;
         String countQuery = "select * from attempt_list";
+        Cursor c = db.rawQuery(countQuery, null);
+        count=c.getCount();
+        return count;
+    }
+
+    public int DeleteAttempt(int aID){
+        int count=0;
+        String countQuery = "DELETE FROM attempt_list WHERE Attempt_ID='"+aID+"'";
         Cursor c = db.rawQuery(countQuery, null);
         count=c.getCount();
         return count;

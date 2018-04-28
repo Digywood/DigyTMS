@@ -5,6 +5,8 @@ import android.database.Cursor;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
+import android.support.design.widget.TabLayout;
+import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -15,11 +17,12 @@ import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 import com.digywood.tms.Adapters.FlashAttemptAdapter;
+import com.digywood.tms.Adapters.PagerAdapter;
 import com.digywood.tms.DBHelper.DBHelper;
 import com.digywood.tms.Pojo.SingleFlashAttempt;
 import java.util.ArrayList;
 
-public class FlashAttemptDataActivity extends AppCompatActivity {
+public class AttemptDataActivity extends AppCompatActivity {
 
     DBHelper myhelper;
     String testId="";
@@ -33,7 +36,7 @@ public class FlashAttemptDataActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_flash_attempt_data);
+        setContentView(R.layout.activity_attempt_data);
 
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
@@ -41,6 +44,33 @@ public class FlashAttemptDataActivity extends AppCompatActivity {
             actionBar.setDisplayHomeAsUpEnabled(true);
             actionBar.setHomeButtonEnabled(true);
         }
+
+        TabLayout tabLayout = (TabLayout) findViewById(R.id.tab_layout);
+        tabLayout.addTab(tabLayout.newTab().setText("Practice Test"));
+        tabLayout.addTab(tabLayout.newTab().setText("FlashCards"));
+        tabLayout.setTabGravity(TabLayout.GRAVITY_CENTER);
+
+        final ViewPager viewPager = (ViewPager) findViewById(R.id.pager);
+        final PagerAdapter adapter = new PagerAdapter
+                (getSupportFragmentManager(), tabLayout.getTabCount());
+        viewPager.setAdapter(adapter);
+        viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
+        tabLayout.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+            @Override
+            public void onTabSelected(TabLayout.Tab tab) {
+                viewPager.setCurrentItem(tab.getPosition());
+            }
+
+            @Override
+            public void onTabUnselected(TabLayout.Tab tab) {
+
+            }
+
+            @Override
+            public void onTabReselected(TabLayout.Tab tab) {
+
+            }
+        });
 
         if(Build.VERSION.SDK_INT>=21) {
 
@@ -50,12 +80,12 @@ public class FlashAttemptDataActivity extends AppCompatActivity {
 
         }
 
-        Intent cmgintent=getIntent();
+/*        Intent cmgintent=getIntent();
         if(cmgintent!=null){
             testId=cmgintent.getStringExtra("testId");
-        }
+        }*/
 
-        myhelper=new DBHelper(this);
+/*        myhelper=new DBHelper(this);
         tv_testid=findViewById(R.id.tv_ftestid);
         tv_testid.setText(testId);
         tv_minscore=findViewById(R.id.tv_minpercent);
@@ -63,10 +93,11 @@ public class FlashAttemptDataActivity extends AppCompatActivity {
         tv_avgscore=findViewById(R.id.tv_avgpercent);
         rv_fattemptdata=findViewById(R.id.rv_flashattempts);
         tv_emptyflashdata=findViewById(R.id.tv_flashemptydata);
-
-        getFlashAttemptData(testId);
+*/
+//        getFlashAttemptData(testId);
 
     }
+
 
     public void getFlashAttemptData(String testId){
 
@@ -98,8 +129,8 @@ public class FlashAttemptDataActivity extends AppCompatActivity {
         if (fattemptList.size() != 0) {
             Log.e("Advtlist.size()", "comes:" + fattemptList.size());
             tv_emptyflashdata.setVisibility(View.GONE);
-            fAdp = new FlashAttemptAdapter(fattemptList,FlashAttemptDataActivity.this);
-            myLayoutManager = new LinearLayoutManager(FlashAttemptDataActivity.this, LinearLayoutManager.VERTICAL,false);
+            fAdp = new FlashAttemptAdapter(fattemptList,AttemptDataActivity.this);
+            myLayoutManager = new LinearLayoutManager(AttemptDataActivity.this, LinearLayoutManager.VERTICAL,false);
             rv_fattemptdata.setLayoutManager(myLayoutManager);
             rv_fattemptdata.setItemAnimator(new DefaultItemAnimator());
             rv_fattemptdata.setAdapter(fAdp);

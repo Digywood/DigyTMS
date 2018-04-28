@@ -32,7 +32,6 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.view.animation.LayoutAnimationController;
 import android.widget.AdapterView;
@@ -108,7 +107,7 @@ public class TestActivity extends AppCompatActivity implements
     Boolean flag = false;
     final Boolean edit = true;
     public static final int RequestPermissionCode = 1;
-    static int index = 0, pos = 0, max = 1, grp = 0, size, count = -1;
+    static int index = 0, pos = 0, max = 1, grp = 0, size, count = 0;
     JSONObject obj, sectionobj, groupobj, questionobj, temp;
     public static JSONObject attempt;
     JSONArray array, optionsArray, totalArray, groupArray, sectionArray, attemptsectionarray, buffer;
@@ -268,13 +267,16 @@ public class TestActivity extends AppCompatActivity implements
 
         try {
 
-            count = dataObj.getAttempCount() - 1;
+            count = dataObj.getAttempCount()-1;
             c = dataObj.getAttempt(count);
             //if cursor has values then the test is being resumed and data is retrieved from database
-            if (c.getCount() > 0) {
-                c.moveToLast();
-                if (c.getInt(c.getColumnIndex("Attempt_Status")) == 1) {
-                    Log.e("TestingJson", "reached");
+                if (getIntent().getStringExtra("status").equalsIgnoreCase("NEW")) {
+                    newTest();
+
+                }
+                else {
+                    c.moveToLast();
+                    Log.e("TestingJson", ""+c.getInt(c.getColumnIndex("Attempt_Status"))+" "+c.getCount());
                     millisStart = c.getLong(c.getColumnIndex("Attempt_RemainingTime"));
                     attempt = new JSONObject(getIntent().getStringExtra("json"));
                     attemptsectionarray = new JSONArray();
@@ -284,24 +286,13 @@ public class TestActivity extends AppCompatActivity implements
                     index = c.getInt(c.getColumnIndex("Attempt_LastQuestion"));
                     pos = c.getInt(c.getColumnIndex("Attempt_LastSection"));
                 }
-            }
-            //else cursor doesn't have values then the test is started fresh
-            else {
-                Log.e("Fresh", "Test");
-                millisStart = 3600000;
-                obj = new JSONObject(getIntent().getStringExtra("json"));
-                encObj = new EncryptDecrypt();
-                attemptsectionarray = new JSONArray();
-                max = 1;
-                attempt = new JSONObject(getIntent().getStringExtra("json"));
-                attemptsectionarray = attempt.getJSONArray("Sections");
-                Log.e("Sections", "" + attemptsectionarray.length());
-                index = 0;
-                pos = 0;
-                buffer = attempt.getJSONArray("Sections").getJSONObject(pos).getJSONArray("Questions");
-                storeSections();
-
-            }
+//
+//            //else cursor doesn't have values then the test is started fresh
+//            else {
+//                Log.e("TestingJson", ""+c.getInt(c.getColumnIndex("Attempt_Status")));
+//                Log.e("Fresh", "Test");
+//                newTest();
+//            }
 
         } catch (JSONException e) {
             e.printStackTrace();
@@ -409,9 +400,9 @@ public class TestActivity extends AppCompatActivity implements
                                             public void onClick(DialogInterface arg0, int arg1) {
 //                                            q_list.clear();
                                                 try {
-                                                    long value = dataObj.UpdateAttempt(count, 2, 0, 0, millisRemaining, index, pos);
+                                                    long value = dataObj.UpdateAttempt(count,attempt.getString("ptu_test_ID"),2, 0,dataObj.getQuestionAttempted(),dataObj.getQuestionSkipped(),dataObj.getQustionBookmarked(),dataObj.getQustionNotAttempted(), 0, millisRemaining, index, pos);
                                                     if (value >= 0) {
-                                                        dataObj.InsertAttempt(attempt.getString("ptu_section_ID"),2, 0, 0, millisRemaining, index, pos);
+                                                        dataObj.InsertAttempt(attempt.getString("ptu_test_ID"),2, 0,dataObj.getQuestionAttempted(),dataObj.getQuestionSkipped(),dataObj.getQustionBookmarked(),dataObj.getQustionNotAttempted(), 0, millisRemaining, index, pos);
                                                     }
                                                     SaveJSONdataToFile.objectToFile(URLClass.mainpath + path + "Attempt/" + testid + ".json", attempt.toString());
                                                 } catch (JSONException|IOException e) {
@@ -423,7 +414,7 @@ public class TestActivity extends AppCompatActivity implements
                                                 int revealX = (int) (finish_view.getX() + finish_view.getWidth() / 2);
                                                 int revealY = (int) (finish_view.getY() + finish_view.getHeight() / 2);
                                                 finish();
-                                                count = dataObj.getAttempCount() - 1;
+                                                count = dataObj.getAttempCount();
 
 /*                                                c = dataObj.getAttempt(count);
                                                 c.moveToFirst();*/
@@ -539,24 +530,19 @@ public class TestActivity extends AppCompatActivity implements
 
     }
 
-    //temperoary method
-    public String loadJSONFromAsset() {
-        String json = null;
-        byte[] buffer = null;
-        try {
-            InputStream is = this.getAssets().open("updated_json.json");
-            int size = is.available();
-            buffer = new byte[size];
-            is.read(buffer);
-            is.close();
-            json = new String(buffer, "UTF-8");
-        } catch (IOException ex) {
-            ex.printStackTrace();
-            return null;
-        } catch (NullPointerException e) {
-            e.printStackTrace();
-        }
-        return json;
+    public void newTest() throws JSONException {
+        millisStart = 3600000;
+        obj = new JSONObject(getIntent().getStringExtra("json"));
+        encObj = new EncryptDecrypt();
+        attemptsectionarray = new JSONArray();
+        max = 1;
+        attempt = new JSONObject(getIntent().getStringExtra("json"));
+        attemptsectionarray = attempt.getJSONArray("Sections");
+        Log.e("Sections", "" + attemptsectionarray.length());
+        index = 0;
+        pos = 0;
+        buffer = attempt.getJSONArray("Sections").getJSONObject(pos).getJSONArray("Questions");
+        storeSections();
     }
 
     //method to display selected question
@@ -722,13 +708,14 @@ public class TestActivity extends AppCompatActivity implements
                     dataObj.InsertQuestion(attempt.getString("ptu_test_ID"), 0, Id, Seq, Integer.valueOf(questionobj.getString("qbm_marks")), Double.valueOf(questionobj.getString("qbm_negative_mrk")), 0, 0, indx, listOfLists.get(pos).get(index).getQ_status(), opAdapter.getSelectedSequence(), opAdapter.getFlag());
                 }
                 Log.e("CurrentStatus", "" + dataObj.getPosition(Id));
+                // Saving time remaining
+                long value = dataObj.UpdateAttempt(count, attempt.getString("ptu_test_ID"), 1, 0, dataObj.getQuestionAttempted(), dataObj.getQuestionSkipped(), dataObj.getQustionBookmarked(), dataObj.getQustionNotAttempted(), 0, millisRemaining, index, pos);
+                Log.e("WriteOption:", "" + value);
+                if (value >= 0) {
+                    dataObj.InsertAttempt(attempt.getString("ptu_test_ID"), 1, 0, dataObj.getQuestionAttempted(), dataObj.getQuestionSkipped(), dataObj.getQustionBookmarked(), dataObj.getQustionNotAttempted(), 0, millisRemaining, index, pos);
+                }
             }
-            // Saving time remaining
-            long value = dataObj.UpdateAttempt(count, 1, 0, 0, millisRemaining, index, pos);
-            if (value >= 0) {
-                dataObj.InsertAttempt(attempt.getString("ptu_section_ID"),1, 0, 0, millisRemaining, index, pos);
-            }
-            Log.e("WriteOption:", opAdapter.getSelectedSequence());
+
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -774,9 +761,9 @@ public class TestActivity extends AppCompatActivity implements
                             public void onClick(DialogInterface arg0, int arg1) {
 //                                            q_list.clear();
                                 try {
-                                    long value = dataObj.UpdateAttempt(count, 2, 0, 0, millisRemaining, index, pos);
+                                    long value = dataObj.UpdateAttempt(count,attempt.getString("ptu_test_ID"),2, 0,dataObj.getQuestionAttempted(),dataObj.getQuestionSkipped(),dataObj.getQustionBookmarked(),dataObj.getQustionNotAttempted(), 0, millisRemaining, index, pos);
                                     if (value >= 0) {
-                                        dataObj.InsertAttempt(attempt.getString("ptu_section_ID"),2, 0, 0, millisRemaining, index, pos);
+                                        dataObj.InsertAttempt(attempt.getString("ptu_test_ID"),2, 0,dataObj.getQuestionAttempted(),dataObj.getQuestionSkipped(),dataObj.getQustionBookmarked(),dataObj.getQustionNotAttempted(), 0, millisRemaining, index, pos);
                                     }
                                     SaveJSONdataToFile.objectToFile(URLClass.mainpath + path + "Attempt/" + testid + ".json", attempt.toString());
                                 } catch (JSONException|IOException e) {
@@ -787,7 +774,7 @@ public class TestActivity extends AppCompatActivity implements
                                 int revealX = (int) (finish_view.getX() + finish_view.getWidth() / 2);
                                 int revealY = (int) (finish_view.getY() + finish_view.getHeight() / 2);
                                 finish();
-                                count = dataObj.getAttempCount() - 1;
+                                count = dataObj.getAttempCount();
 
                                 c = dataObj.getAttempt(count);
                                 c.moveToFirst();
@@ -899,7 +886,7 @@ public class TestActivity extends AppCompatActivity implements
         array = attempt.getJSONArray("Sections").getJSONObject(pos).getJSONArray("Questions");
         myLayoutManager.scrollToPositionWithOffset(index, 400);
         questionobj = array.getJSONObject(index);
-        q_no.setText(questionobj.getString("qbm_SequenceId"));
+        q_no.setText(questionobj.getString("qbm_ID"));
         if (questionobj.getString("qbm_group_flag").equals("YES")) {
             groupId = questionobj.getString("gbg_id");
             btn_group_info.setEnabled(true);
@@ -1094,9 +1081,9 @@ public class TestActivity extends AppCompatActivity implements
                     // do something when the button is clicked
                     public void onClick(DialogInterface arg0, int arg1) {
                         try {
-                            long value = dataObj.UpdateAttempt(count, 1, 0, 0, millisRemaining, index, pos);
+                            long value = dataObj.UpdateAttempt(count,attempt.getString("ptu_test_ID"),1, 0,dataObj.getQuestionAttempted(),dataObj.getQuestionSkipped(),dataObj.getQustionBookmarked(),dataObj.getQustionNotAttempted(), 0, millisRemaining, index, pos);
                             if (value >= 0) {
-                                dataObj.InsertAttempt(attempt.getString("ptu_section_ID"),1, 0, 0, millisRemaining, index, pos);
+                                dataObj.InsertAttempt(attempt.getString("ptu_test_ID"),1, 0,dataObj.getQuestionAttempted(),dataObj.getQuestionSkipped(),dataObj.getQustionBookmarked(),dataObj.getQustionNotAttempted(), 0, millisRemaining, index, pos);
                             }
                             SaveJSONdataToFile.objectToFile(URLClass.mainpath + path + "Attempt/" + testid + ".json", attempt.toString());
                         } catch (JSONException|IOException e) {
@@ -1225,7 +1212,7 @@ public class TestActivity extends AppCompatActivity implements
     public void onResume() {
         Log.d(TAG, "onResume:");
         dataObj = new DBHelper(TestActivity.this);
-        int count = dataObj.getAttempCount();
+//        int count = dataObj.getAttempCount()-1;
         super.onResume();
     }
 
@@ -1234,9 +1221,9 @@ public class TestActivity extends AppCompatActivity implements
         Log.d(TAG, "onPause:");
         dataObj = new DBHelper(TestActivity.this);
         try {
-            long value = dataObj.UpdateAttempt(count, 1, 0, 0, millisRemaining, index, pos);
+            long value = dataObj.UpdateAttempt(count,attempt.getString("ptu_test_ID"),1, 0,dataObj.getQuestionAttempted(),dataObj.getQuestionSkipped(),dataObj.getQustionBookmarked(),dataObj.getQustionNotAttempted(), 0, millisRemaining, index, pos);
             if (value >= 0) {
-                dataObj.InsertAttempt(attempt.getString("ptu_section_ID"),1, 0, 0, millisRemaining, index, pos);
+                dataObj.InsertAttempt(attempt.getString("ptu_test_ID"),1, 0,dataObj.getQuestionAttempted(),dataObj.getQuestionSkipped(),dataObj.getQustionBookmarked(),dataObj.getQustionNotAttempted(), 0, millisRemaining, index, pos);
             }
             SaveJSONdataToFile.objectToFile(URLClass.mainpath + path + "Attempt/" + testid + ".json", attempt.toString());
             Log.e("Attempt-Json", attempt.toString());

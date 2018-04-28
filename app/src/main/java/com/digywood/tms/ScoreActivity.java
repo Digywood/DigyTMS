@@ -128,7 +128,10 @@ public class ScoreActivity extends AppCompatActivity {
                Log.e("ScoreActivity-->","Update Successful");
             }else
                 Log.e("ScoreActivity-->","Update Failed");
-
+            long value = dataObj.UpdateAttempt(dataObj.getAttempCount(),attempt.getString("ptu_test_ID"),2, 0,dataObj.getQuestionAttempted(),dataObj.getQuestionSkipped(),dataObj.getQustionBookmarked(),dataObj.getQustionNotAttempted(), 0, 0, 0, 0);
+            if (value >= 0) {
+                dataObj.InsertAttempt(attempt.getString("ptu_test_ID"),2, 0,dataObj.getQuestionAttempted(),dataObj.getQuestionSkipped(),dataObj.getQustionBookmarked(),dataObj.getQustionNotAttempted(), 0, 0, 0, 0);
+            }
             tv_test.setText(testId);
         } catch (JSONException e) {
             e.printStackTrace();

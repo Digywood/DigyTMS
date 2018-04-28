@@ -1,14 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".FlashAttemptDataActivity">
+    tools:context=".AttemptDataActivity">
 
-    <LinearLayout
+    <android.support.design.widget.TabLayout
+        android:id="@+id/tab_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="?attr/colorPrimary"
+        android:elevation="6dp"
+        android:minHeight="?attr/actionBarSize"
+        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"/>
+
+    <android.support.v4.view.ViewPager
+        android:id="@+id/pager"
+        android:layout_width="match_parent"
+        android:layout_height="fill_parent"
+        android:layout_below="@id/tab_layout"/>
+
+<!--    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/tab_layout"
         android:orientation="vertical">
 
         <LinearLayout
@@ -121,6 +137,7 @@
             android:id="@+id/tv_fdate"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:gravity="center_horizontal|center_vertical"
             android:textColor="#FFFFFF"
             android:textStyle="bold"
             android:textSize="16sp"
@@ -131,6 +148,7 @@
             android:id="@+id/tv_fknowcount"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:gravity="center_horizontal|center_vertical"
             android:textColor="#FFFFFF"
             android:textStyle="bold"
             android:textSize="16sp"
@@ -141,6 +159,7 @@
             android:id="@+id/tv_fdonknowcount"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:gravity="center_horizontal|center_vertical"
             android:textColor="#FFFFFF"
             android:textStyle="bold"
             android:textSize="16sp"
@@ -151,6 +170,7 @@
             android:id="@+id/tv_fskipcount"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:gravity="center_horizontal|center_vertical"
             android:textColor="#FFFFFF"
             android:textStyle="bold"
             android:textSize="16sp"
@@ -161,6 +181,7 @@
             android:id="@+id/tv_fpercentage"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:gravity="center_horizontal|center_vertical"
             android:textColor="#FFFFFF"
             android:textStyle="bold"
             android:textSize="16sp"
@@ -194,6 +215,6 @@
 
     </LinearLayout>
 
-    </LinearLayout>
+    </LinearLayout>-->
 
-</android.support.constraint.ConstraintLayout>
+</RelativeLayout>

@@ -8,6 +8,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="3dp"
+        android:gravity="center"
         android:orientation="horizontal">
 
         <TextView
@@ -16,27 +17,17 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:gravity="center_horizontal|center_vertical"
-            android:hint="date"
+            android:hint="ID"
             android:textColor="#000000"
             android:textSize="16sp" />
 
         <TextView
-            android:id="@+id/tv_attemptTestId"
+            android:id="@+id/tv_attemptAnsweredCount"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:gravity="center_horizontal|center_vertical"
-            android:hint="kcount"
-            android:textColor="#000000"
-            android:textSize="16sp" />
-
-        <TextView
-            android:id="@+id/tv_attemptTestScore"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:gravity="center_horizontal|center_vertical"
-            android:hint="donkcount"
+            android:hint="answered"
             android:textColor="#000000"
             android:textSize="16sp" />
 
@@ -46,9 +37,40 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:gravity="center_horizontal|center_vertical"
-            android:hint="scount"
+            android:hint="skip"
             android:textColor="#000000"
             android:textSize="16sp" />
+
+        <TextView
+            android:id="@+id/tv_attemptTestMarkcount"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center_horizontal|center_vertical"
+            android:hint="mark"
+            android:textColor="#000000"
+            android:textSize="16sp" />
+
+        <TextView
+            android:id="@+id/tv_attemptTestNotAnscount"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center_horizontal|center_vertical"
+            android:hint="mark"
+            android:textColor="#000000"
+            android:textSize="16sp" />
+
+        <TextView
+            android:id="@+id/tv_attemptTestScore"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center_horizontal|center_vertical"
+            android:hint="score"
+            android:textColor="#000000"
+            android:textSize="16sp" />
+
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -64,11 +86,12 @@
             android:layout_marginRight="3dp"/>
 
         <TextView
-            android:id="@+id/tv_fpercentage"
+            android:id="@+id/tv_tpercentage"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textColor="#000000"
             android:textSize="16sp"
+            android:gravity="center"
             android:hint="percent"/>
 
     </LinearLayout>

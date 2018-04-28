@@ -10,6 +10,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.digywood.tms.Pojo.SingleFlashAttempt;
+import com.digywood.tms.Pojo.SingleTestAttempt;
 import com.digywood.tms.R;
 
 import java.util.ArrayList;
@@ -17,33 +18,35 @@ import java.util.List;
 
 public class TestAttemptAdapter extends RecyclerView.Adapter<TestAttemptAdapter.MyViewHolder>{
 
-    private List<SingleFlashAttempt> fattemptList;
+    private List<SingleTestAttempt> tattemptList;
     Context mycontext;
     private ArrayList<String> chknumberList=new ArrayList<>();
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
-        public TextView tv_fdate,tv_fknowcount,tv_fdonknowcount,tv_fskipcount,tv_fpercentage;
+        public TextView tv_attempt_Id,tv_attemptAnsweredCount,tv_attemptTestSkipcount,tv_attemptTestMarkcount,tv_attemptTestNotAnscount,tv_attemptTestScore,tv_tpercentage;
         public ProgressBar pb_progress;
 
         public MyViewHolder(View view) {
             super(view);
-            tv_fdate =view.findViewById(R.id.tv_fdate);
-            tv_fknowcount =view.findViewById(R.id.tv_fknowcount);
-            tv_fdonknowcount =view.findViewById(R.id.tv_fdonknowcount);
-            tv_fskipcount =view.findViewById(R.id.tv_fskipcount);
-            tv_fpercentage =view.findViewById(R.id.tv_fpercentage);
+            tv_attempt_Id =view.findViewById(R.id.tv_attempt_Id);
+            tv_attemptAnsweredCount =view.findViewById(R.id.tv_attemptAnsweredCount);
+            tv_attemptTestSkipcount =view.findViewById(R.id.tv_attemptTestSkipcount);
+            tv_attemptTestMarkcount =view.findViewById(R.id.tv_attemptTestMarkcount);
+            tv_attemptTestNotAnscount =view.findViewById(R.id.tv_attemptTestNotAnscount);
+            tv_attemptTestScore =view.findViewById(R.id.tv_attemptTestScore);
+            tv_tpercentage =view.findViewById(R.id.tv_tpercentage);
             pb_progress =view.findViewById(R.id.pb_progress);
         }
     }
 
 
-    public TestAttemptAdapter(List<SingleFlashAttempt> attemptList, Context c) {
-        this.fattemptList = attemptList;
+    public TestAttemptAdapter(List<SingleTestAttempt> attemptList, Context c) {
+        this.tattemptList = attemptList;
         this.mycontext=c;
     }
 
-    public void updateList(List<SingleFlashAttempt> list){
-        fattemptList = list;
+    public void updateList(List<SingleTestAttempt> list){
+        tattemptList = list;
         notifyDataSetChanged();
     }
 
@@ -54,14 +57,16 @@ public class TestAttemptAdapter extends RecyclerView.Adapter<TestAttemptAdapter.
 
     @Override
     public void onBindViewHolder(final TestAttemptAdapter.MyViewHolder holder, final int position) {
-        final SingleFlashAttempt singlefattempt = fattemptList.get(position);
+        final SingleTestAttempt singletattempt = tattemptList.get(position);
 
-        holder.tv_fdate.setText(singlefattempt.getDate());
-        holder.tv_fknowcount.setText(String.valueOf(singlefattempt.getKnowcount()));
-        holder.tv_fdonknowcount.setText(String.valueOf(singlefattempt.getDonknowcount()));
-        holder.tv_fskipcount.setText(String.valueOf(singlefattempt.getSkipcount()));
-        holder.tv_fpercentage.setText(String.valueOf(singlefattempt.getPercent()));
-        Double d = new Double(singlefattempt.getPercent());
+        holder.tv_attempt_Id.setText(String.valueOf(singletattempt.getAttemptcount()));
+        holder.tv_attemptAnsweredCount.setText(String.valueOf(singletattempt.getSkipcount()));
+        holder.tv_attemptTestSkipcount.setText(String.valueOf(singletattempt.getMarkcount()));
+        holder.tv_attemptTestMarkcount.setText(String.valueOf(singletattempt.getNotattemptcount()));
+        holder.tv_attemptTestNotAnscount.setText(String.valueOf(singletattempt.getScore()));
+        holder.tv_attemptTestScore.setText(String.valueOf(singletattempt.getScore()));
+        holder.tv_tpercentage.setText(String.valueOf(singletattempt.getPercent()));
+        Double d = new Double(singletattempt.getPercent());
         int progress = d.intValue();
         Resources res=mycontext.getResources();
 
@@ -87,7 +92,7 @@ public class TestAttemptAdapter extends RecyclerView.Adapter<TestAttemptAdapter.
     }
 
     public int getItemCount() {
-        return fattemptList.size();
+        return tattemptList.size();
     }
 
 }

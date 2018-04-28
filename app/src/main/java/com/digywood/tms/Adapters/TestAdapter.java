@@ -14,7 +14,8 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.TextView;
-import com.digywood.tms.FlashAttemptDataActivity;
+
+import com.digywood.tms.AttemptDataActivity;
 import com.digywood.tms.FlashCardActivity;
 import com.digywood.tms.JSONParser;
 import com.digywood.tms.DBHelper.DBHelper;
@@ -27,6 +28,7 @@ import com.digywood.tms.URLClass;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
@@ -49,12 +51,12 @@ public class TestAdapter extends RecyclerView.Adapter<TestAdapter.MyViewHolder> 
     DBHelper myhelper;
     Boolean value = false;
     JSONParser myparser;
-    String filedata = "", path, jsonPath, attemptPath, photoPath, enrollid, courseid, subjectId, paperid, testid,fullTest ,attempt ,json;
+    String filedata = "", path, jsonPath, attemptPath, photoPath, enrollid, courseid, subjectId, paperid, testid, fullTest, attempt, json;
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
 
         public TextView tv_testid, tv_teststatus;
-        public Button btn_start, btn_resume,btn_fstart,btn_fattempthistory;
+        public Button btn_start, btn_resume, btn_fstart, btn_fattempthistory;
         public CheckBox cb_download;
 
         public MyViewHolder(View view) {
@@ -63,8 +65,8 @@ public class TestAdapter extends RecyclerView.Adapter<TestAdapter.MyViewHolder> 
             tv_teststatus = view.findViewById(R.id.tv_teststatus);
             btn_start = view.findViewById(R.id.btn_teststart);
             btn_resume = view.findViewById(R.id.btn_testresume);
-            btn_fstart=view.findViewById(R.id.btn_fteststart);
-            btn_fattempthistory=view.findViewById(R.id.btn_fattempthistory);
+            btn_fstart = view.findViewById(R.id.btn_fteststart);
+            btn_fattempthistory = view.findViewById(R.id.btn_fattempthistory);
             cb_download = view.findViewById(R.id.cb_testselection);
         }
     }
@@ -72,7 +74,7 @@ public class TestAdapter extends RecyclerView.Adapter<TestAdapter.MyViewHolder> 
     public TestAdapter(ArrayList<SingleTest> testList, Context c) {
         this.testList = testList;
         this.mycontext = c;
-        myhelper=new DBHelper(c);
+        myhelper = new DBHelper(c);
     }
 
     @Override
@@ -91,29 +93,33 @@ public class TestAdapter extends RecyclerView.Adapter<TestAdapter.MyViewHolder> 
             holder.btn_resume.setEnabled(false);
         } else
             holder.btn_resume.setEnabled(true);
-        int count = dataObj.getAttempCount() - 1;
+        int count = dataObj.getAttempCount();
 
         Cursor c = dataObj.getAttempt(count);
         //if cursor has values then the test is being resumed and data is retrieved from database
         if (c.getCount() > 0) {
             c.moveToLast();
             if (c.getInt(c.getColumnIndex("Attempt_Status")) == 1) {
-                holder.btn_resume.setText("Resume");
-                holder.btn_resume.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        try {
-                            attempt = new String(SaveJSONdataToFile.bytesFromFile(getExternalPath(mycontext,singletest,"ATTEMPT")+ testid + ".json"), "UTF-8");
-                            Log.e("Attempt_testadapter",attempt.toString());
-                            Intent i = new Intent(mycontext, TestActivity.class);
-                            i.putExtra("json", attempt);
-                            i.putExtra("test",testid);
-                            mycontext.startActivity(i);
-                        } catch (IOException | ClassNotFoundException | NullPointerException e) {
-                            e.printStackTrace();
+                Log.e("TAdapter",""+c.getString(c.getColumnIndex("Attempt_Test_ID")));
+                if(c.getString(c.getColumnIndex("Attempt_Test_ID")).equalsIgnoreCase(singletest.getTestid())) {
+                    holder.btn_resume.setText("Resume");
+                    holder.btn_resume.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            try {
+                                attempt = new String(SaveJSONdataToFile.bytesFromFile(getExternalPath(mycontext, singletest, "ATTEMPT") + testid + ".json"), "UTF-8");
+                                Log.e("Attempt_testadapter", attempt.toString());
+                                Intent i = new Intent(mycontext, TestActivity.class);
+                                i.putExtra("json", attempt);
+                                i.putExtra("test", testid);
+                                i.putExtra("status", "RESUME");
+                                mycontext.startActivity(i);
+                            } catch (IOException | ClassNotFoundException | NullPointerException e) {
+                                e.printStackTrace();
+                            }
                         }
-                    }
-                });
+                    });
+                }
             } else {
                 holder.btn_resume.setText("Review");
                 testid = singletest.getTestid();
@@ -121,9 +127,9 @@ public class TestAdapter extends RecyclerView.Adapter<TestAdapter.MyViewHolder> 
                     @Override
                     public void onClick(View v) {
                         try {
-                            attempt = new String(SaveJSONdataToFile.bytesFromFile(getExternalPath(mycontext,singletest,"ATTEMPT")+ testid + ".json"), "UTF-8");
+                            attempt = new String(SaveJSONdataToFile.bytesFromFile(getExternalPath(mycontext, singletest, "ATTEMPT") + testid + ".json"), "UTF-8");
                             Intent i = new Intent(mycontext, ReviewActivity.class);
-                            i.putExtra("test",testid);
+                            i.putExtra("test", testid);
                             i.putExtra("json", attempt);
                             mycontext.startActivity(i);
                         } catch (IOException | ClassNotFoundException e) {
@@ -138,35 +144,43 @@ public class TestAdapter extends RecyclerView.Adapter<TestAdapter.MyViewHolder> 
             @Override
             public void onClick(View v) {
                 dataObj.Destroy("attempt_data");
-                dataObj.Destroy("attempt_list");
-                /*testid = singletest.getTestid();
-                Cursor cursor = dataObj.getSingleStudentTests(testid);
-
-                if (cursor.getCount() > 0) {
-                    while (cursor.moveToNext()) {
-                        enrollid = cursor.getString(cursor.getColumnIndex("sptu_entroll_id"));
-                        courseid = cursor.getString(cursor.getColumnIndex("sptu_course_id"));
-                        subjectId = cursor.getString(cursor.getColumnIndex("sptu_subjet_ID"));
-                        paperid = cursor.getString(cursor.getColumnIndex("sptu_paper_ID"));
+                int count = dataObj.getAttempCount()-1;
+                Cursor c = dataObj.getAttempt(count);
+                //if cursor has values then the test is being resumed and data is retrieved from database
+                if (c.getCount() > 0) {
+                    c.moveToLast();
+                    Log.e("value",""+c.getInt(c.getColumnIndex("Attempt_Status")));
+                    if (c.getInt(c.getColumnIndex("Attempt_Status")) != 2) {
+                        dataObj.DeleteAttempt(count);
+                        try {
+                            fullTest = new String(SaveJSONdataToFile.bytesFromFile(getExternalPath(mycontext, singletest, "BASE") + testid + ".json"), "UTF-8");
+                            JSONParser obj = new JSONParser(fullTest, getExternalPath(mycontext, singletest, "ATTEMPT"), "PRACTICE", mycontext);
+                            attempt = new String(SaveJSONdataToFile.bytesFromFile(getExternalPath(mycontext, singletest, "ATTEMPT") + testid + ".json"), "UTF-8");
+                            Log.e("attempt_created:", attempt);
+                            Intent i = new Intent(mycontext, TestActivity.class);
+                            i.putExtra("json", attempt);
+                            i.putExtra("test", testid);
+                            i.putExtra("status","NEW");
+                            mycontext.startActivity(i);
+                        } catch (IOException | ClassNotFoundException | NullPointerException e) {
+                            e.printStackTrace();
+                        }
                     }
-                }
-
-                Log.e("path_vars", enrollid + " " + courseid + " " + subjectId + " " + paperid + " " + testid);
-                path = enrollid + "/" + courseid + "/" + subjectId + "/" + paperid + "/" + testid + "/";
-                photoPath = URLClass.mainpath + path;
-                attemptPath = URLClass.mainpath + path + "Attempt/" + testid + ".json";
-                jsonPath = URLClass.mainpath + path + testid + ".json";*/
-                try {
-                    fullTest = new String(SaveJSONdataToFile.bytesFromFile(getExternalPath(mycontext,singletest,"BASE")+ testid + ".json"), "UTF-8");
-                    JSONParser obj = new JSONParser(fullTest,getExternalPath(mycontext,singletest,"ATTEMPT"),"PRACTICE",mycontext);
-                    attempt = new String(SaveJSONdataToFile.bytesFromFile(getExternalPath(mycontext,singletest,"ATTEMPT")+ testid + ".json"), "UTF-8");
-                    Log.e("attempt_created:",attempt);
-                    Intent i = new Intent(mycontext, TestActivity.class);
-                    i.putExtra("json", attempt);
-                    i.putExtra("test",testid);
-                    mycontext.startActivity(i);
-                } catch (IOException | ClassNotFoundException | NullPointerException e) {
-                    e.printStackTrace();
+                    else{
+                        try {
+                            fullTest = new String(SaveJSONdataToFile.bytesFromFile(getExternalPath(mycontext, singletest, "BASE") + testid + ".json"), "UTF-8");
+                            JSONParser obj = new JSONParser(fullTest, getExternalPath(mycontext, singletest, "ATTEMPT"), "PRACTICE", mycontext);
+                            attempt = new String(SaveJSONdataToFile.bytesFromFile(getExternalPath(mycontext, singletest, "ATTEMPT") + testid + ".json"), "UTF-8");
+                            Log.e("attempt_created:", attempt);
+                            Intent i = new Intent(mycontext, TestActivity.class);
+                            i.putExtra("json", attempt);
+                            i.putExtra("test", testid);
+                            i.putExtra("status","NEW");
+                            mycontext.startActivity(i);
+                        } catch (IOException | ClassNotFoundException | NullPointerException e) {
+                            e.printStackTrace();
+                        }
+                    }
                 }
 /*                if (value) {
 
@@ -181,29 +195,29 @@ public class TestAdapter extends RecyclerView.Adapter<TestAdapter.MyViewHolder> 
             @Override
             public void onClick(View v) {
 
-                Cursor mycursor=myhelper.getSingleTestData(singletest.getTestid());
-                if(mycursor.getCount()>0){
-                    while(mycursor.moveToNext()){
+                Cursor mycursor = myhelper.getSingleTestData(singletest.getTestid());
+                if (mycursor.getCount() > 0) {
+                    while (mycursor.moveToNext()) {
 
 //                        studentid=mycursor.getString(mycursor.getColumnIndex("sptu_student_ID"));
-                        enrollid=mycursor.getString(mycursor.getColumnIndex("sptu_entroll_id"));
-                        courseid=mycursor.getString(mycursor.getColumnIndex("sptu_course_id"));
-                        subjectId=mycursor.getString(mycursor.getColumnIndex("sptu_subjet_ID"));
-                        paperid=mycursor.getString(mycursor.getColumnIndex("sptu_paper_ID"));
+                        enrollid = mycursor.getString(mycursor.getColumnIndex("sptu_entroll_id"));
+                        courseid = mycursor.getString(mycursor.getColumnIndex("sptu_course_id"));
+                        subjectId = mycursor.getString(mycursor.getColumnIndex("sptu_subjet_ID"));
+                        paperid = mycursor.getString(mycursor.getColumnIndex("sptu_paper_ID"));
 
                     }
-                }else{
+                } else {
                     mycursor.close();
                 }
 
                 try {
-                    String tPath=URLClass.mainpath+enrollid+"/"+courseid+"/"+subjectId+"/"+paperid+"/"+singletest.getTestid()+"/";
+                    String tPath = URLClass.mainpath + enrollid + "/" + courseid + "/" + subjectId + "/" + paperid + "/" + singletest.getTestid() + "/";
 
-                    File file = new File(tPath+singletest.getTestid()+".json");
+                    File file = new File(tPath + singletest.getTestid() + ".json");
                     if (!file.exists()) {
-                        showAlert("Main JSON file for test "+singletest.getTestid()+" is not found! \n Please download test data if not ");
-                    }else{
-                        BufferedReader br = new BufferedReader(new FileReader(tPath+singletest.getTestid()+".json"));
+                        showAlert("Main JSON file for test " + singletest.getTestid() + " is not found! \n Please download test data if not ");
+                    } else {
+                        BufferedReader br = new BufferedReader(new FileReader(tPath + singletest.getTestid() + ".json"));
 //                    BufferedReader br = new BufferedReader(new FileReader(URLClass.mainpath+enrollid+"/"+courseid+"/"+subjectId+"/"+paperid+"/"+singletest.getTestid()+"/"+singletest.getTestid()+"EAAA000009/SSCT1001/SSCS0002/PAA002/PTU0002/"+"PTU0002_01"+".json"));
                         StringBuilder sb = new StringBuilder();
                         String line = br.readLine();
@@ -217,7 +231,7 @@ public class TestAdapter extends RecyclerView.Adapter<TestAdapter.MyViewHolder> 
                         fimageList = readJson(filedata);
                         br.close();
 
-                        myparser=new JSONParser(filedata,tPath+"/flashAttempts/","FLASH",mycontext);
+                        myparser = new JSONParser(filedata, tPath + "/flashAttempts/", "FLASH", mycontext);
 
 
                         //                    if (fimageList.size() != 0) {
@@ -250,8 +264,8 @@ public class TestAdapter extends RecyclerView.Adapter<TestAdapter.MyViewHolder> 
 //                        Log.e("FlashCardActivity---", "No Questions to Display");
 //                    }
                         Intent i = new Intent(mycontext, FlashCardActivity.class);
-                        i.putExtra("testId",testList.get(position).getTestid());
-                        i.putExtra("testPath",tPath);
+                        i.putExtra("testId", testList.get(position).getTestid());
+                        i.putExtra("testPath", tPath);
                         mycontext.startActivity(i);
 
                     }
@@ -266,8 +280,8 @@ public class TestAdapter extends RecyclerView.Adapter<TestAdapter.MyViewHolder> 
         holder.btn_fattempthistory.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent i=new Intent(mycontext, FlashAttemptDataActivity.class);
-                i.putExtra("testId",singletest.getTestid());
+                Intent i = new Intent(mycontext, AttemptDataActivity.class);
+                i.putExtra("testId", singletest.getTestid());
                 mycontext.startActivity(i);
             }
         });
@@ -343,7 +357,7 @@ public class TestAdapter extends RecyclerView.Adapter<TestAdapter.MyViewHolder> 
         alert.show();
     }
 
-    public String getExternalPath(Context context, SingleTest singletest,String type){
+    public String getExternalPath(Context context, SingleTest singletest, String type) {
         DBHelper dataObj = new DBHelper(context);
         testid = singletest.getTestid();
         Cursor cursor = dataObj.getSingleStudentTests(testid);
@@ -361,11 +375,10 @@ public class TestAdapter extends RecyclerView.Adapter<TestAdapter.MyViewHolder> 
         path = enrollid + "/" + courseid + "/" + subjectId + "/" + paperid + "/" + testid + "/";
         photoPath = URLClass.mainpath + path;
         attemptPath = URLClass.mainpath + path + "Attempt/";
-        jsonPath = URLClass.mainpath + path ;
-        if(type.equals("BASE")){
+        jsonPath = URLClass.mainpath + path;
+        if (type.equals("BASE")) {
             return jsonPath;
-        }
-        else
+        } else
             return attemptPath;
     }
 
