@@ -1,6 +1,11 @@
 package com.digywood.tms;
 
 import android.content.Intent;
+import android.database.Cursor;
+import android.graphics.PorterDuff;
+import android.graphics.drawable.Drawable;
+import android.os.Build;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.DefaultItemAnimator;
@@ -42,6 +47,21 @@ public class LandingActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_landing);
+
+        ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null) {
+            actionBar.show();
+            actionBar.setDisplayHomeAsUpEnabled(true);
+            actionBar.setHomeButtonEnabled(true);
+        }
+
+        if(Build.VERSION.SDK_INT>=21) {
+
+            final Drawable upArrow = getApplicationContext().getResources().getDrawable(R.drawable.abc_ic_ab_back_material);
+            upArrow.setColorFilter(getResources().getColor(R.color.white), PorterDuff.Mode.SRC_ATOP);
+            getSupportActionBar().setHomeAsUpIndicator(upArrow);
+
+        }
 
         rv_enroll=findViewById(R.id.rv_listofenrolls);
         tv_emptyenroll=findViewById(R.id.tv_enrollemptydata);
@@ -97,11 +117,6 @@ public class LandingActivity extends AppCompatActivity {
                         }
                     }
                     getEnrollsFromLocal();
-//                    for(int i=0;i<enrollids.size();i++){
-//
-//                        enrollList.add(new SingleEnrollment(enrollids.get(i),enrollcourseids.get(i)));
-//
-//                    }
                 }catch (Exception e){
                     e.printStackTrace();
                     Log.e("LandingActivity----",e.toString());
@@ -242,26 +257,41 @@ public class LandingActivity extends AppCompatActivity {
 
                     if (obj4 instanceof JSONArray)
                     {
-                        long testdelcount=myhelper.deleteAllTests();
-                        Log.e("testdelcount---",""+testdelcount);
+//                        long testdelcount=myhelper.deleteAllTests();
+//                        Log.e("testdelcount---",""+testdelcount);
                         ja_tests_table=myObj.getJSONArray("tests");
                         if(ja_tests_table!=null && ja_tests_table.length()>0){
                             Log.e("testLength---",""+ja_tests_table.length());
-                            int p=0,q=0;
+                            int p=0,q=0,r=0,s=0;
                             for(int i=0;i<ja_tests_table.length();i++){
 
                                 testObj=ja_tests_table.getJSONObject(i);
-                                long insertFlag=myhelper.insertPractiseTest(testObj.getInt("sptu_key"),testObj.getString("sptu_org_id"),testObj.getString("sptu_entroll_id"),testObj.getString("sptu_student_ID"),
-                                        testObj.getString("sptu_batch"),testObj.getString("sptu_ID"),testObj.getString("sptu_paper_ID"),testObj.getString("sptu_subjet_ID"),
-                                        testObj.getString("sptu_course_id"),testObj.getString("sptu_start_date"),testObj.getString("sptu_end_date"),testObj.getString("sptu_dwnld_status"),
-                                        testObj.getInt("sptu_no_of_questions"),testObj.getDouble("sptu_tot_marks"),testObj.getDouble("stpu_min_marks"),testObj.getDouble("sptu_max_marks"));
-                                if(insertFlag>0){
-                                    p++;
-                                }else {
-                                    q++;
+
+                                Cursor mycursor=myhelper.getSingleTestData(testObj.getString("sptu_ID"));
+                                if(mycursor.getCount()>0){
+                                    long updateFlag=myhelper.updatePractiseTestData(testObj.getString("sptu_org_id"),testObj.getString("sptu_entroll_id"),testObj.getString("sptu_student_ID"),
+                                            testObj.getString("sptu_batch"),testObj.getString("sptu_ID"),testObj.getString("sptu_paper_ID"),testObj.getString("sptu_subjet_ID"),
+                                            testObj.getString("sptu_course_id"),testObj.getString("sptu_start_date"),testObj.getString("sptu_end_date"),testObj.getString("sptu_dwnld_status"),
+                                            testObj.getInt("sptu_no_of_questions"),testObj.getDouble("sptu_tot_marks"),testObj.getDouble("stpu_min_marks"),testObj.getDouble("sptu_max_marks"));
+                                    if(updateFlag>0){
+                                        r++;
+                                    }else {
+                                        s++;
+                                    }
+                                }else{
+                                    long insertFlag=myhelper.insertPractiseTest(testObj.getInt("sptu_key"),testObj.getString("sptu_org_id"),testObj.getString("sptu_entroll_id"),testObj.getString("sptu_student_ID"),
+                                            testObj.getString("sptu_batch"),testObj.getString("sptu_ID"),testObj.getString("sptu_paper_ID"),testObj.getString("sptu_subjet_ID"),
+                                            testObj.getString("sptu_course_id"),testObj.getString("sptu_start_date"),testObj.getString("sptu_end_date"),testObj.getString("sptu_dwnld_status"),
+                                            testObj.getInt("sptu_no_of_questions"),testObj.getDouble("sptu_tot_marks"),testObj.getDouble("stpu_min_marks"),testObj.getDouble("sptu_max_marks"));
+                                    if(insertFlag>0){
+                                        p++;
+                                    }else {
+                                        q++;
+                                    }
                                 }
+
                             }
-                            Log.e("Tests--","Inserted: "+p);
+                            Log.e("Tests--","Inserted: "+p+"-- Updated---"+r);
                         }else{
                             Log.e("Tests--","Empty Json Array: ");
                         }

@@ -39,7 +39,7 @@ import java.util.ArrayList;
  * Created by prasa on 2018-02-27.
  */
 
-public class TestAdapter extends RecyclerView.Adapter<TestAdapter.MyViewHolder> {
+public class PractiseTestAdapter extends RecyclerView.Adapter<PractiseTestAdapter.MyViewHolder> {
 
     ArrayList<SingleTest> testList;
     ArrayList<String> downloadedList = new ArrayList<>();
@@ -71,7 +71,7 @@ public class TestAdapter extends RecyclerView.Adapter<TestAdapter.MyViewHolder> 
         }
     }
 
-    public TestAdapter(ArrayList<SingleTest> testList, Context c) {
+    public PractiseTestAdapter(ArrayList<SingleTest> testList, Context c) {
         this.testList = testList;
         this.mycontext = c;
         myhelper = new DBHelper(c);
@@ -80,7 +80,7 @@ public class TestAdapter extends RecyclerView.Adapter<TestAdapter.MyViewHolder> 
     @Override
     public MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.activity_testitem, parent, false);
-        return new TestAdapter.MyViewHolder(itemView);
+        return new PractiseTestAdapter.MyViewHolder(itemView);
     }
 
     @Override

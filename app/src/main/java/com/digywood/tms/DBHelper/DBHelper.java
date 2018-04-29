@@ -222,6 +222,7 @@ public class DBHelper extends SQLiteOpenHelper {
                 "  `attemptNumber` int(5) DEFAULT NULL,\n" +
                 "  `startDttm` datetime DEFAULT NULL,\n" +
                 "  `endDttm` datetime DEFAULT NULL,\n" +
+                "  `attemptQCount` int(5) DEFAULT NULL,\n"+
                 "  `iknowCount` int(5) DEFAULT NULL,\n" +
                 "  `donknowCount` int(5) DEFAULT NULL,\n" +
                 "  `skipCount` int(5) DEFAULT NULL,\n" +
@@ -334,18 +335,31 @@ public class DBHelper extends SQLiteOpenHelper {
         return insertFlag;
     }
 
+    public long updateATestStatus(String testid,String status){
+        long updateFlag=0;
+        ContentValues cv = new ContentValues();
+        cv.put("satu_dwnld_status", status);
+        updateFlag=db.update("satu_student", cv, "satu_ID='"+testid+"'",null);
+        return  updateFlag;
+    }
+
     public Cursor getAssesmentTestData(String testId){
-        Cursor c =db.query("satu_student", new String[] {"satu_course_id,satu_subjet_ID,satu_paper_ID,satu_entroll_id,satu_student_id,satu_batch"},"sptu_ID='"+testId+"'", null, null, null,null);
+        Cursor c =db.query("satu_student", new String[] {"satu_course_id,satu_subjet_ID,satu_paper_ID,satu_entroll_id,satu_student_id,satu_batch"},"satu_ID='"+testId+"'", null, null, null,null);
+        return c;
+    }
+
+    public Cursor getAssesmentTestsByEnroll(String enrollId){
+        Cursor c =db.query("satu_student", new String[] {"satu_entroll_id,satu_student_id,satu_batch,satu_ID,satu_paper_ID,satu_subjet_ID,satu_course_id,satu_start_date,satu_end_date,satu_dwnld_status"},"satu_entroll_id='"+enrollId+"'", null, null, null,null);
         return c;
     }
 
     public long deleteAllAssesmentTests(){
         long deleteFlag=0;
-        deleteFlag=db.delete("satu_student", null, null);
+        deleteFlag=db.delete("satu_student", null,null);
         return  deleteFlag;
     }
 
-    public long insertFlashAttempt(String studentId,String enrollId,String courseId,String subjectId,String paperId,String fcardId,int attemptnum,String sdttm,String edttm,int iknowcount,int donknowcount,int skipcount,Double percentage,String status){
+    public long insertFlashAttempt(String studentId,String enrollId,String courseId,String subjectId,String paperId,String fcardId,int attemptnum,String sdttm,String edttm,int attemptQcount,int iknowcount,int donknowcount,int skipcount,Double percentage,String status){
         long insertFlag=0;
         ContentValues cv = new ContentValues();
         cv.put("studentId",studentId);
@@ -357,6 +371,7 @@ public class DBHelper extends SQLiteOpenHelper {
         cv.put("attemptNumber",attemptnum);
         cv.put("startDttm",sdttm);
         cv.put("endDttm",edttm);
+        cv.put("attemptQCount",attemptQcount);
         cv.put("iknowCount",iknowcount);
         cv.put("donknowCount",donknowcount);
         cv.put("skipCount",skipcount);
@@ -373,7 +388,7 @@ public class DBHelper extends SQLiteOpenHelper {
     }
 
     public Cursor getFlashTestData(String testId){
-        Cursor c =db.query("flashcard_attempt", new String[] {"attemptNumber,startDttm,iknowCount,donknowCount,skipCount,percentageObtain"},"flashcardId='"+testId+"'", null, null, null,"startDttm DESC");
+        Cursor c =db.query("flashcard_attempt", new String[] {"attemptNumber,startDttm,attemptQCount,iknowCount,donknowCount,skipCount,percentageObtain"},"flashcardId='"+testId+"'", null, null, null,"startDttm DESC");
         return  c;
     }
 
@@ -576,23 +591,29 @@ public class DBHelper extends SQLiteOpenHelper {
         cv.put("sptu_tot_marks",ttotalmarks);
         cv.put("stpu_min_marks",tminmarks);
         cv.put("sptu_max_marks",tmaxmarks);
-//        cv.put("sptu_avg_marks",tavgmarks);
         insertFlag = db.insert("sptu_student",null, cv);
         return insertFlag;
     }
 
-    public long updateTest(String tID,String tsid,String tcid,int tnoofques,Double ttotalmarks,Double tminmarks,Double tmaxmarks,Double avgscore,Double percentage){
+    public long updatePractiseTestData(String torgid,String tenrollid,String tstudentid,String tbatch,String tid,String tpid,String tsid,String tcid,String tstartdate,String tenddate,String tdwdstatus,int tnoofques,Double ttotalmarks,Double tminmarks,Double tmaxmarks){
         long updateFlag=0;
         ContentValues cv = new ContentValues();
+        cv.put("sptu_org_id",torgid);
+        cv.put("sptu_entroll_id",tenrollid);
+        cv.put("sptu_student_ID",tstudentid);
+        cv.put("sptu_batch",tbatch);
+        cv.put("sptu_paper_ID",tpid);
         cv.put("sptu_subjet_ID",tsid);
         cv.put("sptu_course_id",tcid);
+        cv.put("sptu_start_date",tstartdate);
+        cv.put("sptu_end_date",tenddate);
+        cv.put("sptu_dwnld_status",tdwdstatus);
         cv.put("sptu_no_of_questions",tnoofques);
         cv.put("sptu_tot_marks",ttotalmarks);
         cv.put("stpu_min_marks",tminmarks);
         cv.put("sptu_max_marks",tmaxmarks);
-        cv.put("sptu_avg_marks",avgscore);
-        updateFlag=db.update("sptu_student", cv,"sptu_ID='"+tID+"'",null);
-        return  updateFlag;
+        updateFlag = db.update("sptu_student", cv,"sptu_ID='"+tid+"'",null);
+        return updateFlag;
     }
 
     public long updateTestStatus(String testid,int attemptcount,Double minscore,Double maxscore,Double avgscore,String Dttm,Double lastAttemptscore){
@@ -624,6 +645,11 @@ public class DBHelper extends SQLiteOpenHelper {
         return c;
     }
 
+    public Cursor getStudentTestsByEnroll(String enrollId){
+        Cursor c =db.query("sptu_student", new String[] {"sptu_entroll_id,sptu_student_ID,sptu_ID,sptu_paper_ID,sptu_subjet_ID,sptu_course_id,sptu_dwnld_status"},"sptu_entroll_id='"+enrollId+"'", null, null, null,null);
+        return c;
+    }
+
     public Cursor getSingleTestData(String testId){
         Cursor c =db.query("sptu_student", new String[] {"sptu_entroll_id,sptu_student_ID,sptu_ID,sptu_paper_ID,sptu_subjet_ID,sptu_course_id,sptu_dwnld_status"},"sptu_ID='"+testId+"'", null, null, null,null);
         return c;
@@ -640,7 +666,7 @@ public class DBHelper extends SQLiteOpenHelper {
         return  deleteFlag;
     }
 
-    public long updateTestStatus(String testid,String status){
+    public long updatePTestStatus(String testid,String status){
         long updateFlag=0;
         ContentValues cv = new ContentValues();
         cv.put("sptu_dwnld_status", status);
@@ -648,7 +674,7 @@ public class DBHelper extends SQLiteOpenHelper {
         return  updateFlag;
     }
 
-    public long insertQuesGroup(int qbkey,String qbid,String tid,String qbmtype,String qbmfile,String qbtext,int noofques,int pickupcount,String status,String createby,String createdttm,String modby,String moddttm){
+    public long insertQuesGroup(int qbkey,String qbid,String tid,String qbmtype,String qbmfile,String qbtext,int noofques,int pickupcount,String status,String createby,String createdttm,String modby,String moddttm,String grouptype){
         long insertFlag=0;
         ContentValues cv = new ContentValues();
         cv.put("qbg_key",qbkey);
@@ -664,6 +690,7 @@ public class DBHelper extends SQLiteOpenHelper {
         cv.put("qbg_created_dttm",createdttm);
         cv.put("qbg_mod_by",modby);
         cv.put("qbg_mod_dttm",moddttm);
+        cv.put("qbg_type",grouptype);
         insertFlag = db.insert("qb_group",null, cv);
         return insertFlag;
     }

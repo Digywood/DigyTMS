@@ -10,7 +10,6 @@ import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -47,11 +46,9 @@ import com.digywood.tms.Adapters.CardQuestionAdapter;
 import com.digywood.tms.Adapters.ScrollGridCardAdapter;
 import com.digywood.tms.DBHelper.DBHelper;
 import com.digywood.tms.Pojo.SingleFlashQuestion;
-import com.digywood.tms.Pojo.SingleQuestionList;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import java.io.BufferedReader;
-import java.io.File;
 import java.io.FileReader;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -66,7 +63,7 @@ public class FlashCardActivity extends AppCompatActivity {
     Spinner sp_sections;
     RecyclerView question_scroll;
     ImageView iv_quesimg,iv_fullscreen;
-    String filedata,status="",testId="",testPath="",studentid="",enrollid="",courseid="";
+    String filedata,status="",testId="",testPath="",studentid="",enrollid="",courseid="",imgPath="";
     String subjectid="",paperid="",rfilename="",startDttm="",endDttm="",tempString="";
     int d=0,pos=0,secpos=0,z=0;
     GridView gridView;
@@ -83,7 +80,7 @@ public class FlashCardActivity extends AppCompatActivity {
     private Matrix matrix = new Matrix();
     //    FloatingActionButton fab_fgroupQview;
     int attemptcount=0,knowcount=0,donknowcount=0,skipcount=0,Qcount=0;
-    TextView tv_attempted,tv_iknow,tv_idonknow,tv_skipped;
+    TextView tv_attempted,tv_iknow,tv_idonknow,tv_skipped,tv_Qid;
     ArrayList<String> knownList=new ArrayList<>();
     ArrayList<String> donknowList=new ArrayList<>();
     ArrayList<String> skipList=new ArrayList<>();
@@ -193,6 +190,8 @@ public class FlashCardActivity extends AppCompatActivity {
                     subjectid=mycursor.getString(mycursor.getColumnIndex("sptu_subjet_ID"));
                     paperid=mycursor.getString(mycursor.getColumnIndex("sptu_paper_ID"));
 
+                    imgPath=URLClass.mainpath+enrollid+"/"+courseid+"/"+subjectid+"/";
+
                 }
             }else{
                 mycursor.close();
@@ -215,6 +214,7 @@ public class FlashCardActivity extends AppCompatActivity {
         tv_iknow=findViewById(R.id.tv_iknowcount);
         tv_idonknow=findViewById(R.id.tv_idonknowcount);
         tv_skipped=findViewById(R.id.tv_skippedcount);
+        tv_Qid=findViewById(R.id.tv_Qid);
 
 //        slideanim=AnimationUtils.loadAnimation(FlashCardActivity.this,R.anim.layout_animation_slide_right);
 
@@ -222,7 +222,6 @@ public class FlashCardActivity extends AppCompatActivity {
 
         try{
             BufferedReader br = new BufferedReader(new FileReader(testPath+"flashAttempts/"+testId+"_01.json"));
-//            BufferedReader br = new BufferedReader(new FileReader(URLClass.mainpath+"EAAA000009/SSCT1001/SSCS0002/PAA002/PTU0002/"+"PTU0002_01"+".json"));
             StringBuilder sb = new StringBuilder();
             String line = br.readLine();
 
@@ -262,9 +261,12 @@ public class FlashCardActivity extends AppCompatActivity {
                     d=position;
                     JSONObject qObj=gja_questions.getJSONObject(position);
                     String imagefile=qObj.getString("qbm_flash_image");
-                    Log.e("Image Path :--",testPath+imagefile);
-                    Bitmap bmp = BitmapFactory.decodeFile(testPath+imagefile);
+                    Log.e("Image Path :--",imagefile);
+                    String pid=qObj.getString("qbm_Paper_ID");
+                    String cid=qObj.getString("qbm_ChapterID");
+                    Bitmap bmp = BitmapFactory.decodeFile(imgPath+pid+"/"+cid+"/"+imagefile);
                     iv_quesimg.setImageBitmap(bmp);
+                    tv_Qid.setText(qObj.getString("qbm_ID"));
                     Animation rotateimage = AnimationUtils.loadAnimation(FlashCardActivity.this,R.anim.fade_in);
                     iv_quesimg.startAnimation(rotateimage);
 
@@ -307,10 +309,13 @@ public class FlashCardActivity extends AppCompatActivity {
 
                     JSONObject qObj=gja_questions.getJSONObject(position);
                     String imagefile=qObj.getString("qbm_flash_image");
-                    Log.e("Image Path :--",testPath+imagefile);
-                    Bitmap bmp = BitmapFactory.decodeFile(testPath+imagefile);
-//                    Bitmap bmp = BitmapFactory.decodeFile(testPath+"SSC01ENC01Q0001_QF.png");
+                    Log.e("Image Path :--",imagefile);
+
+                    String pid=qObj.getString("qbm_Paper_ID");
+                    String cid=qObj.getString("qbm_ChapterID");
+                    Bitmap bmp = BitmapFactory.decodeFile(imgPath+pid+"/"+cid+"/"+imagefile);
                     iv_quesimg.setImageBitmap(bmp);
+                    tv_Qid.setText(qObj.getString("qbm_ID"));
                     Animation rotateimage = AnimationUtils.loadAnimation(FlashCardActivity.this, R.anim.fade_in);
                     iv_quesimg.startAnimation(rotateimage);
 
@@ -366,7 +371,9 @@ public class FlashCardActivity extends AppCompatActivity {
                 try {
                     String filename=gja_questions.getJSONObject(d).getString("gbg_media_file");
                     Log.e("Image Path :--",filename);
-                    Bitmap bmp = BitmapFactory.decodeFile(testPath+filename);
+                    String pid=gja_questions.getJSONObject(d).getString("qbm_Paper_ID");
+                    String cid=gja_questions.getJSONObject(d).getString("qbm_ChapterID");
+                    Bitmap bmp = BitmapFactory.decodeFile(imgPath+pid+"/"+cid+"/"+filename);
                     iv_answerimg.setImageBitmap(bmp);
                     cAdp.setPoiner(d);
                 }catch (Exception e){
@@ -417,8 +424,9 @@ public class FlashCardActivity extends AppCompatActivity {
                         JSONObject reviewObj=reviewArray.getJSONObject(z);
                         rfilename=reviewObj.getString("qba_media_file");
                         Log.e("Image file :--",rfilename);
-                        Bitmap bmp = BitmapFactory.decodeFile(testPath+rfilename);
-//                        iv_answerimg.setAnimation(slideanim);
+                        String pid=gja_questions.getJSONObject(d).getString("qbm_Paper_ID");
+                        String cid=gja_questions.getJSONObject(d).getString("qbm_ChapterID");
+                        Bitmap bmp = BitmapFactory.decodeFile(imgPath+pid+"/"+cid+"/"+rfilename);
                         iv_answerimg.setImageBitmap(bmp);
                     }else{
                         Toast.makeText(getApplicationContext(),"No Review Images",Toast.LENGTH_SHORT).show();
@@ -449,7 +457,10 @@ public class FlashCardActivity extends AppCompatActivity {
                                 reviewObj=reviewArray.getJSONObject(z);
                                 rfilename=reviewObj.getString("qba_media_file");
                                 Log.e("Image file :--",rfilename);
-                                Bitmap bmp = BitmapFactory.decodeFile(testPath+rfilename);
+
+                                String pid=gja_questions.getJSONObject(d).getString("qbm_Paper_ID");
+                                String cid=gja_questions.getJSONObject(d).getString("qbm_ChapterID");
+                                Bitmap bmp = BitmapFactory.decodeFile(imgPath+pid+"/"+cid+"/"+rfilename);
                                 iv_answerimg.setImageBitmap(bmp);
                             }
                         }catch (Exception e){
@@ -470,7 +481,10 @@ public class FlashCardActivity extends AppCompatActivity {
                                 reviewObj=reviewArray.getJSONObject(z);
                                 rfilename=reviewObj.getString("qba_media_file");
                                 Log.e("Image file :--",rfilename);
-                                Bitmap bmp = BitmapFactory.decodeFile(testPath+rfilename);
+
+                                String pid=gja_questions.getJSONObject(d).getString("qbm_Paper_ID");
+                                String cid=gja_questions.getJSONObject(d).getString("qbm_ChapterID");
+                                Bitmap bmp = BitmapFactory.decodeFile(imgPath+pid+"/"+cid+"/"+rfilename);
                                 iv_answerimg.setImageBitmap(bmp);
                             }
                         }catch (Exception e){
@@ -499,8 +513,12 @@ public class FlashCardActivity extends AppCompatActivity {
                     try {
                         String filename=gja_questions.getJSONObject(d).getString("qbm_flash_image");
                         Log.e("Image Path :--",filename);
-                        Bitmap bmp = BitmapFactory.decodeFile(testPath+filename);
+                        String pid=gja_questions.getJSONObject(d).getString("qbm_Paper_ID");
+                        String cid=gja_questions.getJSONObject(d).getString("qbm_ChapterID");
+                        Bitmap bmp = BitmapFactory.decodeFile(imgPath+pid+"/"+cid+"/"+filename);
                         iv_quesimg.setImageBitmap(bmp);
+
+                        tv_Qid.setText(gja_questions.getJSONObject(d).getString("qbm_ID"));
 
                         Animation rotateimage = AnimationUtils.loadAnimation(FlashCardActivity.this, R.anim.fade_in);
                         iv_quesimg.startAnimation(rotateimage);
@@ -526,8 +544,11 @@ public class FlashCardActivity extends AppCompatActivity {
                         try {
                             String filename=gja_questions.getJSONObject(d).getString("qbm_flash_image");
                             Log.e("Image Path :--",filename);
-                            Bitmap bmp = BitmapFactory.decodeFile(testPath+filename);
+                            String pid=gja_questions.getJSONObject(d).getString("qbm_Paper_ID");
+                            String cid=gja_questions.getJSONObject(d).getString("qbm_ChapterID");
+                            Bitmap bmp = BitmapFactory.decodeFile(imgPath+pid+"/"+cid+"/"+filename);
                             iv_quesimg.setImageBitmap(bmp);
+                            tv_Qid.setText(gja_questions.getJSONObject(d).getString("qbm_ID"));
 
                             Animation rotateimage = AnimationUtils.loadAnimation(FlashCardActivity.this, R.anim.fade_in);
                             iv_quesimg.startAnimation(rotateimage);
@@ -570,8 +591,12 @@ public class FlashCardActivity extends AppCompatActivity {
                         try {
                             String filename=gja_questions.getJSONObject(d).getString("qbm_flash_image");
                             Log.e("Image Path :--",filename);
-                            Bitmap bmp = BitmapFactory.decodeFile(testPath+filename);
+
+                            String pid=gja_questions.getJSONObject(d).getString("qbm_Paper_ID");
+                            String cid=gja_questions.getJSONObject(d).getString("qbm_ChapterID");
+                            Bitmap bmp = BitmapFactory.decodeFile(imgPath+pid+"/"+cid+"/"+filename);
                             iv_quesimg.setImageBitmap(bmp);
+                            tv_Qid.setText(gja_questions.getJSONObject(d).getString("qbm_ID"));
 
                             Animation rotateimage = AnimationUtils.loadAnimation(FlashCardActivity.this, R.anim.fade_in);
                             iv_quesimg.startAnimation(rotateimage);
@@ -599,8 +624,12 @@ public class FlashCardActivity extends AppCompatActivity {
                     try {
                         String filename=gja_questions.getJSONObject(d).getString("qbm_flash_image");
                         Log.e("Image Path :--",filename);
-                        Bitmap bmp = BitmapFactory.decodeFile(testPath+filename);
+
+                        String pid=gja_questions.getJSONObject(d).getString("qbm_Paper_ID");
+                        String cid=gja_questions.getJSONObject(d).getString("qbm_ChapterID");
+                        Bitmap bmp = BitmapFactory.decodeFile(imgPath+pid+"/"+cid+"/"+filename);
                         iv_quesimg.setImageBitmap(bmp);
+                        tv_Qid.setText(gja_questions.getJSONObject(d).getString("qbm_ID"));
 
                         Animation rotateimage = AnimationUtils.loadAnimation(FlashCardActivity.this, R.anim.fade_in);
                         iv_quesimg.startAnimation(rotateimage);
@@ -957,15 +986,16 @@ public class FlashCardActivity extends AppCompatActivity {
                 .setPositiveButton("Ok",new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
 
-                        int attemptcount=myhelper.getFlashAttemptNum(testId);
-                        attemptcount=attemptcount+1;
+                        int attemptnum=myhelper.getFlashAttemptNum(testId);
+                        attemptnum=attemptnum+1;
                         Double kcount=Double.parseDouble(String.valueOf(knowcount));
                         Double percent=kcount/Qcount;
 //                        Double percentage=Double.parseDouble(String.valueOf(percent));
                         percent=percent*100;
                         percent=round(percent,2);
+
                         endDttm= new java.text.SimpleDateFormat("yyyy-MM-dd kk:mm:ss").format(Calendar.getInstance(TimeZone.getDefault()).getTime());
-                        long iFlag=myhelper.insertFlashAttempt(studentid,enrollid,courseid,subjectid,paperid,testId,attemptcount,startDttm,endDttm,knowcount,donknowcount,skipcount,percent,"Completed");
+                        long iFlag=myhelper.insertFlashAttempt(studentid,enrollid,courseid,subjectid,paperid,testId,attemptnum,startDttm,endDttm,attemptcount,knowcount,donknowcount,skipcount,percent,"Completed");
                         if(iFlag>0){
                             Log.e("FlashCardActivity----","Attempt Inserted");
 
@@ -978,7 +1008,7 @@ public class FlashCardActivity extends AppCompatActivity {
                                     avgscore=mycursor.getDouble(mycursor.getColumnIndex("avgscore"));
                                 }
                                 Log.e("Scores:---","min:--"+minscore+"  max--"+maxscore+"  avg----"+avgscore);
-                                long uFlag=myhelper.updateTestStatus(testId,attemptcount,minscore,maxscore,avgscore,endDttm,percent);
+                                long uFlag=myhelper.updateTestStatus(testId,attemptnum,minscore,maxscore,avgscore,endDttm,percent);
                                 if(uFlag>0){
                                     Log.e("FlashCardActivity----","Test Updated");
                                 }else{
@@ -1034,15 +1064,15 @@ public class FlashCardActivity extends AppCompatActivity {
                 .setPositiveButton("Ok",new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
 
-                        int attemptcount=myhelper.getFlashAttemptNum(testId);
-                        attemptcount=attemptcount+1;
+                        int attemptnum=myhelper.getFlashAttemptNum(testId);
+                        attemptnum=attemptnum+1;
                         Double kcount=Double.parseDouble(String.valueOf(knowcount));
                         Double percent=kcount/Qcount;
 //                        Double percentage=Double.parseDouble(String.valueOf(percent));
                         percent=percent*100;
                         percent=round(percent,2);
                         endDttm= new java.text.SimpleDateFormat("yyyy-MM-dd kk:mm:ss").format(Calendar.getInstance(TimeZone.getDefault()).getTime());
-                        long iFlag=myhelper.insertFlashAttempt(studentid,enrollid,courseid,subjectid,paperid,testId,attemptcount,startDttm,endDttm,knowcount,donknowcount,skipcount,percent,"Completed");
+                        long iFlag=myhelper.insertFlashAttempt(studentid,enrollid,courseid,subjectid,paperid,testId,attemptnum,startDttm,endDttm,attemptcount,knowcount,donknowcount,skipcount,percent,"Completed");
                         if(iFlag>0){
                             Log.e("FlashCardActivity----","Attempt Inserted");
 
@@ -1055,7 +1085,7 @@ public class FlashCardActivity extends AppCompatActivity {
                                     avgscore=mycursor.getDouble(mycursor.getColumnIndex("avgscore"));
                                 }
                                 Log.e("Scores:---","min:--"+minscore+"  max--"+maxscore+"  avg----"+avgscore);
-                                long uFlag=myhelper.updateTestStatus(testId,attemptcount,minscore,maxscore,avgscore,endDttm,percent);
+                                long uFlag=myhelper.updateTestStatus(testId,attemptnum,minscore,maxscore,avgscore,endDttm,percent);
                                 if(uFlag>0){
                                     Log.e("FlashCardActivity----","Test Updated");
                                 }else{

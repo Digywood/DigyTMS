@@ -30,17 +30,17 @@ import java.io.File;
 import java.io.FileReader;
 import java.util.ArrayList;
 import java.util.HashMap;
-import com.digywood.tms.Adapters.TestAdapter;
+import com.digywood.tms.Adapters.PractiseTestAdapter;
 import com.digywood.tms.AsynTasks.AsyncCheckInternet;
 import com.digywood.tms.AsynTasks.BagroundTask;
 import com.digywood.tms.AsynTasks.DownloadFileAsync;
 import com.digywood.tms.DBHelper.DBHelper;
+import com.digywood.tms.Pojo.SingleDWDQues;
 import com.digywood.tms.Pojo.SingleTest;
-
 import static android.Manifest.permission.READ_EXTERNAL_STORAGE;
 import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
 
-public class ListofTests extends AppCompatActivity {
+public class ListofPractiseTests extends AppCompatActivity {
 
     HashMap<String,String> hmap=new HashMap<>();
     ArrayList<SingleTest> testidList;
@@ -52,9 +52,12 @@ public class ListofTests extends AppCompatActivity {
     int currentitem;
     DBHelper myhelper;
     public static final int RequestPermissionCode = 1;
-    TestAdapter tAdp;
+    PractiseTestAdapter tAdp;
     ArrayList<String> finalUrls,finalNames,finalPaths,selectedtestidList;
     ArrayList<String> downloadfileList;
+    ArrayList<SingleDWDQues> chapterFileList;
+    ArrayList<String> chapterList;
+    ArrayList<String> localPathList;
     ArrayList<String> alreadydwdList;
     ArrayList<SingleTest> dwdupdateList;
     FloatingActionButton fab_download;
@@ -93,6 +96,9 @@ public class ListofTests extends AppCompatActivity {
         selectedtestidList=new ArrayList<>();
         downloadfileList=new ArrayList<>();
         alreadydwdList=new ArrayList<>();
+        chapterList=new ArrayList<>();
+        chapterFileList=new ArrayList<>();
+        localPathList=new ArrayList<>();
 
         myhelper=new DBHelper(this);
 
@@ -100,7 +106,6 @@ public class ListofTests extends AppCompatActivity {
         if(cmgintent!=null){
             enrollid=cmgintent.getStringExtra("enrollid");
             courseid=cmgintent.getStringExtra("courseid");
-//            Log.e("ListofTests---",cmgintent.getStringExtra("paperid"));
             paperid=cmgintent.getStringExtra("paperid");
         }
 
@@ -117,7 +122,7 @@ public class ListofTests extends AppCompatActivity {
 
                 }catch (Exception e){
                     e.printStackTrace();
-                    Log.e("ListofTests-----",e.toString());
+                    Log.e("ListofPractiseTests--",e.toString());
                 }
 
                 if(alreadydwdList.size()!=0){
@@ -126,7 +131,7 @@ public class ListofTests extends AppCompatActivity {
                     if(selectedtestidList.size()!=0){
                         currentitem=0;
                         if(checkPermission()){
-                            new AsyncCheckInternet(ListofTests.this,new INetStatus() {
+                            new AsyncCheckInternet(ListofPractiseTests.this,new INetStatus() {
                                 @Override
                                 public void inetSatus(Boolean netStatus) {
                                     if(netStatus){
@@ -158,14 +163,14 @@ public class ListofTests extends AppCompatActivity {
         hmap.clear();
         hmap.put("testid",selectedtestidList.get(currentitem));
         hmap.put("status","STARTED");
-        new BagroundTask(URLClass.hosturl +"updateTestStatus.php",hmap,ListofTests.this,new IBagroundListener() {
+        new BagroundTask(URLClass.hosturl +"updatePractiseTestStatus.php",hmap,ListofPractiseTests.this,new IBagroundListener() {
             @Override
             public void bagroundData(String json) {
                 try{
                     Log.e("UploadStatus---",json);
                     if(json.equalsIgnoreCase("Updated")){
 
-                        long updateFlag=myhelper.updateTestStatus(selectedtestidList.get(currentitem),"STARTED");
+                        long updateFlag=myhelper.updatePTestStatus(selectedtestidList.get(currentitem),"STARTED");
                         if(updateFlag>0){
                             Log.e("LocalStatusUpdate---","Updated Locally");
                         }else{
@@ -203,14 +208,10 @@ public class ListofTests extends AppCompatActivity {
                         }else{
                             finalUrls.add(downloadjsonpath);
                             finalNames.add(selectedtestidList.get(currentitem)+".json");
+                            localPathList.add(URLClass.mainpath+localpath);
                         }
 
-                        String[] urlList=new String[finalUrls.size()];
-                        urlList = finalUrls.toArray(urlList);
-                        String[] nameList = new String[finalNames.size()];
-                        nameList = finalNames.toArray(nameList);
-
-                        new DownloadFileAsync(ListofTests.this,URLClass.mainpath+localpath,urlList,nameList,new IDownloadStatus() {
+                        new DownloadFileAsync(ListofPractiseTests.this,localPathList,finalUrls,finalNames,new IDownloadStatus() {
                             @Override
                             public void downloadStatus(String status) {
 
@@ -219,6 +220,8 @@ public class ListofTests extends AppCompatActivity {
 
                                         finalUrls.clear();
                                         finalNames.clear();
+                                        localPathList.clear();
+
                                         filedata="";
 
                                         try{
@@ -244,32 +247,25 @@ public class ListofTests extends AppCompatActivity {
 
                                         if(downloadfileList.size()!=0){
 
-                                            File myFile = new File(URLClass.mainpath+localpath);
-                                            if(myFile.exists()){
-                                                for(int i=0;i<downloadfileList.size();i++){
+                                            for(int i=0;i<chapterFileList.size();i++){
 
-                                                    File myFile1 = new File(URLClass.mainpath+localpath+downloadfileList.get(i));
-                                                    if(myFile1.exists()){
+                                                SingleDWDQues sdq=chapterFileList.get(i);
 
-                                                    }else{
-//                                                        finalUrls.add(URLClass.downloadurl+downloadfileList.get(i));
-                                                        finalUrls.add(tfiledwdpath+downloadfileList.get(i));
-                                                        finalNames.add(downloadfileList.get(i));
-                                                    }
-                                                }
-                                            }else{
-                                                for(int i=0;i<downloadfileList.size();i++){
+                                                File myFile1 = new File(URLClass.mainpath+enrollid+"/"+courseid+"/"+subjectid+"/"+sdq.getPaperId()+"/"+sdq.getChapterId()+"/"+sdq.getFileName());
+                                                if(myFile1.exists()){
 
-//                                                    finalUrls.add(URLClass.downloadurl+downloadfileList.get(i));
-                                                    finalUrls.add(tfiledwdpath+downloadfileList.get(i));
-                                                    finalNames.add(downloadfileList.get(i));
+                                                }else{
 
+                                                    String tPath=URLClass.downloadjson+"courses/"+courseid+"/"+subjectid+"/"+sdq.getPaperId()+"/";
+                                                    finalUrls.add(tPath+sdq.getChapterId()+"/"+sdq.getFileName());
+                                                    finalNames.add(sdq.getFileName());
+                                                    localPathList.add(URLClass.mainpath+enrollid+"/"+courseid+"/"+subjectid+"/"+sdq.getPaperId()+"/"+sdq.getChapterId()+"/");
                                                 }
                                             }
 
                                         }else{
+                                            currentitem=currentitem+1;
                                             if(currentitem<selectedtestidList.size()){
-                                                currentitem=currentitem+1;
                                                 downloadTest(selectedtestidList.get(currentitem));
                                             }else{
                                                 Toast.makeText(getApplicationContext(),"All Downloaded",Toast.LENGTH_SHORT).show();
@@ -279,14 +275,7 @@ public class ListofTests extends AppCompatActivity {
 
                                         if(finalNames.size()!=0){
 
-                                            String[] urlList=new String[finalUrls.size()];
-                                            urlList = finalUrls.toArray(urlList);
-                                            String[] nameList = new String[finalNames.size()];
-                                            nameList = finalNames.toArray(nameList);
-
-                                            Log.e("TestName---",testidList.get(0).getTestid());
-
-                                            new DownloadFileAsync(ListofTests.this,URLClass.mainpath+localpath,urlList,nameList,new IDownloadStatus() {
+                                            new DownloadFileAsync(ListofPractiseTests.this,localPathList,finalUrls,finalNames,new IDownloadStatus() {
                                                 @Override
                                                 public void downloadStatus(String status) {
 
@@ -294,24 +283,23 @@ public class ListofTests extends AppCompatActivity {
                                                         if(status.equalsIgnoreCase("Completed")){
                                                             hmap.clear();
                                                             hmap.put("testid",selectedtestidList.get(currentitem));
-                                                            hmap.put("status","DOWNLOADED");
-                                                            new BagroundTask(URLClass.hosturl +"updateTestStatus.php",hmap, ListofTests.this, new IBagroundListener() {
+                                                            hmap.put("status","Downloaded");
+                                                            new BagroundTask(URLClass.hosturl +"updatePractiseTestStatus.php",hmap, ListofPractiseTests.this, new IBagroundListener() {
                                                                 @Override
                                                                 public void bagroundData(String json) {
                                                                     try {
 
                                                                         Log.e("UploadStatus---",json);
                                                                         if(json.equalsIgnoreCase("Updated")){
-                                                                            long updateFlag=myhelper.updateTestStatus(selectedtestidList.get(currentitem),"DOWNLOADED");
+                                                                            long updateFlag=myhelper.updatePTestStatus(selectedtestidList.get(currentitem),"DOWNLOADED");
                                                                             if(updateFlag>0){
                                                                                 Log.e("LocalStatusUpdate---","Updated Locally");
                                                                             }else{
 
                                                                             }
 
-//                                                                            dwdupdateList.add(new SingleTest(selectedtestidList.get(currentitem),"","Downloaded"));
+                                                                            currentitem=currentitem+1;
                                                                             if(currentitem<selectedtestidList.size()){
-                                                                                currentitem=currentitem+1;
                                                                                 downloadTest(selectedtestidList.get(currentitem));
                                                                             }else{
                                                                                 Toast.makeText(getApplicationContext(),"All Downloaded",Toast.LENGTH_SHORT).show();
@@ -322,7 +310,7 @@ public class ListofTests extends AppCompatActivity {
 
                                                                     } catch (Exception e) {
                                                                         e.printStackTrace();
-                                                                        Log.e("ListofTests----", e.toString());
+                                                                        Log.e("ListofPractiseTests----", e.toString());
                                                                     }
                                                                 }
                                                             }).execute();
@@ -341,18 +329,15 @@ public class ListofTests extends AppCompatActivity {
                                                 }
                                             }).execute();
 
-//                            if(dwdupdateList.size()!=0){
-//
-//
-//
-//                            }else{
-//                                Toast.makeText(getApplicationContext(),"All Tests are not fully Downloaded",Toast.LENGTH_SHORT).show();
-//                            }
-
                                         }else{
+
                                             currentitem=currentitem+1;
-                                            downloadTest(selectedtestidList.get(currentitem));
-                                            Log.e("LandingActivity----","All OwnAd Images Downloaded");
+                                            if(currentitem<selectedtestidList.size()){
+                                                downloadTest(selectedtestidList.get(currentitem));
+                                            }else{
+                                                Toast.makeText(getApplicationContext(),"All Downloaded",Toast.LENGTH_SHORT).show();
+                                            }
+
                                         }
 
                                     }else{
@@ -370,7 +355,7 @@ public class ListofTests extends AppCompatActivity {
                     }
                 }catch (Exception e){
                     e.printStackTrace();
-                    Log.e("ListofTests----",e.toString());
+                    Log.e("ListofPractiseTests----",e.toString());
                 }
 
             }
@@ -380,17 +365,17 @@ public class ListofTests extends AppCompatActivity {
     public void getTestIdsFromLocal(){
         testidList.clear();
         try {
-            Cursor mycursor=myhelper.getStudentTests();
+            Cursor mycursor=myhelper.getStudentTestsByEnroll(enrollid);
             if(mycursor.getCount()>0){
                 while (mycursor.moveToNext()) {
-                    Log.e("DBHelper-->",""+mycursor.getCount());
                     testidList.add(new SingleTest(mycursor.getString(mycursor.getColumnIndex("sptu_ID")),mycursor.getString(mycursor.getColumnIndex("sptu_subjet_ID")),mycursor.getString(mycursor.getColumnIndex("sptu_dwnld_status"))));
                     subjectIds.add(mycursor.getString(mycursor.getColumnIndex("sptu_subjet_ID")));
                 }
             }else {
                 mycursor.close();
-                Toast.makeText(ListofTests.this,"No Tests Available",Toast.LENGTH_LONG).show();
+                Toast.makeText(ListofPractiseTests.this,"No Tests Available",Toast.LENGTH_LONG).show();
             }
+
         } catch (IndexOutOfBoundsException e) {
             e.printStackTrace();
         }
@@ -401,7 +386,7 @@ public class ListofTests extends AppCompatActivity {
         hmap.clear();
         hmap.put("testId",testid);
         hmap.put("groupiddata",groupidData);
-        new BagroundTask(URLClass.hosturl +"getTestConfig.php",hmap,ListofTests.this,new IBagroundListener() {
+        new BagroundTask(URLClass.hosturl +"getTestConfig.php",hmap,ListofPractiseTests.this,new IBagroundListener() {
             @Override
             public void bagroundData(String json) {
 
@@ -409,7 +394,7 @@ public class ListofTests extends AppCompatActivity {
                 JSONObject groupObj=null,qconObj=null,gquesconObj=null,sectionObj=null;
 
                 try{
-                    Log.e("ListofTests---",json);
+                    Log.e("ListofPractiseTests---",json);
 
                     JSONObject myObj=new JSONObject(json);
 
@@ -427,8 +412,8 @@ public class ListofTests extends AppCompatActivity {
 
                                 groupObj=groupArray.getJSONObject(i);
                                 long insertFlag=myhelper.insertQuesGroup(groupObj.getInt("qbg_key"),groupObj.getString("qbg_ID"),testid,groupObj.getString("qbg_media_type"),groupObj.getString("qbg_media_file"),
-                                        groupObj.getString("qbg_text"),groupObj.getInt("qbg_no_questions"),groupObj.getInt("qbg_pickup_count"),groupObj.getString("qbg_status"),
-                                        groupObj.getString("qbg_created_by"),groupObj.getString("qbg_created_dttm"),groupObj.getString("qbg_mod_by"),groupObj.getString("qbg_mod_dttm"));
+                                        groupObj.getString("qbg_text"),groupObj.getInt("qbg_no_questions"),groupObj.getInt("qbg_no_pick"),groupObj.getString("qbg_status"),
+                                        groupObj.getString("qbg_created_by"),groupObj.getString("qbg_created_dttm"),groupObj.getString("qbg_mod_by"),groupObj.getString("qbg_mod_dttm"),groupObj.getString("qbg_type"));
                                 if(insertFlag>0){
                                     p++;
                                 }else {
@@ -539,7 +524,7 @@ public class ListofTests extends AppCompatActivity {
 
                 }catch (Exception e){
                     e.printStackTrace();
-                    Log.e("ListofTests---",e.toString());
+                    Log.e("ListofPractiseTests---",e.toString());
                 }
 
             }
@@ -550,11 +535,11 @@ public class ListofTests extends AppCompatActivity {
         hmap.clear();
         hmap.put("courseid",courseid);
         hmap.put("paperid",paperid);
-        new BagroundTask(URLClass.hosturl+"getTestsByCourseandPaper.php", hmap, ListofTests.this,new IBagroundListener() {
+        new BagroundTask(URLClass.hosturl+"getTestsByCourseandPaper.php", hmap, ListofPractiseTests.this,new IBagroundListener() {
             @Override
             public void bagroundData(String json) {
                 try{
-                    Log.e("ListofTests----","JSON:comes-"+json);
+                    Log.e("ListofPractiseTests----","JSON:comes-"+json);
                     if(json.equalsIgnoreCase("Tests_Not_Exist")){
                         Toast.makeText(getApplicationContext(),"No Tests for User",Toast.LENGTH_SHORT).show();
                     }else{
@@ -570,16 +555,16 @@ public class ListofTests extends AppCompatActivity {
 
                             long checkFlag=myhelper.checkTest(myObj.getInt("sptu_key"));
                             if(checkFlag>0){
-                                Log.e("ListofTests----","Test Already Exists");
+                                Log.e("ListofPractiseTests----","Test Already Exists");
                             }else{
                                 long insertFlag=myhelper.insertPractiseTest(myObj.getInt("sptu_key"),myObj.getString("sptu_org_id"),myObj.getString("sptu_entroll_id"),myObj.getString("sptu_student_ID"),
                                         myObj.getString("sptu_batch"),myObj.getString("sptu_ID"),myObj.getString("sptu_paper_ID"),myObj.getString("sptu_subjet_ID"),
                                         myObj.getString("sptu_course_id"),myObj.getString("sptu_start_date"),myObj.getString("sptu_end_date"),myObj.getString("sptu_dwnld_status"),
                                         myObj.getInt("sptu_no_of_questions"),myObj.getDouble("sptu_tot_marks"),myObj.getDouble("stpu_min_marks"),myObj.getDouble("sptu_max_marks"));
                                 if(insertFlag>0){
-                                    Log.e("ListofTests----","Test Inserted in Local");
+                                    Log.e("ListofPractiseTests----","Test Inserted in Local");
                                 }else{
-                                    Log.e("ListofTests----","Local Test Insertion Failed");
+                                    Log.e("ListofPractiseTests----","Local Test Insertion Failed");
                                 }
                             }
 
@@ -588,7 +573,7 @@ public class ListofTests extends AppCompatActivity {
                     getTestIdsFromLocal();
                 }catch (Exception e){
                     e.printStackTrace();
-                    Log.e("ListofTests----",e.toString());
+                    Log.e("ListofPractiseTests----",e.toString());
                 }
             }
         }).execute();
@@ -598,8 +583,8 @@ public class ListofTests extends AppCompatActivity {
         if (testidList.size() != 0) {
             Log.e("Advtlist.size()", "comes:" + testidList.size());
             tv_emptytests.setVisibility(View.GONE);
-            tAdp = new TestAdapter(testidList,ListofTests.this);
-            myLayoutManager = new LinearLayoutManager(ListofTests.this, LinearLayoutManager.VERTICAL,false);
+            tAdp = new PractiseTestAdapter(testidList,ListofPractiseTests.this);
+            myLayoutManager = new LinearLayoutManager(ListofPractiseTests.this, LinearLayoutManager.VERTICAL,false);
             rv_tests.setLayoutManager(myLayoutManager);
             rv_tests.setItemAnimator(new DefaultItemAnimator());
             rv_tests.setAdapter(tAdp);
@@ -612,8 +597,10 @@ public class ListofTests extends AppCompatActivity {
     public void parseJson(String json){
 
         downloadfileList.clear();
+        chapterFileList.clear();
+        localPathList.clear();
 
-        JSONArray secArray,grpArray,grpquesArray,quesArray,optionsArray,additionsArray;
+        JSONArray secArray,quesArray,optionsArray,additionsArray;
         JSONObject mainObj,secObj,singlequesObj,optionsObj,additionsObj;
         try{
             mainObj=new JSONObject(json);
@@ -629,12 +616,23 @@ public class ListofTests extends AppCompatActivity {
                 for(int i=0;i<quesArray.length();i++){
 
                     singlequesObj=quesArray.getJSONObject(i);
+
+                    String chapterid=singlequesObj.getString("qbm_ChapterID");
+                    String paperid=singlequesObj.getString("qbm_Paper_ID");
+
                     if(singlequesObj.getString("qbm_group_flag").equalsIgnoreCase("YES")){
 
                         if(groupIds.contains(singlequesObj.getString("gbg_id"))){
 
                         }else{
                             groupIds.add(singlequesObj.getString("gbg_id"));
+                        }
+
+                        if(downloadfileList.contains(singlequesObj.getString("gbg_media_file"))){
+
+                        }else{
+                            downloadfileList.add(singlequesObj.getString("gbg_media_file"));
+                            chapterFileList.add(new SingleDWDQues(chapterid,paperid,singlequesObj.getString("gbg_media_file")));
                         }
 
                     }else{
@@ -645,21 +643,21 @@ public class ListofTests extends AppCompatActivity {
 
                     }else{
                         downloadfileList.add(singlequesObj.getString("qbm_image_file"));
+                        chapterFileList.add(new SingleDWDQues(chapterid,paperid,singlequesObj.getString("qbm_image_file")));
                     }
+
                     if(downloadfileList.contains(singlequesObj.getString("qbm_Review_Images"))){
 
                     }else{
                         downloadfileList.add(singlequesObj.getString("qbm_Review_Images"));
+                        chapterFileList.add(new SingleDWDQues(chapterid,paperid,singlequesObj.getString("qbm_Review_Images")));
                     }
-                    if(downloadfileList.contains(singlequesObj.getString("qbm_Additional_Image_ref"))){
 
-                    }else{
-                        downloadfileList.add(singlequesObj.getString("qbm_Additional_Image_ref"));
-                    }
                     if(downloadfileList.contains(singlequesObj.getString("qbm_flash_image"))){
 
                     }else{
                         downloadfileList.add(singlequesObj.getString("qbm_flash_image"));
+                        chapterFileList.add(new SingleDWDQues(chapterid,paperid,singlequesObj.getString("qbm_flash_image")));
                     }
 
                     optionsArray=singlequesObj.getJSONArray("Options");
@@ -670,6 +668,7 @@ public class ListofTests extends AppCompatActivity {
 
                         }else{
                             downloadfileList.add(optionsObj.getString("qbo_media_file"));
+                            chapterFileList.add(new SingleDWDQues(chapterid,paperid,optionsObj.getString("qbo_media_file")));
                         }
                     }
 
@@ -681,6 +680,7 @@ public class ListofTests extends AppCompatActivity {
 
                         }else{
                             downloadfileList.add(additionsObj.getString("qba_media_file"));
+                            chapterFileList.add(new SingleDWDQues(chapterid,paperid,additionsObj.getString("qba_media_file")));
                         }
 
                     }
@@ -698,7 +698,7 @@ public class ListofTests extends AppCompatActivity {
                     }
                 }
             }else{
-                Log.e("ListofTests----","No Groups Available in Test");
+                Log.e("ListofPractiseTests----","No Groups Available in Test");
             }
 
             Log.e("JSONPARSE---",""+downloadfileList.size());
@@ -718,7 +718,7 @@ public class ListofTests extends AppCompatActivity {
     }
 
     private void requestPermission() {
-        ActivityCompat.requestPermissions(ListofTests.this, new
+        ActivityCompat.requestPermissions(ListofPractiseTests.this, new
                 String[]{WRITE_EXTERNAL_STORAGE,READ_EXTERNAL_STORAGE},RequestPermissionCode);
     }
 
@@ -727,7 +727,7 @@ public class ListofTests extends AppCompatActivity {
 
         if(requestCode == RequestPermissionCode){
             if(grantResults.length >0 && grantResults[0] == PackageManager.PERMISSION_GRANTED && grantResults[1] == PackageManager.PERMISSION_GRANTED){
-                new AsyncCheckInternet(ListofTests.this,new INetStatus() {
+                new AsyncCheckInternet(ListofPractiseTests.this,new INetStatus() {
                     @Override
                     public void inetSatus(Boolean netStatus) {
                         if(netStatus){
@@ -740,7 +740,7 @@ public class ListofTests extends AppCompatActivity {
                 }).execute();
             }
             else {
-                Toast.makeText(ListofTests.this, "You don't have permission to access file location!", Toast.LENGTH_SHORT).show();
+                Toast.makeText(ListofPractiseTests.this, "You don't have permission to access file location!", Toast.LENGTH_SHORT).show();
             }
             return;
         }
@@ -749,7 +749,7 @@ public class ListofTests extends AppCompatActivity {
     }
 
     public  void showAlert(String messege){
-        AlertDialog.Builder builder = new AlertDialog.Builder(ListofTests.this);
+        AlertDialog.Builder builder = new AlertDialog.Builder(ListofPractiseTests.this);
         builder.setMessage(messege)
                 .setCancelable(false)
                 .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
@@ -759,7 +759,7 @@ public class ListofTests extends AppCompatActivity {
                         if(selectedtestidList.size()!=0){
                             currentitem=0;
                             if(checkPermission()){
-                                new AsyncCheckInternet(ListofTests.this,new INetStatus() {
+                                new AsyncCheckInternet(ListofPractiseTests.this,new INetStatus() {
                                     @Override
                                     public void inetSatus(Boolean netStatus) {
                                         if(netStatus){
@@ -804,33 +804,5 @@ public class ListofTests extends AppCompatActivity {
         }
         return super.onKeyDown(keyCode, event);
     }
-
-
-
-
-//    public boolean onCreateOptionsMenu(Menu menu) {
-//        MenuInflater inflater = getMenuInflater();
-//        inflater.inflate(R.menu.menu_main, menu);
-//        return true;
-//    }
-//
-//    public boolean onOptionsItemSelected(MenuItem item) {
-//        switch (item.getItemId()) {
-//            case R.id.action_refresh:
-//                new AsyncCheckInternet(ListofTests.this,new INetStatus() {
-//                    @Override
-//                    public void inetSatus(Boolean netStatus) {
-//                        if(netStatus){
-//                            getTestIds();
-//                        }else{
-//                            Toast.makeText(getApplicationContext(),"No internet,Please Check your connection",Toast.LENGTH_SHORT).show();
-//                        }
-//                    }
-//                }).execute();
-//                return  true;
-//            default:
-//                return super.onOptionsItemSelected(item);
-//        }
-//    }
 
 }

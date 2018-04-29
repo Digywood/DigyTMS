@@ -1,8 +1,6 @@
 package com.digywood.tms;
 
 import android.content.Context;
-import android.net.http.LoggingEventHandler;
-import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import com.digywood.tms.DBHelper.DBHelper;
 import com.digywood.tms.Pojo.GroupQues;
@@ -17,7 +15,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Random;
 
-public class JSONParser extends AppCompatActivity{
+public class JSONParser {
 
     ArrayList<String> quesIdList=new ArrayList<>();
     ArrayList<String> groupList=new ArrayList<>();
@@ -53,30 +51,11 @@ public class JSONParser extends AppCompatActivity{
         this.dwdpath=dwdPath;
         this.testType=type;
         this.myhelper=new DBHelper(c.getApplicationContext());
-//        this.myhelper=new DBHelper(JSONParser.this);
 
         quesIdList.clear();
 
-        testfimages.add("Q001.PNG");
-        testfimages.add("Q002.PNG");
-        testfimages.add("Q004.PNG");
-        testfimages.add("Q007.PNG");
-        testfimages.add("Q008.PNG");
-        testfimages.add("Q010.PNG");
-
-//        scConfigList.add(new SingleSubcatConfig("SSCE000101",5,3));
-//        scConfigList.add(new SingleSubcatConfig("SSCE000102",5,2));
-//        scConfigList.add(new SingleSubcatConfig("SSCR000101",5,3));
-//        scConfigList.add(new SingleSubcatConfig("SSCR000201",3,2));
-//        scConfigList.add(new SingleSubcatConfig("SSCR000301",4,2));
-//        scConfigList.add(new SingleSubcatConfig("SSCM000101",4,2));
-//        scConfigList.add(new SingleSubcatConfig("SSCM000201",3,2));
-//        scConfigList.add(new SingleSubcatConfig("SSCM000301",5,3));
-
         try{
             mainObj=new JSONObject(JSON);
-
-//            DBHelper myhelper=new DBHelper(this);
 
             cmainObj=new JSONObject();
             testid=mainObj.getString("ptu_test_ID");
@@ -153,12 +132,6 @@ public class JSONParser extends AppCompatActivity{
                             }
                         }
 
-
-//                        if(groupList.contains(quesObj.getString("gbg_id"))){
-//
-//                        }else{
-//                            groupList.add(quesObj.getString("gbg_id"));
-//                        }
                         groupmainList.add(new GroupQues(quesObj.getString("gbg_id"),quesObj.getString("qbm_ID")));
                     }
 
@@ -167,7 +140,9 @@ public class JSONParser extends AppCompatActivity{
 
                 finalgroupList.clear();
                 if(groupcompList.size()>0){
+
                     int finalcompgroupcount=myhelper.getCompGroupCount(testid,sectionid,"Comprehention");
+
                     finalgroupList=getFinalGroups(groupcompList,finalcompgroupcount);
                     if(finalgroupList.size()>0){
                         for(int d=0;d<finalgroupList.size();d++){
@@ -205,10 +180,10 @@ public class JSONParser extends AppCompatActivity{
 
                         }
                     }else{
-                        Log.e("GroupConfig: --","Empty Comprehention Groups");
+                        Log.e("GroupConfigIn: --","Empty Comprehention Groups");
                     }
                 }else{
-                    Log.e("GroupConfig: --","Empty Comprehention Groups");
+                    Log.e("GroupConfigOut: --","Empty Comprehention Groups");
                 }
 
 
@@ -252,10 +227,10 @@ public class JSONParser extends AppCompatActivity{
 
                         }
                     }else{
-                        Log.e("GroupConfig: --","Empty Closure Groups");
+                        Log.e("GroupConfigIn: --","Empty Closure Groups");
                     }
                 }else{
-                    Log.e("GroupConfig: --","Empty Closure Groups");
+                    Log.e("GroupConfigOut: --","Empty Closure Groups");
                 }
 
 
@@ -346,7 +321,6 @@ public class JSONParser extends AppCompatActivity{
 
                             if(testQuesList.contains(quesObj.get("qbm_ID"))){
 
-                                int g=r.nextInt(testfimages.size());
                                 seqno++;
                                 cquesObj=new JSONObject();
                                 cquesObj.put("qbm_ID",quesObj.get("qbm_ID"));
@@ -390,8 +364,6 @@ public class JSONParser extends AppCompatActivity{
                                 cquesObj.put("gbg_no_questions",quesObj.get("gbg_no_questions"));
                                 cquesObj.put("gbg_no_pick",quesObj.get("gbg_no_pick"));
                                 cquesObj.put("qbm_jumbling_flag",quesObj.get("qbm_jumbling_flag"));
-                                cquesObj.put("qbm_flash_image",quesObj.get("qbm_flash_image"));
-//                                cquesObj.put("qbm_flash_image",testfimages.get(g));
 //                                cquesObj.put("qbm_QAdditional_type",quesObj.get("qbm_QAdditional_type"));
 //                                cquesObj.put("qbm_QAdditional_Image",quesObj.get("qbm_QAdditional_Image"));
 //                                cquesObj.put("qbm_QAdditional_Flag",quesObj.get("qbm_QAdditional_Flag"));
@@ -453,7 +425,6 @@ public class JSONParser extends AppCompatActivity{
 
                             if(testQuesList.contains(quesObj.getString("qbm_ID"))){
 
-                                int g=r.nextInt(testfimages.size());
                                 seqno++;
                                 cquesObj=new JSONObject();
                                 cquesObj.put("qbm_ID",quesObj.get("qbm_ID"));
@@ -496,7 +467,6 @@ public class JSONParser extends AppCompatActivity{
                                 cquesObj.put("gbg_no_pick",quesObj.get("gbg_no_pick"));
                                 cquesObj.put("qbm_jumbling_flag",quesObj.get("qbm_jumbling_flag"));
                                 cquesObj.put("qbm_flash_image",quesObj.get("qbm_flash_image"));
-//                                cquesObj.put("qbm_flash_image",testfimages.get(g));
 //                                cquesObj.put("qbm_QAdditional_type",quesObj.get("qbm_QAdditional_type"));
 //                                cquesObj.put("qbm_QAdditional_Image",quesObj.get("qbm_QAdditional_Image"));
 //                                cquesObj.put("qbm_QAdditional_Flag",quesObj.get("qbm_QAdditional_Flag"));
@@ -687,10 +657,6 @@ public class JSONParser extends AppCompatActivity{
     public void getShuffledQues(ArrayList<String> quesList,int count) {
 
         ArrayList<String> finalList=new ArrayList<>();
-
-//        for(int z=0;z<quesList.size();z++){
-//            Log.e("ITEM:---",quesList.get(z));
-//        }
 
         while (finalList.size()<count){
             int p=r.nextInt(quesList.size());

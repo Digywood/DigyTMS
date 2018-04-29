@@ -121,11 +121,12 @@ public class AttemptDataActivity extends AppCompatActivity {
         Cursor mycursor=myhelper.getFlashTestData(testId);
         if(mycursor.getCount()>0){
             while(mycursor.moveToNext()){
-                fattemptList.add(new SingleFlashAttempt(mycursor.getString(mycursor.getColumnIndex("startDttm")),mycursor.getInt(mycursor.getColumnIndex("iknowCount")),mycursor.getInt(mycursor.getColumnIndex("donknowCount")),mycursor.getInt(mycursor.getColumnIndex("skipCount")),mycursor.getDouble(mycursor.getColumnIndex("percentageObtain"))));
+                fattemptList.add(new SingleFlashAttempt(mycursor.getString(mycursor.getColumnIndex("startDttm")),mycursor.getInt(mycursor.getColumnIndex("attemptQCount")),mycursor.getInt(mycursor.getColumnIndex("iknowCount")),mycursor.getInt(mycursor.getColumnIndex("donknowCount")),mycursor.getInt(mycursor.getColumnIndex("skipCount")),mycursor.getDouble(mycursor.getColumnIndex("percentageObtain"))));
             }
         }else{
             mycursor.close();
         }
+
         if (fattemptList.size() != 0) {
             Log.e("Advtlist.size()", "comes:" + fattemptList.size());
             tv_emptyflashdata.setVisibility(View.GONE);

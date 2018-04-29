@@ -5,7 +5,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.os.AsyncTask;
 import android.util.Log;
-
 import com.digywood.tms.DBHelper.DBHelper;
 import com.digywood.tms.IDownloadStatus;
 import com.digywood.tms.URLClass;
@@ -19,6 +18,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.ArrayList;
 
 /**
  * Created by NARESH on 28-09-2016.
@@ -26,11 +26,10 @@ import java.net.URL;
 
 public class DownloadFileAsync extends AsyncTask<Void,String, String> {
 
-    String filePath=null ;
     public static final int DIALOG_DOWNLOAD_PROGRESS = 0;
     Context context;
     private ProgressDialog mProgressDialog;
-    String[] file_paths,file_names;
+    ArrayList<String> file_paths,file_names,dwd_paths;
     InputStream input;
     OutputStream output;
     HttpURLConnection con;
@@ -42,10 +41,10 @@ public class DownloadFileAsync extends AsyncTask<Void,String, String> {
     String log_status = null;
     DBHelper helper;
 
-    public DownloadFileAsync(Context c,String path,String[] urlslist,String[] nameslist,IDownloadStatus iDownloadStatus) {
+    public DownloadFileAsync(Context c,ArrayList<String> dwdpaths,ArrayList<String> urlslist,ArrayList<String> nameslist,IDownloadStatus iDownloadStatus) {
         super();
         this.context=c;
-        this.filePath=path;
+        this.dwd_paths=dwdpaths;
         this.dwdtask=this;
         mProgressDialog= new ProgressDialog(context);
         mProgressDialog.setCanceledOnTouchOutside(false);
@@ -65,13 +64,13 @@ public class DownloadFileAsync extends AsyncTask<Void,String, String> {
             folder.mkdirs();
         }
 
-        for(int i=0; i<file_paths.length;i++)
+        for(int i=0; i<file_paths.size();i++)
         {
             status="Connecting to server..";
             publishProgress(""+(int)0,status);
             try {
 
-                URL url = new URL(file_paths[i]);
+                URL url = new URL(file_paths.get(i));
                 con = (HttpURLConnection) url.openConnection();
                 con.setConnectTimeout(30000);
                 con.connect();
@@ -84,10 +83,10 @@ public class DownloadFileAsync extends AsyncTask<Void,String, String> {
                     case 401 :  status="Unauthorized Connection..";
                         publishProgress(""+(int)0,status);
                         break;
-                    case 404 :  status="Connection Not Found.."+file_names[i];
+                    case 404 :  status="Connection Not Found.."+file_names.get(i);
                         publishProgress(""+(int)0,status);
                         break;
-                    case 408 :  status="Connection Time-Out please try again later.."+file_names[i];
+                    case 408 :  status="Connection Time-Out please try again later.."+file_names.get(i);
                         publishProgress(""+(int)0,status);
                         break;
                     case 500 :  status="Internal Server Error try again later..";
@@ -108,14 +107,14 @@ public class DownloadFileAsync extends AsyncTask<Void,String, String> {
 
                 input = new BufferedInputStream(url.openStream());
 
-                output = new FileOutputStream(temp_location+file_names[i]);
+                output = new FileOutputStream(temp_location+file_names.get(i));
 
-                status= "File : "+file_names[i]+"                          "+(i+1)+" / "+file_paths.length;
+                status= "File : "+file_names.get(i)+"                          "+(i+1)+" / "+file_paths.size();
 
-                Log.e("DownloadFileAsync", "Lenght of file: " + original_lenghtOfFile +"File path + File Name: "+ temp_location+file_names[i]);
+                Log.e("DownloadFileAsync", "Lenght of file: " + original_lenghtOfFile +"File path + File Name: "+ temp_location+file_names.get(i));
 
 
-                filename=file_names[i];
+                filename=file_names.get(i);
                 byte data[] = new byte[1024*1024];
 
                 long total = 0;
@@ -143,7 +142,7 @@ public class DownloadFileAsync extends AsyncTask<Void,String, String> {
                 if (con != null)
                     con.disconnect();
             }
-            moveFile(temp_location,filename,filePath);
+            moveFile(temp_location,filename,dwd_paths.get(i));
         }
 
         return filename;
@@ -193,14 +192,9 @@ public class DownloadFileAsync extends AsyncTask<Void,String, String> {
         //((MainActivity)context). playCommertialAdds();
         mProgressDialog.dismiss();
         listner.downloadStatus("Completed");
-
-        /*Intent i = context.getPackageManager()
-                .getLaunchIntentForPackage( context.getPackageName() );
-        i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        context.startActivity(i);*/
     }
 
-    private void moveFile(String inputPath, String inputFile, String outputPath) {
+    private void moveFile(String inputPath,String inputFile,String outputPath) {
 
         long lenghtOfFile1=new File(inputPath + inputFile).length();
         Log.d("DownloadFileAsync", "Size of downloaded file in Temp location: " + lenghtOfFile1 + "Original File Size in server " + original_lenghtOfFile);
