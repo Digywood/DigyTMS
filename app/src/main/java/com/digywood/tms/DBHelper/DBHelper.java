@@ -211,6 +211,24 @@ public class DBHelper extends SQLiteOpenHelper {
                 ")";
         db.execSQL(AttemptData);
 
+        String AttemptCategory=" CREATE TABLE `attempt_category` (\n"+
+                "   `Attempt_ID` INTEGER,\n"+
+                "   `Attempt_Category` varchar(15),\n" +
+                "   `Attempt_Subcategory` varchar(15),\n" +
+                "   `Question_Category` varchar(15) DEFAULT NULL,\n" +
+                "   `Question_SubCategory` varchar(15) DEFAULT NULL,\n" +
+                "   `Question_Max_Marks` double(15) DEFAULT NULL,\n"+
+                "   `Question_Negative_Marks` double(15) DEFAULT NULL,\n"+
+                "   `Question_Marks_Obtained` double(15) DEFAULT NULL,\n"+
+                "   `Question_Negative_Applied` double(15) DEFAULT NULL,\n"+
+                "   `Question_Option` int(15) DEFAULT NULL,\n"+
+                "   `Question_Status` varchar(20) DEFAULT NULL,\n"+
+                "   `Question_Option_Sequence` varchar(20) DEFAULT NULL,\n"+
+                "   `Option_Answer_Flag` varchar(15) DEFAULT NULL,\n"+
+                "   PRIMARY KEY (`Question_ID`)\n"+
+                ")";
+        db.execSQL(AttemptData);
+
         String FlashAttemptTable="CREATE TABLE `flashcard_attempt` (\n" +
                 "  `flashcard_attemptKey` integer PRIMARY KEY AUTOINCREMENT,\n" +
                 "  `studentId` text DEFAULT NULL,\n" +
@@ -1152,7 +1170,7 @@ public class DBHelper extends SQLiteOpenHelper {
     }
     public int getAttempCount(){
         int count=0;
-        String countQuery = "select * from attempt_list";
+        String countQuery = "select Attempt_ID from attempt_list";
         Cursor c = db.rawQuery(countQuery, null);
         count=c.getCount();
         return count;
@@ -1170,6 +1188,7 @@ public class DBHelper extends SQLiteOpenHelper {
         int attempt_id = 0;
         String query = "select max(Attempt_ID) as last from attempt_list";
         Cursor c = db.rawQuery(query,null);
+        c.moveToLast();
         if (c.getCount() >0) {
             attempt_id = c.getInt(c.getColumnIndex("last"));
         } else {

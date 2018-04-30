@@ -279,7 +279,6 @@ public class JSONParser {
                     }else{
                         Log.e("SubCatConfig","Check "+"- SubCategory- - "+subcatid);
                     }
-
                 }
 
                 int tempcount=quescount-testQuesList.size();
@@ -290,7 +289,6 @@ public class JSONParser {
                 }else{
                     Log.e("JSONPARSE","Subcat Config is not proper");
                 }
-
                 JSONArray cja_questions=new JSONArray();
 
 
@@ -385,19 +383,37 @@ public class JSONParser {
                                     }
                                 }
 
-                                if(opList.size()!=0){
-                                    Collections.shuffle(opList);
-                                    for(int b=0;b<opList.size();b++){
-                                        SingleOptions singleOptions=opList.get(b);
-                                        coptionObj = new JSONObject();
-                                        coptionObj.put("qbo_id",singleOptions.getQbo_id());
-                                        coptionObj.put("qbo_seq_no",singleOptions.getQbo_seq_no());
-                                        coptionObj.put("qbo_type",singleOptions.getQbo_type());
-                                        coptionObj.put("qbo_text",singleOptions.getQbo_text());
-                                        coptionObj.put("qbo_media_type",singleOptions.getQbo_media_type());
-                                        coptionObj.put("qbo_media_file",singleOptions.getQbo_media_file());
-                                        coptionObj.put("qbo_answer_flag",singleOptions.getQbo_answer_flag());
-                                        cja_options.put(coptionObj);
+                                if (quesObj.getString("qbm_jumbling_flag").equalsIgnoreCase("YES")) {
+                                    if(opList.size()!=0){
+                                        Collections.shuffle(opList);
+                                        for(int b=0;b<opList.size();b++){
+                                            SingleOptions singleOptions=opList.get(b);
+                                            coptionObj = new JSONObject();
+                                            coptionObj.put("qbo_id",singleOptions.getQbo_id());
+                                            coptionObj.put("qbo_seq_no",singleOptions.getQbo_seq_no());
+                                            coptionObj.put("qbo_type",singleOptions.getQbo_type());
+                                            coptionObj.put("qbo_text",singleOptions.getQbo_text());
+                                            coptionObj.put("qbo_media_type",singleOptions.getQbo_media_type());
+                                            coptionObj.put("qbo_media_file",singleOptions.getQbo_media_file());
+                                            coptionObj.put("qbo_answer_flag",singleOptions.getQbo_answer_flag());
+                                            cja_options.put(coptionObj);
+                                        }
+                                    }
+                                }
+                                else{
+                                    if(opList.size()!=0){
+                                        for(int b=0;b<opList.size();b++){
+                                            SingleOptions singleOptions=opList.get(b);
+                                            coptionObj = new JSONObject();
+                                            coptionObj.put("qbo_id",singleOptions.getQbo_id());
+                                            coptionObj.put("qbo_seq_no",singleOptions.getQbo_seq_no());
+                                            coptionObj.put("qbo_type",singleOptions.getQbo_type());
+                                            coptionObj.put("qbo_text",singleOptions.getQbo_text());
+                                            coptionObj.put("qbo_media_type",singleOptions.getQbo_media_type());
+                                            coptionObj.put("qbo_media_file",singleOptions.getQbo_media_file());
+                                            coptionObj.put("qbo_answer_flag",singleOptions.getQbo_answer_flag());
+                                            cja_options.put(coptionObj);
+                                        }
                                     }
                                 }
 
