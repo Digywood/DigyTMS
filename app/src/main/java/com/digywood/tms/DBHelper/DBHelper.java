@@ -698,6 +698,18 @@ public class DBHelper extends SQLiteOpenHelper {
         return c;
     }
 
+    public Cursor getAllCourseIds(){
+        String query ="SELECT distinct(sptu_course_id) FROM sptu_student";
+        Cursor c=db.rawQuery(query,null);
+        return c;
+    }
+
+    public Cursor getCourseEnrollments(String courseid){
+        String query ="SELECT sptu_entroll_id FROM sptu_student where sptu_course_id='"+courseid+"'";
+        Cursor c=db.rawQuery(query,null);
+        return c;
+    }
+
     public long deleteAllTests(){
         long deleteFlag=0;
         deleteFlag=db.delete("sptu_student", null, null);
