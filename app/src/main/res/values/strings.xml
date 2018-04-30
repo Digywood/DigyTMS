@@ -19,6 +19,11 @@
         <item>Section3</item>
         <item>Section4</item>
     </string-array>
+
+    <string-array name="actionBarTabs">
+        <item>Practice Test</item>
+        <item>FlashCard</item>
+    </string-array>
     <string name="title_activity_test">TestActivity</string>
     <string name="title_activity_score">ScoreActivity</string>
     <string name="title_activity_review">ReviewActivity</string>
@@ -28,5 +33,8 @@
     <string name="close_text">Close</string>
     <string name="title_activity_flash_card">FlashCardActivity</string>
     <string name="title_activity_dashboard">DashboardActivity</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 
 </resources>

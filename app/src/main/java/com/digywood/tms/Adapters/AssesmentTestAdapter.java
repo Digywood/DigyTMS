@@ -16,7 +16,7 @@ import android.widget.CheckBox;
 import android.widget.TextView;
 
 import com.digywood.tms.DBHelper.DBHelper;
-import com.digywood.tms.FlashAttemptDataActivity;
+import com.digywood.tms.AttemptDataActivity;
 import com.digywood.tms.FlashCardActivity;
 import com.digywood.tms.JSONParser;
 import com.digywood.tms.Pojo.SingleTest;

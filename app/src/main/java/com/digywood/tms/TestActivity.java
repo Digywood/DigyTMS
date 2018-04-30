@@ -75,12 +75,11 @@ public class TestActivity extends AppCompatActivity implements
     ImageView fullscreen;
     GridView gridView;
     Spinner sections;
-    String jsonPath, photoPath, Seq, Id, path, enrollid, courseid, subjectId, paperid, testid, groupId, MyPREFERENCES = "MyPreferences";
+    String jsonPath,imgPath, photoPath, Seq, Id, path, enrollid, courseid, subjectId, paperid, testid, groupId, MyPREFERENCES = "MyPreferences";
     EncryptDecrypt encObj;
     RecyclerView question_scroll;
     ScrollGridAdapter scrollAdapter;
     QuestionListAdapter qAdapter;
-    FloatingActionButton menu;
     LinearLayoutManager myLayoutManager;
     ArrayAdapter adapter;
     RecyclerView rv_option;
@@ -95,7 +94,7 @@ public class TestActivity extends AppCompatActivity implements
     ArrayList<SingleOptions> optionsList = new ArrayList<>();
     ArrayList<SingleQuestionList> questionOpList = new ArrayList<>();
     ArrayList<ArrayList<SingleQuestionList>> listOfLists = new ArrayList<>();
-    ImageView question_img;
+    ImageView question_img ,menu;
     Bundle bundle;
     Button btn_group_info, btn_qadditional, btn_review, btn_prev, btn_next, btn_clear_option, btn_mark;
     Cursor c;
@@ -104,7 +103,7 @@ public class TestActivity extends AppCompatActivity implements
     Boolean flag = false;
     final Boolean edit = true;
     public static final int RequestPermissionCode = 1;
-    static int index = 0, pos = 0, max = 1, grp = 0, size, count = -1;
+    static int index = 0, pos = 0, max = 1, grp = 0, size, count = 0;
     JSONObject obj, sectionobj, groupobj, questionobj, temp;
     public static JSONObject attempt;
     JSONArray array, optionsArray, totalArray, groupArray, sectionArray, attemptsectionarray, buffer;
@@ -230,6 +229,7 @@ public class TestActivity extends AppCompatActivity implements
         path = enrollid + "/" + courseid + "/" + subjectId + "/" + paperid + "/" + testid + "/";
         photoPath = URLClass.mainpath + path;
         jsonPath = URLClass.mainpath + path + "Attempt/" + testid + ".json";
+        imgPath=URLClass.mainpath+enrollid+"/"+courseid+"/"+subjectId+"/";
 
         temp = new JSONObject();
         sectionArray = new JSONArray();
@@ -264,13 +264,16 @@ public class TestActivity extends AppCompatActivity implements
 
         try {
 
-            count = dataObj.getAttempCount() - 1;
+            count = dataObj.getAttempCount()-1;
             c = dataObj.getAttempt(count);
             //if cursor has values then the test is being resumed and data is retrieved from database
-            if (c.getCount() > 0) {
-                c.moveToLast();
-                if (c.getInt(c.getColumnIndex("Attempt_Status")) == 1) {
-                    Log.e("TestingJson", "reached");
+                if (getIntent().getStringExtra("status").equalsIgnoreCase("NEW")) {
+                    newTest();
+
+                }
+                else {
+                    c.moveToLast();
+                    Log.e("TestingJson", ""+c.getInt(c.getColumnIndex("Attempt_Status"))+" "+c.getCount());
                     millisStart = c.getLong(c.getColumnIndex("Attempt_RemainingTime"));
                     attempt = new JSONObject(getIntent().getStringExtra("json"));
                     attemptsectionarray = new JSONArray();
@@ -280,24 +283,13 @@ public class TestActivity extends AppCompatActivity implements
                     index = c.getInt(c.getColumnIndex("Attempt_LastQuestion"));
                     pos = c.getInt(c.getColumnIndex("Attempt_LastSection"));
                 }
-            }
-            //else cursor doesn't have values then the test is started fresh
-            else {
-                Log.e("Fresh", "Test");
-                millisStart = 3600000;
-                obj = new JSONObject(getIntent().getStringExtra("json"));
-                encObj = new EncryptDecrypt();
-                attemptsectionarray = new JSONArray();
-                max = 1;
-                attempt = new JSONObject(getIntent().getStringExtra("json"));
-                attemptsectionarray = attempt.getJSONArray("Sections");
-                Log.e("Sections", "" + attemptsectionarray.length());
-                index = 0;
-                pos = 0;
-                buffer = attempt.getJSONArray("Sections").getJSONObject(pos).getJSONArray("Questions");
-                storeSections();
-
-            }
+//
+//            //else cursor doesn't have values then the test is started fresh
+//            else {
+//                Log.e("TestingJson", ""+c.getInt(c.getColumnIndex("Attempt_Status")));
+//                Log.e("Fresh", "Test");
+//                newTest();
+//            }
 
         } catch (JSONException e) {
             e.printStackTrace();
@@ -405,8 +397,12 @@ public class TestActivity extends AppCompatActivity implements
                                             public void onClick(DialogInterface arg0, int arg1) {
 //                                            q_list.clear();
                                                 try {
+                                                    long value = dataObj.UpdateAttempt(count,attempt.getString("ptu_test_ID"),2, 0,dataObj.getQuestionAttempted(),dataObj.getQuestionSkipped(),dataObj.getQustionBookmarked(),dataObj.getQustionNotAttempted(), 0, millisRemaining, index, pos);
+                                                    if (value >= 0) {
+                                                        dataObj.InsertAttempt(attempt.getString("ptu_test_ID"),2, 0,dataObj.getQuestionAttempted(),dataObj.getQuestionSkipped(),dataObj.getQustionBookmarked(),dataObj.getQustionNotAttempted(), 0, millisRemaining, index, pos);
+                                                    }
                                                     SaveJSONdataToFile.objectToFile(URLClass.mainpath + path + "Attempt/" + testid + ".json", attempt.toString());
-                                                } catch (IOException e) {
+                                                } catch (JSONException|IOException e) {
                                                     e.printStackTrace();
                                                 }
 
@@ -415,15 +411,12 @@ public class TestActivity extends AppCompatActivity implements
                                                 int revealX = (int) (finish_view.getX() + finish_view.getWidth() / 2);
                                                 int revealY = (int) (finish_view.getY() + finish_view.getHeight() / 2);
                                                 finish();
-                                                count = dataObj.getAttempCount() - 1;
-                                                long value = dataObj.UpdateAttempt(count, 2, 0, 0, millisRemaining, index, pos);
-                                                if (value >= 0) {
-                                                    dataObj.InsertAttempt(2, 0, 0, millisRemaining, index, pos);
-                                                }
-                                                c = dataObj.getAttempt(count);
-                                                c.moveToFirst();
-                                                if (c.getInt(c.getColumnIndex("Attempt_Status")) == 2)
-                                                    Log.e("Test", "Finished");
+                                                count = dataObj.getAttempCount();
+
+/*                                                c = dataObj.getAttempt(count);
+                                                c.moveToFirst();*/
+/*                                                if (c.getInt(c.getColumnIndex("Attempt_Status")) == 2)
+                                                    Log.e("Test", "Finished");*/
 
                                                 Intent intent = new Intent(TestActivity.this, ScoreActivity.class);
                                                 bundle = new Bundle();
@@ -534,24 +527,19 @@ public class TestActivity extends AppCompatActivity implements
 
     }
 
-    //temperoary method
-    public String loadJSONFromAsset() {
-        String json = null;
-        byte[] buffer = null;
-        try {
-            InputStream is = this.getAssets().open("updated_json.json");
-            int size = is.available();
-            buffer = new byte[size];
-            is.read(buffer);
-            is.close();
-            json = new String(buffer, "UTF-8");
-        } catch (IOException ex) {
-            ex.printStackTrace();
-            return null;
-        } catch (NullPointerException e) {
-            e.printStackTrace();
-        }
-        return json;
+    public void newTest() throws JSONException {
+        millisStart = 3600000;
+        obj = new JSONObject(getIntent().getStringExtra("json"));
+        encObj = new EncryptDecrypt();
+        attemptsectionarray = new JSONArray();
+        max = 1;
+        attempt = new JSONObject(getIntent().getStringExtra("json"));
+        attemptsectionarray = attempt.getJSONArray("Sections");
+        Log.e("Sections", "" + attemptsectionarray.length());
+        index = 0;
+        pos = 0;
+        buffer = attempt.getJSONArray("Sections").getJSONObject(pos).getJSONArray("Questions");
+        storeSections();
     }
 
     //method to display selected question
@@ -717,13 +705,14 @@ public class TestActivity extends AppCompatActivity implements
                     dataObj.InsertQuestion(attempt.getString("ptu_test_ID"), 0, Id, Seq, Integer.valueOf(questionobj.getString("qbm_marks")), Double.valueOf(questionobj.getString("qbm_negative_mrk")), 0, 0, indx, listOfLists.get(pos).get(index).getQ_status(), opAdapter.getSelectedSequence(), opAdapter.getFlag());
                 }
                 Log.e("CurrentStatus", "" + dataObj.getPosition(Id));
+                // Saving time remaining
+                long value = dataObj.UpdateAttempt(count, attempt.getString("ptu_test_ID"), 1, 0, dataObj.getQuestionAttempted(), dataObj.getQuestionSkipped(), dataObj.getQustionBookmarked(), dataObj.getQustionNotAttempted(), 0, millisRemaining, index, pos);
+                Log.e("WriteOption:", "" + value);
+                if (value >= 0) {
+                    dataObj.InsertAttempt(attempt.getString("ptu_test_ID"), 1, 0, dataObj.getQuestionAttempted(), dataObj.getQuestionSkipped(), dataObj.getQustionBookmarked(), dataObj.getQustionNotAttempted(), 0, millisRemaining, index, pos);
+                }
             }
-            // Saving time remaining
-            long value = dataObj.UpdateAttempt(count, 1, 0, 0, millisRemaining, index, pos);
-            if (value >= 0) {
-                dataObj.InsertAttempt(1, 0, 0, millisRemaining, index, pos);
-            }
-            Log.e("WriteOption:", opAdapter.getSelectedSequence());
+
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -769,8 +758,12 @@ public class TestActivity extends AppCompatActivity implements
                             public void onClick(DialogInterface arg0, int arg1) {
 //                                            q_list.clear();
                                 try {
+                                    long value = dataObj.UpdateAttempt(count,attempt.getString("ptu_test_ID"),2, 0,dataObj.getQuestionAttempted(),dataObj.getQuestionSkipped(),dataObj.getQustionBookmarked(),dataObj.getQustionNotAttempted(), 0, millisRemaining, index, pos);
+                                    if (value >= 0) {
+                                        dataObj.InsertAttempt(attempt.getString("ptu_test_ID"),2, 0,dataObj.getQuestionAttempted(),dataObj.getQuestionSkipped(),dataObj.getQustionBookmarked(),dataObj.getQustionNotAttempted(), 0, millisRemaining, index, pos);
+                                    }
                                     SaveJSONdataToFile.objectToFile(URLClass.mainpath + path + "Attempt/" + testid + ".json", attempt.toString());
-                                } catch (IOException e) {
+                                } catch (JSONException|IOException e) {
                                     e.printStackTrace();
                                 }
                                 ActivityOptionsCompat options = ActivityOptionsCompat.
@@ -778,11 +771,8 @@ public class TestActivity extends AppCompatActivity implements
                                 int revealX = (int) (finish_view.getX() + finish_view.getWidth() / 2);
                                 int revealY = (int) (finish_view.getY() + finish_view.getHeight() / 2);
                                 finish();
-                                count = dataObj.getAttempCount() - 1;
-                                long value = dataObj.UpdateAttempt(count, 2, 0, 0, millisRemaining, index, pos);
-                                if (value >= 0) {
-                                    dataObj.InsertAttempt(2, 0, 0, millisRemaining, index, pos);
-                                }
+                                count = dataObj.getAttempCount();
+
                                 c = dataObj.getAttempt(count);
                                 c.moveToFirst();
                                 Intent intent = new Intent(TestActivity.this, ScoreActivity.class);
@@ -893,7 +883,7 @@ public class TestActivity extends AppCompatActivity implements
         array = attempt.getJSONArray("Sections").getJSONObject(pos).getJSONArray("Questions");
         myLayoutManager.scrollToPositionWithOffset(index, 400);
         questionobj = array.getJSONObject(index);
-        q_no.setText(questionobj.getString("qbm_SequenceId"));
+        q_no.setText(questionobj.getString("qbm_ID"));
         if (questionobj.getString("qbm_group_flag").equals("YES")) {
             groupId = questionobj.getString("gbg_id");
             btn_group_info.setEnabled(true);
@@ -924,10 +914,13 @@ public class TestActivity extends AppCompatActivity implements
             btn_review.setBackgroundColor(0);
 
         }
-
-        b = BitmapFactory.decodeFile(photoPath + questionobj.getString("qbm_image_file"));
+        String pid=questionobj.getString("qbm_Paper_ID");
+        String cid=questionobj.getString("qbm_ChapterID");
+        Bitmap b = BitmapFactory.decodeFile(imgPath+pid+"/"+cid+"/"+questionobj.getString("qbm_image_file"));
         Log.e("qimage", photoPath + questionobj.getString("qbm_image_file"));
         question_img.setImageBitmap(b);
+/*        Animation fadeimage = AnimationUtils.loadAnimation(TestActivity.this, R.anim.fade_in);
+        question_img.startAnimation(fadeimage);*/
         question_img.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
@@ -940,7 +933,7 @@ public class TestActivity extends AppCompatActivity implements
         for (int i = 0; i < optionsArray.length(); i++) {
             option = new SingleOptions();
             option.setQbo_id(optionsArray.getJSONObject(i).getString("qbo_id"));
-            option.setQbo_media_file(optionsArray.getJSONObject(i).getString("qbo_media_file"));
+            option.setQbo_media_file(imgPath+pid+"/"+cid+"/"+questionobj.getString("qbo_media_file"));
             option.setQbo_seq_no(optionsArray.getJSONObject(i).getString("qbo_seq_no"));
             option.setQbo_answer_flag(optionsArray.getJSONObject(i).getString(("qbo_answer_flag")));
             optionsList.add(option);
@@ -1085,13 +1078,13 @@ public class TestActivity extends AppCompatActivity implements
 
                     // do something when the button is clicked
                     public void onClick(DialogInterface arg0, int arg1) {
-                        long value = dataObj.UpdateAttempt(count, 1, 0, 0, millisRemaining, index, pos);
-                        if (value >= 0) {
-                            dataObj.InsertAttempt(1, 0, 0, millisRemaining, index, pos);
-                        }
                         try {
+                            long value = dataObj.UpdateAttempt(count,attempt.getString("ptu_test_ID"),1, 0,dataObj.getQuestionAttempted(),dataObj.getQuestionSkipped(),dataObj.getQustionBookmarked(),dataObj.getQustionNotAttempted(), 0, millisRemaining, index, pos);
+                            if (value >= 0) {
+                                dataObj.InsertAttempt(attempt.getString("ptu_test_ID"),1, 0,dataObj.getQuestionAttempted(),dataObj.getQuestionSkipped(),dataObj.getQustionBookmarked(),dataObj.getQustionNotAttempted(), 0, millisRemaining, index, pos);
+                            }
                             SaveJSONdataToFile.objectToFile(URLClass.mainpath + path + "Attempt/" + testid + ".json", attempt.toString());
-                        } catch (IOException e) {
+                        } catch (JSONException|IOException e) {
                             e.printStackTrace();
                         }
                         Intent intent = new Intent(TestActivity.this, ListofPractiseTests.class);
@@ -1217,7 +1210,7 @@ public class TestActivity extends AppCompatActivity implements
     public void onResume() {
         Log.d(TAG, "onResume:");
         dataObj = new DBHelper(TestActivity.this);
-        int count = dataObj.getAttempCount();
+//        int count = dataObj.getAttempCount()-1;
         super.onResume();
     }
 
@@ -1226,15 +1219,16 @@ public class TestActivity extends AppCompatActivity implements
         Log.d(TAG, "onPause:");
         dataObj = new DBHelper(TestActivity.this);
         try {
+            long value = dataObj.UpdateAttempt(count,attempt.getString("ptu_test_ID"),1, 0,dataObj.getQuestionAttempted(),dataObj.getQuestionSkipped(),dataObj.getQustionBookmarked(),dataObj.getQustionNotAttempted(), 0, millisRemaining, index, pos);
+            if (value >= 0) {
+                dataObj.InsertAttempt(attempt.getString("ptu_test_ID"),1, 0,dataObj.getQuestionAttempted(),dataObj.getQuestionSkipped(),dataObj.getQustionBookmarked(),dataObj.getQustionNotAttempted(), 0, millisRemaining, index, pos);
+            }
             SaveJSONdataToFile.objectToFile(URLClass.mainpath + path + "Attempt/" + testid + ".json", attempt.toString());
             Log.e("Attempt-Json", attempt.toString());
-        } catch (IOException e) {
+        } catch (JSONException|IOException e) {
             e.printStackTrace();
         }
-        long value = dataObj.UpdateAttempt(count, 1, 0, 0, millisRemaining, index, pos);
-        if (value >= 0) {
-            dataObj.InsertAttempt(1, 0, 0, millisRemaining, index, pos);
-        }
+
 
         super.onPause();
     }

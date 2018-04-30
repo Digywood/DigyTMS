@@ -134,8 +134,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignBottom="@+id/time_layout"
-            android:layout_marginStart="90sp"
-            android:textSize="20sp"
+            android:layout_marginStart="10sp"
+            android:textSize="12sp"
             android:textColor="@android:color/black"
             android:layout_toEndOf="@+id/btn_review_info"
             android:text="Question no." />
@@ -145,7 +145,7 @@
             android:layout_height="wrap_content"
             android:layout_alignBottom="@+id/time_layout"
             android:layout_marginStart="10sp"
-            android:textSize="20sp"
+            android:textSize="12sp"
             android:textColor="@android:color/black"
             android:layout_toEndOf="@+id/tv_Question_no_label" />
 
