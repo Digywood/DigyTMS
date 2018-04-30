@@ -933,7 +933,7 @@ public class TestActivity extends AppCompatActivity implements
         for (int i = 0; i < optionsArray.length(); i++) {
             option = new SingleOptions();
             option.setQbo_id(optionsArray.getJSONObject(i).getString("qbo_id"));
-            option.setQbo_media_file(imgPath+pid+"/"+cid+"/"+questionobj.getString("qbo_media_file"));
+            option.setQbo_media_file(imgPath+pid+"/"+cid+"/"+optionsArray.getJSONObject(i).getString("qbo_media_file"));
             option.setQbo_seq_no(optionsArray.getJSONObject(i).getString("qbo_seq_no"));
             option.setQbo_answer_flag(optionsArray.getJSONObject(i).getString(("qbo_answer_flag")));
             optionsList.add(option);
@@ -941,6 +941,7 @@ public class TestActivity extends AppCompatActivity implements
 
         try {
             opAdapter = new OptionsCheckAdapter(optionsList, TestActivity.this, photoPath, rv_option);
+            Log.e("opSize", ""+oplist.size());
             RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
             rv_option.setLayoutManager(mLayoutManager);
             rv_option.setItemAnimator(new DefaultItemAnimator());
