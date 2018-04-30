@@ -75,12 +75,11 @@ public class TestActivity extends AppCompatActivity implements
     ImageView fullscreen;
     GridView gridView;
     Spinner sections;
-    String jsonPath, photoPath, Seq, Id, path, enrollid, courseid, subjectId, paperid, testid, groupId, MyPREFERENCES = "MyPreferences";
+    String jsonPath,imgPath, photoPath, Seq, Id, path, enrollid, courseid, subjectId, paperid, testid, groupId, MyPREFERENCES = "MyPreferences";
     EncryptDecrypt encObj;
     RecyclerView question_scroll;
     ScrollGridAdapter scrollAdapter;
     QuestionListAdapter qAdapter;
-    FloatingActionButton menu;
     LinearLayoutManager myLayoutManager;
     ArrayAdapter adapter;
     RecyclerView rv_option;
@@ -95,7 +94,7 @@ public class TestActivity extends AppCompatActivity implements
     ArrayList<SingleOptions> optionsList = new ArrayList<>();
     ArrayList<SingleQuestionList> questionOpList = new ArrayList<>();
     ArrayList<ArrayList<SingleQuestionList>> listOfLists = new ArrayList<>();
-    ImageView question_img;
+    ImageView question_img ,menu;
     Bundle bundle;
     Button btn_group_info, btn_qadditional, btn_review, btn_prev, btn_next, btn_clear_option, btn_mark;
     Cursor c;
@@ -230,6 +229,7 @@ public class TestActivity extends AppCompatActivity implements
         path = enrollid + "/" + courseid + "/" + subjectId + "/" + paperid + "/" + testid + "/";
         photoPath = URLClass.mainpath + path;
         jsonPath = URLClass.mainpath + path + "Attempt/" + testid + ".json";
+        imgPath=URLClass.mainpath+enrollid+"/"+courseid+"/"+subjectId+"/";
 
         temp = new JSONObject();
         sectionArray = new JSONArray();
@@ -914,8 +914,9 @@ public class TestActivity extends AppCompatActivity implements
             btn_review.setBackgroundColor(0);
 
         }
-
-        b = BitmapFactory.decodeFile(photoPath + questionobj.getString("qbm_image_file"));
+        String pid=questionobj.getString("qbm_Paper_ID");
+        String cid=questionobj.getString("qbm_ChapterID");
+        Bitmap b = BitmapFactory.decodeFile(imgPath+pid+"/"+cid+"/"+questionobj.getString("qbm_image_file"));
         Log.e("qimage", photoPath + questionobj.getString("qbm_image_file"));
         question_img.setImageBitmap(b);
 /*        Animation fadeimage = AnimationUtils.loadAnimation(TestActivity.this, R.anim.fade_in);
@@ -932,7 +933,7 @@ public class TestActivity extends AppCompatActivity implements
         for (int i = 0; i < optionsArray.length(); i++) {
             option = new SingleOptions();
             option.setQbo_id(optionsArray.getJSONObject(i).getString("qbo_id"));
-            option.setQbo_media_file(optionsArray.getJSONObject(i).getString("qbo_media_file"));
+            option.setQbo_media_file(imgPath+pid+"/"+cid+"/"+questionobj.getString("qbo_media_file"));
             option.setQbo_seq_no(optionsArray.getJSONObject(i).getString("qbo_seq_no"));
             option.setQbo_answer_flag(optionsArray.getJSONObject(i).getString(("qbo_answer_flag")));
             optionsList.add(option);

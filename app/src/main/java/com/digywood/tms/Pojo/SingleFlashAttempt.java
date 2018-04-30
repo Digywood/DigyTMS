@@ -8,10 +8,6 @@ public class SingleFlashAttempt {
 
     private Double percent;
 
-    public SingleFlashAttempt(){
-
-    }
-
     public SingleFlashAttempt(String dttm,int aQcount,int knowcount,int donknowcount,int skipcount,Double percentage){
 
         this.date=dttm;

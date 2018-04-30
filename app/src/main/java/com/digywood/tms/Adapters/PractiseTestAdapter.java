@@ -144,44 +144,32 @@ public class PractiseTestAdapter extends RecyclerView.Adapter<PractiseTestAdapte
             @Override
             public void onClick(View v) {
                 dataObj.Destroy("attempt_data");
-                int count = dataObj.getAttempCount()-1;
+                int count = dataObj.getAttempCount();
                 Cursor c = dataObj.getAttempt(count);
+                Log.e("attempt_created:", ""+count);
+//                Log.e("value",""+c.getInt(c.getColumnIndex("Attempt_Status")));
                 //if cursor has values then the test is being resumed and data is retrieved from database
-                if (c.getCount() > 0) {
+/*                if (c.getCount() > 0) {
                     c.moveToLast();
-                    Log.e("value",""+c.getInt(c.getColumnIndex("Attempt_Status")));
+                    Log.e("value", "" + c.getInt(c.getColumnIndex("Attempt_Status")));
                     if (c.getInt(c.getColumnIndex("Attempt_Status")) != 2) {
                         dataObj.DeleteAttempt(count);
-                        try {
-                            fullTest = new String(SaveJSONdataToFile.bytesFromFile(getExternalPath(mycontext, singletest, "BASE") + testid + ".json"), "UTF-8");
-                            JSONParser obj = new JSONParser(fullTest, getExternalPath(mycontext, singletest, "ATTEMPT"), "PRACTICE", mycontext);
-                            attempt = new String(SaveJSONdataToFile.bytesFromFile(getExternalPath(mycontext, singletest, "ATTEMPT") + testid + ".json"), "UTF-8");
-                            Log.e("attempt_created:", attempt);
-                            Intent i = new Intent(mycontext, TestActivity.class);
-                            i.putExtra("json", attempt);
-                            i.putExtra("test", testid);
-                            i.putExtra("status","NEW");
-                            mycontext.startActivity(i);
-                        } catch (IOException | ClassNotFoundException | NullPointerException e) {
-                            e.printStackTrace();
-                        }
                     }
-                    else{
-                        try {
-                            fullTest = new String(SaveJSONdataToFile.bytesFromFile(getExternalPath(mycontext, singletest, "BASE") + testid + ".json"), "UTF-8");
-                            JSONParser obj = new JSONParser(fullTest, getExternalPath(mycontext, singletest, "ATTEMPT"), "PRACTICE", mycontext);
-                            attempt = new String(SaveJSONdataToFile.bytesFromFile(getExternalPath(mycontext, singletest, "ATTEMPT") + testid + ".json"), "UTF-8");
-                            Log.e("attempt_created:", attempt);
-                            Intent i = new Intent(mycontext, TestActivity.class);
-                            i.putExtra("json", attempt);
-                            i.putExtra("test", testid);
-                            i.putExtra("status","NEW");
-                            mycontext.startActivity(i);
-                        } catch (IOException | ClassNotFoundException | NullPointerException e) {
-                            e.printStackTrace();
-                        }
-                    }
+                }*/
+                try {
+                    fullTest = new String(SaveJSONdataToFile.bytesFromFile(getExternalPath(mycontext, singletest, "BASE") + testid + ".json"), "UTF-8");
+                    JSONParser obj = new JSONParser(fullTest, getExternalPath(mycontext, singletest, "ATTEMPT"), "PRACTICE", mycontext);
+                    attempt = new String(SaveJSONdataToFile.bytesFromFile(getExternalPath(mycontext, singletest, "ATTEMPT") + testid + ".json"), "UTF-8");
+                    Log.e("attempt_created:", attempt);
+                    Intent i = new Intent(mycontext, TestActivity.class);
+                    i.putExtra("json", attempt);
+                    i.putExtra("test", testid);
+                    i.putExtra("status","NEW");
+                    mycontext.startActivity(i);
+                } catch (IOException | ClassNotFoundException | NullPointerException e) {
+                    e.printStackTrace();
                 }
+
 /*                if (value) {
 
                 } else {
