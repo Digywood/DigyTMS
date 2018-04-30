@@ -364,9 +364,9 @@ public class JSONParser {
                                 cquesObj.put("gbg_no_questions",quesObj.get("gbg_no_questions"));
                                 cquesObj.put("gbg_no_pick",quesObj.get("gbg_no_pick"));
                                 cquesObj.put("qbm_jumbling_flag",quesObj.get("qbm_jumbling_flag"));
-//                                cquesObj.put("qbm_QAdditional_type",quesObj.get("qbm_QAdditional_type"));
-//                                cquesObj.put("qbm_QAdditional_Image",quesObj.get("qbm_QAdditional_Image"));
-//                                cquesObj.put("qbm_QAdditional_Flag",quesObj.get("qbm_QAdditional_Flag"));
+                                cquesObj.put("qbm_QAdditional_type",quesObj.get("qbm_QAdditional_type"));
+                                cquesObj.put("qbm_QAdditional_Image",quesObj.get("qbm_QAdditional_Image"));
+                                cquesObj.put("qbm_QAdditional_Flag",quesObj.get("qbm_QAdditional_Flag"));
                                 cquesObj.put("qbm_support_flag",quesObj.get("qbm_support_flag"));
                                 cquesObj.put("qbm_support_type",quesObj.get("qbm_support_type"));
                                 cquesObj.put("qbm_support_image_file",quesObj.get("qbm_support_image_file"));
@@ -467,9 +467,9 @@ public class JSONParser {
                                 cquesObj.put("gbg_no_pick",quesObj.get("gbg_no_pick"));
                                 cquesObj.put("qbm_jumbling_flag",quesObj.get("qbm_jumbling_flag"));
                                 cquesObj.put("qbm_flash_image",quesObj.get("qbm_flash_image"));
-//                                cquesObj.put("qbm_QAdditional_type",quesObj.get("qbm_QAdditional_type"));
-//                                cquesObj.put("qbm_QAdditional_Image",quesObj.get("qbm_QAdditional_Image"));
-//                                cquesObj.put("qbm_QAdditional_Flag",quesObj.get("qbm_QAdditional_Flag"));
+                                cquesObj.put("qbm_QAdditional_type",quesObj.get("qbm_QAdditional_type"));
+                                cquesObj.put("qbm_QAdditional_Image",quesObj.get("qbm_QAdditional_Image"));
+                                cquesObj.put("qbm_QAdditional_Flag",quesObj.get("qbm_QAdditional_Flag"));
                                 cquesObj.put("qbm_support_flag",quesObj.get("qbm_support_flag"));
                                 cquesObj.put("qbm_support_type",quesObj.get("qbm_support_type"));
                                 cquesObj.put("qbm_support_image_file",quesObj.get("qbm_support_image_file"));
