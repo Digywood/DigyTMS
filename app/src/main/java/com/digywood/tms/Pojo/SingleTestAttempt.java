@@ -6,16 +6,25 @@ package com.digywood.tms.Pojo;
 
 public class SingleTestAttempt {
 
-    private int attemptcount,skipcount,markcount,notattemptcount;
+    private int attemptId,attemptcount,skipcount,markcount,notattemptcount;
     private Double score, percent;
 
-    public SingleTestAttempt(int attemptcount,int skipcount,int markcount,int notattemptcount,double score,double percent){
+    public SingleTestAttempt(int attemptId,int attemptcount,int skipcount,int markcount,int notattemptcount,double score,double percent){
+        this.attemptId = attemptId;
         this.attemptcount = attemptcount;
         this.skipcount = skipcount;
         this.markcount = markcount;
         this.notattemptcount = notattemptcount;
         this.score = score;;
         this.percent = percent;
+    }
+
+    public int getAttemptId() {
+        return attemptId;
+    }
+
+    public void setAttemptId(int attemptId) {
+        this.attemptId = attemptId;
     }
 
     public int getAttemptcount() {

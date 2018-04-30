@@ -59,11 +59,11 @@ public class TestAttemptAdapter extends RecyclerView.Adapter<TestAttemptAdapter.
     public void onBindViewHolder(final TestAttemptAdapter.MyViewHolder holder, final int position) {
         final SingleTestAttempt singletattempt = tattemptList.get(position);
 
-        holder.tv_attempt_Id.setText(String.valueOf(singletattempt.getAttemptcount()));
-        holder.tv_attemptAnsweredCount.setText(String.valueOf(singletattempt.getSkipcount()));
-        holder.tv_attemptTestSkipcount.setText(String.valueOf(singletattempt.getMarkcount()));
-        holder.tv_attemptTestMarkcount.setText(String.valueOf(singletattempt.getNotattemptcount()));
-        holder.tv_attemptTestNotAnscount.setText(String.valueOf(singletattempt.getScore()));
+        holder.tv_attempt_Id.setText(String.valueOf(singletattempt.getAttemptId()));
+        holder.tv_attemptAnsweredCount.setText(String.valueOf(singletattempt.getAttemptcount()));
+        holder.tv_attemptTestSkipcount.setText(String.valueOf(singletattempt.getSkipcount()));
+        holder.tv_attemptTestMarkcount.setText(String.valueOf(singletattempt.getMarkcount()));
+        holder.tv_attemptTestNotAnscount.setText(String.valueOf(singletattempt.getNotattemptcount()));
         holder.tv_attemptTestScore.setText(String.valueOf(singletattempt.getScore()));
         holder.tv_tpercentage.setText(String.valueOf(singletattempt.getPercent()));
         Double d = new Double(singletattempt.getPercent());

@@ -126,7 +126,7 @@ public class TestAttemptFragment extends Fragment {
 
         if(mycursor.getCount()>0){
             while(mycursor.moveToNext()){
-                tattemptList.add(new SingleTestAttempt(mycursor.getInt(mycursor.getColumnIndex("Attempt_Confirmed")),mycursor.getInt(mycursor.getColumnIndex("Attempt_Skipped")),mycursor.getInt(mycursor.getColumnIndex("Attempt_Bookmarked")),mycursor.getInt(mycursor.getColumnIndex("Attempt_UnAttempted")),mycursor.getDouble(mycursor.getColumnIndex("Attempt_Score")),mycursor.getDouble(mycursor.getColumnIndex("Attempt_Percentage"))));
+                tattemptList.add(new SingleTestAttempt(mycursor.getInt(mycursor.getColumnIndex("Attempt_ID")),mycursor.getInt(mycursor.getColumnIndex("Attempt_Confirmed")),mycursor.getInt(mycursor.getColumnIndex("Attempt_Skipped")),mycursor.getInt(mycursor.getColumnIndex("Attempt_Bookmarked")),mycursor.getInt(mycursor.getColumnIndex("Attempt_UnAttempted")),mycursor.getDouble(mycursor.getColumnIndex("Attempt_Score")),mycursor.getDouble(mycursor.getColumnIndex("Attempt_Percentage"))));
             }
         }else{
             mycursor.close();

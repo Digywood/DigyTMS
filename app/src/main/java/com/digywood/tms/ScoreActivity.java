@@ -1,12 +1,15 @@
 package com.digywood.tms;
 
 import android.animation.Animator;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewAnimationUtils;
 import android.view.ViewTreeObserver;
@@ -21,20 +24,21 @@ import com.digywood.tms.DBHelper.DBHelper;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.IOException;
 import java.util.ArrayList;
 
 public class ScoreActivity extends AppCompatActivity {
 
     DBHelper dataObj;
     LinearLayout rootLayout;
-    String subject,course,testId;
+    String enrollid,subjectid,courseid,paperid,testId;
     TextView tv_test,tv_course,tv_subject,tv_attempted,tv_skipped,tv_bookmarked,tv_totalQuestions,tv_totalCorrect,tv_totalWrong,tv_totalNegative,tv_totalPositive,tv_totalScore,tv_totalPercentage;
     Button btn_save;
     JSONObject attempt;
     Bundle bundle;
     Double minscore = 0.0,maxscore = 0.0,avgscore = 0.0;
-    int CorrectCount = 0,WrongCount = 0,TotalPositive = 0, TotalNegative = 0,TotalCount = 0,TotalScore = 0 ,MaxMarks ,revealX,revealY;
-    float Percentage;
+    int CorrectCount = 0,WrongCount = 0,TotalCount = 0,revealX,revealY;
+    float Percentage,TotalPositive = 0,TotalScore = 0,MaxMarks ,TotalNegative = 0;
     ArrayList<Integer> OptionsList = new ArrayList<>();;
 
     @Override
@@ -48,8 +52,10 @@ public class ScoreActivity extends AppCompatActivity {
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        subject = bundle.getString("Subject");
-        course = bundle.getString("Course");
+        enrollid = bundle.getString("enrollid");
+        subjectid = bundle.getString("subjectid");
+        courseid = bundle.getString("courseid");
+        paperid = bundle.getString("paperid");
         Intent intent = getIntent();
         rootLayout = findViewById(R.id.rootLayout);
 
@@ -119,7 +125,7 @@ public class ScoreActivity extends AppCompatActivity {
             }
             TotalScore = TotalPositive - TotalNegative;
             testId = attempt.getString("ptu_test_ID");
-            long qflag = dataObj.updateTest(testId,subject,course,dataObj.getQuestionCount(),Double.valueOf(MaxMarks),minscore,maxscore,avgscore,Double.valueOf(Percentage));
+            /*long qflag = dataObj.updateTest(testId,subjectid,courseid,dataObj.getQuestionCount(),Double.valueOf(MaxMarks),minscore,maxscore,avgscore,Double.valueOf(Percentage));
             if(qflag > 0){
                Log.e("ScoreActivity-->","Update Successful");
             }else
@@ -127,14 +133,14 @@ public class ScoreActivity extends AppCompatActivity {
             long value = dataObj.UpdateAttempt(dataObj.getAttempCount(),attempt.getString("ptu_test_ID"),2, 0,dataObj.getQuestionAttempted(),dataObj.getQuestionSkipped(),dataObj.getQustionBookmarked(),dataObj.getQustionNotAttempted(), 0, 0, 0, 0);
             if (value >= 0) {
                 dataObj.InsertAttempt(attempt.getString("ptu_test_ID"),2, 0,dataObj.getQuestionAttempted(),dataObj.getQuestionSkipped(),dataObj.getQustionBookmarked(),dataObj.getQustionNotAttempted(), 0, 0, 0, 0);
-            }
+            }*/
             tv_test.setText(testId);
         } catch (JSONException e) {
             e.printStackTrace();
         }
 
-        tv_course.setText(course);
-        tv_subject.setText(subject);
+        tv_course.setText(courseid);
+        tv_subject.setText(subjectid);
         tv_attempted.setText(String.valueOf(dataObj.getQuestionAttempted()));
         tv_skipped.setText(String.valueOf(dataObj.getQuestionSkipped()));
         tv_bookmarked.setText(String.valueOf(dataObj.getQustionBookmarked()));
@@ -151,6 +157,9 @@ public class ScoreActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(ScoreActivity.this, ListofPractiseTests.class);
+                intent.putExtra("enrollid",enrollid);
+                intent.putExtra("courseid", courseid);
+                intent.putExtra("paperid",paperid);
                 startActivity(intent);
             }
         });
@@ -170,6 +179,24 @@ public class ScoreActivity extends AppCompatActivity {
         } else {
             finish();
         }
+    }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_BACK) {
+            exitByBackKey();
+            //moveTaskToBack(false);
+            return true;
+        }
+        return super.onKeyDown(keyCode, event);
+    }
+
+    protected void exitByBackKey() {
+        Intent intent = new Intent(ScoreActivity.this,ListofPractiseTests.class);
+        intent.putExtra("enrollid",enrollid);
+        intent.putExtra("courseid", courseid);
+        intent.putExtra("paperid",paperid);
+        startActivity(intent);
     }
 
 }
