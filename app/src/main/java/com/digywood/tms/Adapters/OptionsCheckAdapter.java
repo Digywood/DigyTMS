@@ -6,6 +6,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Build;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -102,6 +103,7 @@ public class OptionsCheckAdapter extends RecyclerView.Adapter<OptionsCheckAdapte
     @Override
     public void onBindViewHolder(final OptionsCheckAdapter.MyViewHolder holder,int position) {
         SingleOptions option = optionsList.get(position);
+        Log.e("Option image--->",option.getQbo_media_file());
             holder.iv_opmedia.setImageBitmap(getOptionImage(option.getQbo_media_file()));
             holder.iv_opmedia.setScaleType(ImageView.ScaleType.FIT_XY);
             holder.rb_option.setChecked(position == mSelectedItem);
@@ -167,7 +169,7 @@ public class OptionsCheckAdapter extends RecyclerView.Adapter<OptionsCheckAdapte
     }
 
     public Bitmap getOptionImage(String file){
-        Bitmap b =  BitmapFactory.decodeFile(path + file);
+        Bitmap b =  BitmapFactory.decodeFile(file);
         return b ;
     }
 

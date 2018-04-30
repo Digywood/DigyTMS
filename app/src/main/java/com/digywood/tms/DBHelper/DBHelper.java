@@ -1131,12 +1131,11 @@ public class DBHelper extends SQLiteOpenHelper {
         cv.put("Attempt_LastSection",pos );
 
         updateFlag = db.update("attempt_list",cv,"Attempt_ID='"+aID+"'",null);
-
         return updateFlag;
     }
 
     public Cursor getTestAttemptData(String testId){
-        Cursor c =db.query("attempt_list", new String[] {"Attempt_ID,Attempt_Test_ID,Attempt_Status,Attempt_Confirmed,Attempt_Skipped,Attempt_Bookmarked,Attempt_UnAttempted,Attempt_Score,Attempt_Percentage"},"Attempt_Test_ID='"+testId+" and Attempt_Status = 2'", null, null, null,"Attempt_ID DESC");
+        Cursor c =db.query("attempt_list", new String[] {"Attempt_ID,Attempt_Test_ID,Attempt_Status,Attempt_Confirmed,Attempt_Skipped,Attempt_Bookmarked,Attempt_UnAttempted,Attempt_Score,Attempt_Percentage"},"Attempt_Test_ID='"+testId+"'", null, null, null,"Attempt_ID DESC");
         return  c;
     }
     public int getAttempCount(){
