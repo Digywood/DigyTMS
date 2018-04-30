@@ -657,6 +657,12 @@ public class DBHelper extends SQLiteOpenHelper {
         return c;
     }
 
+    public Cursor getTestRawDataByPaper(String paperId){
+        String query ="SELECT MIN(min_flashScore) as minscore,MAX(max_flashScore) as maxscore,AVG(avg_flashScore) as avgscore FROM "+" sptu_student"+" WHERE sptu_paper_ID ='"+paperId+"'";
+        Cursor c=db.rawQuery(query,null);
+        return c;
+    }
+
     public long deleteAllTests(){
         long deleteFlag=0;
         deleteFlag=db.delete("sptu_student", null, null);

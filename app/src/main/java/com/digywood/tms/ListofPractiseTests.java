@@ -20,6 +20,9 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.KeyEvent;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -748,11 +751,36 @@ public class ListofPractiseTests extends AppCompatActivity {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
     }
 
+    public void updateTestData(){
+        hmap.clear();
+        JSONObject finalObj=buildJson();
+        hmap.put("JSON",finalObj.toString());
+        new BagroundTask("updatePTestsData",hmap,ListofPractiseTests.this,new IBagroundListener() {
+            @Override
+            public void bagroundData(String json) {
+                try{
+                    Log.e("Json--","comes.."+json);
+
+
+                }catch (Exception e){
+                    e.printStackTrace();
+                    Log.e("ListofPTests-----",e.toString());
+                }
+            }
+        }).execute();
+    }
+
+    public JSONObject buildJson(){
+        JSONObject createObj=null;
+
+        return createObj;
+    }
+
     public  void showAlert(String messege){
         AlertDialog.Builder builder = new AlertDialog.Builder(ListofPractiseTests.this);
         builder.setMessage(messege)
                 .setCancelable(false)
-                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                .setPositiveButton("Yes",new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
 
                         dialog.cancel();
@@ -803,6 +831,34 @@ public class ListofPractiseTests extends AppCompatActivity {
             return true;
         }
         return super.onKeyDown(keyCode, event);
+    }
+
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.menu_listptests, menu);
+        return true;
+    }
+
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.action_ptsync:
+                new AsyncCheckInternet(ListofPractiseTests.this,new INetStatus() {
+                    @Override
+                    public void inetSatus(Boolean netStatus) {
+                        if(netStatus){
+                            updateTestData();
+                        }else{
+                            Toast.makeText(getApplicationContext(),"No internet,Please Check your connection",Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                }).execute();
+                return  true;
+            case R.id.action_exit:
+                finish();
+                return  true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 
 }
