@@ -122,10 +122,11 @@ public class TestAttemptFragment extends Fragment {
         Double avgpercent=round(avgscore,2);
         tv_avgscore.setText(String.valueOf(avgpercent)+" %");
         Cursor mycursor=dataObj.getTestAttemptData(testId);
+        Log.e("tadapter", ""+ mycursor.getCount());
+
         if(mycursor.getCount()>0){
             while(mycursor.moveToNext()){
                 tattemptList.add(new SingleTestAttempt(mycursor.getInt(mycursor.getColumnIndex("Attempt_Confirmed")),mycursor.getInt(mycursor.getColumnIndex("Attempt_Skipped")),mycursor.getInt(mycursor.getColumnIndex("Attempt_Bookmarked")),mycursor.getInt(mycursor.getColumnIndex("Attempt_UnAttempted")),mycursor.getDouble(mycursor.getColumnIndex("Attempt_Score")),mycursor.getDouble(mycursor.getColumnIndex("Attempt_Percentage"))));
-                Log.e("tadapter", "reached");
             }
         }else{
             mycursor.close();
