@@ -77,8 +77,6 @@ public class FlashCardActivity extends AppCompatActivity {
     Dialog mydialog;
     DBHelper myhelper;
     JSONObject reviewObj;
-    private Matrix matrix = new Matrix();
-    //    FloatingActionButton fab_fgroupQview;
     int attemptcount=0,knowcount=0,donknowcount=0,skipcount=0,Qcount=0;
     TextView tv_attempted,tv_iknow,tv_idonknow,tv_skipped,tv_Qid;
     ArrayList<String> knownList=new ArrayList<>();
@@ -431,8 +429,6 @@ public class FlashCardActivity extends AppCompatActivity {
                     }else{
                         Toast.makeText(getApplicationContext(),"No Review Images",Toast.LENGTH_SHORT).show();
                     }
-//                    String filename=gja_questions.getJSONObject(d).getString("qbm_flash_image");
-
                 }catch (Exception e){
                     e.printStackTrace();
                     Log.e("ViewLotInfo---",e.toString());
