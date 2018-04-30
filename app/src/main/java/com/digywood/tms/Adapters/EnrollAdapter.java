@@ -64,7 +64,7 @@ public class EnrollAdapter extends  RecyclerView.Adapter<EnrollAdapter.MyViewHol
         holder.btn_start.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent i=new Intent(mycontext,DashboardActivity.class);
+                Intent i=new Intent(mycontext,CourseActivity.class);
                 i.putExtra("enrollid",singleenroll.getEnrollid());
                 i.putExtra("courseid",singleenroll.getEnrollcourseid());
                 mycontext.startActivity(i);

@@ -33,7 +33,7 @@ public class LandingActivity extends AppCompatActivity {
 
     RecyclerView rv_enroll;
     TextView tv_emptyenroll;
-    String studentid,RandomAudioFileName="ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+    String studentid="",studentname="",RandomAudioFileName="ABCDEFGHIJKLMNOPQRSTUVWXYZ";
     DBHelper myhelper;
     Random random ;
     ArrayList<String> enrollids;
@@ -74,7 +74,8 @@ public class LandingActivity extends AppCompatActivity {
 
         Intent cmgintent=getIntent();
         if(cmgintent!=null){
-            studentid=String.valueOf(cmgintent.getStringExtra("studentid"));
+            studentid=cmgintent.getStringExtra("studentid");
+            studentname=cmgintent.getStringExtra("sname");
         }
 
         getEnrollsFromLocal();

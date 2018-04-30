@@ -534,6 +534,25 @@ public class ListofPractiseTests extends AppCompatActivity {
         }).execute();
     }
 
+    @Override
+    public boolean onSupportNavigateUp() {
+        finish();
+        Intent i=new Intent(getApplicationContext(),CourseActivity.class);
+        i.putExtra("enrollid",enrollid);
+        i.putExtra("courseid",courseid);
+        startActivity(i);
+        return true;
+    }
+
+    @Override
+    public void onBackPressed() {
+        finish();
+        Intent i=new Intent(getApplicationContext(),CourseActivity.class);
+        i.putExtra("enrollid",enrollid);
+        i.putExtra("courseid",courseid);
+        startActivity(i);
+    }
+
     public void getTestIds(){
         hmap.clear();
         hmap.put("courseid",courseid);

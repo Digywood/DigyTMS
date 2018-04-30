@@ -37,7 +37,7 @@ public class MainActivity extends AppCompatActivity {
     Button btn_login;
     TextView tv_signup;
     CheckBox cb_remember;
-    String studentid,filedata="";
+    String studentid,studentname="";
     DBHelper myhelper;
     EditText et_email,et_password;
     String pwd="",enterpwd;
@@ -94,10 +94,12 @@ public class MainActivity extends AppCompatActivity {
                             while (mycursor.moveToNext()) {
                                 localpwd=mycursor.getString(mycursor.getColumnIndex("Student_password"));
                                 studentid=mycursor.getString(mycursor.getColumnIndex("StudentID"));
+                                studentname=mycursor.getString(mycursor.getColumnIndex("Student_Name"));
                             }
                             if(enterpwd.equalsIgnoreCase(localpwd)){
-                                Intent i=new Intent(getApplicationContext(),LandingActivity.class);
+                                Intent i=new Intent(getApplicationContext(),DashboardActivity.class);
                                 i.putExtra("studentid",studentid);
+                                i.putExtra("sname",studentname);
                                 startActivity(i);
                                 finish();
                             }else{
@@ -124,6 +126,7 @@ public class MainActivity extends AppCompatActivity {
                                                             jo=ja.getJSONObject(i);
                                                             studentid=jo.getString("StudentID");
                                                             pwd=jo.getString("Student_password");
+                                                            studentname=jo.getString("Student_Name");
 
                                                             long checkFlag=myhelper.checkStudent(jo.getInt("StudentKey"));
                                                             if(checkFlag>0){
@@ -139,8 +142,9 @@ public class MainActivity extends AppCompatActivity {
                                                             }
                                                         }
                                                         if(enterpwd.equalsIgnoreCase(pwd)){
-                                                            Intent i=new Intent(getApplicationContext(),LandingActivity.class);
+                                                            Intent i=new Intent(getApplicationContext(),DashboardActivity.class);
                                                             i.putExtra("studentid",studentid);
+                                                            i.putExtra("sname",studentname);
                                                             startActivity(i);
                                                             finish();
                                                         }else{
