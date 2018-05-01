@@ -196,6 +196,123 @@
 
         </android.support.v7.widget.CardView>
 
+            <android.support.v7.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:elevation="5dp"
+                app:cardElevation="5dp"
+                app:cardUseCompatPadding="true">
+
+                <RelativeLayout
+                    android:id="@+id/subcatTotal"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <TableLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/tbl_details">
+
+                        <TableRow
+                            android:layout_width="fill_parent"
+                            android:layout_height="fill_parent"
+                            android:id="@+id/row_header"
+                            android:weightSum="7">
+
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:textColor="@android:color/black"
+                                android:text="Category"/>
+
+                            <View
+                                android:layout_width="2dp"
+                                android:layout_height="match_parent"
+                                android:layout_marginStart="2dp"
+                                android:layout_marginEnd="2dp"
+                                android:background="#000000" />
+
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:textColor="@android:color/black"
+                                android:text="SubCategory"/>
+
+                            <View
+                                android:layout_width="2dp"
+                                android:layout_height="match_parent"
+                                android:layout_marginStart="2dp"
+                                android:layout_marginEnd="2dp"
+                                android:textColor="@android:color/black"
+                                android:background="#000000" />
+
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:textColor="@android:color/black"
+                                android:text="No.of Questions"/>
+
+                            <View
+                                android:layout_width="2dp"
+                                android:layout_height="match_parent"
+                                android:layout_marginStart="2dp"
+                                android:layout_marginEnd="2dp"
+                                android:background="#000000" />
+
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:textColor="@android:color/black"
+                                android:text="Attempted"/>
+
+                            <View
+                                android:layout_width="2dp"
+                                android:layout_height="match_parent"
+                                android:layout_marginStart="2dp"
+                                android:layout_marginEnd="2dp"
+                                android:background="#000000" />
+
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:textColor="@android:color/black"
+                                android:text="Skipped"/>
+
+                            <View
+                                android:layout_width="2dp"
+                                android:layout_height="match_parent"
+                                android:layout_marginStart="2dp"
+                                android:layout_marginEnd="2dp"
+                                android:background="#000000" />
+
+                            <View
+                                android:layout_width="2dp"
+                                android:layout_height="match_parent"
+                                android:layout_marginStart="2dp"
+                                android:layout_marginEnd="2dp"
+                                android:background="#000000" />
+
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:textColor="@android:color/black"
+                                android:text="Score"/>
+                        </TableRow>
+                        <View
+                            android:layout_width="match_parent"
+                            android:layout_height="2dp"
+                            android:background="#000000" />
+                    </TableLayout>
+                </RelativeLayout>
+            </android.support.v7.widget.CardView>
+
         <android.support.v7.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -241,8 +358,8 @@
                     android:id="@+id/tv_totalCorrect"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="10dp"
                     android:layout_below="@+id/tv_totalQuestions_label"
+                    android:layout_marginStart="10dp"
                     android:layout_toEndOf="@id/tv_totalCorrect_label"
                     android:textColor="@android:color/black"
                     android:textSize="20sp" />
@@ -261,8 +378,8 @@
                     android:id="@+id/tv_totalWrong"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="10dp"
                     android:layout_below="@+id/tv_totalCorrect_label"
+                    android:layout_marginStart="10dp"
                     android:layout_toEndOf="@id/tv_totalWrong_label"
                     android:textColor="@android:color/black"
                     android:textSize="20sp" />
@@ -281,8 +398,8 @@
                     android:id="@+id/tv_totalPositive"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="10dp"
                     android:layout_below="@+id/tv_totalWrong_label"
+                    android:layout_marginStart="10dp"
                     android:layout_toEndOf="@id/tv_totalPositive_label"
                     android:textColor="@android:color/black"
                     android:textSize="20sp" />
@@ -301,17 +418,18 @@
                     android:id="@+id/tv_totalNegative"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="10dp"
                     android:layout_below="@+id/tv_totalPositive_label"
+                    android:layout_marginStart="10dp"
                     android:layout_toEndOf="@id/tv_totalNegative_label"
                     android:textColor="@android:color/black"
                     android:textSize="20sp" />
+
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="2dp"
-                    android:layout_marginTop="2dp"
-                    android:layout_marginBottom="2dp"
                     android:layout_below="@id/tv_totalNegative_label"
+                    android:layout_marginBottom="2dp"
+                    android:layout_marginTop="2dp"
                     android:background="#000000" />
 
                 <TextView
@@ -330,9 +448,9 @@
                     android:id="@+id/tv_totalScore"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_below="@+id/tv_totalNegative_label"
                     android:layout_marginStart="10dp"
                     android:layout_toEndOf="@id/tv_totalScore_label"
-                    android:layout_below="@+id/tv_totalNegative_label"
                     android:textColor="@android:color/black"
                     android:textSize="20sp" />
 
@@ -341,8 +459,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_below="@id/tv_totalScore_label"
-                    android:layout_marginTop="5dp"
                     android:layout_marginStart="10dp"
+                    android:layout_marginTop="5dp"
                     android:text="Total Percentage : "
                     android:textColor="@android:color/black"
                     android:textSize="20sp"
@@ -353,12 +471,23 @@
                     android:id="@+id/tv_totalPercentage"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_below="@id/tv_totalScore_label"
                     android:layout_marginStart="10dp"
                     android:layout_marginTop="5dp"
                     android:layout_toEndOf="@id/tv_totalPercentage_label"
-                    android:layout_below="@id/tv_totalScore_label"
                     android:textColor="@android:color/black"
                     android:textSize="20sp" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentBottom="true"
+                    android:layout_alignParentEnd="true"
+                    android:layout_marginBottom="10dp"
+                    android:layout_marginEnd="86dp"
+                    android:layout_weight="1"
+                    android:text="Correct"
+                    android:textColor="@android:color/black" />
             </RelativeLayout>
         </android.support.v7.widget.CardView>
 
