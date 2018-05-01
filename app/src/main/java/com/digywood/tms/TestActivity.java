@@ -583,8 +583,10 @@ public class TestActivity extends AppCompatActivity implements
     public void setQBackground(int pos, int index) {
 
         if (opAdapter.getSelectedItem() == -1) {
+            Log.e("status",listOfLists.get(pos).get(index).getQ_status());
             listOfLists.get(pos).get(index).setQ_status("SKIPPED");
         } else {
+            Log.e("status",listOfLists.get(pos).get(index).getQ_status());
             listOfLists.get(pos).get(index).setQ_status("ATTEMPTED");
         }
         qAdapter.updateList(listOfLists.get(pos));
@@ -694,17 +696,19 @@ public class TestActivity extends AppCompatActivity implements
             buffer = attempt.getJSONArray("Sections").getJSONObject(pos).getJSONArray("Questions");
             Id = buffer.getJSONObject(index).getString("qbm_ID");
             Seq = buffer.getJSONObject(index).getString("qbm_SequenceId");
+            questionobj = buffer.getJSONObject(index);
             scrollAdapter.updateList(listOfLists.get(pos));
             if (dataObj.CheckQuestion(Id)) {
                 Log.e("Option_Status", listOfLists.get(pos).get(index).getQ_status());
                 if (indx > -1) {
 
-                    result = dataObj.UpdateQuestion(attempt.getString("ptu_test_ID"), 0, Id, Seq, Integer.valueOf(questionobj.getString("qbm_marks")), Double.valueOf(questionobj.getString("qbm_negative_mrk")), 0, 0, indx, listOfLists.get(pos).get(index).getQ_status(), opAdapter.getSelectedSequence(), opAdapter.getFlag());
+                    result = dataObj.UpdateQuestion(attempt.getString("ptu_test_ID"), 0, Id, Seq,questionobj.getString("qbm_Chapter_name"),questionobj.getString("qbm_Sub_CategoryName"), Integer.valueOf(questionobj.getString("qbm_marks")), Double.valueOf(questionobj.getString("qbm_negative_mrk")), 0, 0, indx, listOfLists.get(pos).get(index).getQ_status(), opAdapter.getSelectedSequence(), opAdapter.getFlag());
                 } else {
-                    result = dataObj.UpdateQuestion(attempt.getString("ptu_test_ID"), 0, Id, Seq, Integer.valueOf(questionobj.getString("qbm_marks")), Double.valueOf(questionobj.getString("qbm_negative_mrk")), 0, 0, indx, listOfLists.get(pos).get(index).getQ_status(), opAdapter.getSelectedSequence(), opAdapter.getFlag());
+                    //if question is attempted and then the option is cleared store as skipped
+                    result = dataObj.UpdateQuestion(attempt.getString("ptu_test_ID"), 0, Id, Seq,questionobj.getString("qbm_Chapter_name"),questionobj.getString("qbm_Sub_CategoryName"), Integer.valueOf(questionobj.getString("qbm_marks")), Double.valueOf(questionobj.getString("qbm_negative_mrk")), 0, 0, indx, listOfLists.get(pos).get(index).getQ_status(), opAdapter.getSelectedSequence(), opAdapter.getFlag());
                 }
                 if (result == 0) {
-                    dataObj.InsertQuestion(attempt.getString("ptu_test_ID"), 0, Id, Seq, Integer.valueOf(questionobj.getString("qbm_marks")), Double.valueOf(questionobj.getString("qbm_negative_mrk")), 0, 0, indx, listOfLists.get(pos).get(index).getQ_status(), opAdapter.getSelectedSequence(), opAdapter.getFlag());
+                    dataObj.InsertQuestion(attempt.getString("ptu_test_ID"), 0, Id, Seq,questionobj.getString("qbm_Chapter_name"),questionobj.getString("qbm_Sub_CategoryName"), Integer.valueOf(questionobj.getString("qbm_marks")), Double.valueOf(questionobj.getString("qbm_negative_mrk")), 0, 0, indx, listOfLists.get(pos).get(index).getQ_status(), opAdapter.getSelectedSequence(), opAdapter.getFlag());
                 }
                 Log.e("CurrentStatus", "" + dataObj.getPosition(Id));
                 /*// Saving time remaining
@@ -726,7 +730,8 @@ public class TestActivity extends AppCompatActivity implements
             buffer = attempt.getJSONArray("Sections");
             Id = buffer.getJSONObject(index).getString("qbm_ID");
             Seq = buffer.getJSONObject(index).getString("qbm_SequenceId");
-            dataObj.UpdateQuestion(attempt.getString("ptu_test_ID"), dataObj.getLastAttempt(), Id, Seq, Integer.valueOf(questionobj.getString("qbm_marks")), Double.valueOf(questionobj.getString("qbm_negative_mrk")), dataObj.getCorrectSum(), dataObj.getWrongSum(), -1, listOfLists.get(pos).get(index).getQ_status(), opAdapter.getSelectedSequence(), opAdapter.getFlag());
+            questionobj = buffer.getJSONObject(index);
+            dataObj.UpdateQuestion(attempt.getString("ptu_test_ID"), dataObj.getLastAttempt(), Id, Seq,questionobj.getString("qbm_Chapter_name"),questionobj.getString("qbm_Sub_CategoryName"), Integer.valueOf(questionobj.getString("qbm_marks")), Double.valueOf(questionobj.getString("qbm_negative_mrk")), dataObj.getCorrectSum(), dataObj.getWrongSum(), -1, listOfLists.get(pos).get(index).getQ_status(), opAdapter.getSelectedSequence(), opAdapter.getFlag());
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -979,9 +984,10 @@ public class TestActivity extends AppCompatActivity implements
                 for (int j = 0; j < array2.length(); j++) {
                     Id = array2.getJSONObject(j).getString("qbm_ID");
                     Seq = array2.getJSONObject(j).getString("qbm_SequenceId");
+                    questionobj = array2.getJSONObject(j);
                     Log.e("sequence", Seq);
                     qListObj = new SingleQuestionList(array2.getJSONObject(j).getString("qbm_SequenceId"), "NOT_ATTEMPTED");
-                    dataObj.InsertQuestion(attempt.getString("ptu_test_ID"), 0, Id, Seq, 0, 0, 0, 0, -1, "NOT_ATTEMPTED", "-1", "NO");
+                    dataObj.InsertQuestion(attempt.getString("ptu_test_ID"), 0, Id, Seq,questionobj.getString("qbm_Chapter_name"),questionobj.getString("qbm_Sub_CategoryName"), 0, 0, 0, 0, -1, "NOT_ATTEMPTED", "-1", "NO");
                     questionOpList.add(qListObj);
                 }
                 listOfLists.add(questionOpList);
