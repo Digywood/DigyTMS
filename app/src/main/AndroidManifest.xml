@@ -30,12 +30,12 @@
             android:screenOrientation="portrait" />
         <activity
             android:name=".LandingActivity"
-            android:screenOrientation="landscape"
-            android:parentActivityName=".MainActivity"/>
+            android:parentActivityName=".MainActivity"
+            android:screenOrientation="landscape" />
         <activity
             android:name=".CourseActivity"
-            android:screenOrientation="landscape"
-            android:parentActivityName=".LandingActivity"/>
+            android:parentActivityName=".LandingActivity"
+            android:screenOrientation="landscape" />
         <activity android:name=".EnrollRequestActivity" />
         <activity
             android:name=".ListofPractiseTests"
@@ -69,11 +69,15 @@
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".AttemptDataActivity"
-            android:screenOrientation="landscape"
-            android:parentActivityName=".FlashCardActivity"/>
+            android:parentActivityName=".FlashCardActivity"
+            android:screenOrientation="landscape" />
         <activity
-            android:name=".DashboardActivity"
+            android:name=".DbActivity"
             android:label="@string/title_activity_dashboard"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".DashBoardNavActivity"
+            android:label="@string/title_activity_dash_board"
             android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 
