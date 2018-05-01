@@ -1,59 +1,44 @@
 package com.digywood.tms.Fragments;
 
 import android.content.Context;
-import android.content.Intent;
+import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
-import android.support.v7.widget.DefaultItemAnimator;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 
-import com.digywood.tms.Adapters.EnrollAdapter;
 import com.digywood.tms.DBHelper.DBHelper;
-import com.digywood.tms.EnrollRequestActivity;
-import com.digywood.tms.Pojo.SingleEnrollment;
 import com.digywood.tms.R;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Random;
-
-public class EnrollFragment extends Fragment {
+public class FlashFragment extends Fragment{
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
 
+
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
 
-    RecyclerView rv_enroll;
-    TextView tv_emptyenroll;
-    String studentid="",studentname="";
     DBHelper myhelper;
-    Random random ;
-    ArrayList<String> enrollids;
-    ArrayList<String> enrollcourseids;
-    HashMap<String,String> hmap=new HashMap<>();
-    ArrayList<SingleEnrollment> enrollList;
-    LinearLayoutManager myLayoutManager;
-    FloatingActionButton fab_enrollreq;
-    EnrollAdapter eAdp;
 
-    private FlashAttemptFragment.OnFragmentInteractionListener mListener;
+    Button btn_fdetails;
 
-    public EnrollFragment() {
+    int totptestcount=0;
+
+    TextView tv_ftottests,tv_fattempted,tv_ftestsasplan,tv_fpercent,tv_fmax,tv_fmin,tv_favg,tv_fRAGattempt,tv_fRAGAVGscore;
+
+    private FlashFragment.OnFragmentInteractionListener mListener;
+
+    public FlashFragment() {
         // Required empty public constructor
     }
 
@@ -63,11 +48,11 @@ public class EnrollFragment extends Fragment {
      *
      * @param param1 Parameter 1.
      * @param param2 Parameter 2.
-     * @return A new instance of fragment FlashAttemptFragment.
+     * @return A new instance of fragment TestAttemptFragment.
      */
     // TODO: Rename and change types and number of parameters
-    public static EnrollFragment newInstance(String param1, String param2) {
-        EnrollFragment fragment = new EnrollFragment();
+    public static FlashFragment newInstance(String param1, String param2) {
+        FlashFragment fragment = new FlashFragment();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
         args.putString(ARG_PARAM2, param2);
@@ -88,24 +73,23 @@ public class EnrollFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.activity_enrolllist, container, false);
-        rv_enroll=view.findViewById(R.id.rv_elistofenrolls);
-        tv_emptyenroll=view.findViewById(R.id.tv_eenrollemptydata);
-        fab_enrollreq=view.findViewById(R.id.fab_enrollreq);
-        enrollids=new ArrayList<>();
-        enrollcourseids=new ArrayList<>();
-        enrollList=new ArrayList<>();
+        View view = inflater.inflate(R.layout.activity_fdash, container, false);
+
+        tv_ftottests=view.findViewById(R.id.tv_ftottests);
+        tv_fattempted=view.findViewById(R.id.tv_fattempted);
+        tv_ftestsasplan=view.findViewById(R.id.tv_ftestsasplan);
+        tv_fpercent=view.findViewById(R.id.tv_fpercent);
+        tv_fmax=view.findViewById(R.id.tv_fmax);
+        tv_fmin=view.findViewById(R.id.tv_fmin);
+        tv_favg=view.findViewById(R.id.tv_favg);
+        tv_fRAGattempt=view.findViewById(R.id.tv_fRAGattempt);
+        tv_fRAGAVGscore=view.findViewById(R.id.tv_fRAGAVGscore);
+
+
+        btn_fdetails = view.findViewById(R.id.btn_fdetails);
 
         myhelper=new DBHelper(getActivity());
-        random=new Random();
 
-        Intent cmgintent=getActivity().getIntent();
-        if(cmgintent!=null){
-            studentid=cmgintent.getStringExtra("studentid");
-            studentname=cmgintent.getStringExtra("sname");
-        }
-
-        getEnrollsFromLocal();
         return view;
     }
 
@@ -113,14 +97,25 @@ public class EnrollFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        fab_enrollreq.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent i=new Intent(getActivity(),EnrollRequestActivity.class);
-                i.putExtra("studentid",studentid);
-                startActivity(i);
+        totptestcount=myhelper.getPTestsCount();
+
+        tv_ftottests.setText(""+totptestcount);
+
+        Cursor mycur=myhelper.getFlashSummary();
+        if(mycur.getCount()>0){
+            while (mycur.moveToNext()){
+                int attemptpcount=mycur.getInt(mycur.getColumnIndex("attemptfcount"));
+                Double min=mycur.getDouble(mycur.getColumnIndex("minscore"));
+                Double max=mycur.getDouble(mycur.getColumnIndex("maxscore"));
+                Double avg=mycur.getDouble(mycur.getColumnIndex("avgscore"));
+                tv_fattempted.setText(""+attemptpcount);
+                tv_fmax.setText(""+round(max,1));
+                tv_fmin.setText(""+round(min,1));
+                tv_favg.setText(""+round(avg,1));
             }
-        });
+        }else{
+            mycur.close();
+        }
 
     }
 
@@ -134,7 +129,7 @@ public class EnrollFragment extends Fragment {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        /*if (context instanceof OnFragmentInteractionListener) {
+       /* if (context instanceof OnFragmentInteractionListener) {
             mListener = (OnFragmentInteractionListener) context;
         } else {
             throw new RuntimeException(context.toString()
@@ -163,20 +158,13 @@ public class EnrollFragment extends Fragment {
         void onFragmentInteraction(Uri uri);
     }
 
-    public void getEnrollsFromLocal(){
-        enrollList=myhelper.getStudentEnrolls();
-        if (enrollList.size() != 0) {
-            Log.e("Advtlist.size()", "comes:" + enrollList.size());
-            tv_emptyenroll.setVisibility(View.GONE);
-            eAdp = new EnrollAdapter(enrollList,getActivity());
-            myLayoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL,false);
-            rv_enroll.setLayoutManager(myLayoutManager);
-            rv_enroll.setItemAnimator(new DefaultItemAnimator());
-            rv_enroll.setAdapter(eAdp);
-        } else {
-            tv_emptyenroll.setText("No Enrollments for student");
-            tv_emptyenroll.setVisibility(View.VISIBLE);
-        }
+    public static double round(double value, int places) {
+        if (places < 0) throw new IllegalArgumentException();
+
+        long factor = (long) Math.pow(10, places);
+        value = value * factor;
+        long tmp = Math.round(value);
+        return (double) tmp / factor;
     }
 
 }

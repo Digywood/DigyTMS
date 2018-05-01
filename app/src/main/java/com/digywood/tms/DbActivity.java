@@ -18,7 +18,7 @@ import java.util.ArrayList;
 
 public class DbActivity extends AppCompatActivity {
 
-    Button btn_next,btn_pdetails,btn_fdetails,btn_adetails;
+    Button btn_pdetails,btn_fdetails,btn_adetails;
     TextView tv_studentid,tv_sname;
 
     TextView tv_ptottests,tv_pattempted,tv_ptestsasplan,tv_ppercent,tv_pmax,tv_pmin,tv_pavg,tv_pRAGattempt,tv_pRAGAVGscore;
@@ -47,121 +47,111 @@ public class DbActivity extends AppCompatActivity {
             studentname=cmgintent.getStringExtra("sname");
         }
 
-        tv_studentid=findViewById(R.id.tv_dstudentid);
-        tv_studentid.setText(studentid);
-        tv_sname=findViewById(R.id.tv_dsname);
-        tv_sname.setText(studentname);
-
-        sp_enrollid=findViewById(R.id.sp_denrollid);
-        sp_coursename=findViewById(R.id.sp_dcoursename);
-
-        tv_ptottests=findViewById(R.id.tv_ptottests);
-        tv_pattempted=findViewById(R.id.tv_pattempted);
-        tv_ptestsasplan=findViewById(R.id.tv_ptestsasplan);
-        tv_ppercent=findViewById(R.id.tv_ppercent);
-        tv_pmax=findViewById(R.id.tv_pmax);
-        tv_pmin=findViewById(R.id.tv_pmin);
-        tv_pavg=findViewById(R.id.tv_pavg);
-        tv_pRAGattempt=findViewById(R.id.tv_pRAGattempt);
-        tv_pRAGAVGscore=findViewById(R.id.tv_pRAGAVGscore);
-
-        tv_ftottests=findViewById(R.id.tv_ftottests);
-        tv_fattempted=findViewById(R.id.tv_fattempted);
-        tv_ftestsasplan=findViewById(R.id.tv_ftestsasplan);
-        tv_fpercent=findViewById(R.id.tv_fpercent);
-        tv_fmax=findViewById(R.id.tv_fmax);
-        tv_fmin=findViewById(R.id.tv_fmin);
-        tv_favg=findViewById(R.id.tv_favg);
-        tv_fRAGattempt=findViewById(R.id.tv_fRAGattempt);
-        tv_fRAGAVGscore=findViewById(R.id.tv_fRAGAVGscore);
-
-        tv_atottests=findViewById(R.id.tv_atottests);
-        tv_aattempted=findViewById(R.id.tv_aattempted);
-        tv_atestsasplan=findViewById(R.id.tv_atestsasplan);
-        tv_apercent=findViewById(R.id.tv_apercent);
-        tv_amax=findViewById(R.id.tv_amax);
-        tv_amin=findViewById(R.id.tv_amin);
-        tv_aavg=findViewById(R.id.tv_aavg);
-        tv_aRAGattempt=findViewById(R.id.tv_aRAGattempt);
-        tv_aRAGAVGscore=findViewById(R.id.tv_aRAGAVGscore);
-
-        btn_next = findViewById(R.id.btn_mylearnings);
-        btn_pdetails = findViewById(R.id.btn_pdetails);
-        btn_fdetails = findViewById(R.id.btn_fdetails);
-        btn_adetails = findViewById(R.id.btn_adetails);
+//        tv_studentid=findViewById(R.id.tv_dstudentid);
+//        tv_studentid.setText(studentid);
+//        tv_sname=findViewById(R.id.tv_dsname);
+//        tv_sname.setText(studentname);
+//
+//        sp_enrollid=findViewById(R.id.sp_denrollid);
+//        sp_coursename=findViewById(R.id.sp_dcoursename);
+//
+//        tv_ptottests=findViewById(R.id.tv_ptottests);
+//        tv_pattempted=findViewById(R.id.tv_pattempted);
+//        tv_ptestsasplan=findViewById(R.id.tv_ptestsasplan);
+//        tv_ppercent=findViewById(R.id.tv_ppercent);
+//        tv_pmax=findViewById(R.id.tv_pmax);
+//        tv_pmin=findViewById(R.id.tv_pmin);
+//        tv_pavg=findViewById(R.id.tv_pavg);
+//        tv_pRAGattempt=findViewById(R.id.tv_pRAGattempt);
+//        tv_pRAGAVGscore=findViewById(R.id.tv_pRAGAVGscore);
+//
+//        tv_ftottests=findViewById(R.id.tv_ftottests);
+//        tv_fattempted=findViewById(R.id.tv_fattempted);
+//        tv_ftestsasplan=findViewById(R.id.tv_ftestsasplan);
+//        tv_fpercent=findViewById(R.id.tv_fpercent);
+//        tv_fmax=findViewById(R.id.tv_fmax);
+//        tv_fmin=findViewById(R.id.tv_fmin);
+//        tv_favg=findViewById(R.id.tv_favg);
+//        tv_fRAGattempt=findViewById(R.id.tv_fRAGattempt);
+//        tv_fRAGAVGscore=findViewById(R.id.tv_fRAGAVGscore);
+//
+//        tv_atottests=findViewById(R.id.tv_atottests);
+//        tv_aattempted=findViewById(R.id.tv_aattempted);
+//        tv_atestsasplan=findViewById(R.id.tv_atestsasplan);
+//        tv_apercent=findViewById(R.id.tv_apercent);
+//        tv_amax=findViewById(R.id.tv_amax);
+//        tv_amin=findViewById(R.id.tv_amin);
+//        tv_aavg=findViewById(R.id.tv_aavg);
+//        tv_aRAGattempt=findViewById(R.id.tv_aRAGattempt);
+//        tv_aRAGAVGscore=findViewById(R.id.tv_aRAGAVGscore);
+//
+//        btn_pdetails = findViewById(R.id.btn_pdetails);
+//        btn_fdetails = findViewById(R.id.btn_fdetails);
+//        btn_adetails = findViewById(R.id.btn_adetails);
 
         myhelper=new DBHelper(this);
 
-        Cursor mycursor=myhelper.getAllCourseIds();
-        Log.e("CursorCount---",""+mycursor.getCount());
-        courseIds.add("Select");
-        if(mycursor.getCount()>0){
-            while(mycursor.moveToNext()){
-                String courseId=mycursor.getString(mycursor.getColumnIndex("sptu_course_id"));
-                courseIds.add(courseId);
-            }
-            courseAdp= new ArrayAdapter(DbActivity.this,android.R.layout.simple_spinner_item,courseIds);
-            courseAdp.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-            sp_coursename.setAdapter(courseAdp);
-        }else{
-            mycursor.close();
-        }
+//        Cursor mycursor=myhelper.getAllCourseIds();
+//        Log.e("CursorCount---",""+mycursor.getCount());
+//        courseIds.add("Select");
+//        if(mycursor.getCount()>0){
+//            while(mycursor.moveToNext()){
+//                String courseId=mycursor.getString(mycursor.getColumnIndex("sptu_course_id"));
+//                courseIds.add(courseId);
+//            }
+//            courseAdp= new ArrayAdapter(DbActivity.this,android.R.layout.simple_spinner_item,courseIds);
+//            courseAdp.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+//            sp_coursename.setAdapter(courseAdp);
+//        }else{
+//            mycursor.close();
+//        }
+//
+//        sp_coursename.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+//            @Override
+//            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+//                enrollIds.clear();
+//                enrollIds.add("Select");
+//                Cursor mycursor=myhelper.getCourseEnrollments(sp_coursename.getSelectedItem().toString());
+//                if(mycursor.getCount()>0){
+//                    while (mycursor.moveToNext()){
+//                        String enrollId=mycursor.getString(mycursor.getColumnIndex("sptu_entroll_id"));
+//                        enrollIds.add(enrollId);
+//                    }
+//                    enrollAdp= new ArrayAdapter(DbActivity.this,android.R.layout.simple_spinner_item,enrollIds);
+//                    enrollAdp.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+//                    sp_enrollid.setAdapter(enrollAdp);
+//                }else{
+//                    mycursor.close();
+//                }
+//            }
+//
+//            @Override
+//            public void onNothingSelected(AdapterView<?> parent) {
+//
+//            }
+//        });
+//
+//        btn_pdetails.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                Toast.makeText(getApplicationContext(),"Practise Test",Toast.LENGTH_SHORT).show();
+//            }
+//        });
+//
+//        btn_fdetails.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                Toast.makeText(getApplicationContext(),"Flash Card",Toast.LENGTH_SHORT).show();
+//            }
+//        });
+//
+//        btn_adetails.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                Toast.makeText(getApplicationContext(),"Assessment Test",Toast.LENGTH_SHORT).show();
+//            }
+//        });
 
-        sp_coursename.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                enrollIds.clear();
-                enrollIds.add("Select");
-                Cursor mycursor=myhelper.getCourseEnrollments(sp_coursename.getSelectedItem().toString());
-                if(mycursor.getCount()>0){
-                    while (mycursor.moveToNext()){
-                        String enrollId=mycursor.getString(mycursor.getColumnIndex("sptu_entroll_id"));
-                        enrollIds.add(enrollId);
-                    }
-                    enrollAdp= new ArrayAdapter(DbActivity.this,android.R.layout.simple_spinner_item,enrollIds);
-                    enrollAdp.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                    sp_enrollid.setAdapter(enrollAdp);
-                }else{
-                    mycursor.close();
-                }
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-
-            }
-        });
-
-        btn_pdetails.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Toast.makeText(getApplicationContext(),"Practise Test",Toast.LENGTH_SHORT).show();
-            }
-        });
-
-        btn_fdetails.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Toast.makeText(getApplicationContext(),"Flash Card",Toast.LENGTH_SHORT).show();
-            }
-        });
-
-        btn_adetails.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Toast.makeText(getApplicationContext(),"Assessment Test",Toast.LENGTH_SHORT).show();
-            }
-        });
-
-        btn_next.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent i=new Intent(getApplicationContext(),LandingActivity.class);
-                i.putExtra("studentid",studentid);
-                i.putExtra("studentname",studentname);
-                startActivity(i);
-            }
-        });
     }
 
 }
