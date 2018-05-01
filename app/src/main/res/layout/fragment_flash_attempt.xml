@@ -116,7 +116,6 @@
             android:padding="3dp">
 
             <TextView
-                android:id="@+id/tv_fdate"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center_horizontal|center_vertical"
@@ -127,7 +126,16 @@
                 android:text="Date-Time"/>
 
             <TextView
-                android:id="@+id/tv_fknowcount"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_horizontal|center_vertical"
+                android:textColor="#FFFFFF"
+                android:textStyle="bold"
+                android:textSize="16sp"
+                android:layout_weight="1"
+                android:text="Attempted"/>
+
+            <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center_horizontal|center_vertical"
@@ -138,7 +146,6 @@
                 android:text="Known"/>
 
             <TextView
-                android:id="@+id/tv_fdonknowcount"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center_horizontal|center_vertical"
@@ -149,7 +156,6 @@
                 android:text="UnKnown"/>
 
             <TextView
-                android:id="@+id/tv_fskipcount"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center_horizontal|center_vertical"
@@ -160,7 +166,6 @@
                 android:text="Skipped"/>
 
             <TextView
-                android:id="@+id/tv_fpercentage"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center_horizontal|center_vertical"

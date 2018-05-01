@@ -16,7 +16,7 @@ import android.widget.Toast;
 import com.digywood.tms.DBHelper.DBHelper;
 import java.util.ArrayList;
 
-public class DashboardActivity extends AppCompatActivity {
+public class DbActivity extends AppCompatActivity {
 
     Button btn_next,btn_pdetails,btn_fdetails,btn_adetails;
     TextView tv_studentid,tv_sname;
@@ -37,7 +37,7 @@ public class DashboardActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_dashboard);
+        setContentView(R.layout.activity_db);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -100,7 +100,7 @@ public class DashboardActivity extends AppCompatActivity {
                 String courseId=mycursor.getString(mycursor.getColumnIndex("sptu_course_id"));
                 courseIds.add(courseId);
             }
-            courseAdp= new ArrayAdapter(DashboardActivity.this,android.R.layout.simple_spinner_item,courseIds);
+            courseAdp= new ArrayAdapter(DbActivity.this,android.R.layout.simple_spinner_item,courseIds);
             courseAdp.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
             sp_coursename.setAdapter(courseAdp);
         }else{
@@ -118,7 +118,7 @@ public class DashboardActivity extends AppCompatActivity {
                         String enrollId=mycursor.getString(mycursor.getColumnIndex("sptu_entroll_id"));
                         enrollIds.add(enrollId);
                     }
-                    enrollAdp= new ArrayAdapter(DashboardActivity.this,android.R.layout.simple_spinner_item,enrollIds);
+                    enrollAdp= new ArrayAdapter(DbActivity.this,android.R.layout.simple_spinner_item,enrollIds);
                     enrollAdp.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                     sp_enrollid.setAdapter(enrollAdp);
                 }else{

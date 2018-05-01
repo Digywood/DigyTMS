@@ -89,6 +89,7 @@ public class FlashAttemptFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_flash_attempt, container, false);
         myhelper=new DBHelper(getActivity().getApplicationContext());
+        testId = getActivity().getIntent().getStringExtra("testId");
         tv_testid=view.findViewById(R.id.tv_ftestid);
         tv_testid.setText(testId);
         tv_minscore=view.findViewById(R.id.tv_minpercent);
