@@ -3,11 +3,15 @@ package com.digywood.tms.Fragments;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
+import android.support.v4.view.ViewPager;
+import android.support.v7.widget.LinearLayoutManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,6 +22,10 @@ import android.widget.Button;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.Toolbar;
+
+import com.digywood.tms.Adapters.DashPagerAdapter;
+import com.digywood.tms.Adapters.PagerAdapter;
 import com.digywood.tms.DBHelper.DBHelper;
 import com.digywood.tms.DbActivity;
 import com.digywood.tms.LandingActivity;
@@ -36,7 +44,7 @@ public class DashBoardFragment extends Fragment {
     private String mParam2;
 
 
-    Button btn_next,btn_pdetails,btn_fdetails,btn_adetails;
+    Button btn_pdetails,btn_fdetails,btn_adetails;
     TextView tv_studentid,tv_sname;
 
     TextView tv_ptottests,tv_pattempted,tv_ptestsasplan,tv_ppercent,tv_pmax,tv_pmin,tv_pavg,tv_pRAGattempt,tv_pRAGAVGscore;
@@ -46,6 +54,8 @@ public class DashBoardFragment extends Fragment {
     Spinner sp_enrollid,sp_coursename;
 
     DBHelper myhelper;
+
+    int totptestcount=0;
 
     ArrayList<String> courseIds=new ArrayList<>();
     ArrayList<String> enrollIds=new ArrayList<>();
@@ -91,54 +101,45 @@ public class DashBoardFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.activity_db, container, false);
 
+        TabLayout tabLayout =view.findViewById(R.id.dash_tablayout);
+        tabLayout.addTab(tabLayout.newTab().setText("Practise Tests"));
+        tabLayout.addTab(tabLayout.newTab().setText("Flashcard Tests"));
+        tabLayout.addTab(tabLayout.newTab().setText("Assessment Tests"));
+        tabLayout.setTabGravity(TabLayout.GRAVITY_CENTER);
+
+        final ViewPager viewPager = view.findViewById(R.id.dash_viewpager);
+        final DashPagerAdapter adapter = new DashPagerAdapter
+                (getFragmentManager(), tabLayout.getTabCount());
+        viewPager.setAdapter(adapter);
+        viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
+        tabLayout.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+            @Override
+            public void onTabSelected(TabLayout.Tab tab) {
+                viewPager.setCurrentItem(tab.getPosition());
+            }
+
+            @Override
+            public void onTabUnselected(TabLayout.Tab tab) {
+
+            }
+
+            @Override
+            public void onTabReselected(TabLayout.Tab tab) {
+
+            }
+        });
+
+
         Intent cmgintent=getActivity().getIntent();
         if(cmgintent!=null){
             studentid=cmgintent.getStringExtra("studentid");
             studentname=cmgintent.getStringExtra("sname");
         }
 
-        tv_studentid=view.findViewById(R.id.tv_dstudentid);
-        tv_studentid.setText(studentid);
-        tv_sname=view.findViewById(R.id.tv_dsname);
-        tv_sname.setText(studentname);
 
-        sp_enrollid=view.findViewById(R.id.sp_denrollid);
-        sp_coursename=view.findViewById(R.id.sp_dcoursename);
+//        sp_enrollid=view.findViewById(R.id.sp_denrollid);
+//        sp_coursename=view.findViewById(R.id.sp_dcoursename);
 
-        tv_ptottests=view.findViewById(R.id.tv_ptottests);
-        tv_pattempted=view.findViewById(R.id.tv_pattempted);
-        tv_ptestsasplan=view.findViewById(R.id.tv_ptestsasplan);
-        tv_ppercent=view.findViewById(R.id.tv_ppercent);
-        tv_pmax=view.findViewById(R.id.tv_pmax);
-        tv_pmin=view.findViewById(R.id.tv_pmin);
-        tv_pavg=view.findViewById(R.id.tv_pavg);
-        tv_pRAGattempt=view.findViewById(R.id.tv_pRAGattempt);
-        tv_pRAGAVGscore=view.findViewById(R.id.tv_pRAGAVGscore);
-
-        tv_ftottests=view.findViewById(R.id.tv_ftottests);
-        tv_fattempted=view.findViewById(R.id.tv_fattempted);
-        tv_ftestsasplan=view.findViewById(R.id.tv_ftestsasplan);
-        tv_fpercent=view.findViewById(R.id.tv_fpercent);
-        tv_fmax=view.findViewById(R.id.tv_fmax);
-        tv_fmin=view.findViewById(R.id.tv_fmin);
-        tv_favg=view.findViewById(R.id.tv_favg);
-        tv_fRAGattempt=view.findViewById(R.id.tv_fRAGattempt);
-        tv_fRAGAVGscore=view.findViewById(R.id.tv_fRAGAVGscore);
-
-        tv_atottests=view.findViewById(R.id.tv_atottests);
-        tv_aattempted=view.findViewById(R.id.tv_aattempted);
-        tv_atestsasplan=view.findViewById(R.id.tv_atestsasplan);
-        tv_apercent=view.findViewById(R.id.tv_apercent);
-        tv_amax=view.findViewById(R.id.tv_amax);
-        tv_amin=view.findViewById(R.id.tv_amin);
-        tv_aavg=view.findViewById(R.id.tv_aavg);
-        tv_aRAGattempt=view.findViewById(R.id.tv_aRAGattempt);
-        tv_aRAGAVGscore=view.findViewById(R.id.tv_aRAGAVGscore);
-
-        btn_next =view.findViewById(R.id.btn_mylearnings);
-        btn_pdetails = view.findViewById(R.id.btn_pdetails);
-        btn_fdetails = view.findViewById(R.id.btn_fdetails);
-        btn_adetails = view.findViewById(R.id.btn_adetails);
 
         myhelper=new DBHelper(getActivity());
         return view;
@@ -148,76 +149,103 @@ public class DashBoardFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        Cursor mycursor=myhelper.getAllCourseIds();
-        Log.e("CursorCount---",""+mycursor.getCount());
-        courseIds.add("Select");
-        if(mycursor.getCount()>0){
-            while(mycursor.moveToNext()){
-                String courseId=mycursor.getString(mycursor.getColumnIndex("sptu_course_id"));
-                courseIds.add(courseId);
-            }
-            courseAdp= new ArrayAdapter(getActivity(),android.R.layout.simple_spinner_item,courseIds);
-            courseAdp.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-            sp_coursename.setAdapter(courseAdp);
-        }else{
-            mycursor.close();
-        }
-
-        sp_coursename.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                enrollIds.clear();
-                enrollIds.add("Select");
-                Cursor mycursor=myhelper.getCourseEnrollments(sp_coursename.getSelectedItem().toString());
-                if(mycursor.getCount()>0){
-                    while (mycursor.moveToNext()){
-                        String enrollId=mycursor.getString(mycursor.getColumnIndex("sptu_entroll_id"));
-                        enrollIds.add(enrollId);
-                    }
-                    enrollAdp= new ArrayAdapter(getActivity(),android.R.layout.simple_spinner_item,enrollIds);
-                    enrollAdp.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                    sp_enrollid.setAdapter(enrollAdp);
-                }else{
-                    mycursor.close();
-                }
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-
-            }
-        });
-
-        btn_pdetails.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Toast.makeText(getActivity(),"Practise Test",Toast.LENGTH_SHORT).show();
-            }
-        });
-
-        btn_fdetails.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Toast.makeText(getActivity(),"Flash Card",Toast.LENGTH_SHORT).show();
-            }
-        });
-
-        btn_adetails.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Toast.makeText(getActivity(),"Assessment Test",Toast.LENGTH_SHORT).show();
-            }
-        });
-
-        btn_next.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent i=new Intent(getActivity(),LandingActivity.class);
-                i.putExtra("studentid",studentid);
-                i.putExtra("studentname",studentname);
-                startActivity(i);
-            }
-        });
+//        Cursor mycursor=myhelper.getAllCourseIds();
+//        Log.e("CursorCount---",""+mycursor.getCount());
+//        courseIds.add("Select");
+//        if(mycursor.getCount()>0){
+//            while(mycursor.moveToNext()){
+//                String courseId=mycursor.getString(mycursor.getColumnIndex("sptu_course_id"));
+//                courseIds.add(courseId);
+//            }
+//            courseAdp= new ArrayAdapter(getActivity(),android.R.layout.simple_spinner_item,courseIds);
+//            courseAdp.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+//            sp_coursename.setAdapter(courseAdp);
+//        }else{
+//            mycursor.close();
+//        }
+//
+//        totptestcount=myhelper.getPTestsCount();
+//
+//        tv_ftottests.setText(""+totptestcount);
+//        tv_ptottests.setText(""+totptestcount);
+//
+//        Cursor mycur=myhelper.getFlashSummary();
+//        if(mycur.getCount()>0){
+//            while (mycur.moveToNext()){
+//                int attemptpcount=mycur.getInt(mycur.getColumnIndex("attemptfcount"));
+//                Double min=mycur.getDouble(mycur.getColumnIndex("minscore"));
+//                Double max=mycur.getDouble(mycur.getColumnIndex("maxscore"));
+//                Double avg=mycur.getDouble(mycur.getColumnIndex("avgscore"));
+//                tv_fattempted.setText(""+attemptpcount);
+//                tv_fmax.setText(""+round(max,1));
+//                tv_fmin.setText(""+round(min,1));
+//                tv_favg.setText(""+round(avg,1));
+//            }
+//        }else{
+//            mycur.close();
+//        }
+//
+//        Cursor mycur1=myhelper.getPractiseSummary();
+//        if(mycur1.getCount()>0){
+//            while (mycur1.moveToNext()){
+//                int attemptpcount=mycur1.getInt(mycur1.getColumnIndex("attemptpcount"));
+//                Double min=mycur1.getDouble(mycur1.getColumnIndex("minscore"));
+//                Double max=mycur1.getDouble(mycur1.getColumnIndex("maxscore"));
+//                Double avg=mycur1.getDouble(mycur1.getColumnIndex("avgscore"));
+//                tv_pattempted.setText(""+attemptpcount);
+//                tv_pmax.setText(""+round(max,1));
+//                tv_pmin.setText(""+round(min,1));
+//                tv_pavg.setText(""+round(avg,1));
+//            }
+//        }else{
+//            mycur1.close();
+//        }
+//
+//        sp_coursename.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+//            @Override
+//            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+//                enrollIds.clear();
+//                enrollIds.add("Select");
+//                Cursor mycursor=myhelper.getCourseEnrollments(sp_coursename.getSelectedItem().toString());
+//                if(mycursor.getCount()>0){
+//                    while (mycursor.moveToNext()){
+//                        String enrollId=mycursor.getString(mycursor.getColumnIndex("sptu_entroll_id"));
+//                        enrollIds.add(enrollId);
+//                    }
+//                    enrollAdp= new ArrayAdapter(getActivity(),android.R.layout.simple_spinner_item,enrollIds);
+//                    enrollAdp.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+//                    sp_enrollid.setAdapter(enrollAdp);
+//                }else{
+//                    mycursor.close();
+//                }
+//            }
+//
+//            @Override
+//            public void onNothingSelected(AdapterView<?> parent) {
+//
+//            }
+//        });
+//
+//        btn_pdetails.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                Toast.makeText(getActivity(),"Practise Test",Toast.LENGTH_SHORT).show();
+//            }
+//        });
+//
+//        btn_fdetails.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                Toast.makeText(getActivity(),"Flash Card",Toast.LENGTH_SHORT).show();
+//            }
+//        });
+//
+//        btn_adetails.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                Toast.makeText(getActivity(),"Assessment Test",Toast.LENGTH_SHORT).show();
+//            }
+//        });
 
     }
 
@@ -258,6 +286,15 @@ public class DashBoardFragment extends Fragment {
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
+    }
+
+    public static double round(double value, int places) {
+        if (places < 0) throw new IllegalArgumentException();
+
+        long factor = (long) Math.pow(10, places);
+        value = value * factor;
+        long tmp = Math.round(value);
+        return (double) tmp / factor;
     }
 
 }
