@@ -224,6 +224,8 @@
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:layout_weight="1"
+                                android:gravity="center"
+                                android:textSize="20sp"
                                 android:textColor="@android:color/black"
                                 android:text="Category"/>
 
@@ -238,8 +240,10 @@
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:layout_weight="1"
+                                android:gravity="center"
+                                android:textSize="20sp"
                                 android:textColor="@android:color/black"
-                                android:text="SubCategory"/>
+                                android:text="SubCate"/>
 
                             <View
                                 android:layout_width="2dp"
@@ -253,8 +257,10 @@
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:layout_weight="1"
+                                android:gravity="center"
+                                android:textSize="20sp"
                                 android:textColor="@android:color/black"
-                                android:text="No.of Questions"/>
+                                android:text="No.of Qs."/>
 
                             <View
                                 android:layout_width="2dp"
@@ -267,8 +273,10 @@
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:layout_weight="1"
+                                android:gravity="center"
+                                android:textSize="20sp"
                                 android:textColor="@android:color/black"
-                                android:text="Attempted"/>
+                                android:text="Attempt"/>
 
                             <View
                                 android:layout_width="2dp"
@@ -281,6 +289,8 @@
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:layout_weight="1"
+                                android:gravity="center"
+                                android:textSize="20sp"
                                 android:textColor="@android:color/black"
                                 android:text="Skipped"/>
 
@@ -291,6 +301,15 @@
                                 android:layout_marginEnd="2dp"
                                 android:background="#000000" />
 
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:gravity="center"
+                                android:textSize="20sp"
+                                android:textColor="@android:color/black"
+                                android:text="Correct"/>
+
                             <View
                                 android:layout_width="2dp"
                                 android:layout_height="match_parent"
@@ -302,6 +321,8 @@
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:layout_weight="1"
+                                android:gravity="center"
+                                android:textSize="20sp"
                                 android:textColor="@android:color/black"
                                 android:text="Score"/>
                         </TableRow>
@@ -478,16 +499,7 @@
                     android:textColor="@android:color/black"
                     android:textSize="20sp" />
 
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentBottom="true"
-                    android:layout_alignParentEnd="true"
-                    android:layout_marginBottom="10dp"
-                    android:layout_marginEnd="86dp"
-                    android:layout_weight="1"
-                    android:text="Correct"
-                    android:textColor="@android:color/black" />
+
             </RelativeLayout>
         </android.support.v7.widget.CardView>
 
