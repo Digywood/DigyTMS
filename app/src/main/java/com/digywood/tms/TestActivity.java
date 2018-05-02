@@ -96,7 +96,7 @@ public class TestActivity extends AppCompatActivity implements
     ArrayList<ArrayList<SingleQuestionList>> listOfLists = new ArrayList<>();
     ImageView question_img ,menu;
     Bundle bundle;
-    Button btn_group_info, btn_qadditional, btn_review, btn_prev, btn_next, btn_clear_option, btn_mark;
+    Button btn_group_info, btn_qadditional, btn_review, btn_prev, btn_next, btn_clear_option, btn_mark,btn_confirm;
     Cursor c;
     AlertDialog alertDialog;
     Bitmap b, op, bitmap;
@@ -197,6 +197,7 @@ public class TestActivity extends AppCompatActivity implements
         btn_next = findViewById(R.id.next_btn);
         btn_clear_option = findViewById(R.id.btn_clear_option);
         btn_mark = findViewById(R.id.btn_mark);
+        btn_confirm = findViewById(R.id.btn_confirm);
         btn_group_info = findViewById(R.id.btn_group_info);
         btn_qadditional = findViewById(R.id.btn_qadditional);
         btn_review = findViewById(R.id.btn_review_info);
@@ -314,9 +315,10 @@ public class TestActivity extends AppCompatActivity implements
             @Override
             public void onClick(View v) {
                 opAdapter.resetOptionsList();
-                ((SimpleItemAnimator) rv_option.getItemAnimator()).setSupportsChangeAnimations(false);
+//                ((SimpleItemAnimator) rv_option.getItemAnimator()).setSupportsChangeAnimations(false);
                 opAdapter.notifyDataSetChanged();
                 clearOptions();
+                setQBackground(pos,index);
             }
         });
         //mark question and move to next button
@@ -325,13 +327,24 @@ public class TestActivity extends AppCompatActivity implements
             public void onClick(View v) {
                 if (opAdapter.getSelectedItem() > -1) {
                     listOfLists.get(pos).get(index).setQ_status("BOOKMARKED");
+                    setQBackground(pos,index);
                     writeOption(opAdapter.getSelectedItem());
                     index++;
-                    gotoQuestion(index);
+//                    gotoQuestion(index);
                 } else
                     Toast.makeText(TestActivity.this, "No option Selected", Toast.LENGTH_LONG).show();
             }
         });
+        //choice confirmation button
+        btn_confirm.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                setQBackground(pos,index);
+                writeOption(opAdapter.getSelectedItem());
+                btn_confirm.setBackgroundColor(Color.GREEN);
+            }
+        });
+
         //additional infromation popup button
         btn_qadditional.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -373,21 +386,20 @@ public class TestActivity extends AppCompatActivity implements
                 finish_view = v;
                 try {
                     flag = true;
-                    buffer = attempt.getJSONArray("Sections").getJSONObject(pos).getJSONArray("Questions");
+                    setStatus();
                     if (index <= buffer.length()) {
                         if (index < buffer.length() - 1) {
-                            setQBackground(pos, index);
-                            writeOption(opAdapter.getSelectedItem());
+//                            writeOption(opAdapter.getSelectedItem());
                             index++;
                             setQuestion(pos, index, edit);
                             checkRadio();
                         } else if (index == buffer.length() - 1) {
                             //Change button once last question of test is reached
-                            setQBackground(pos, index);
+//                            setQBackground(pos, index);
                             writeOption(opAdapter.getSelectedItem());
                             if (pos == attemptsectionarray.length() - 1) {
                                 btn_next.setText("Finish");
-                                writeOption(opAdapter.getSelectedItem());
+//                                writeOption(opAdapter.getSelectedItem());
                                 AlertDialog alertbox = new AlertDialog.Builder(TestActivity.this)
                                         .setMessage("Do you want to finish Test?" + " " + dataObj.getQuestionCount())
                                         .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
@@ -469,8 +481,8 @@ public class TestActivity extends AppCompatActivity implements
             @Override
             public void onClick(View v) {
                 try {
-                    setQBackground(pos, index);
-                    writeOption(opAdapter.getSelectedItem());
+//                    setQBackground(pos, index);
+//                    writeOption(opAdapter.getSelectedItem());
 
                     questionobj = array.getJSONObject(index);
                     if (index > 0) {
@@ -500,8 +512,9 @@ public class TestActivity extends AppCompatActivity implements
         question_scroll.addOnItemTouchListener(new RecyclerTouchListener(getApplicationContext(), question_scroll, new RecyclerTouchListener.OnItemClickListener() {
             @Override
             public void onClick(View view, int in) {
-                setQBackground(pos, index);
-                writeOption(opAdapter.getSelectedItem());
+//                setQBackground(pos, index);
+//                writeOption(opAdapter.getSelectedItem());
+                setStatus();
                 gotoQuestion(in);
             }
 
@@ -529,6 +542,30 @@ public class TestActivity extends AppCompatActivity implements
 
     }
 
+    public void setStatus(){
+        try {
+            buffer = attempt.getJSONArray("Sections").getJSONObject(pos).getJSONArray("Questions");
+            questionobj = buffer.getJSONObject(index);
+            if(opAdapter.getSelectedItem() == -1){
+                //if no option selected chcek if the question is being skipped
+                if(!listOfLists.get(pos).get(index).getQ_status().equalsIgnoreCase("SKIPPED")) {
+                    //if question not being skipped then question as bookmarked
+                    listOfLists.get(pos).get(index).setQ_status("BOOKMARKED");
+                    setQBackground(pos, index);
+                }
+            }else{
+                //if confirm not pressed, check in database
+                if(!dataObj.CheckQuestionStatus(questionobj.getString("qbm_ID"))) {
+                    //if database entry returns -1 then send toast message
+                    Toast.makeText(TestActivity.this, "Answer for question " + questionobj.getString("qbm_SequenceId") + " Not Saved", Toast.LENGTH_LONG).show();
+                }
+            }
+            Id = buffer.getJSONObject(index).getString("qbm_ID");
+            dataObj.updateStatus(Id,listOfLists.get(pos).get(index).getQ_status());
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
     public void newTest() throws JSONException {
         millisStart = 3600000;
         obj = new JSONObject(getIntent().getStringExtra("json"));
@@ -584,7 +621,9 @@ public class TestActivity extends AppCompatActivity implements
 
         if (opAdapter.getSelectedItem() == -1) {
             Log.e("status",listOfLists.get(pos).get(index).getQ_status());
-            listOfLists.get(pos).get(index).setQ_status("SKIPPED");
+            if(!listOfLists.get(pos).get(index).getQ_status().equalsIgnoreCase("BOOKMARKED")){
+                listOfLists.get(pos).get(index).setQ_status("SKIPPED");
+            }
         } else {
             Log.e("status",listOfLists.get(pos).get(index).getQ_status());
             listOfLists.get(pos).get(index).setQ_status("ATTEMPTED");
@@ -731,7 +770,10 @@ public class TestActivity extends AppCompatActivity implements
             Id = buffer.getJSONObject(index).getString("qbm_ID");
             Seq = buffer.getJSONObject(index).getString("qbm_SequenceId");
             questionobj = buffer.getJSONObject(index);
-            dataObj.UpdateQuestion(attempt.getString("ptu_test_ID"), dataObj.getLastAttempt(), Id, Seq,questionobj.getString("qbm_Chapter_name"),questionobj.getString("qbm_Sub_CategoryName"), Integer.valueOf(questionobj.getString("qbm_marks")), Double.valueOf(questionobj.getString("qbm_negative_mrk")), dataObj.getCorrectSum(), dataObj.getWrongSum(), -1, listOfLists.get(pos).get(index).getQ_status(), opAdapter.getSelectedSequence(), opAdapter.getFlag());
+            long value = dataObj.UpdateQuestion(attempt.getString("ptu_test_ID"), dataObj.getLastAttempt(), Id, Seq,questionobj.getString("qbm_Chapter_name"),questionobj.getString("qbm_Sub_CategoryName"), Integer.valueOf(questionobj.getString("qbm_marks")), Double.valueOf(questionobj.getString("qbm_negative_mrk")), dataObj.getCorrectSum(), dataObj.getWrongSum(), -1, listOfLists.get(pos).get(index).getQ_status(), opAdapter.getSelectedSequence(), opAdapter.getFlag());
+            Log.e("UpdateClear",""+value);
+            listOfLists.get(pos).get(index).setQ_status("NOT_ATTEMPTED");
+            btn_confirm.setBackgroundColor(getResources().getColor(R.color.dull_yellow));
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -914,7 +956,11 @@ public class TestActivity extends AppCompatActivity implements
             btn_qadditional.setBackgroundColor(0);
 
         }*/
-
+        if(listOfLists.get(pos).get(index).getQ_status().equalsIgnoreCase("ATTEMPTED") || listOfLists.get(pos).get(index).getQ_status().equalsIgnoreCase("SKIPPED")){
+            btn_confirm.setBackgroundColor(Color.GREEN);
+        }else{
+            btn_confirm.setBackgroundColor(getResources().getColor(R.color.dull_yellow));
+        }
         Log.e("Setquestions", questionobj.getString("qbm_image_file"));
         if (edit) {
             btn_review.setEnabled(false);

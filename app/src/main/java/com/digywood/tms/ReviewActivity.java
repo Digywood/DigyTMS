@@ -70,7 +70,7 @@ public class ReviewActivity extends AppCompatActivity implements
     private PopupWindow pw;
     GridView gridView;
     Spinner sections;
-    String jsonPath, photoPath, Seq, Id, path, enrollid, courseid, subjectId, paperid, testid, groupId, MyPREFERENCES = "MyPreferences";
+    String jsonPath,imgPath, photoPath, Seq, Id, path, enrollid, courseid, subjectId, paperid, testid, groupId, MyPREFERENCES = "MyPreferences";
     RecyclerView question_scroll;
     ScrollGridAdapter scrollAdapter;
     QuestionListAdapter qAdapter;
@@ -225,6 +225,7 @@ public class ReviewActivity extends AppCompatActivity implements
         path = enrollid + "/" + courseid + "/" + subjectId + "/" + paperid + "/" + testid + "/";
         photoPath = URLClass.mainpath + path;
         jsonPath = URLClass.mainpath + path + testid + ".json";
+        imgPath=URLClass.mainpath+enrollid+"/"+courseid+"/"+subjectId+"/";
 
         temp = new JSONObject();
         sectionArray = new JSONArray();
@@ -316,8 +317,10 @@ public class ReviewActivity extends AppCompatActivity implements
             public void onClick(View v) {
                 try {
                     questionobj = array.getJSONObject(index);
-                    b = BitmapFactory.decodeFile(photoPath + questionobj.getString("qbm_image_file"));
-                    bitmap = BitmapFactory.decodeFile(photoPath + questionobj.getString("qbm_qimage_file"));
+                    String pid=questionobj.getString("qbm_Paper_ID");
+                    String cid=questionobj.getString("qbm_ChapterID");
+                    b = BitmapFactory.decodeFile(imgPath+pid+"/"+cid+"/"+questionobj.getString("qbm_image_file"));
+                    bitmap = BitmapFactory.decodeFile(imgPath+pid+"/"+cid+"/"+questionobj.getString("qbm_qimage_file"));
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -331,8 +334,9 @@ public class ReviewActivity extends AppCompatActivity implements
                 try {
                     questionobj = array.getJSONObject(index);
                     if(groupId.equals(questionobj.getString("gbg_id"))) {
-                        g = BitmapFactory.decodeFile(photoPath + questionobj.getString("gbg_media_file"));
-                    }
+                        String pid=questionobj.getString("qbm_Paper_ID");
+                        String cid=questionobj.getString("qbm_ChapterID");
+                        g = BitmapFactory.decodeFile(imgPath+pid+"/"+cid+"/"+questionobj.getString("gbg_media_file"));                    }
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -383,6 +387,10 @@ public class ReviewActivity extends AppCompatActivity implements
 //                                            q_list.clear();
                                                 finish();
                                                 Intent intent = new Intent(ReviewActivity.this, ListofPractiseTests.class);
+                                                intent.putExtra("enrollid",enrollid);
+                                                intent.putExtra("courseid", courseid);
+                                                intent.putExtra("subjectid", subjectId);
+                                                intent.putExtra("paperid",paperid);
                                                 startActivity(intent);
                                             }
                                         })
@@ -491,7 +499,9 @@ public class ReviewActivity extends AppCompatActivity implements
     public void setQBackground(int pos, int index) {
 
         if (opAdapter.getSelectedItem() == -1) {
-            listOfLists.get(pos).get(index).setQ_status("SKIPPED");
+            if (!listOfLists.get(pos).get(index).getQ_status().equals("NOT_ATTEMPTED")){
+                listOfLists.get(pos).get(index).setQ_status("SKIPPED");
+            }
         } else {
             if (!listOfLists.get(pos).get(index).getQ_status().equals("BOOKMARKED"))
             {   listOfLists.get(pos).get(index).setQ_status("ATTEMPTED");}
@@ -710,7 +720,10 @@ public class ReviewActivity extends AppCompatActivity implements
 
             limg = layout.findViewById(R.id.layout_img);
             review = jarray;
-            Bitmap rev = BitmapFactory.decodeFile(photoPath + review.getJSONObject(last).getString("qba_media_file"));
+            final String pid=questionobj.getString("qbm_Paper_ID");
+            final String cid=questionobj.getString("qbm_ChapterID");
+
+            Bitmap rev = BitmapFactory.decodeFile(imgPath+pid+"/"+cid+"/"+review.getJSONObject(last).getString("qba_media_file"));
             limg.setImageBitmap(rev);
             Log.e("Review_Image","reached");
 
@@ -742,7 +755,7 @@ public class ReviewActivity extends AppCompatActivity implements
                                 right.setVisibility(View.INVISIBLE);
                             else
                                 right.setVisibility(View.VISIBLE);
-                            Bitmap rev = BitmapFactory.decodeFile(photoPath + review.getJSONObject(last).getString("qba_media_file"));
+                            Bitmap rev = BitmapFactory.decodeFile(imgPath+pid+"/"+cid+"/"+review.getJSONObject(last).getString("qba_media_file"));
                             limg.setImageBitmap(rev);
                         }
                     } catch (JSONException e) {
@@ -765,7 +778,7 @@ public class ReviewActivity extends AppCompatActivity implements
                                 right.setVisibility(View.INVISIBLE);
                             else
                                 right.setVisibility(View.VISIBLE);
-                            Bitmap rev = BitmapFactory.decodeFile(photoPath + review.getJSONObject(last).getString("qba_media_file"));
+                            Bitmap rev = BitmapFactory.decodeFile(imgPath+pid+"/"+cid+"/"+review.getJSONObject(last).getString("qba_media_file"));
                             limg.setImageBitmap(rev);
                         }
                     } catch (JSONException e) {
@@ -913,7 +926,7 @@ public class ReviewActivity extends AppCompatActivity implements
         array =  attempt.getJSONArray("Sections").getJSONObject(pos).getJSONArray("Questions");
         myLayoutManager.scrollToPositionWithOffset(index, 350);
         questionobj = array.getJSONObject(index);
-        q_no.setText(questionobj.getString("qbm_SequenceId"));
+        q_no.setText(questionobj.getString("qbm_ID"));
         if (questionobj.getString("qbm_group_flag").equals("YES")) {
             groupId = questionobj.getString("gbg_id");
             btn_group_info.setEnabled(true);
@@ -949,8 +962,9 @@ public class ReviewActivity extends AppCompatActivity implements
                 btn_review.setBackgroundColor(0);
             }
         }
-        b = BitmapFactory.decodeFile(photoPath + questionobj.getString("qbm_image_file"));
-
+        String pid=questionobj.getString("qbm_Paper_ID");
+        String cid=questionobj.getString("qbm_ChapterID");
+        Bitmap b = BitmapFactory.decodeFile(imgPath+pid+"/"+cid+"/"+questionobj.getString("qbm_image_file"));
         question_img.setImageBitmap(b);
         question_img.setOnTouchListener(new View.OnTouchListener() {
             @Override
@@ -964,7 +978,7 @@ public class ReviewActivity extends AppCompatActivity implements
         for (int i = 0; i < optionsArray.length(); i++) {
             option = new SingleOptions();
             option.setQbo_id(optionsArray.getJSONObject(i).getString("qbo_id"));
-            option.setQbo_media_file(optionsArray.getJSONObject(i).getString("qbo_media_file"));
+            option.setQbo_media_file(imgPath+pid+"/"+cid+"/"+optionsArray.getJSONObject(i).getString("qbo_media_file"));
             option.setQbo_seq_no(optionsArray.getJSONObject(i).getString("qbo_seq_no"));
             option.setQbo_answer_flag(optionsArray.getJSONObject(i).getString(("qbo_answer_flag")));
             optionsList.add(option);
