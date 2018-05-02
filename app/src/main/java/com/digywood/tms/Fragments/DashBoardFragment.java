@@ -47,10 +47,6 @@ public class DashBoardFragment extends Fragment {
     Button btn_pdetails,btn_fdetails,btn_adetails;
     TextView tv_studentid,tv_sname;
 
-    TextView tv_ptottests,tv_pattempted,tv_ptestsasplan,tv_ppercent,tv_pmax,tv_pmin,tv_pavg,tv_pRAGattempt,tv_pRAGAVGscore;
-    TextView tv_ftottests,tv_fattempted,tv_ftestsasplan,tv_fpercent,tv_fmax,tv_fmin,tv_favg,tv_fRAGattempt,tv_fRAGAVGscore;
-    TextView tv_atottests,tv_aattempted,tv_atestsasplan,tv_apercent,tv_amax,tv_amin,tv_aavg,tv_aRAGattempt,tv_aRAGAVGscore;
-
     Spinner sp_enrollid,sp_coursename;
 
     DBHelper myhelper;
@@ -58,7 +54,6 @@ public class DashBoardFragment extends Fragment {
     int totptestcount=0;
 
     ArrayList<String> courseIds=new ArrayList<>();
-    ArrayList<String> enrollIds=new ArrayList<>();
     ArrayAdapter<String> courseAdp,enrollAdp;
     String studentid="",enrollid,courseid,studentname="";
 
