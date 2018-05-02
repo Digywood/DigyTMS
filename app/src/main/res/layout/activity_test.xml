@@ -222,7 +222,7 @@
         android:orientation="horizontal"
         android:id="@+id/action_buttons"
         android:layout_alignParentBottom="true"
-        android:weightSum="4">
+        android:weightSum="5">
 
         <Button
             android:layout_width="wrap_content"
@@ -251,11 +251,21 @@
             android:layout_width="wrap_content"
             android:layout_height="30dp"
             android:layout_weight="1"
-            android:text="Mark / Next"
+            android:text="Mark"
             android:layout_marginEnd="5dp"
             android:background="@drawable/test_navigation_custom"
             android:textColor="@drawable/test_navigation_text"
             android:id="@+id/btn_mark"/>
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="30dp"
+            android:layout_weight="1"
+            android:text="Confirm"
+            android:layout_marginEnd="5dp"
+            android:background="@drawable/test_navigation_custom"
+            android:textColor="@drawable/test_navigation_text"
+            android:id="@+id/btn_confirm"/>
 
         <Button
             android:id="@+id/next_btn"
@@ -266,7 +276,7 @@
             android:textColor="@drawable/test_text_custom"
             android:drawableEnd="@drawable/ic_arrow_forward_24dp"
             android:drawablePadding="0dp"
-            android:text="Confirm/Next" />
+            android:text="Next" />
 
     </LinearLayout>
 

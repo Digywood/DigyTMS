@@ -957,6 +957,12 @@ public class DBHelper extends SQLiteOpenHelper {
         return updateFlag;
     }
 
+    public long updateStatus(String qId, String status){
+        long updateFlag=0;
+        String query ="UPDATE attempt_data SET Question_Status ='"+status+"' WHERE Question_ID='"+qId+"'";
+        return updateFlag;
+    }
+
     public Cursor getSubcategories(){
         String query ="SELECT DISTINCT Question_SubCategory FROM attempt_data";
         Cursor c=db.rawQuery(query,null);
@@ -1001,6 +1007,20 @@ public class DBHelper extends SQLiteOpenHelper {
         Cursor cursor=db.rawQuery(query,null);
         cursor.moveToFirst();
         if (cursor.getCount()>0)
+            value = true;
+        else
+            value = false;
+        cursor.close();
+        return value;
+    }
+
+    public Boolean CheckQuestionStatus(String qId){
+        Boolean value = false;
+        String query ="SELECT  Question_Status FROM "+" attempt_data"+" WHERE Question_ID ='"+qId+"'";
+        db=this.getWritableDatabase();
+        Cursor cursor=db.rawQuery(query,null);
+        cursor.moveToFirst();
+        if (cursor.getString(0).equalsIgnoreCase("ATTEMPTED"))
             value = true;
         else
             value = false;
