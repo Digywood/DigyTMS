@@ -5,11 +5,20 @@ package com.digywood.tms.Pojo;
  */
 
 public class SingleQuestionList {
-    String q_num,q_status;
+    String q_num,q_status,q_check;
 
-    public SingleQuestionList(String q_num, String q_status){
+    public SingleQuestionList(String q_num, String q_status,String q_check){
         this.q_num = q_num;
         this.q_status = q_status;
+        this.q_check = q_check;
+    }
+
+    public String getQ_check() {
+        return q_check;
+    }
+
+    public void setQ_check(String q_check) {
+        this.q_check = q_check;
     }
 
     public String getQ_num() {

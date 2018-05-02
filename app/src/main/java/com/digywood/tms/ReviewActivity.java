@@ -70,7 +70,8 @@ public class ReviewActivity extends AppCompatActivity implements
     private PopupWindow pw;
     GridView gridView;
     Spinner sections;
-    String jsonPath,imgPath, photoPath, Seq, Id, path, enrollid, courseid, subjectId, paperid, testid, groupId, MyPREFERENCES = "MyPreferences";
+    String jsonPath,imgPath, photoPath, Seq, Id, path, enrollid, courseid, subjectId, paperid, testid, groupId;
+    final String notAttempted = "NOT_ATTEMPTED", attempted = "ATTEMPTED", skipped = "SKIPPED", bookmarked = "BOOKMARKED",not_confirmed = "NOT_CONFIRMED",confirmed = "CONFIRMED";
     RecyclerView question_scroll;
     ScrollGridAdapter scrollAdapter;
     QuestionListAdapter qAdapter;
@@ -909,7 +910,7 @@ public class ReviewActivity extends AppCompatActivity implements
                 Log.e("Review_array2",""+array2.length());
                 for (int j = 0; j < array2.length(); j++) {
                     if(statusList.get(j) != null) {
-                        qListObj = new SingleQuestionList(array2.getJSONObject(j).getString("qbm_SequenceId"), statusList.get(max));
+                        qListObj = new SingleQuestionList(array2.getJSONObject(j).getString("qbm_SequenceId"), statusList.get(max),not_confirmed);
                     }
                     max++;
                     questionOpList.add(qListObj);
