@@ -319,6 +319,7 @@ public class TestActivity extends AppCompatActivity implements
                 opAdapter.notifyDataSetChanged();
                 clearOptions();
                 setQBackground(pos,index);
+                btn_confirm.setBackgroundColor(getResources().getColor(R.color.dull_yellow));
             }
         });
 
@@ -330,6 +331,7 @@ public class TestActivity extends AppCompatActivity implements
                     listOfLists.get(pos).get(index).setQ_status(bookmarked);
                     listOfLists.get(pos).get(index).setQ_check(confirmed);
                     writeOption(opAdapter.getSelectedItem());
+                    setQBackground(pos,index);
 //                    index++;
 //                    gotoQuestion(index);
                 } else
@@ -617,14 +619,15 @@ public class TestActivity extends AppCompatActivity implements
 
         if (opAdapter.getSelectedItem() == -1) {
             Log.e("status",listOfLists.get(pos).get(index).getQ_status());
-            if(!listOfLists.get(pos).get(index).getQ_status().equalsIgnoreCase(bookmarked)){
                 listOfLists.get(pos).get(index).setQ_status(skipped);
                 listOfLists.get(pos).get(index).setQ_check(not_confirmed);
-            }
+
         } else {
-            Log.e("status",listOfLists.get(pos).get(index).getQ_status());
-            listOfLists.get(pos).get(index).setQ_status(attempted);
-            listOfLists.get(pos).get(index).setQ_check(confirmed);
+            if(!listOfLists.get(pos).get(index).getQ_status().equalsIgnoreCase(bookmarked)) {
+                Log.e("status", listOfLists.get(pos).get(index).getQ_status());
+                listOfLists.get(pos).get(index).setQ_status(attempted);
+                listOfLists.get(pos).get(index).setQ_check(confirmed);
+            }
         }
         qAdapter.updateList(listOfLists.get(pos));
     }
