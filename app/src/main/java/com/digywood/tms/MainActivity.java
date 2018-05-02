@@ -28,7 +28,7 @@ public class MainActivity extends AppCompatActivity {
     Button btn_login;
     TextView tv_signup;
     CheckBox cb_remember;
-    String studentid,studentname="";
+    String studentid,studentname="",semail="";
     DBHelper myhelper;
     EditText et_email,et_password;
     String pwd="",enterpwd;
@@ -86,11 +86,13 @@ public class MainActivity extends AppCompatActivity {
                                 localpwd=mycursor.getString(mycursor.getColumnIndex("Student_password"));
                                 studentid=mycursor.getString(mycursor.getColumnIndex("StudentID"));
                                 studentname=mycursor.getString(mycursor.getColumnIndex("Student_Name"));
+                                semail=mycursor.getString(mycursor.getColumnIndex("Student_email"));
                             }
                             if(enterpwd.equalsIgnoreCase(localpwd)){
                                 Intent i=new Intent(getApplicationContext(),DashBoardNavActivity.class);
                                 i.putExtra("studentid",studentid);
                                 i.putExtra("sname",studentname);
+                                i.putExtra("email",semail);
                                 startActivity(i);
                                 finish();
                             }else{
@@ -118,6 +120,7 @@ public class MainActivity extends AppCompatActivity {
                                                             studentid=jo.getString("StudentID");
                                                             pwd=jo.getString("Student_password");
                                                             studentname=jo.getString("Student_Name");
+                                                            semail=jo.getString("Student_email");
 
                                                             long checkFlag=myhelper.checkStudent(jo.getInt("StudentKey"));
                                                             if(checkFlag>0){
@@ -136,6 +139,7 @@ public class MainActivity extends AppCompatActivity {
                                                             Intent i=new Intent(getApplicationContext(),DashBoardNavActivity.class);
                                                             i.putExtra("studentid",studentid);
                                                             i.putExtra("sname",studentname);
+                                                            i.putExtra("email",semail);
                                                             startActivity(i);
                                                             finish();
                                                         }else{

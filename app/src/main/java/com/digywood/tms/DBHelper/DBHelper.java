@@ -211,7 +211,7 @@ public class DBHelper extends SQLiteOpenHelper {
                 ")";
         db.execSQL(AttemptData);
 
-        String AttemptCategory=" CREATE TABLE `attempt_category` (\n"+
+        String AttemptCategory="CREATE TABLE `attempt_category` (\n"+
                 "   `Attempt_ID` INTEGER,\n"+
                 "   `Attempt_Category` varchar(15),\n" +
                 "   `Attempt_Subcategory` varchar(15),\n" +
@@ -418,6 +418,18 @@ public class DBHelper extends SQLiteOpenHelper {
 
     public Cursor getFlashRawData(String testId){
         String query ="SELECT COUNT(*) as attemptcount,MIN(percentageObtain) as minscore,MAX(percentageObtain) as maxscore,AVG(percentageObtain) as avgscore FROM "+" flashcard_attempt"+" WHERE flashcardId ='"+testId+"'";
+        Cursor c=db.rawQuery(query,null);
+        return c;
+    }
+
+    public Cursor getFlashSummary(){
+        String query ="SELECT count(distinct flashcardId) as attemptfcount,MIN(percentageObtain) as minscore,MAX(percentageObtain) as maxscore,AVG(percentageObtain) as avgscore FROM "+" flashcard_attempt";
+        Cursor c=db.rawQuery(query,null);
+        return c;
+    }
+
+    public Cursor getPractiseSummary(){
+        String query ="SELECT count(distinct Attempt_Test_ID) as attemptpcount,MIN(Attempt_Percentage) as minscore,MAX(Attempt_Percentage) as maxscore,AVG(Attempt_Percentage) as avgscore FROM "+"attempt_list";
         Cursor c=db.rawQuery(query,null);
         return c;
     }
@@ -671,6 +683,12 @@ public class DBHelper extends SQLiteOpenHelper {
         Cursor c =db.query("sptu_student", new String[] {"sptu_entroll_id,sptu_student_ID,sptu_ID,sptu_paper_ID,sptu_subjet_ID,sptu_course_id,sptu_dwnld_status"},"sptu_ID='"+testId+"'", null, null, null,null);
         return c;
     }
+
+    public int getPTestsCount(){
+        Cursor c =db.query("sptu_student", new String[] {"sptu_entroll_id,sptu_student_ID,sptu_ID"},null, null, null, null,null);
+        return c.getCount();
+    }
+
     public Cursor getStudentTests(){
         Cursor c =db.query("sptu_student", new String[] {"sptu_entroll_id,sptu_student_ID,sptu_ID,sptu_paper_ID,sptu_subjet_ID,sptu_course_id,sptu_dwnld_status"},null, null, null, null,null);
         return c;
