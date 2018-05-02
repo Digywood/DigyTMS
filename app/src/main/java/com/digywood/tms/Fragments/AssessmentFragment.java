@@ -11,7 +11,9 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.digywood.tms.DBHelper.DBHelper;
@@ -46,6 +48,10 @@ public class AssessmentFragment extends Fragment implements OnChartValueSelected
 
     Button btn_adetails;
     public PieChart mChart;
+
+    ArrayList<String> courseIds=new ArrayList<>();
+    ArrayAdapter<String> courseAdp;
+    Spinner sp_coursename;
 
     private AssessmentFragment.OnFragmentInteractionListener mListener;
 
@@ -97,6 +103,7 @@ public class AssessmentFragment extends Fragment implements OnChartValueSelected
         tv_aRAGAVGscore=view.findViewById(R.id.tv_aRAGAVGscore);
 
         btn_adetails = view.findViewById(R.id.btn_adetails);
+        sp_coursename=view.findViewById(R.id.sp_acourseid);
 
         mChart=view.findViewById(R.id.chart3);
 

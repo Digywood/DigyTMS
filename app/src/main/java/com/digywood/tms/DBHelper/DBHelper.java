@@ -422,8 +422,8 @@ public class DBHelper extends SQLiteOpenHelper {
         return c;
     }
 
-    public Cursor getFlashSummary(){
-        String query ="SELECT count(distinct flashcardId) as attemptfcount,MIN(percentageObtain) as minscore,MAX(percentageObtain) as maxscore,AVG(percentageObtain) as avgscore FROM "+" flashcard_attempt";
+    public Cursor getFlashSummary(String courseid){
+        String query ="SELECT count(distinct flashcardId) as attemptfcount,MIN(percentageObtain) as minscore,MAX(percentageObtain) as maxscore,AVG(percentageObtain) as avgscore FROM "+" flashcard_attempt"+" WHERE courseId ='"+courseid+"'";
         Cursor c=db.rawQuery(query,null);
         return c;
     }
@@ -684,8 +684,8 @@ public class DBHelper extends SQLiteOpenHelper {
         return c;
     }
 
-    public int getPTestsCount(){
-        Cursor c =db.query("sptu_student", new String[] {"sptu_entroll_id,sptu_student_ID,sptu_ID"},null, null, null, null,null);
+    public int getPTestsCount(String courseid){
+        Cursor c =db.query("sptu_student", new String[] {"sptu_entroll_id,sptu_student_ID,sptu_ID"},"sptu_course_id='"+courseid+"'", null, null, null,null);
         return c.getCount();
     }
 

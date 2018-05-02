@@ -21,8 +21,10 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.SeekBar;
+import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.digywood.tms.Adapters.TestAttemptAdapter;
@@ -78,6 +80,11 @@ public class PractiseFragment extends Fragment implements OnChartValueSelectedLi
     public PieChart mChart;
 
     public BarChart mChart1;
+
+    ArrayList<String> courseIds=new ArrayList<>();
+    ArrayAdapter<String> courseAdp;
+
+    Spinner sp_coursename;
 
     protected String[] mMonths = new String[] {
             "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Okt", "Nov", "Dec"
@@ -143,6 +150,7 @@ public class PractiseFragment extends Fragment implements OnChartValueSelectedLi
         mChart1 =view.findViewById(R.id.bchart1);
 
         btn_pdetails = view.findViewById(R.id.btn_pdetails);
+        sp_coursename=view.findViewById(R.id.sp_pcourseid);
 
         myhelper=new DBHelper(getActivity());
 
@@ -153,7 +161,21 @@ public class PractiseFragment extends Fragment implements OnChartValueSelectedLi
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        totptestcount=myhelper.getPTestsCount();
+        Cursor mycursor=myhelper.getAllCourseIds();
+        Log.e("CursorCount---",""+mycursor.getCount());
+        if(mycursor.getCount()>0){
+            while(mycursor.moveToNext()){
+                String courseId=mycursor.getString(mycursor.getColumnIndex("sptu_course_id"));
+                courseIds.add(courseId);
+            }
+            courseAdp= new ArrayAdapter(getActivity(),android.R.layout.simple_spinner_item,courseIds);
+            courseAdp.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+            sp_coursename.setAdapter(courseAdp);
+        }else{
+            mycursor.close();
+        }
+
+        totptestcount=myhelper.getPTestsCount(sp_coursename.getSelectedItem().toString());
         tv_ptottests.setText(""+totptestcount);
 
         Cursor mycur1=myhelper.getPractiseSummary();

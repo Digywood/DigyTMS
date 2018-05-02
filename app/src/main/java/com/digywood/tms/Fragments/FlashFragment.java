@@ -13,7 +13,9 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.digywood.tms.DBHelper.DBHelper;
@@ -48,6 +50,11 @@ public class FlashFragment extends Fragment implements OnChartValueSelectedListe
     private PieChart mChart;
     float attemptpercent=0.0f;
     Double min,max,avg;
+
+    ArrayList<String> courseIds=new ArrayList<>();
+    ArrayAdapter<String> courseAdp;
+
+    Spinner sp_coursename;
 
     TextView tv_ftottests,tv_fattempted,tv_ftestsasplan,tv_fpercent,tv_fmax,tv_fmin,tv_favg,tv_fRAGattempt,tv_fRAGAVGscore;
 
@@ -106,6 +113,8 @@ public class FlashFragment extends Fragment implements OnChartValueSelectedListe
         tv_fRAGAVGscore=view.findViewById(R.id.tv_fRAGAVGscore);
         btn_fdetails = view.findViewById(R.id.btn_fdetails);
 
+        sp_coursename=view.findViewById(R.id.sp_fcourseid);
+
         myhelper=new DBHelper(getActivity());
 
         mChart=view.findViewById(R.id.chart2);
@@ -117,11 +126,25 @@ public class FlashFragment extends Fragment implements OnChartValueSelectedListe
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        totptestcount=myhelper.getPTestsCount();
+        Cursor mycursor=myhelper.getAllCourseIds();
+        Log.e("CursorCount---",""+mycursor.getCount());
+        if(mycursor.getCount()>0){
+            while(mycursor.moveToNext()){
+                String courseId=mycursor.getString(mycursor.getColumnIndex("sptu_course_id"));
+                courseIds.add(courseId);
+            }
+            courseAdp= new ArrayAdapter(getActivity(),android.R.layout.simple_spinner_item,courseIds);
+            courseAdp.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+            sp_coursename.setAdapter(courseAdp);
+        }else{
+            mycursor.close();
+        }
+
+        totptestcount=myhelper.getPTestsCount(sp_coursename.getSelectedItem().toString());
 
         tv_ftottests.setText(""+totptestcount);
 
-        Cursor mycur=myhelper.getFlashSummary();
+        Cursor mycur=myhelper.getFlashSummary(sp_coursename.getSelectedItem().toString());
         if(mycur.getCount()>0){
             while (mycur.moveToNext()){
                 attemptpcount=mycur.getInt(mycur.getColumnIndex("attemptfcount"));
