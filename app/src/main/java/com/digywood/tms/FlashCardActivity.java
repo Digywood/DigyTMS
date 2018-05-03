@@ -302,6 +302,9 @@ public class FlashCardActivity extends AppCompatActivity {
                     skipList.clear();
                     secpos=position;
 
+                    d=0;
+                    pos=d;
+
                     JSONObject secObj=gja_sections.getJSONObject(position);
 
                     gja_questions=secObj.getJSONArray("Questions");
@@ -503,10 +506,15 @@ public class FlashCardActivity extends AppCompatActivity {
                 btn_know.setBackgroundResource(R.drawable.test_button_normal);
                 btn_idonknow.setBackgroundResource(R.drawable.test_button_normal);
 
-                flashQAttempt();
+                if(d>=0){
+                    flashQAttempt();
+                }else{
+                    Log.e("Previous:--","No Update");
+                }
 
                 d--;
                 pos=d;
+
                 if(d>=0){
                     myLayoutManager.scrollToPosition(d);
                     try {
