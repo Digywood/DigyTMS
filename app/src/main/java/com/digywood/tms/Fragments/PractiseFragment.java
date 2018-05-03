@@ -397,15 +397,6 @@ public class PractiseFragment extends Fragment implements OnChartValueSelectedLi
         yVals1.add(new BarEntry(2,45.78f));
         yVals1.add(new BarEntry(3,89.0f));
 
-//        double d1 = min;
-//        float f1 = (float)d1;
-//
-//        double d2 = min;
-//        float f2 = (float)d2;
-//
-//        double d3 = min;
-//        float f3 = (float)d3;
-
         BarDataSet set1;
 
         set1 = new BarDataSet(yVals1, "Min:Avg:Max");
