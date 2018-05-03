@@ -2,16 +2,25 @@ package com.digywood.tms.Pojo;
 
 public class SingleDWDQues {
 
-    String chapterId,paperId,fileName;
+    String chapterId,paperId,subjectId,fileName;
 
     public SingleDWDQues(){
 
     }
 
-    public SingleDWDQues(String chapterid,String paperId,String filename){
+    public SingleDWDQues(String chapterid,String paperId,String subjectId,String filename){
         this.chapterId=chapterid;
         this.paperId=paperId;
+        this.subjectId=subjectId;
         this.fileName=filename;
+    }
+
+    public String getSubjectId() {
+        return subjectId;
+    }
+
+    public void setSubjectId(String subjectId) {
+        this.subjectId = subjectId;
     }
 
     public String getChapterId() {
