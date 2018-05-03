@@ -146,38 +146,38 @@ public class PracticeFragment extends Fragment implements OnChartValueSelectedLi
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-       /* Cursor mycursor=myhelper.getAllCourseIds();
-        Log.e("CursorCount---",""+mycursor.getCount());
-        if(mycursor.getCount()>0){
-            while(mycursor.moveToNext()){
-                String courseId=mycursor.getString(mycursor.getColumnIndex("sptu_course_id"));
-                courseIds.add(courseId);
-            }
-            courseAdp= new ArrayAdapter(getActivity(),android.R.layout.simple_spinner_item,courseIds);
-            courseAdp.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-            sp_coursename.setAdapter(courseAdp);
-        }else{
-            mycursor.close();
-        }
-
-        totptestcount=myhelper.getPTestsCount(sp_coursename.getSelectedItem().toString());
-        tv_ptottests.setText(""+totptestcount);
-
-        Cursor mycur1=myhelper.getPractiseSummary();
-        if(mycur1.getCount()>0){
-            while (mycur1.moveToNext()){
-                attemptpcount=mycur1.getInt(mycur1.getColumnIndex("attemptpcount"));
-                min=mycur1.getDouble(mycur1.getColumnIndex("minscore"));
-                max=mycur1.getDouble(mycur1.getColumnIndex("maxscore"));
-                avg=mycur1.getDouble(mycur1.getColumnIndex("avgscore"));
-                tv_pattempted.setText(""+attemptpcount);
-                tv_pmax.setText(""+round(max,1));
-                tv_pmin.setText(""+round(min,1));
-                tv_pavg.setText(""+round(avg,1));
-            }
-        }else{
-            mycur1.close();
-        }*/
+//        Cursor mycursor=myhelper.getAllCourseIds();
+//        Log.e("CursorCount---",""+mycursor.getCount());
+//        if(mycursor.getCount()>0){
+//            while(mycursor.moveToNext()){
+//                String courseId=mycursor.getString(mycursor.getColumnIndex("sptu_course_id"));
+//                courseIds.add(courseId);
+//            }
+//            courseAdp= new ArrayAdapter(getActivity(),android.R.layout.simple_spinner_item,courseIds);
+//            courseAdp.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+//            sp_coursename.setAdapter(courseAdp);
+//        }else{
+//            mycursor.close();
+//        }
+//
+//        totptestcount=myhelper.getPTestsCount(sp_coursename.getSelectedItem().toString());
+//        tv_ptottests.setText(""+totptestcount);
+//
+//        Cursor mycur1=myhelper.getPractiseSummary();
+//        if(mycur1.getCount()>0){
+//            while (mycur1.moveToNext()){
+//                attemptpcount=mycur1.getInt(mycur1.getColumnIndex("attemptpcount"));
+//                min=mycur1.getDouble(mycur1.getColumnIndex("minscore"));
+//                max=mycur1.getDouble(mycur1.getColumnIndex("maxscore"));
+//                avg=mycur1.getDouble(mycur1.getColumnIndex("avgscore"));
+//                tv_pattempted.setText(""+attemptpcount);
+//                tv_pmax.setText(""+round(max,1));
+//                tv_pmin.setText(""+round(min,1));
+//                tv_pavg.setText(""+round(avg,1));
+//            }
+//        }else{
+//            mycur1.close();
+//        }
 
         attemptpercent=(Float.parseFloat(String.valueOf(attemptpcount))/totptestcount)*100;
 

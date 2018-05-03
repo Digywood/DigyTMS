@@ -229,7 +229,7 @@ public class ScoreActivity extends AppCompatActivity {
                 dataObj.InsertAttempt(attempt.getString("ptu_test_ID"),2, 0,dataObj.getQuestionAttempted(),dataObj.getQuestionSkipped(),dataObj.getQustionBookmarked(),dataObj.getQustionNotAttempted(), 0, 0, 0, 0);
             }*/
             tv_test.setText(testId);
-        } catch (JSONException e) {
+        } catch (JSONException|NumberFormatException e) {
             e.printStackTrace();
         }
 

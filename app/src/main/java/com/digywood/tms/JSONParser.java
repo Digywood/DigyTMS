@@ -170,8 +170,8 @@ public class JSONParser {
 
                             int groupquescount=myhelper.getGroupQPickCount(finalgroupList.get(d));
 
-//                            int groupquescount=1;
-
+                            Log.e("GCOMPQLIST-----",""+gquesList.size());
+                            Log.e("GCOMPQLIST-----",""+gquesList.size()+"  :  "+groupquescount);
                             if(gquesList.size()>=groupquescount){
                                 getGroupQues(gquesList,groupquescount);
                             }else{

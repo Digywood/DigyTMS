@@ -254,15 +254,15 @@ public class ListofPractiseTests extends AppCompatActivity {
 
                                                 SingleDWDQues sdq=chapterFileList.get(i);
 
-                                                File myFile1 = new File(URLClass.mainpath+enrollid+"/"+courseid+"/"+subjectid+"/"+sdq.getPaperId()+"/"+sdq.getChapterId()+"/"+sdq.getFileName());
+                                                File myFile1 = new File(URLClass.mainpath+enrollid+"/"+courseid+"/"+sdq.getSubjectId()+"/"+sdq.getPaperId()+"/"+sdq.getChapterId()+"/"+sdq.getFileName());
                                                 if(myFile1.exists()){
 
                                                 }else{
 
-                                                    String tPath=URLClass.downloadjson+"courses/"+courseid+"/"+subjectid+"/"+sdq.getPaperId()+"/";
+                                                    String tPath=URLClass.downloadjson+"courses/"+courseid+"/"+sdq.getSubjectId()+"/"+sdq.getPaperId()+"/";
                                                     finalUrls.add(tPath+sdq.getChapterId()+"/"+sdq.getFileName());
                                                     finalNames.add(sdq.getFileName());
-                                                    localPathList.add(URLClass.mainpath+enrollid+"/"+courseid+"/"+subjectid+"/"+sdq.getPaperId()+"/"+sdq.getChapterId()+"/");
+                                                    localPathList.add(URLClass.mainpath+enrollid+"/"+courseid+"/"+sdq.getSubjectId()+"/"+sdq.getPaperId()+"/"+sdq.getChapterId()+"/");
                                                 }
                                             }
 
@@ -641,6 +641,7 @@ public class ListofPractiseTests extends AppCompatActivity {
 
                     String chapterid=singlequesObj.getString("qbm_ChapterID");
                     String paperid=singlequesObj.getString("qbm_Paper_ID");
+                    String subid=singlequesObj.getString("qbm_SubjectID");
 
                     if(singlequesObj.getString("qbm_group_flag").equalsIgnoreCase("YES")){
 
@@ -654,7 +655,7 @@ public class ListofPractiseTests extends AppCompatActivity {
 
                         }else{
                             downloadfileList.add(singlequesObj.getString("gbg_media_file"));
-                            chapterFileList.add(new SingleDWDQues(chapterid,paperid,singlequesObj.getString("gbg_media_file")));
+                            chapterFileList.add(new SingleDWDQues(chapterid,paperid,subid,singlequesObj.getString("gbg_media_file")));
                         }
 
                     }else{
@@ -665,21 +666,21 @@ public class ListofPractiseTests extends AppCompatActivity {
 
                     }else{
                         downloadfileList.add(singlequesObj.getString("qbm_image_file"));
-                        chapterFileList.add(new SingleDWDQues(chapterid,paperid,singlequesObj.getString("qbm_image_file")));
+                        chapterFileList.add(new SingleDWDQues(chapterid,paperid,subid,singlequesObj.getString("qbm_image_file")));
                     }
 
                     if(downloadfileList.contains(singlequesObj.getString("qbm_Review_Images"))){
 
                     }else{
                         downloadfileList.add(singlequesObj.getString("qbm_Review_Images"));
-                        chapterFileList.add(new SingleDWDQues(chapterid,paperid,singlequesObj.getString("qbm_Review_Images")));
+                        chapterFileList.add(new SingleDWDQues(chapterid,paperid,subid,singlequesObj.getString("qbm_Review_Images")));
                     }
 
                     if(downloadfileList.contains(singlequesObj.getString("qbm_flash_image"))){
 
                     }else{
                         downloadfileList.add(singlequesObj.getString("qbm_flash_image"));
-                        chapterFileList.add(new SingleDWDQues(chapterid,paperid,singlequesObj.getString("qbm_flash_image")));
+                        chapterFileList.add(new SingleDWDQues(chapterid,paperid,subid,singlequesObj.getString("qbm_flash_image")));
                     }
 
                     optionsArray=singlequesObj.getJSONArray("Options");
@@ -690,7 +691,7 @@ public class ListofPractiseTests extends AppCompatActivity {
 
                         }else{
                             downloadfileList.add(optionsObj.getString("qbo_media_file"));
-                            chapterFileList.add(new SingleDWDQues(chapterid,paperid,optionsObj.getString("qbo_media_file")));
+                            chapterFileList.add(new SingleDWDQues(chapterid,paperid,subid,optionsObj.getString("qbo_media_file")));
                         }
                     }
 
@@ -702,7 +703,7 @@ public class ListofPractiseTests extends AppCompatActivity {
 
                         }else{
                             downloadfileList.add(additionsObj.getString("qba_media_file"));
-                            chapterFileList.add(new SingleDWDQues(chapterid,paperid,additionsObj.getString("qba_media_file")));
+                            chapterFileList.add(new SingleDWDQues(chapterid,paperid,subid,additionsObj.getString("qba_media_file")));
                         }
 
                     }
@@ -722,6 +723,8 @@ public class ListofPractiseTests extends AppCompatActivity {
             }else{
                 Log.e("ListofPractiseTests----","No Groups Available in Test");
             }
+
+            Log.e("JSONPARSE---",""+groupdata);
 
             Log.e("JSONPARSE---",""+downloadfileList.size());
 
