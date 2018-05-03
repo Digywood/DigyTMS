@@ -39,7 +39,7 @@ public class TestAttemptFragment extends Fragment {
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
-    TextView tv_testid,tv_minscore,tv_maxscore,tv_avgscore,tv_emptytestdata;
+    TextView tv_attempt_Id,tv_testid,tv_minscore,tv_maxscore,tv_avgscore,tv_emptytestdata;
     RecyclerView rv_tattemptdata;
     DBHelper dataObj;
     String testId="";
@@ -93,6 +93,7 @@ public class TestAttemptFragment extends Fragment {
         dataObj= new DBHelper(getActivity().getApplicationContext());
         tv_testid=view.findViewById(R.id.tv_ftestid);
         tv_testid.setText(testId);
+        tv_attempt_Id = view.findViewById(R.id.tv_attempt_Id);
         tv_minscore=view.findViewById(R.id.tv_minpercent);
         tv_maxscore=view.findViewById(R.id.tv_maxpercent);
         tv_avgscore=view.findViewById(R.id.tv_avgpercent);
@@ -126,7 +127,7 @@ public class TestAttemptFragment extends Fragment {
 
         if(mycursor.getCount()>0){
             while(mycursor.moveToNext()){
-                tattemptList.add(new SingleTestAttempt(mycursor.getInt(mycursor.getColumnIndex("Attempt_ID")),mycursor.getInt(mycursor.getColumnIndex("Attempt_Confirmed")),mycursor.getInt(mycursor.getColumnIndex("Attempt_Skipped")),mycursor.getInt(mycursor.getColumnIndex("Attempt_Bookmarked")),mycursor.getInt(mycursor.getColumnIndex("Attempt_UnAttempted")),mycursor.getDouble(mycursor.getColumnIndex("Attempt_Score")),mycursor.getDouble(mycursor.getColumnIndex("Attempt_Percentage"))));
+                tattemptList.add(new SingleTestAttempt(mycursor.getString(mycursor.getColumnIndex("Attempt_ID")),mycursor.getInt(mycursor.getColumnIndex("Attempt_Confirmed")),mycursor.getInt(mycursor.getColumnIndex("Attempt_Skipped")),mycursor.getInt(mycursor.getColumnIndex("Attempt_Bookmarked")),mycursor.getInt(mycursor.getColumnIndex("Attempt_UnAttempted")),mycursor.getDouble(mycursor.getColumnIndex("Attempt_Score")),mycursor.getDouble(mycursor.getColumnIndex("Attempt_Percentage"))));
             }
         }else{
             mycursor.close();

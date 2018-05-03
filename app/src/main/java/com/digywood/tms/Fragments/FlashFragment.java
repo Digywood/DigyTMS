@@ -49,7 +49,7 @@ public class FlashFragment extends Fragment implements OnChartValueSelectedListe
     int totptestcount=0,attemptpcount=0;
     private PieChart mChart;
     float attemptpercent=0.0f;
-    Double min,max,avg;
+    Double min=0.0,max=0.0,avg=0.0;
 
     ArrayList<String> courseIds=new ArrayList<>();
     ArrayAdapter<String> courseAdp;
@@ -126,7 +126,7 @@ public class FlashFragment extends Fragment implements OnChartValueSelectedListe
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        Cursor mycursor=myhelper.getAllCourseIds();
+        /*Cursor mycursor=myhelper.getAllCourseIds();
         Log.e("CursorCount---",""+mycursor.getCount());
         if(mycursor.getCount()>0){
             while(mycursor.moveToNext()){
@@ -158,7 +158,7 @@ public class FlashFragment extends Fragment implements OnChartValueSelectedListe
             }
         }else{
             mycur.close();
-        }
+        }*/
 
         attemptpercent=(Float.parseFloat(String.valueOf(attemptpcount))/totptestcount)*100;
 
