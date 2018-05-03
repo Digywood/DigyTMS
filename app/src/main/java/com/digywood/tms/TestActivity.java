@@ -242,7 +242,7 @@ public class TestActivity extends AppCompatActivity implements
         path = enrollid + "/" + courseid + "/" + subjectId + "/" + paperid + "/" + testid + "/";
         photoPath = URLClass.mainpath + path;
         jsonPath = URLClass.mainpath + path + "Attempt/" + testid + ".json";
-        imgPath=URLClass.mainpath+enrollid+"/"+courseid+"/"+subjectId+"/";
+        imgPath=URLClass.mainpath+enrollid+"/"+courseid+"/";
 
         temp = new JSONObject();
         sectionArray = new JSONArray();
@@ -375,8 +375,9 @@ public class TestActivity extends AppCompatActivity implements
                     questionobj = array.getJSONObject(index);
                     String pid=questionobj.getString("qbm_Paper_ID");
                     String cid=questionobj.getString("qbm_ChapterID");
-                    b = BitmapFactory.decodeFile(imgPath+pid+"/"+cid+"/"+questionobj.getString("qbm_image_file"));
-                    bitmap = BitmapFactory.decodeFile(imgPath+pid+"/"+cid+"/"+questionobj.getString("qbm_qimage_file"));
+                    String sid=questionobj.getString("qbm_SubjectID");
+                    b = BitmapFactory.decodeFile(imgPath+sid+"/"+pid+"/"+cid+"/"+questionobj.getString("qbm_image_file"));
+                    bitmap = BitmapFactory.decodeFile(imgPath+sid+"/"+pid+"/"+cid+"/"+questionobj.getString("qbm_qimage_file"));
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -393,7 +394,8 @@ public class TestActivity extends AppCompatActivity implements
                     if (groupId.equals(questionobj.getString("gbg_id"))) {
                         String pid=questionobj.getString("qbm_Paper_ID");
                         String cid=questionobj.getString("qbm_ChapterID");
-                        op = BitmapFactory.decodeFile(imgPath+pid+"/"+cid+"/"+questionobj.getString("gbg_media_file"));
+                        String sid=questionobj.getString("qbm_SubjectID");
+                        op = BitmapFactory.decodeFile(imgPath+sid+"/"+pid+"/"+cid+"/"+questionobj.getString("gbg_media_file"));
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -520,15 +522,24 @@ public class TestActivity extends AppCompatActivity implements
             @Override
             public void onClick(View v) {
                 try {
-                    setQBackground(pos, index);
-                    writeOption(opAdapter.getSelectedItem());
-
                     questionobj = array.getJSONObject(index);
                     if (index > 0) {
-                        index--;
-                        buffer = attempt.getJSONArray("Sections").getJSONObject(pos).getJSONArray("Questions");
-                        Id = buffer.getJSONObject(index).getString("qbm_ID");
-                        Seq = buffer.getJSONObject(index).getString("qbm_SequenceId");
+                        if (opAdapter.getSelectedItem() > -1) {
+                            if (listOfLists.get(pos).get(index).getQ_check().equalsIgnoreCase(confirmed)) {
+                                Log.e("if condition", listOfLists.get(pos).get(index).getQ_check());
+                                setQBackground(pos, index);
+                                writeOption(opAdapter.getSelectedItem());
+                                index--;
+                            } else {
+                                btn_mark.callOnClick();
+                                index--;
+                            }
+                        } else {
+                            Log.e("else condition", "reached");
+                            setQBackground(pos, index);
+                            writeOption(opAdapter.getSelectedItem());
+                            index--;
+                        }
                         flag = true;
                         setQuestion(pos, index, edit);
                     } else if (index == 0 && pos > 0) {
@@ -550,9 +561,23 @@ public class TestActivity extends AppCompatActivity implements
         question_scroll.addOnItemTouchListener(new RecyclerTouchListener(getApplicationContext(), question_scroll, new RecyclerTouchListener.OnItemClickListener() {
             @Override
             public void onClick(View view, int in) {
-                setQBackground(pos, index);
-                writeOption(opAdapter.getSelectedItem());
-                gotoQuestion(in);
+                if (opAdapter.getSelectedItem() > -1) {
+                    if (listOfLists.get(pos).get(index).getQ_check().equalsIgnoreCase(confirmed)) {
+                        Log.e("scroll_if", listOfLists.get(pos).get(index).getQ_check());
+                        setQBackground(pos, index);
+                        writeOption(opAdapter.getSelectedItem());
+                        gotoQuestion(in);
+                    } else {
+                        btn_mark.callOnClick();
+                        gotoQuestion(in);
+                    }
+                } else {
+                    Log.e("scroll_else","reached");
+                    setQBackground(pos, index);
+                    writeOption(opAdapter.getSelectedItem());
+                    gotoQuestion(in);
+                }
+                Log.e("Scroll_Index",""+in);
             }
             @Override
             public void onLongClick(View view, int position) {
@@ -606,15 +631,7 @@ public class TestActivity extends AppCompatActivity implements
 
             buffer = attempt.getJSONArray("Sections").getJSONObject(pos).getJSONArray("Questions");
             Id = buffer.getJSONObject(index).getString("qbm_ID");
-            if (index == buffer.length() - 1) {
-                pos++;
-                index = 0;
-                Log.e("next", "sections");
-//                qAdapter.updateList(questionOpList);
-            } else {
-                Log.e("same", "sections");
-                index = in;
-            }
+            index = in;
             setQuestion(pos, index, edit);
             checkRadio();
         } catch (JSONException e) {
@@ -639,7 +656,6 @@ public class TestActivity extends AppCompatActivity implements
     public void setQBackground(int pos, int index) {
 
         if (opAdapter.getSelectedItem() == -1) {
-            Log.e("status",listOfLists.get(pos).get(index).getQ_status());
                 listOfLists.get(pos).get(index).setQ_status(skipped);
                 listOfLists.get(pos).get(index).setQ_check(not_confirmed);
 
@@ -954,6 +970,7 @@ public class TestActivity extends AppCompatActivity implements
         array = attempt.getJSONArray("Sections").getJSONObject(pos).getJSONArray("Questions");
         myLayoutManager.scrollToPositionWithOffset(index, 400);
         questionobj = array.getJSONObject(index);
+        Log.e("CurrentIndex",""+index);
         q_no.setText(questionobj.getString("qbm_ID"));
         if (questionobj.getString("qbm_group_flag").equals("YES")) {
             groupId = questionobj.getString("gbg_id");
@@ -990,7 +1007,8 @@ public class TestActivity extends AppCompatActivity implements
         }
         String pid=questionobj.getString("qbm_Paper_ID");
         String cid=questionobj.getString("qbm_ChapterID");
-        Bitmap b = BitmapFactory.decodeFile(imgPath+pid+"/"+cid+"/"+questionobj.getString("qbm_image_file"));
+        String sid=questionobj.getString("qbm_SubjectID");
+        Bitmap b = BitmapFactory.decodeFile(imgPath+sid+"/"+pid+"/"+cid+"/"+questionobj.getString("qbm_image_file"));
         Log.e("qimage", photoPath + questionobj.getString("qbm_image_file"));
         question_img.setImageBitmap(b);
 /*        Animation fadeimage = AnimationUtils.loadAnimation(TestActivity.this, R.anim.fade_in);
@@ -1007,7 +1025,7 @@ public class TestActivity extends AppCompatActivity implements
         for (int i = 0; i < optionsArray.length(); i++) {
             option = new SingleOptions();
             option.setQbo_id(optionsArray.getJSONObject(i).getString("qbo_id"));
-            option.setQbo_media_file(imgPath+pid+"/"+cid+"/"+optionsArray.getJSONObject(i).getString("qbo_media_file"));
+            option.setQbo_media_file(imgPath+sid+"/"+pid+"/"+cid+"/"+optionsArray.getJSONObject(i).getString("qbo_media_file"));
             option.setQbo_seq_no(optionsArray.getJSONObject(i).getString("qbo_seq_no"));
             option.setQbo_answer_flag(optionsArray.getJSONObject(i).getString(("qbo_answer_flag")));
             optionsList.add(option);

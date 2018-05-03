@@ -5,10 +5,8 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 
 import com.digywood.tms.Fragments.AssessmentFragment;
-import com.digywood.tms.Fragments.FlashAttemptFragment;
 import com.digywood.tms.Fragments.FlashFragment;
-import com.digywood.tms.Fragments.PractiseFragment;
-import com.digywood.tms.Fragments.TestAttemptFragment;
+import com.digywood.tms.Fragments.PracticeFragment;
 
 /**
  * Created by Shashank on 26-04-2018.
@@ -27,7 +25,7 @@ public class DashPagerAdapter extends FragmentStatePagerAdapter {
 
         switch (position) {
             case 0:
-                PractiseFragment tab1 = new PractiseFragment();
+                PracticeFragment tab1 = new PracticeFragment();
                 return tab1;
             case 1:
                 FlashFragment tab2 = new FlashFragment();

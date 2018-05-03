@@ -145,17 +145,17 @@ public class PractiseTestAdapter extends RecyclerView.Adapter<PractiseTestAdapte
             public void onClick(View v) {
                 dataObj.Destroy("attempt_data");
                 int count = dataObj.getAttempCount();
-                Cursor c = dataObj.getAttempt(dataObj.getLastAttempt());
+                Cursor c = dataObj.getAttempt(dataObj.getLastTestAttempt(singletest.getTestid()));
                 Log.e("attempt_created:", ""+count);
 //                Log.e("value",""+c.getInt(c.getColumnIndex("Attempt_Status")));
                 //if cursor has values then the test is being resumed and data is retrieved from database
-/*                if (c.getCount() > 0) {
+                if (c.getCount() > 0) {
                     c.moveToLast();
                     Log.e("value", "" + c.getInt(c.getColumnIndex("Attempt_Status")));
                     if (c.getInt(c.getColumnIndex("Attempt_Status")) != 2) {
-                        dataObj.DeleteAttempt(count);
+                        dataObj.DeleteAttempt(dataObj.getLastTestAttempt(singletest.getTestid()));
                     }
-                }*/
+                }
                 try {
                     fullTest = new String(SaveJSONdataToFile.bytesFromFile(getExternalPath(mycontext, singletest, "BASE") + testid + ".json"), "UTF-8");
                     JSONParser obj = new JSONParser(fullTest, getExternalPath(mycontext, singletest, "ATTEMPT"), "PRACTICE", mycontext);

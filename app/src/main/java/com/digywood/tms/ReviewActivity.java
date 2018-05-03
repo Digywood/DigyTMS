@@ -320,8 +320,9 @@ public class ReviewActivity extends AppCompatActivity implements
                     questionobj = array.getJSONObject(index);
                     String pid=questionobj.getString("qbm_Paper_ID");
                     String cid=questionobj.getString("qbm_ChapterID");
-                    b = BitmapFactory.decodeFile(imgPath+pid+"/"+cid+"/"+questionobj.getString("qbm_image_file"));
-                    bitmap = BitmapFactory.decodeFile(imgPath+pid+"/"+cid+"/"+questionobj.getString("qbm_qimage_file"));
+                    String sid=questionobj.getString("qbm_SubjectID");
+                    b = BitmapFactory.decodeFile(imgPath+sid+"/"+pid+"/"+cid+"/"+questionobj.getString("qbm_image_file"));
+                    bitmap = BitmapFactory.decodeFile(imgPath+sid+"/"+pid+"/"+cid+"/"+questionobj.getString("qbm_qimage_file"));
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -337,7 +338,8 @@ public class ReviewActivity extends AppCompatActivity implements
                     if(groupId.equals(questionobj.getString("gbg_id"))) {
                         String pid=questionobj.getString("qbm_Paper_ID");
                         String cid=questionobj.getString("qbm_ChapterID");
-                        g = BitmapFactory.decodeFile(imgPath+pid+"/"+cid+"/"+questionobj.getString("gbg_media_file"));                    }
+                        String sid=questionobj.getString("qbm_SubjectID");
+                        g = BitmapFactory.decodeFile(imgPath+sid+"/"+pid+"/"+cid+"/"+questionobj.getString("gbg_media_file"));                    }
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -723,8 +725,8 @@ public class ReviewActivity extends AppCompatActivity implements
             review = jarray;
             final String pid=questionobj.getString("qbm_Paper_ID");
             final String cid=questionobj.getString("qbm_ChapterID");
-
-            Bitmap rev = BitmapFactory.decodeFile(imgPath+pid+"/"+cid+"/"+review.getJSONObject(last).getString("qba_media_file"));
+            final String sid=questionobj.getString("qbm_SubjectID");
+            Bitmap rev = BitmapFactory.decodeFile(imgPath+sid+"/"+pid+"/"+cid+"/"+review.getJSONObject(last).getString("qba_media_file"));
             limg.setImageBitmap(rev);
             Log.e("Review_Image","reached");
 
@@ -965,7 +967,8 @@ public class ReviewActivity extends AppCompatActivity implements
         }
         String pid=questionobj.getString("qbm_Paper_ID");
         String cid=questionobj.getString("qbm_ChapterID");
-        Bitmap b = BitmapFactory.decodeFile(imgPath+pid+"/"+cid+"/"+questionobj.getString("qbm_image_file"));
+        String sid=questionobj.getString("qbm_SubjectID");
+        Bitmap b = BitmapFactory.decodeFile(imgPath+sid+"/"+pid+"/"+cid+"/"+questionobj.getString("qbm_image_file"));
         question_img.setImageBitmap(b);
         question_img.setOnTouchListener(new View.OnTouchListener() {
             @Override
@@ -979,7 +982,7 @@ public class ReviewActivity extends AppCompatActivity implements
         for (int i = 0; i < optionsArray.length(); i++) {
             option = new SingleOptions();
             option.setQbo_id(optionsArray.getJSONObject(i).getString("qbo_id"));
-            option.setQbo_media_file(imgPath+pid+"/"+cid+"/"+optionsArray.getJSONObject(i).getString("qbo_media_file"));
+            option.setQbo_media_file(imgPath+sid+"/"+pid+"/"+cid+"/"+optionsArray.getJSONObject(i).getString("qbo_media_file"));
             option.setQbo_seq_no(optionsArray.getJSONObject(i).getString("qbo_seq_no"));
             option.setQbo_answer_flag(optionsArray.getJSONObject(i).getString(("qbo_answer_flag")));
             optionsList.add(option);
