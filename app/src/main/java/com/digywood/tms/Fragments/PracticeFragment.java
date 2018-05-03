@@ -2,6 +2,7 @@ package com.digywood.tms.Fragments;
 
 
 import android.content.Context;
+import android.database.Cursor;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
@@ -66,10 +67,10 @@ public class PracticeFragment extends Fragment implements OnChartValueSelectedLi
 
     public BarChart mChart1;
 
-    ArrayList<String> courseIds=new ArrayList<>();
-    ArrayAdapter<String> courseAdp;
+    ArrayList<String> enrollIds=new ArrayList<>();
+    ArrayAdapter<String> enrollAdp;
 
-    Spinner sp_coursename;
+    Spinner sp_enrollids;
 
     protected String[] mMonths = new String[] {
             "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Okt", "Nov", "Dec"
@@ -135,7 +136,7 @@ public class PracticeFragment extends Fragment implements OnChartValueSelectedLi
         mChart1 =view.findViewById(R.id.bchart1);
 
         btn_pdetails = view.findViewById(R.id.btn_pdetails);
-        sp_coursename=view.findViewById(R.id.sp_pcourseid);
+        sp_enrollids=view.findViewById(R.id.sp_penrollids);
 
         myhelper=new DBHelper(getActivity());
 
@@ -146,38 +147,40 @@ public class PracticeFragment extends Fragment implements OnChartValueSelectedLi
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-//        Cursor mycursor=myhelper.getAllCourseIds();
-//        Log.e("CursorCount---",""+mycursor.getCount());
-//        if(mycursor.getCount()>0){
-//            while(mycursor.moveToNext()){
-//                String courseId=mycursor.getString(mycursor.getColumnIndex("sptu_course_id"));
-//                courseIds.add(courseId);
-//            }
-//            courseAdp= new ArrayAdapter(getActivity(),android.R.layout.simple_spinner_item,courseIds);
-//            courseAdp.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-//            sp_coursename.setAdapter(courseAdp);
-//        }else{
-//            mycursor.close();
-//        }
-//
-//        totptestcount=myhelper.getPTestsCount(sp_coursename.getSelectedItem().toString());
-//        tv_ptottests.setText(""+totptestcount);
-//
-//        Cursor mycur1=myhelper.getPractiseSummary();
-//        if(mycur1.getCount()>0){
-//            while (mycur1.moveToNext()){
-//                attemptpcount=mycur1.getInt(mycur1.getColumnIndex("attemptpcount"));
-//                min=mycur1.getDouble(mycur1.getColumnIndex("minscore"));
-//                max=mycur1.getDouble(mycur1.getColumnIndex("maxscore"));
-//                avg=mycur1.getDouble(mycur1.getColumnIndex("avgscore"));
-//                tv_pattempted.setText(""+attemptpcount);
-//                tv_pmax.setText(""+round(max,1));
-//                tv_pmin.setText(""+round(min,1));
-//                tv_pavg.setText(""+round(avg,1));
-//            }
-//        }else{
-//            mycur1.close();
-//        }
+        Cursor mycursor=myhelper.getAllEnrolls();
+        Log.e("CursorCount---",""+mycursor.getCount());
+        if(mycursor.getCount()>0){
+            while(mycursor.moveToNext()){
+                String enrollidId=mycursor.getString(mycursor.getColumnIndex("sptu_entroll_id"));
+                enrollIds.add(enrollidId);
+            }
+            enrollAdp= new ArrayAdapter(getActivity(),android.R.layout.simple_spinner_item,enrollIds);
+            enrollAdp.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+            sp_enrollids.setAdapter(enrollAdp);
+        }else{
+            mycursor.close();
+        }
+
+        if(enrollIds.size()>0){
+            totptestcount=myhelper.getPTestsCount(sp_enrollids.getSelectedItem().toString());
+            tv_ptottests.setText(""+totptestcount);
+
+            Cursor mycur1=myhelper.getPractiseSummary();
+            if(mycur1.getCount()>0){
+                while (mycur1.moveToNext()){
+                    attemptpcount=mycur1.getInt(mycur1.getColumnIndex("attemptpcount"));
+                    min=mycur1.getDouble(mycur1.getColumnIndex("minscore"));
+                    max=mycur1.getDouble(mycur1.getColumnIndex("maxscore"));
+                    avg=mycur1.getDouble(mycur1.getColumnIndex("avgscore"));
+                    tv_pattempted.setText(""+attemptpcount);
+                    tv_pmax.setText(""+round(max,1));
+                    tv_pmin.setText(""+round(min,1));
+                    tv_pavg.setText(""+round(avg,1));
+                }
+            }else{
+                mycur1.close();
+            }
+        }
 
         attemptpercent=(Float.parseFloat(String.valueOf(attemptpcount))/totptestcount)*100;
 
@@ -417,6 +420,15 @@ public class PracticeFragment extends Fragment implements OnChartValueSelectedLi
 //        s.setSpan(new StyleSpan(Typeface.ITALIC), s.length() - 14, s.length(), 0);
 //        s.setSpan(new ForegroundColorSpan(ColorTemplate.getHoloBlue()), s.length() - 14, s.length(), 0);
         return s;
+    }
+
+    public static double round(double value, int places) {
+        if (places < 0) throw new IllegalArgumentException();
+
+        long factor = (long) Math.pow(10, places);
+        value = value * factor;
+        long tmp = Math.round(value);
+        return (double) tmp / factor;
     }
 
     @Override

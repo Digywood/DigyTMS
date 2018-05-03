@@ -1,6 +1,7 @@
 package com.digywood.tms.Fragments;
 
 import android.content.Context;
+import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Color;
 import android.net.Uri;
@@ -13,12 +14,15 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.digywood.tms.DBHelper.DBHelper;
+import com.digywood.tms.PaperDashActivity;
+import com.digywood.tms.Pojo.SingleEnrollment;
 import com.digywood.tms.R;
 import com.github.mikephil.charting.charts.PieChart;
 import com.github.mikephil.charting.components.Legend;
@@ -50,12 +54,13 @@ public class FlashFragment extends Fragment implements OnChartValueSelectedListe
     private PieChart mChart;
     float attemptpercent=0.0f;
     Double min=0.0,max=0.0,avg=0.0;
+    String enrollid="",courseid="";
 
-    ArrayList<String> courseIds=new ArrayList<>();
-    ArrayAdapter<String> courseAdp;
+    ArrayList<SingleEnrollment> enrollPojos=new ArrayList<>();
+    ArrayList<String> enrollIds=new ArrayList<>();
+    ArrayAdapter<String> enrollAdp;
 
-    Spinner sp_coursename;
-
+    Spinner sp_enrollids;
     TextView tv_ftottests,tv_fattempted,tv_ftestsasplan,tv_fpercent,tv_fmax,tv_fmin,tv_favg,tv_fRAGattempt,tv_fRAGAVGscore;
 
     protected String[] mParties = new String[] {
@@ -113,7 +118,7 @@ public class FlashFragment extends Fragment implements OnChartValueSelectedListe
         tv_fRAGAVGscore=view.findViewById(R.id.tv_fRAGAVGscore);
         btn_fdetails = view.findViewById(R.id.btn_fdetails);
 
-        sp_coursename=view.findViewById(R.id.sp_fcourseid);
+        sp_enrollids=view.findViewById(R.id.sp_fenrollids);
 
         myhelper=new DBHelper(getActivity());
 
@@ -126,39 +131,66 @@ public class FlashFragment extends Fragment implements OnChartValueSelectedListe
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-//        Cursor mycursor=myhelper.getAllCourseIds();
-//        Log.e("CursorCount---",""+mycursor.getCount());
-//        if(mycursor.getCount()>0){
-//            while(mycursor.moveToNext()){
-//                String courseId=mycursor.getString(mycursor.getColumnIndex("sptu_course_id"));
-//                courseIds.add(courseId);
-//            }
-//            courseAdp= new ArrayAdapter(getActivity(),android.R.layout.simple_spinner_item,courseIds);
-//            courseAdp.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-//            sp_coursename.setAdapter(courseAdp);
-//        }else{
-//            mycursor.close();
-//        }
-//
-//        totptestcount=myhelper.getPTestsCount(sp_coursename.getSelectedItem().toString());
-//
-//        tv_ftottests.setText(""+totptestcount);
-//
-//        Cursor mycur=myhelper.getFlashSummary(sp_coursename.getSelectedItem().toString());
-//        if(mycur.getCount()>0){
-//            while (mycur.moveToNext()){
-//                attemptpcount=mycur.getInt(mycur.getColumnIndex("attemptfcount"));
-//                min=mycur.getDouble(mycur.getColumnIndex("minscore"));
-//                max=mycur.getDouble(mycur.getColumnIndex("maxscore"));
-//                avg=mycur.getDouble(mycur.getColumnIndex("avgscore"));
-//                tv_fattempted.setText(""+attemptpcount);
-//                tv_fmax.setText(""+round(max,1));
-//                tv_fmin.setText(""+round(min,1));
-//                tv_favg.setText(""+round(avg,1));
-//            }
-//        }else{
-//            mycur.close();
-//        }
+        Cursor mycursor=myhelper.getAllEnrolls();
+        Log.e("CursorCount---",""+mycursor.getCount());
+        if(mycursor.getCount()>0){
+            while(mycursor.moveToNext()){
+                String enrollidId=mycursor.getString(mycursor.getColumnIndex("sptu_entroll_id"));
+                String courseId=mycursor.getString(mycursor.getColumnIndex("sptu_course_id"));
+                enrollIds.add(enrollidId);
+                enrollPojos.add(new SingleEnrollment(enrollidId,courseId));
+            }
+            enrollAdp= new ArrayAdapter(getActivity(),android.R.layout.simple_spinner_item,enrollIds);
+            enrollAdp.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+            sp_enrollids.setAdapter(enrollAdp);
+        }else{
+            mycursor.close();
+        }
+
+        if(enrollIds.size()>0){
+            totptestcount=myhelper.getPTestsCount(sp_enrollids.getSelectedItem().toString());
+            tv_ftottests.setText(""+totptestcount);
+            Cursor mycur=myhelper.getFlashSummary(sp_enrollids.getSelectedItem().toString());
+            if(mycur.getCount()>0){
+                while (mycur.moveToNext()){
+                    attemptpcount=mycur.getInt(mycur.getColumnIndex("attemptfcount"));
+                    min=mycur.getDouble(mycur.getColumnIndex("minscore"));
+                    max=mycur.getDouble(mycur.getColumnIndex("maxscore"));
+                    avg=mycur.getDouble(mycur.getColumnIndex("avgscore"));
+                    tv_fattempted.setText(""+attemptpcount);
+                    tv_fmax.setText(""+round(max,1));
+                    tv_fmin.setText(""+round(min,1));
+                    tv_favg.setText(""+round(avg,1));
+                }
+            }else{
+                mycur.close();
+            }
+        }
+
+        sp_enrollids.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+
+                SingleEnrollment singleEnrollment=enrollPojos.get(position);
+                enrollid=singleEnrollment.getEnrollid();
+                courseid=singleEnrollment.getEnrollcourseid();
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+
+        btn_fdetails.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                Intent i=new Intent(getActivity(), PaperDashActivity.class);
+                i.putExtra("courseid",courseid);
+                startActivity(i);
+            }
+        });
 
         attemptpercent=(Float.parseFloat(String.valueOf(attemptpcount))/totptestcount)*100;
 

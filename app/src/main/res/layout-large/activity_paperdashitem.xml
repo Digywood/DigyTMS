@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="8dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/fpdash_paperid"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:textColor="#000000"
+            android:textSize="14dp"/>
+
+        <TextView
+            android:id="@+id/fpdash_papername"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:textColor="#000000"
+            android:textSize="14dp"/>
+
+        <TextView
+            android:id="@+id/fpdash_tottestcount"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:textColor="#000000"
+            android:textSize="14dp"/>
+
+        <TextView
+            android:id="@+id/fpdash_attemptcount"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:textColor="#000000"
+            android:textSize="14dp"/>
+
+        <TextView
+            android:id="@+id/fpdash_max"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:textColor="#000000"
+            android:textSize="14dp"/>
+
+        <TextView
+            android:id="@+id/fpdash_min"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:textColor="#000000"
+            android:textSize="14dp"/>
+
+        <TextView
+            android:id="@+id/fpdash_avg"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:textColor="#000000"
+            android:textSize="14dp"/>
+
+    </LinearLayout>
+
+</LinearLayout>
