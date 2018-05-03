@@ -44,7 +44,7 @@ public class ScoreActivity extends AppCompatActivity {
     Bundle bundle;
     Double minscore = 0.0,maxscore = 0.0,avgscore = 0.0;
     int CorrectCount = 0,WrongCount = 0,TotalCount = 0,revealX,revealY;
-    float Percentage,TotalPositive = 0,TotalScore = 0,MaxMarks ,TotalNegative = 0;
+    Double Percentage,TotalPositive = 0.0,TotalScore = 0.0,MaxMarks= 0.0 ,TotalNegative = 0.0;
     ArrayList<Integer> OptionsList = new ArrayList<>();;
 
     @Override
@@ -109,15 +109,15 @@ public class ScoreActivity extends AppCompatActivity {
         WrongCount = dataObj.getWrongOptionsCount();
         try {
             if(dataObj.getQuestionAttempted() == 0){
-                TotalPositive = 0;
-                TotalNegative = 0;
+                TotalPositive = 0.0;
+                TotalNegative = 0.0;
             }
             else
             {
-                TotalPositive = Integer.valueOf(attempt.getString("ptu_positive_marks")) * CorrectCount;
-                TotalNegative = Integer.valueOf(attempt.getString("ptu_negative_marks"))* WrongCount;
-                MaxMarks = Float.valueOf(attempt.getString("ptu_positive_marks")) * dataObj.getQuestionCount();
-                Percentage = ( (float) TotalPositive /(float) MaxMarks )*100;
+                TotalPositive = Double.valueOf(attempt.getString("ptu_positive_marks")) * CorrectCount;
+                TotalNegative = Double.valueOf(attempt.getString("ptu_negative_marks"))* WrongCount;
+                MaxMarks = Double.valueOf(attempt.getString("ptu_positive_marks")) * dataObj.getQuestionCount();
+                Percentage = (  TotalPositive / MaxMarks )*100;
             }
 
             Cursor mycursor=dataObj.getTestRawData(testId);

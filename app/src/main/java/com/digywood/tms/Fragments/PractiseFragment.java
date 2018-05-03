@@ -73,7 +73,7 @@ public class PractiseFragment extends Fragment implements OnChartValueSelectedLi
     DBHelper myhelper;
     int totptestcount=0,attemptpcount=0;
     float attemptpercent=0.0f;
-    Double min,max,avg;
+    Double min=0.0,max=0.0,avg=0.0;
 
     Button btn_pdetails;
 
@@ -161,7 +161,7 @@ public class PractiseFragment extends Fragment implements OnChartValueSelectedLi
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        Cursor mycursor=myhelper.getAllCourseIds();
+       /* Cursor mycursor=myhelper.getAllCourseIds();
         Log.e("CursorCount---",""+mycursor.getCount());
         if(mycursor.getCount()>0){
             while(mycursor.moveToNext()){
@@ -192,7 +192,7 @@ public class PractiseFragment extends Fragment implements OnChartValueSelectedLi
             }
         }else{
             mycur1.close();
-        }
+        }*/
 
         attemptpercent=(Float.parseFloat(String.valueOf(attemptpcount))/totptestcount)*100;
 

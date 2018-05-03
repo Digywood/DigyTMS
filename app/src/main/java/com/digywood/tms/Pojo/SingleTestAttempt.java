@@ -6,10 +6,11 @@ package com.digywood.tms.Pojo;
 
 public class SingleTestAttempt {
 
-    private int attemptId,attemptcount,skipcount,markcount,notattemptcount;
+    private int attemptcount,skipcount,markcount,notattemptcount;
+    String attemptId;
     private Double score, percent;
 
-    public SingleTestAttempt(int attemptId,int attemptcount,int skipcount,int markcount,int notattemptcount,double score,double percent){
+    public SingleTestAttempt(String attemptId,int attemptcount,int skipcount,int markcount,int notattemptcount,double score,double percent){
         this.attemptId = attemptId;
         this.attemptcount = attemptcount;
         this.skipcount = skipcount;
@@ -19,11 +20,11 @@ public class SingleTestAttempt {
         this.percent = percent;
     }
 
-    public int getAttemptId() {
+    public String getAttemptId() {
         return attemptId;
     }
 
-    public void setAttemptId(int attemptId) {
+    public void setAttemptId(String attemptId) {
         this.attemptId = attemptId;
     }
 

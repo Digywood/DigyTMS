@@ -116,7 +116,7 @@
             android:padding="3dp">
 
             <TextView
-                android:id="@+id/tv_fdate"
+                android:id="@+id/tv_attempt_Id"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center_horizontal|center_vertical"
@@ -124,7 +124,7 @@
                 android:textStyle="bold"
                 android:textSize="16sp"
                 android:layout_weight="1"
-                android:text="Attempt No."/>
+                android:text="Attempt Id."/>
 
             <TextView
                 android:id="@+id/tv_tknowcount"

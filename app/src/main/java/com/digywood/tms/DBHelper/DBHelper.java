@@ -178,7 +178,7 @@ public class DBHelper extends SQLiteOpenHelper {
         db.execSQL(tbl_satu_student);
 
         String AttemptList ="CREATE TABLE `attempt_list` (\n"+
-                "   `Attempt_ID` INTEGER PRIMARY KEY AUTOINCREMENT,\n"+
+                "   `Attempt_ID` TEXT,\n"+
                 "   `Attempt_Test_ID` INTEGER,\n"+
                 "   `Attempt_Status` int(5) NOT NULL,\n"+
                 "   `Attempt_RemainingTime` int(5) DEFAULT NULL,\n"+
@@ -194,7 +194,7 @@ public class DBHelper extends SQLiteOpenHelper {
 
         String AttemptData=" CREATE TABLE `attempt_data` (\n"+
                 "   `Test_ID` varchar(15),\n" +
-                "   `Attempt_ID` INTEGER,\n"+
+                "   `Attempt_ID` TEXT,\n"+
                 "   `Question_ID` varchar(15),\n" +
                 "   `Question_Seq_No` varchar(15) DEFAULT NULL,\n" +
                 "   `Question_Category` varchar(15) DEFAULT NULL,\n" +
@@ -906,7 +906,7 @@ public class DBHelper extends SQLiteOpenHelper {
         }
         return AdvtprefList;
     }
-    public long InsertQuestion(String testId,int attemptId,String qId,String qSeq,String cat,String subcat, double maxMarks,double negMarks,double marksObtained,double negApplied, int option,String status,String oSeq,String flag){
+    public long InsertQuestion(String testId,String attemptId,String qId,String qSeq,String cat,String subcat, double maxMarks,double negMarks,double marksObtained,double negApplied, int option,String status,String oSeq,String flag){
 
         long insertFlag=0;
 
@@ -932,7 +932,7 @@ public class DBHelper extends SQLiteOpenHelper {
         return insertFlag;
     }
 
-    public long UpdateQuestion(String testId,int attemptId,String qId,String qSeq,String cat,String subcat, double maxMarks,double negMarks,double marksObtained,double negApplied, int option,String status,String oSeq,String flag){
+    public long UpdateQuestion(String testId,String attemptId,String qId,String qSeq,String cat,String subcat, double maxMarks,double negMarks,double marksObtained,double negApplied, int option,String status,String oSeq,String flag){
 
         long updateFlag=0;
 
@@ -1195,11 +1195,12 @@ public class DBHelper extends SQLiteOpenHelper {
 //        db.execSQL("TRUNCATE table " +table);
     }
 
-    public long InsertAttempt( String testID,int status, int aScore, int attempted, int skipped, int bookmarked, int unattempted, int aperc,long aTime,int index,int pos){
+    public long InsertAttempt( String aId,String testID,int status, int aScore, int attempted, int skipped, int bookmarked, int unattempted, int aperc,long aTime,int index,int pos){
 
         long insertFlag=0;
 
         ContentValues cv = new ContentValues();
+        cv.put("Attempt_ID", aId);
         cv.put("Attempt_Test_ID", testID);
         cv.put("Attempt_Status", status);
         cv.put("Attempt_Confirmed", attempted);
@@ -1222,7 +1223,7 @@ public class DBHelper extends SQLiteOpenHelper {
         return c;
     }
 
-    public long UpdateAttempt(int aID,String testID,int status, double aScore, int attempted, int skipped, int bookmarked, int unattempted, double aperc,long aTime,int index,int pos){
+    public long UpdateAttempt(String aID,String testID,int status, double aScore, int attempted, int skipped, int bookmarked, int unattempted, double aperc,long aTime,int index,int pos){
 
         long updateFlag=0;
         ContentValues cv = new ContentValues();
@@ -1254,7 +1255,15 @@ public class DBHelper extends SQLiteOpenHelper {
         return count;
     }
 
-    public int DeleteAttempt(int aID){
+    public int getTestAttempCount(String testId){
+        int count=0;
+        String countQuery = "select Attempt_ID from attempt_list WHERE Attempt_Test_ID = '"+testId+"'";
+        Cursor c = db.rawQuery(countQuery, null);
+        count=c.getCount();
+        return count;
+    }
+
+    public int DeleteAttempt(String aID){
         int count=0;
         String countQuery = "DELETE FROM attempt_list WHERE Attempt_ID='"+aID+"'";
         Cursor c = db.rawQuery(countQuery, null);
@@ -1262,20 +1271,20 @@ public class DBHelper extends SQLiteOpenHelper {
         return count;
     }
 
-    public int getLastAttempt(){
-        int attempt_id = 0;
-        String query = "select max(Attempt_ID) as last from attempt_list";
+    public String getLastAttempt(){
+        String attempt_id = null;
+        String query = "select Attempt_ID from attempt_list";
         Cursor c = db.rawQuery(query,null);
         c.moveToLast();
         if (c.getCount() >0) {
-            attempt_id = c.getInt(c.getColumnIndex("last"));
+            attempt_id = c.getString(c.getColumnIndex("Attempt_ID"));
         } else {
-            attempt_id = 0;
+            attempt_id = null;
         }
         return attempt_id;
     }
 
-    public Cursor getAttempt(int aID){
+    public Cursor getAttempt(String aID){
         int status =0 ;
         String countQuery = "select * from attempt_list where Attempt_ID = '"+aID+"'";
         Cursor c =db.rawQuery(countQuery,null);

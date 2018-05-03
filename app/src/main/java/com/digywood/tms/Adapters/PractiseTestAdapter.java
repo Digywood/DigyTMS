@@ -94,7 +94,7 @@ public class PractiseTestAdapter extends RecyclerView.Adapter<PractiseTestAdapte
         } else
             holder.btn_resume.setEnabled(true);
         int count = dataObj.getAttempCount();
-        Cursor c = dataObj.getAttempt(count);
+        Cursor c = dataObj.getAttempt(dataObj.getLastAttempt());
         Log.e("Cursor Count---",""+c.getCount());
         //if cursor has values then the test is being resumed and data is retrieved from database
         if (c.getCount() > 0) {
@@ -145,7 +145,7 @@ public class PractiseTestAdapter extends RecyclerView.Adapter<PractiseTestAdapte
             public void onClick(View v) {
                 dataObj.Destroy("attempt_data");
                 int count = dataObj.getAttempCount();
-                Cursor c = dataObj.getAttempt(count);
+                Cursor c = dataObj.getAttempt(dataObj.getLastAttempt());
                 Log.e("attempt_created:", ""+count);
 //                Log.e("value",""+c.getInt(c.getColumnIndex("Attempt_Status")));
                 //if cursor has values then the test is being resumed and data is retrieved from database
