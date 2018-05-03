@@ -1284,6 +1284,19 @@ public class DBHelper extends SQLiteOpenHelper {
         return attempt_id;
     }
 
+    public String getLastTestAttempt(String testId){
+        String attempt_id = null;
+        String query = "select Attempt_ID from attempt_list WHERE Attempt_Test_ID = '"+testId+"'";
+        Cursor c = db.rawQuery(query,null);
+        c.moveToLast();
+        if (c.getCount() >0) {
+            attempt_id = c.getString(c.getColumnIndex("Attempt_ID"));
+        } else {
+            attempt_id = null;
+        }
+        return attempt_id;
+    }
+
     public Cursor getAttempt(String aID){
         int status =0 ;
         String countQuery = "select * from attempt_list where Attempt_ID = '"+aID+"'";

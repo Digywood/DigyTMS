@@ -843,13 +843,19 @@ public class ListofPractiseTests extends AppCompatActivity {
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (keyCode == KeyEvent.KEYCODE_BACK) {
-//            exitByBackKey();
-
+            exitByBackKey();
             //moveTaskToBack(false);
 
             return true;
         }
         return super.onKeyDown(keyCode, event);
+    }
+
+
+    protected void exitByBackKey() {
+        Intent intent = new Intent(ListofPractiseTests.this, LandingActivity.class);
+        startActivity(intent);
+
     }
 
     public boolean onCreateOptionsMenu(Menu menu) {

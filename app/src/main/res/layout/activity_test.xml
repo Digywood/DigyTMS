@@ -254,7 +254,7 @@
             android:text="Mark"
             android:layout_marginEnd="5dp"
             android:background="@drawable/test_navigation_custom"
-            android:textColor="@drawable/test_navigation_text"
+            android:textColor="@drawable/test_text_custom"
             android:id="@+id/btn_mark"/>
 
         <Button

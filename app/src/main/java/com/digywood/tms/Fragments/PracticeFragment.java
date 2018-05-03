@@ -2,41 +2,28 @@ package com.digywood.tms.Fragments;
 
 
 import android.content.Context;
-import android.database.Cursor;
 import android.graphics.Color;
-import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v7.widget.DefaultItemAnimator;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.text.SpannableString;
-import android.text.style.ForegroundColorSpan;
-import android.text.style.RelativeSizeSpan;
-import android.text.style.StyleSpan;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.SeekBar;
 import android.widget.Spinner;
 import android.widget.TextView;
 
-import com.digywood.tms.Adapters.TestAttemptAdapter;
 import com.digywood.tms.Charts.DayAxisValueFormatter;
 import com.digywood.tms.Charts.MyAxisValueFormatter;
 import com.digywood.tms.Charts.XYMarkerView;
 import com.digywood.tms.DBHelper.DBHelper;
-import com.digywood.tms.Pojo.SingleTestAttempt;
 import com.digywood.tms.R;
-import com.github.mikephil.charting.animation.Easing;
 import com.github.mikephil.charting.charts.BarChart;
-import com.github.mikephil.charting.charts.HorizontalBarChart;
 import com.github.mikephil.charting.charts.PieChart;
 import com.github.mikephil.charting.components.Legend;
 import com.github.mikephil.charting.components.XAxis;
@@ -53,12 +40,10 @@ import com.github.mikephil.charting.formatter.PercentFormatter;
 import com.github.mikephil.charting.highlight.Highlight;
 import com.github.mikephil.charting.interfaces.datasets.IBarDataSet;
 import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
-import com.github.mikephil.charting.utils.ColorTemplate;
+
 import java.util.ArrayList;
 
-import static com.digywood.tms.AttemptDataActivity.round;
-
-public class PractiseFragment extends Fragment implements OnChartValueSelectedListener {
+public class PracticeFragment extends Fragment implements OnChartValueSelectedListener {
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -97,9 +82,9 @@ public class PractiseFragment extends Fragment implements OnChartValueSelectedLi
 
     TextView tv_ptottests,tv_pattempted,tv_ptestsasplan,tv_ppercent,tv_pmax,tv_pmin,tv_pavg,tv_pRAGattempt,tv_pRAGAVGscore;
 
-    private PractiseFragment.OnFragmentInteractionListener mListener;
+    private PracticeFragment.OnFragmentInteractionListener mListener;
 
-    public PractiseFragment() {
+    public PracticeFragment() {
         // Required empty public constructor
     }
 
@@ -112,8 +97,8 @@ public class PractiseFragment extends Fragment implements OnChartValueSelectedLi
      * @return A new instance of fragment TestAttemptFragment.
      */
     // TODO: Rename and change types and number of parameters
-    public static PractiseFragment newInstance(String param1, String param2) {
-        PractiseFragment fragment = new PractiseFragment();
+    public static PracticeFragment newInstance(String param1, String param2) {
+        PracticeFragment fragment = new PracticeFragment();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
         args.putString(ARG_PARAM2, param2);

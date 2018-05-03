@@ -131,9 +131,9 @@ public class ScoreActivity extends AppCompatActivity {
             }
             TotalScore = TotalPositive - TotalNegative;
             testId = attempt.getString("ptu_test_ID");
-            long flag = dataObj.UpdateAttempt(dataObj.getLastAttempt(), attempt.getString("ptu_test_ID"), 2, Double.valueOf(MaxMarks), dataObj.getQuestionAttempted(), dataObj.getQuestionSkipped(), dataObj.getQustionBookmarked(), dataObj.getQustionNotAttempted(), 0, 0, 0, 0);
+            long flag = dataObj.UpdateAttempt(dataObj.getLastAttempt(), attempt.getString("ptu_test_ID"), 2,MaxMarks, dataObj.getQuestionAttempted(), dataObj.getQuestionSkipped(), dataObj.getQustionBookmarked(), dataObj.getQustionNotAttempted(), 0, 0, 0, 0);
             if(flag > 0){
-                long qflag = dataObj.updateTest(testId,subjectid,courseid,dataObj.getQuestionCount(),Double.valueOf(MaxMarks),minscore,maxscore,avgscore,Double.valueOf(Percentage));
+                long qflag = dataObj.updateTest(testId,subjectid,courseid,dataObj.getQuestionCount(),MaxMarks,minscore,maxscore,avgscore,Percentage);
                 if(qflag > 0){
                     //only if the data is inserted into the table, it should be displaued on screen
                     Cursor cursor = dataObj.getSubcategories();
