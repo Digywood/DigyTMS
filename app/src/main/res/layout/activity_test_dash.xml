@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".PaperDashActivity">
+    tools:context=".TestDashActivity">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -13,7 +13,7 @@
         android:orientation="vertical">
 
         <android.support.v7.widget.RecyclerView
-            android:id="@+id/rv_listoffpapertests"
+            android:id="@+id/rv_testlist"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:scrollbars="vertical"
@@ -21,7 +21,7 @@
         </android.support.v7.widget.RecyclerView>
 
         <TextView
-            android:id="@+id/tv_pfemptydata"
+            android:id="@+id/tv_emptytestdata"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textColor="@android:color/holo_red_light"

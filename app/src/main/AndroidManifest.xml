@@ -74,12 +74,20 @@
         <activity
             android:name=".DbActivity"
             android:label="@string/title_activity_dashboard"
+            android:screenOrientation="landscape"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".DashBoardNavActivity"
             android:label="@string/title_activity_dash_board"
+            android:screenOrientation="landscape"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".PaperDashActivity"></activity>
+        <activity
+            android:name=".PaperDashActivity"
+            android:label="@string/paperdashlabel"
+            android:screenOrientation="landscape" />
+        <activity android:name=".TestDashActivity"
+            android:label="@string/testdashlabel"
+            android:screenOrientation="landscape"></activity>
     </application>
 
 </manifest>

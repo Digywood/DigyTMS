@@ -135,8 +135,8 @@ public class FlashFragment extends Fragment implements OnChartValueSelectedListe
         Log.e("CursorCount---",""+mycursor.getCount());
         if(mycursor.getCount()>0){
             while(mycursor.moveToNext()){
-                String enrollidId=mycursor.getString(mycursor.getColumnIndex("sptu_entroll_id"));
-                String courseId=mycursor.getString(mycursor.getColumnIndex("sptu_course_id"));
+                String enrollidId=mycursor.getString(mycursor.getColumnIndex("Enroll_ID"));
+                String courseId=mycursor.getString(mycursor.getColumnIndex("Enroll_course_ID"));
                 enrollIds.add(enrollidId);
                 enrollPojos.add(new SingleEnrollment(enrollidId,courseId));
             }
@@ -188,6 +188,7 @@ public class FlashFragment extends Fragment implements OnChartValueSelectedListe
 
                 Intent i=new Intent(getActivity(), PaperDashActivity.class);
                 i.putExtra("courseid",courseid);
+                i.putExtra("testtype","FLASH");
                 startActivity(i);
             }
         });

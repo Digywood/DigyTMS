@@ -1,6 +1,8 @@
 <resources>
     <string name="app_name">TMS</string>
     <string name="reglabel">Register Here</string>
+    <string name="paperdashlabel">PaperWise Performance</string>
+    <string name="testdashlabel">TestWise Performance</string>
 
     <string-array name="qualifications">
         <item>Select</item>
