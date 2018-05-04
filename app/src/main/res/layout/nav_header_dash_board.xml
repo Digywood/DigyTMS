@@ -24,6 +24,7 @@
         android:id="@+id/tv_hsname"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:textColor="@color/white"
         android:paddingTop="@dimen/nav_header_vertical_spacing"
         android:hint="name"
         android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
@@ -32,6 +33,7 @@
         android:id="@+id/tv_hsemail"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:textColor="@color/white"
         android:hint="email" />
 
 </LinearLayout>

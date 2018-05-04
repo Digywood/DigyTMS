@@ -2,6 +2,7 @@ package com.digywood.tms.Fragments;
 
 
 import android.content.Context;
+import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Color;
 import android.net.Uri;
@@ -14,6 +15,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.Spinner;
@@ -23,6 +25,8 @@ import com.digywood.tms.Charts.DayAxisValueFormatter;
 import com.digywood.tms.Charts.MyAxisValueFormatter;
 import com.digywood.tms.Charts.XYMarkerView;
 import com.digywood.tms.DBHelper.DBHelper;
+import com.digywood.tms.PaperDashActivity;
+import com.digywood.tms.Pojo.SingleEnrollment;
 import com.digywood.tms.R;
 import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.charts.PieChart;
@@ -57,6 +61,7 @@ public class PracticeFragment extends Fragment implements OnChartValueSelectedLi
     private String mParam2;
 
     DBHelper myhelper;
+    String enrollid="",courseid="";
     int totptestcount=0,attemptpcount=0;
     float attemptpercent=0.0f;
     Double min=0.0,max=0.0,avg=0.0;
@@ -66,6 +71,7 @@ public class PracticeFragment extends Fragment implements OnChartValueSelectedLi
     public PieChart mChart;
 
     public BarChart mChart1;
+    ArrayList<SingleEnrollment> enrollPojos=new ArrayList<>();
 
     ArrayList<String> enrollIds=new ArrayList<>();
     ArrayAdapter<String> enrollAdp;
@@ -151,8 +157,10 @@ public class PracticeFragment extends Fragment implements OnChartValueSelectedLi
         Log.e("CursorCount---",""+mycursor.getCount());
         if(mycursor.getCount()>0){
             while(mycursor.moveToNext()){
-                String enrollidId=mycursor.getString(mycursor.getColumnIndex("sptu_entroll_id"));
+                String enrollidId=mycursor.getString(mycursor.getColumnIndex("Enroll_ID"));
+                String courseId=mycursor.getString(mycursor.getColumnIndex("Enroll_course_ID"));
                 enrollIds.add(enrollidId);
+                enrollPojos.add(new SingleEnrollment(enrollidId,courseId));
             }
             enrollAdp= new ArrayAdapter(getActivity(),android.R.layout.simple_spinner_item,enrollIds);
             enrollAdp.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -181,6 +189,30 @@ public class PracticeFragment extends Fragment implements OnChartValueSelectedLi
                 mycur1.close();
             }
         }
+
+        btn_pdetails.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i=new Intent(getActivity(), PaperDashActivity.class);
+                i.putExtra("courseid",courseid);
+                i.putExtra("testtype","PRACTISE");
+                startActivity(i);
+            }
+        });
+
+        sp_enrollids.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                SingleEnrollment singleEnrollment=enrollPojos.get(position);
+                enrollid=singleEnrollment.getEnrollid();
+                courseid=singleEnrollment.getEnrollcourseid();
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
 
         attemptpercent=(Float.parseFloat(String.valueOf(attemptpcount))/totptestcount)*100;
 

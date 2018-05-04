@@ -434,6 +434,12 @@ public class DBHelper extends SQLiteOpenHelper {
         return c;
     }
 
+    public Cursor getTestFlashSummary(String testId){
+        String query ="SELECT sptuflash_attempts,max_flashScore,min_flashScore,avg_flashScore,lastAttemptDttm,lastAttemptScore as avgscore FROM "+" sptu_student"+" WHERE flashcardId ='"+testId+"'";
+        Cursor c=db.rawQuery(query,null);
+        return c;
+    }
+
     public Cursor getPractiseSummary(){
         String query ="SELECT count(distinct Attempt_Test_ID) as attemptpcount,MIN(Attempt_Percentage) as minscore,MAX(Attempt_Percentage) as maxscore,AVG(Attempt_Percentage) as avgscore FROM "+"attempt_list";
         Cursor c=db.rawQuery(query,null);
@@ -705,6 +711,11 @@ public class DBHelper extends SQLiteOpenHelper {
         return c.getCount();
     }
 
+    public Cursor getTestDataByPaper(String paperid){
+        Cursor c =db.query("sptu_student", new String[] {"sptu_entroll_id,sptu_student_ID,sptu_ID"},"sptu_paper_ID='"+paperid+"'", null, null, null,null);
+        return c;
+    }
+
     public Cursor getStudentTests(){
         Cursor c =db.query("sptu_student", new String[] {"sptu_entroll_id,sptu_student_ID,sptu_ID,sptu_paper_ID,sptu_subjet_ID,sptu_course_id,sptu_dwnld_status"},null, null, null, null,null);
         return c;
@@ -732,7 +743,7 @@ public class DBHelper extends SQLiteOpenHelper {
     }
 
     public Cursor getAllEnrolls(){
-        String query ="SELECT sptu_entroll_id,sptu_batch,sptu_paper_ID,sptu_subjet_ID,sptu_course_id FROM sptu_student";
+        String query ="SELECT DISTINCT * FROM enrollments";
         Cursor c=db.rawQuery(query,null);
         return c;
     }

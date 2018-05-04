@@ -2,69 +2,99 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:layout_margin="2dp">
 
-    <LinearLayout
+    <android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:card="http://schemas.android.com/apk/res-auto"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:background="#FFFFFF"
+        android:layout_margin="1dp"
+        android:layout_gravity="center"
+        card:cardCornerRadius="5dp"
+        card:cardElevation="5dp"
+        card:contentPadding="8dp">
 
-        <TextView
-            android:id="@+id/fpdash_paperid"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:textColor="#000000"
-            android:textSize="14dp"/>
+            android:orientation="vertical">
 
-        <TextView
-            android:id="@+id/fpdash_papername"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:textColor="#000000"
-            android:textSize="14dp"/>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
 
-        <TextView
-            android:id="@+id/fpdash_tottestcount"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:textColor="#000000"
-            android:textSize="14dp"/>
+                <TextView
+                    android:id="@+id/fpdash_papername"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:textColor="#000000"
+                    android:textSize="14dp"/>
 
-        <TextView
-            android:id="@+id/fpdash_attemptcount"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:textColor="#000000"
-            android:textSize="14dp"/>
+                <TextView
+                    android:id="@+id/fpdash_tottestcount"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:textColor="#000000"
+                    android:textSize="14dp"/>
 
-        <TextView
-            android:id="@+id/fpdash_max"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:textColor="#000000"
-            android:textSize="14dp"/>
+                <TextView
+                    android:id="@+id/fpdash_attemptcount"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:textColor="#000000"
+                    android:textSize="14dp"/>
 
-        <TextView
-            android:id="@+id/fpdash_min"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:textColor="#000000"
-            android:textSize="14dp"/>
+            </LinearLayout>
 
-        <TextView
-            android:id="@+id/fpdash_avg"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:textColor="#000000"
-            android:textSize="14dp"/>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
 
-    </LinearLayout>
+                <TextView
+                    android:id="@+id/fpdash_max"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:textColor="#000000"
+                    android:textSize="14dp"/>
+
+                <TextView
+                    android:id="@+id/fpdash_min"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:textColor="#000000"
+                    android:textSize="14dp"/>
+
+                <TextView
+                    android:id="@+id/fpdash_avg"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:textColor="#000000"
+                    android:textSize="14dp"/>
+
+                <Button
+                    android:id="@+id/fpdash_det"
+                    android:layout_width="match_parent"
+                    android:layout_height="30dp"
+                    android:background="@drawable/btn_details_bg"
+                    android:layout_weight="1"
+                    android:textSize="12sp"
+                    android:textColor="@color/white"
+                    android:text="Details"/>
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </android.support.v7.widget.CardView>
 
 </LinearLayout>
