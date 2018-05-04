@@ -13,6 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.digywood.tms.AttemptDataActivity;
@@ -56,18 +57,19 @@ public class PractiseTestAdapter extends RecyclerView.Adapter<PractiseTestAdapte
     public class MyViewHolder extends RecyclerView.ViewHolder {
 
         public TextView tv_testid, tv_teststatus;
-        public Button btn_start, btn_resume, btn_fstart, btn_fattempthistory;
-        public CheckBox cb_download;
+        public Button btn_pstart, btn_review, btn_fstart;
+        ImageView iv_history;
+//        public CheckBox cb_download;
 
         public MyViewHolder(View view) {
             super(view);
             tv_testid = view.findViewById(R.id.tv_testid);
             tv_teststatus = view.findViewById(R.id.tv_teststatus);
-            btn_start = view.findViewById(R.id.btn_teststart);
-            btn_resume = view.findViewById(R.id.btn_testresume);
-            btn_fstart = view.findViewById(R.id.btn_fteststart);
-            btn_fattempthistory = view.findViewById(R.id.btn_fattempthistory);
-            cb_download = view.findViewById(R.id.cb_testselection);
+            btn_pstart = view.findViewById(R.id.btn_pstart);
+            btn_review = view.findViewById(R.id.btn_review);
+            btn_fstart = view.findViewById(R.id.btn_fstart);
+            iv_history = view.findViewById(R.id.iv_history);
+//            cb_download = view.findViewById(R.id.cb_testselection);
         }
     }
 
@@ -90,9 +92,9 @@ public class PractiseTestAdapter extends RecyclerView.Adapter<PractiseTestAdapte
         holder.tv_teststatus.setText(singletest.getStatus());
         final DBHelper dataObj = new DBHelper(mycontext);
         if (dataObj.getQuestionCount() == 0) {
-            holder.btn_resume.setEnabled(false);
+            holder.btn_review.setEnabled(false);
         } else
-            holder.btn_resume.setEnabled(true);
+            holder.btn_review.setEnabled(true);
         int count = dataObj.getAttempCount();
         Cursor c = dataObj.getAttempt(dataObj.getLastAttempt());
         Log.e("Cursor Count---",""+c.getCount());
@@ -102,8 +104,8 @@ public class PractiseTestAdapter extends RecyclerView.Adapter<PractiseTestAdapte
             if (c.getInt(c.getColumnIndex("Attempt_Status")) == 1) {
                 Log.e("TAdapter",""+c.getString(c.getColumnIndex("Attempt_Test_ID")));
                 if(c.getString(c.getColumnIndex("Attempt_Test_ID")).equalsIgnoreCase(singletest.getTestid())) {
-                    holder.btn_resume.setText("Resume");
-                    holder.btn_resume.setOnClickListener(new View.OnClickListener() {
+                    holder.btn_review.setText("Resume");
+                    holder.btn_review.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
                             try {
@@ -121,9 +123,9 @@ public class PractiseTestAdapter extends RecyclerView.Adapter<PractiseTestAdapte
                     });
                 }
             } else {
-                holder.btn_resume.setText("Review");
+                holder.btn_review.setText("Review");
                 testid = singletest.getTestid();
-                holder.btn_resume.setOnClickListener(new View.OnClickListener() {
+                holder.btn_review.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         try {
@@ -140,7 +142,7 @@ public class PractiseTestAdapter extends RecyclerView.Adapter<PractiseTestAdapte
             }
         }
 
-        holder.btn_start.setOnClickListener(new View.OnClickListener() {
+        holder.btn_pstart.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 dataObj.Destroy("attempt_data");
@@ -265,7 +267,7 @@ public class PractiseTestAdapter extends RecyclerView.Adapter<PractiseTestAdapte
             }
         });
 
-        holder.btn_fattempthistory.setOnClickListener(new View.OnClickListener() {
+        holder.iv_history.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent i = new Intent(mycontext, AttemptDataActivity.class);
@@ -274,7 +276,7 @@ public class PractiseTestAdapter extends RecyclerView.Adapter<PractiseTestAdapte
             }
         });
 
-        holder.cb_download.setOnClickListener(new View.OnClickListener() {
+ /*       holder.cb_download.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
@@ -306,6 +308,7 @@ public class PractiseTestAdapter extends RecyclerView.Adapter<PractiseTestAdapte
 
             }
         });
+        */
 
     }
 

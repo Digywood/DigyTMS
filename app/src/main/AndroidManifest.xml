@@ -27,7 +27,7 @@
         <activity
             android:name=".RegistrationActivity"
             android:label="@string/reglabel"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="landscape" />
         <activity
             android:name=".LandingActivity"
             android:parentActivityName=".MainActivity"
@@ -81,6 +81,8 @@
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".DashBoardNavActivity"
+            android:screenOrientation="landscape"
+            android:theme="@style/AppTheme.NoActionBar"/>
             android:label="@string/title_activity_dash_board"
             android:screenOrientation="landscape"
             android:theme="@style/AppTheme.NoActionBar" />

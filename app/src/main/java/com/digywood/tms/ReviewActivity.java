@@ -91,7 +91,7 @@ public class ReviewActivity extends AppCompatActivity implements
     ArrayList<SingleQuestionList> questionOpList = new ArrayList<>();
     ArrayList<ArrayList<SingleQuestionList>> listOfLists = new ArrayList<>();
     ImageView question_img, left,right;
-    Button btn_group_info, btn_qadditional, btn_review, btn_prev, btn_next, btn_clear_option, btn_mark;
+    Button btn_group_info, btn_qadditional, btn_review, btn_prev, btn_next, btn_clear_option, btn_mark,btn_confirm;
     AlertDialog alertDialog;
     Bitmap b, g, rev , bitmap;
     Boolean flag = true;
@@ -195,6 +195,7 @@ public class ReviewActivity extends AppCompatActivity implements
         btn_group_info = findViewById(R.id.btn_group_info);
         btn_qadditional = findViewById(R.id.btn_qadditional);
         btn_review = findViewById(R.id.btn_review_info);
+        btn_confirm = findViewById(R.id.btn_confirm);
         timer = findViewById(R.id.timer);
         q_no = findViewById(R.id.tv_Question_no);
         sections = findViewById(R.id.sections);
@@ -226,7 +227,7 @@ public class ReviewActivity extends AppCompatActivity implements
         path = enrollid + "/" + courseid + "/" + subjectId + "/" + paperid + "/" + testid + "/";
         photoPath = URLClass.mainpath + path;
         jsonPath = URLClass.mainpath + path + testid + ".json";
-        imgPath=URLClass.mainpath+enrollid+"/"+courseid+"/"+subjectId+"/";
+        imgPath=URLClass.mainpath+enrollid+"/"+courseid+"/";
 
         temp = new JSONObject();
         sectionArray = new JSONArray();
@@ -310,6 +311,7 @@ public class ReviewActivity extends AppCompatActivity implements
 
         btn_mark.setVisibility(View.INVISIBLE);
         btn_clear_option.setVisibility(View.INVISIBLE);
+        btn_confirm.setVisibility(View.INVISIBLE);
         btn_next.setText("Next");
         btn_prev.setText("Back");
 
@@ -640,6 +642,15 @@ public class ReviewActivity extends AppCompatActivity implements
         View layout = inflater.inflate(R.layout.menu, null);
         AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);
         dialogBuilder.setView(layout);
+
+        Button finish_button = layout.findViewById(R.id.finish_button);
+        finish_button.setText("Finish Review");
+        finish_button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                exitByBackKey();
+            }
+        });
 
         Button cancelButton = layout.findViewById(R.id.close_button);
         final AlertDialog alertDialog = dialogBuilder.create();
@@ -1066,6 +1077,10 @@ public class ReviewActivity extends AppCompatActivity implements
                     public void onClick(DialogInterface arg0, int arg1) {
 
                         Intent intent = new Intent(ReviewActivity.this, ListofPractiseTests.class);
+                        intent.putExtra("enrollid",enrollid);
+                        intent.putExtra("courseid", courseid);
+                        intent.putExtra("subjectid", subjectId);
+                        intent.putExtra("paperid",paperid);
                         startActivity(intent);
 
                     }
