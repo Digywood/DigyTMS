@@ -435,7 +435,7 @@ public class DBHelper extends SQLiteOpenHelper {
     }
 
     public Cursor getTestFlashSummary(String testId){
-        String query ="SELECT sptuflash_attempts,max_flashScore,min_flashScore,avg_flashScore,lastAttemptDttm,lastAttemptScore as avgscore FROM "+" sptu_student"+" WHERE flashcardId ='"+testId+"'";
+        String query ="SELECT sptuflash_attempts,max_flashScore,min_flashScore,avg_flashScore,lastAttemptDttm,lastAttemptScore FROM "+" sptu_student"+" WHERE sptu_ID='"+testId+"'";
         Cursor c=db.rawQuery(query,null);
         return c;
     }

@@ -378,7 +378,7 @@ public class EnrollRequestActivity extends AppCompatActivity {
         hashMap.put("OrgId",orgid);
         hashMap.put("CourseId",courseid);
         hashMap.put("BranchId",branchid);
-        Log.e("EnrollReqActivity---","ORG: "+orgid+"  CID: "+courseids+"  BID: "+branchid);
+        Log.e("EnrollReqActivity---","ORG: "+orgid+"  CID: "+courseid+"  BID: "+branchid);
         new BagroundTask(URLClass.hosturl+"getBatches.php",hashMap,EnrollRequestActivity.this,new IBagroundListener() {
             @Override
             public void bagroundData(String json) {

@@ -36,7 +36,10 @@
             android:name=".CourseActivity"
             android:parentActivityName=".LandingActivity"
             android:screenOrientation="landscape" />
-        <activity android:name=".EnrollRequestActivity" />
+        <activity android:name=".EnrollRequestActivity"
+            android:screenOrientation="landscape"
+            android:label="@string/enrolllabel"
+            android:parentActivityName=".DashBoardNavActivity"/>
         <activity
             android:name=".ListofPractiseTests"
             android:parentActivityName=".CourseActivity"
