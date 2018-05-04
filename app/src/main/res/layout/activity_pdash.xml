@@ -197,7 +197,7 @@
                 <Spinner
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:id="@+id/sp_pcourseid"/>
+                    android:id="@+id/sp_penrollids"/>
 
                 <com.github.mikephil.charting.charts.BarChart
                     android:id="@+id/bchart1"

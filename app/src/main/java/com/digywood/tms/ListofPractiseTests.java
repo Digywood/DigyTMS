@@ -368,7 +368,7 @@ public class ListofPractiseTests extends AppCompatActivity {
     public void getTestIdsFromLocal(){
         testidList.clear();
         try {
-            Cursor mycursor=myhelper.getStudentTestsByEnroll(enrollid);
+            Cursor mycursor=myhelper.getStudentTests(enrollid,courseid,paperid);
             if(mycursor.getCount()>0){
                 while (mycursor.moveToNext()) {
                     testidList.add(new SingleTest(mycursor.getString(mycursor.getColumnIndex("sptu_ID")),mycursor.getString(mycursor.getColumnIndex("sptu_subjet_ID")),mycursor.getString(mycursor.getColumnIndex("sptu_dwnld_status"))));

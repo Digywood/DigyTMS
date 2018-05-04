@@ -422,8 +422,20 @@ public class DBHelper extends SQLiteOpenHelper {
         return c;
     }
 
-    public Cursor getFlashSummary(String courseid){
-        String query ="SELECT count(distinct flashcardId) as attemptfcount,MIN(percentageObtain) as minscore,MAX(percentageObtain) as maxscore,AVG(percentageObtain) as avgscore FROM "+" flashcard_attempt"+" WHERE courseId ='"+courseid+"'";
+    public Cursor getFlashSummary(String enrollid){
+        String query ="SELECT count(distinct flashcardId) as attemptfcount,MIN(percentageObtain) as minscore,MAX(percentageObtain) as maxscore,AVG(percentageObtain) as avgscore FROM "+" flashcard_attempt"+" WHERE enrollmentId ='"+enrollid+"'";
+        Cursor c=db.rawQuery(query,null);
+        return c;
+    }
+
+    public Cursor getFlashSummaryByPaper(String paperid){
+        String query ="SELECT count(distinct flashcardId) as attemptfcount,MIN(percentageObtain) as minscore,MAX(percentageObtain) as maxscore,AVG(percentageObtain) as avgscore FROM "+" flashcard_attempt"+" WHERE paperId ='"+paperid+"'";
+        Cursor c=db.rawQuery(query,null);
+        return c;
+    }
+
+    public Cursor getTestFlashSummary(String testId){
+        String query ="SELECT sptuflash_attempts,max_flashScore,min_flashScore,avg_flashScore,lastAttemptDttm,lastAttemptScore as avgscore FROM "+" sptu_student"+" WHERE flashcardId ='"+testId+"'";
         Cursor c=db.rawQuery(query,null);
         return c;
     }
@@ -595,6 +607,11 @@ public class DBHelper extends SQLiteOpenHelper {
         return c;
     }
 
+    public Cursor getPapersByCourse(String courseid){
+        Cursor c =db.query("papers", new String[] {"Paper_ID,Paper_Name"},"Course_ID='"+courseid+"'", null, null, null,null);
+        return c;
+    }
+
     public long deleteAllPapers(){
         long deleteFlag=0;
         deleteFlag=db.delete("papers", null, null);
@@ -684,9 +701,19 @@ public class DBHelper extends SQLiteOpenHelper {
         return c;
     }
 
-    public int getPTestsCount(String courseid){
-        Cursor c =db.query("sptu_student", new String[] {"sptu_entroll_id,sptu_student_ID,sptu_ID"},"sptu_course_id='"+courseid+"'", null, null, null,null);
+    public int getPTestsCount(String enrollid){
+        Cursor c =db.query("sptu_student", new String[] {"sptu_entroll_id,sptu_student_ID,sptu_ID"},"sptu_entroll_id='"+enrollid+"'", null, null, null,null);
         return c.getCount();
+    }
+
+    public int getTestsByPaper(String paperid){
+        Cursor c =db.query("sptu_student", new String[] {"sptu_entroll_id,sptu_student_ID,sptu_ID"},"sptu_paper_ID='"+paperid+"'", null, null, null,null);
+        return c.getCount();
+    }
+
+    public Cursor getTestDataByPaper(String paperid){
+        Cursor c =db.query("sptu_student", new String[] {"sptu_entroll_id,sptu_student_ID,sptu_ID"},"sptu_paper_ID='"+paperid+"'", null, null, null,null);
+        return c;
     }
 
     public Cursor getStudentTests(){
@@ -694,8 +721,8 @@ public class DBHelper extends SQLiteOpenHelper {
         return c;
     }
 
-    public Cursor getStudentTestsByEnroll(String enrollId){
-        Cursor c =db.query("sptu_student", new String[] {"sptu_entroll_id,sptu_student_ID,sptu_ID,sptu_paper_ID,sptu_subjet_ID,sptu_course_id,sptu_dwnld_status"},"sptu_entroll_id='"+enrollId+"'", null, null, null,null);
+    public Cursor getStudentTests(String enrollId,String courseId,String paperId){
+        Cursor c =db.query("sptu_student", new String[] {"sptu_entroll_id,sptu_student_ID,sptu_ID,sptu_paper_ID,sptu_subjet_ID,sptu_course_id,sptu_dwnld_status"},"sptu_entroll_id='"+enrollId+"' and sptu_course_id='"+courseId+"' and sptu_paper_ID='"+paperId+"'", null, null, null,null);
         return c;
     }
 
@@ -715,8 +742,8 @@ public class DBHelper extends SQLiteOpenHelper {
         return c;
     }
 
-    public Cursor getAllCourseIds(){
-        String query ="SELECT distinct(sptu_course_id) FROM sptu_student";
+    public Cursor getAllEnrolls(){
+        String query ="SELECT DISTINCT * FROM enrollments";
         Cursor c=db.rawQuery(query,null);
         return c;
     }

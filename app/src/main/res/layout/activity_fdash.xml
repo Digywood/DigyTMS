@@ -16,27 +16,13 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:orientation="vertical"
                 android:layout_weight="1">
 
                 <com.github.mikephil.charting.charts.PieChart
                     android:id="@+id/chart2"
-                    android:layout_width="350dp"
-                    android:layout_height="350dp" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal|center_vertical"
-                android:layout_weight="1"
-                android:padding="3dp"
-                android:layout_margin="2dp"
-                android:orientation="vertical">
-
-                <Spinner
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/sp_fcourseid"/>
+                    android:layout_width="250dp"
+                    android:layout_height="250dp" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -148,6 +134,80 @@
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:text="RAG for Attempts"
+                        android:layout_weight="2"
+                        android:textStyle="bold"
+                        android:textColor="#8e58d1"/>
+
+                    <TextView
+                        android:id="@+id/tv_fRAGattempt"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="0"
+                        android:layout_weight="8"
+                        android:textStyle="bold"
+                        android:textColor="#000000"/>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:weightSum="10"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="RAG for AVG score"
+                        android:layout_weight="2"
+                        android:textStyle="bold"
+                        android:textColor="#8e58d1"/>
+
+                    <TextView
+                        android:id="@+id/tv_fRAGAVGscore"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="0"
+                        android:layout_weight="8"
+                        android:textStyle="bold"
+                        android:textColor="#000000"/>
+
+                </LinearLayout>
+
+                <Button
+                    android:id="@+id/btn_fdetails"
+                    android:layout_width="wrap_content"
+                    android:layout_height="30dp"
+                    android:text="Details >>"
+                    android:background="@drawable/btn_details_bg"
+                    android:textColor="#FFFFFF"
+                    android:layout_gravity="center"/>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:padding="3dp"
+                android:layout_margin="2dp"
+                android:orientation="vertical">
+
+                <Spinner
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/sp_fenrollids"/>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:weightSum="10"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
                         android:text="Max"
                         android:layout_weight="2"
                         android:textStyle="bold"
@@ -213,65 +273,6 @@
                         android:textColor="#000000"/>
 
                 </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:weightSum="10"
-                    android:orientation="horizontal">
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="RAG for Attempts"
-                        android:layout_weight="2"
-                        android:textStyle="bold"
-                        android:textColor="#8e58d1"/>
-
-                    <TextView
-                        android:id="@+id/tv_fRAGattempt"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="0"
-                        android:layout_weight="8"
-                        android:textStyle="bold"
-                        android:textColor="#000000"/>
-
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:weightSum="10"
-                    android:orientation="horizontal">
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="RAG for AVG score"
-                        android:layout_weight="2"
-                        android:textStyle="bold"
-                        android:textColor="#8e58d1"/>
-
-                    <TextView
-                        android:id="@+id/tv_fRAGAVGscore"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="0"
-                        android:layout_weight="8"
-                        android:textStyle="bold"
-                        android:textColor="#000000"/>
-
-                </LinearLayout>
-
-                <Button
-                    android:id="@+id/btn_fdetails"
-                    android:layout_width="wrap_content"
-                    android:layout_height="30dp"
-                    android:text="Details >>"
-                    android:background="@drawable/btn_details_bg"
-                    android:textColor="#FFFFFF"
-                    android:layout_gravity="center"/>
 
             </LinearLayout>
 
