@@ -856,6 +856,7 @@ public class ListofPractiseTests extends AppCompatActivity {
 
 
     protected void exitByBackKey() {
+        finish();
         Intent intent = new Intent(ListofPractiseTests.this, LandingActivity.class);
         startActivity(intent);
 
