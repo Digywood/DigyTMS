@@ -20,11 +20,11 @@ import java.util.ArrayList;
 
 public class TestDashActivity extends AppCompatActivity {
 
-    String paperid="",testtype="";
+    String paperid="",testtype="",lastdate="";;
     RecyclerView rv_tests;
     TextView tv_emptytests;
     DBHelper myhelper;
-    int attemptcount=0;
+    int attemptcount=0,lastscore=0;
     Double min=0.0,max=0.0,avg=0.0;
     TestDashAdapter tdAdp;
     LinearLayoutManager myLayoutManager;
@@ -114,22 +114,26 @@ public class TestDashActivity extends AppCompatActivity {
 
             for(int i=0;i<testids.size();i++){
                 attemptcount=0;
+                lastscore=0;
+                lastdate="";
                 min=0.0;
                 max=0.0;
                 avg=0.0;
                 Cursor mycur=myhelper.getTestFlashSummary(testids.get(i));
                 if(mycur.getCount()>0){
                     while (mycur.moveToNext()){
-                        attemptcount=mycur.getInt(mycur.getColumnIndex("attemptfcount"));
-                        min=mycur.getDouble(mycur.getColumnIndex("minscore"));
-                        max=mycur.getDouble(mycur.getColumnIndex("maxscore"));
-                        avg=mycur.getDouble(mycur.getColumnIndex("avgscore"));
+                        attemptcount=mycur.getInt(mycur.getColumnIndex("sptuflash_attempts"));
+                        lastscore=mycur.getInt(mycur.getColumnIndex("lastAttemptScore"));
+                        min=mycur.getDouble(mycur.getColumnIndex("min_flashScore"));
+                        max=mycur.getDouble(mycur.getColumnIndex("max_flashScore"));
+                        avg=mycur.getDouble(mycur.getColumnIndex("avg_flashScore"));
+                        lastdate=mycur.getString(mycur.getColumnIndex("lastAttemptDttm"));
                     }
                 }else{
                     mycur.close();
                 }
 
-//                dashPaperList.add(new SingleDashPaper(paperids.get(i),papernames.get(i),totaltestcount,attemptcount,max,min,avg));
+                dashTestList.add(new SingleDashTest(testids.get(i),"Sample",attemptcount,lastdate,lastscore,"",min,max,avg,0.0,0.0,0.0,0,0,0));
 
             }
         }

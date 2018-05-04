@@ -120,7 +120,7 @@ public class CourseActivity extends AppCompatActivity {
     public void getPapersDataFromLocal(){
         paperidList.clear();
         papernameList.clear();
-        Cursor mycursor=myhelper.getStudentPapers();
+        Cursor mycursor=myhelper.getPapersByCourse(courseid);
         if(mycursor.getCount()>0){
             papernameList.add("Select");
             while (mycursor.moveToNext()){

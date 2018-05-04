@@ -112,6 +112,8 @@ public class ListofPractiseTests extends AppCompatActivity {
             paperid=cmgintent.getStringExtra("paperid");
         }
 
+        Log.e("Test:--","Eid:---"+enrollid+"  Cid:---"+courseid+"  Pid:----"+paperid);
+
         getTestIdsFromLocal();
 
         fab_download.setOnClickListener(new View.OnClickListener() {
