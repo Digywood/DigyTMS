@@ -24,8 +24,8 @@ public class TestDashActivity extends AppCompatActivity {
     RecyclerView rv_tests;
     TextView tv_emptytests;
     DBHelper myhelper;
-    int attemptcount=0,lastscore=0;
-    Double min=0.0,max=0.0,avg=0.0;
+    int attemptcount=0;
+    Double min=0.0,max=0.0,avg=0.0,lastscore=0.0;
     TestDashAdapter tdAdp;
     LinearLayoutManager myLayoutManager;
     ArrayList<SingleDashTest> dashTestList=new ArrayList<>();
@@ -114,7 +114,7 @@ public class TestDashActivity extends AppCompatActivity {
 
             for(int i=0;i<testids.size();i++){
                 attemptcount=0;
-                lastscore=0;
+                lastscore=0.0;
                 lastdate="";
                 min=0.0;
                 max=0.0;
@@ -123,7 +123,7 @@ public class TestDashActivity extends AppCompatActivity {
                 if(mycur.getCount()>0){
                     while (mycur.moveToNext()){
                         attemptcount=mycur.getInt(mycur.getColumnIndex("sptuflash_attempts"));
-                        lastscore=mycur.getInt(mycur.getColumnIndex("lastAttemptScore"));
+                        lastscore=mycur.getDouble(mycur.getColumnIndex("lastAttemptScore"));
                         min=mycur.getDouble(mycur.getColumnIndex("min_flashScore"));
                         max=mycur.getDouble(mycur.getColumnIndex("max_flashScore"));
                         avg=mycur.getDouble(mycur.getColumnIndex("avg_flashScore"));
@@ -133,7 +133,7 @@ public class TestDashActivity extends AppCompatActivity {
                     mycur.close();
                 }
 
-                dashTestList.add(new SingleDashTest(testids.get(i),"Sample",attemptcount,lastdate,lastscore,"",min,max,avg,0.0,0.0,0.0,0,0,0));
+                dashTestList.add(new SingleDashTest(testids.get(i),"Sample",attemptcount,lastdate,lastscore,"2018-05-04",min,max,avg,0.0,0.0,0.0,0,0,0));
 
             }
         }

@@ -23,29 +23,28 @@ public class TestDashAdapter extends RecyclerView.Adapter<TestDashAdapter.MyView
     Context mycontext;
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
-        public TextView tv_papername,tv_totaltests,tv_attempttests,tv_max,tv_min;
-        public TextView tv_papername1,tv_totaltests1,tv_attempttests1,tv_max1,tv_min1;
-        public TextView tv_papername2,tv_totaltests2,tv_attempttests2,tv_max2,tv_min2;
-        public Button btn_details;
+        public TextView tv_testid,tv_testname,tv_noofattempts,tv_lastdate;
+        public TextView tv_lastscore,tv_uploaddttm,tv_smin,tv_smax,tv_savg;
+        public TextView tv_omin,tv_omax,tv_oavg,tv_avgattempts,tv_maxattempts,tv_minattempts;
 
         public MyViewHolder(View view) {
             super(view);
 
-//            tv_papername =view.findViewById(R.id.fpdash_papername);
-//            tv_totaltests =view.findViewById(R.id.fpdash_tottestcount);
-//            tv_attempttests =view.findViewById(R.id.fpdash_attemptcount);
-//            tv_max =view.findViewById(R.id.fpdash_max);
-//            tv_min =view.findViewById(R.id.fpdash_min);
-//            tv_avg =view.findViewById(R.id.fpdash_avg);
-//            tv_papername =view.findViewById(R.id.fpdash_papername);
-//            tv_totaltests =view.findViewById(R.id.fpdash_tottestcount);
-//            tv_attempttests =view.findViewById(R.id.fpdash_attemptcount);
-//            tv_max =view.findViewById(R.id.fpdash_max);
-//            tv_min =view.findViewById(R.id.fpdash_min);
-//            tv_papername =view.findViewById(R.id.fpdash_papername);
-//            tv_totaltests =view.findViewById(R.id.fpdash_tottestcount);
-//            tv_attempttests =view.findViewById(R.id.fpdash_attemptcount);
-//            tv_max =view.findViewById(R.id.fpdash_max);
+//            tv_testid =view.findViewById(R.id.ftdash_testid);
+            tv_testname =view.findViewById(R.id.ftdash_testname);
+            tv_noofattempts =view.findViewById(R.id.ftdash_noofattempts);
+            tv_lastdate =view.findViewById(R.id.ftdash_lastdate);
+            tv_lastscore =view.findViewById(R.id.ftdash_lastattemptpercent);
+            tv_uploaddttm =view.findViewById(R.id.ftdash_uploaddttm);
+            tv_smin =view.findViewById(R.id.ftdash_minmarks);
+            tv_smax =view.findViewById(R.id.ftdash_maxmarks);
+            tv_savg =view.findViewById(R.id.ftdash_avgmarks);
+            tv_omin =view.findViewById(R.id.ftdash_ominmarks);
+            tv_omax =view.findViewById(R.id.ftdash_omaxmarks);
+            tv_oavg =view.findViewById(R.id.ftdash_oavgmarks);
+            tv_avgattempts =view.findViewById(R.id.ftdash_oavgattempts);
+            tv_maxattempts =view.findViewById(R.id.ftdash_omaxattempts);
+            tv_minattempts =view.findViewById(R.id.ftdash_ominattempts);
 
         }
     }
@@ -62,7 +61,7 @@ public class TestDashAdapter extends RecyclerView.Adapter<TestDashAdapter.MyView
     }
 
     public TestDashAdapter.MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.activity_paperdashitem, parent, false);
+        View itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.activity_testdashitem, parent, false);
         return new TestDashAdapter.MyViewHolder(itemView);
     }
 
@@ -70,21 +69,20 @@ public class TestDashAdapter extends RecyclerView.Adapter<TestDashAdapter.MyView
     public void onBindViewHolder(final TestDashAdapter.MyViewHolder holder, final int position) {
         final SingleDashTest singleDashTest = testdashList.get(position);
 
-//        holder.tv_papername.setText(singleDashPaper.getPapername());
-//        holder.tv_totaltests.setText(""+singleDashPaper.getTotaltests());
-//        holder.tv_attempttests.setText(""+singleDashPaper.getAttemptedtests());
-//        holder.tv_max.setText(""+round(singleDashPaper.getMax(),1));
-//        holder.tv_min.setText(""+round(singleDashPaper.getMin(),1));
-//        holder.tv_avg.setText(""+round(singleDashPaper.getAvg(),1));
-//        holder.tv_papername.setText(singleDashPaper.getPapername());
-//        holder.tv_totaltests.setText(""+singleDashPaper.getTotaltests());
-//        holder.tv_attempttests.setText(""+singleDashPaper.getAttemptedtests());
-//        holder.tv_max.setText(""+round(singleDashPaper.getMax(),1));
-//        holder.tv_min.setText(""+round(singleDashPaper.getMin(),1));
-//        holder.tv_avg.setText(""+round(singleDashPaper.getAvg(),1));
-//        holder.tv_max.setText(""+round(singleDashPaper.getMax(),1));
-//        holder.tv_min.setText(""+round(singleDashPaper.getMin(),1));
-//        holder.tv_avg.setText(""+round(singleDashPaper.getAvg(),1));
+        holder.tv_testname.setText(singleDashTest.getTestname());
+        holder.tv_noofattempts.setText(""+singleDashTest.getNoofattempts());
+        holder.tv_lastdate.setText(singleDashTest.getDttm());
+        holder.tv_lastscore.setText(""+round(singleDashTest.getLatestpercenatage(),1)+" %");
+        holder.tv_uploaddttm.setText(singleDashTest.getUploaddttm());
+        holder.tv_smin.setText(""+round(singleDashTest.getSmin(),1)+" %");
+        holder.tv_smax.setText(""+round(singleDashTest.getSman(),1)+" %");
+        holder.tv_savg.setText(""+round(singleDashTest.getSavg(),1)+" %");
+        holder.tv_omin.setText(""+round(singleDashTest.getOmin(),1)+" %");
+        holder.tv_omax.setText(""+round(singleDashTest.getOmax(),1)+" %");
+        holder.tv_oavg.setText(""+round(singleDashTest.getOavg(),1)+" %");
+        holder.tv_avgattempts.setText(""+singleDashTest.getAvgattempts());
+        holder.tv_maxattempts.setText(""+singleDashTest.getMaxattempts());
+        holder.tv_minattempts.setText(""+singleDashTest.getMinattempts());
 
 //        holder.btn_details.setOnClickListener(new View.OnClickListener() {
 //            @Override
