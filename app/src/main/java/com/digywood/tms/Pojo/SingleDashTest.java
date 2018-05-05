@@ -3,20 +3,20 @@ package com.digywood.tms.Pojo;
 public class SingleDashTest {
 
     private String testid,testname,dttm,uploaddttm;
-    Double smin,sman,savg,omin,omax,oavg;
-    private int lastatmptscore,noofattempts,avgattempts,maxscore,minscore;
+    Double latestpercenatage,smin,sman,savg,omin,omax,oavg;
+    private int noofattempts,avgattempts,maxattempts,minattempts;
 
     public SingleDashTest(){
 
     }
 
-    public SingleDashTest(String testid,String testname,int noofattempts,String dttm,int lastatmptscore,String uploaddttm,Double smin,Double smax,Double savg,Double omin,Double omax,Double oavg,int avgattempts,int maxscore,int minscore){
+    public SingleDashTest(String testid,String testname,int noofattempts,String dttm,Double latestpercenatage,String uploaddttm,Double smin,Double smax,Double savg,Double omin,Double omax,Double oavg,int avgattempts,int maxattempts,int minattempts){
 
         this.testid=testid;
         this.testname=testname;
         this.noofattempts=noofattempts;
         this.dttm=dttm;
-        this.lastatmptscore=lastatmptscore;
+        this.latestpercenatage=latestpercenatage;
         this.uploaddttm=uploaddttm;
         this.smin=smin;
         this.sman=smax;
@@ -25,8 +25,8 @@ public class SingleDashTest {
         this.omax=omax;
         this.oavg=oavg;
         this.avgattempts=avgattempts;
-        this.maxscore=maxscore;
-        this.minscore=minscore;
+        this.maxattempts=maxattempts;
+        this.minattempts=minattempts;
 
     }
 
@@ -110,12 +110,12 @@ public class SingleDashTest {
         this.oavg = oavg;
     }
 
-    public int getLastatmptscore() {
-        return lastatmptscore;
+    public Double getLatestpercenatage() {
+        return latestpercenatage;
     }
 
-    public void setLastatmptscore(int lastatmptscore) {
-        this.lastatmptscore = lastatmptscore;
+    public void setLatestpercenatage(Double latestpercenatage) {
+        this.latestpercenatage = latestpercenatage;
     }
 
     public int getNoofattempts() {
@@ -134,20 +134,20 @@ public class SingleDashTest {
         this.avgattempts = avgattempts;
     }
 
-    public int getMaxscore() {
-        return maxscore;
+    public int getMaxattempts() {
+        return maxattempts;
     }
 
-    public void setMaxscore(int maxscore) {
-        this.maxscore = maxscore;
+    public void setMaxattempts(int maxattempts) {
+        this.maxattempts = maxattempts;
     }
 
-    public int getMinscore() {
-        return minscore;
+    public int getMinattempts() {
+        return minattempts;
     }
 
-    public void setMinscore(int minscore) {
-        this.minscore = minscore;
+    public void setMinattempts(int minattempts) {
+        this.minattempts = minattempts;
     }
 }
 
