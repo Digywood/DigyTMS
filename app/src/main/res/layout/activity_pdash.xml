@@ -194,10 +194,26 @@
                 android:padding="3dp"
                 android:orientation="vertical">
 
-                <Spinner
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:id="@+id/sp_penrollids"/>
+                    android:orientation="horizontal">
+
+                    <Spinner
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:id="@+id/sp_penrollids"/>
+
+                    <TextView
+                        android:id="@+id/tv_pcourseid"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="courseid"
+                        android:layout_margin="2dp"
+                        android:layout_weight="1"/>
+
+                </LinearLayout>
 
                 <com.github.mikephil.charting.charts.BarChart
                     android:id="@+id/bchart1"

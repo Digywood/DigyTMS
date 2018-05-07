@@ -42,7 +42,7 @@
                         android:textStyle="bold"
                         android:layout_weight="1"
                         android:textSize="16sp"
-                        android:textColor="#000000"/>
+                        android:textColor="@color/green"/>
 
                 </LinearLayout>
 
@@ -56,7 +56,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:textColor="#8e58d1"
+                        android:textColor="@color/green"
                         android:text="Latest Percent"/>
 
                     <TextView
@@ -80,7 +80,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:textColor="#8e58d1"
+                        android:textColor="@color/green"
                         android:text="Last Attempt Date"/>
 
                     <TextView
@@ -126,7 +126,7 @@
                             android:background="@drawable/btn_details_bg"
                             android:text="Self"
                             android:padding="3dp"
-                            android:textStyle="italic"
+                            android:textStyle="italic|bold"
                             android:textSize="12sp"
                             android:textColor="#FFFFFF"/>
 
@@ -142,7 +142,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:textColor="#8e58d1"
+                            android:textColor="@color/green"
                             android:text="Noof.Attempts: "/>
 
                         <TextView
@@ -167,7 +167,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:textColor="#8e58d1"
+                            android:textColor="@color/green"
                             android:text="UploadDate"/>
 
                         <TextView
@@ -201,14 +201,13 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:textColor="#8e58d1"
+                            android:textColor="@color/green"
                             android:text="Min"/>
 
                         <TextView
                             android:id="@+id/ftdash_minmarks"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:drawableLeft="@drawable/downclrarrow"
                             android:hint=""
                             android:layout_weight="1"
                             android:textSize="14sp"
@@ -227,14 +226,13 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:textColor="#8e58d1"
+                            android:textColor="@color/green"
                             android:text="Max"/>
 
                         <TextView
                             android:id="@+id/ftdash_maxmarks"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:drawableLeft="@drawable/upclrarrow"
                             android:hint=""
                             android:layout_weight="1"
                             android:textSize="14sp"
@@ -253,7 +251,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:textColor="#8e58d1"
+                            android:textColor="@color/green"
                             android:text="Avg"/>
 
                         <TextView
@@ -301,7 +299,7 @@
                             android:background="@drawable/btn_details_bg"
                             android:text="Batch"
                             android:padding="3dp"
-                            android:textStyle="italic"
+                            android:textStyle="italic|bold"
                             android:textSize="12sp"
                             android:textColor="#FFFFFF"/>
 
@@ -317,7 +315,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:textColor="#8e58d1"
+                            android:textColor="@color/green"
                             android:text="Avg Attempts"/>
 
                         <TextView
@@ -342,7 +340,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:textColor="#8e58d1"
+                            android:textColor="@color/green"
                             android:text="Max Attempts"/>
 
                         <TextView
@@ -367,7 +365,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:textColor="#8e58d1"
+                            android:textColor="@color/green"
                             android:text="Min Attempts"/>
 
                         <TextView
@@ -401,7 +399,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:textColor="#8e58d1"
+                            android:textColor="@color/green"
                             android:text="Min"/>
 
                         <TextView
@@ -426,7 +424,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:textColor="#8e58d1"
+                            android:textColor="@color/green"
                             android:text="Max"/>
 
                         <TextView
@@ -451,7 +449,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:textColor="#8e58d1"
+                            android:textColor="@color/green"
                             android:text="Avg"/>
 
                         <TextView

@@ -81,21 +81,8 @@ public class TestDashAdapter extends RecyclerView.Adapter<TestDashAdapter.MyView
             holder.tv_lastscore.setText(""+round(singleDashTest.getLatestpercenatage(),1)+" %");
             holder.tv_uploaddttm.setText(singleDashTest.getUploaddttm());
 
-            if(singleDashTest.getSmin()>singleDashTest.getOmin()){
-                holder.tv_smin.setText(" "+round(singleDashTest.getSmin(),1));
-                holder.tv_smin.setCompoundDrawablesWithIntrinsicBounds( R.drawable.upclrarrow, 0, 0, 0);
-            }else{
-                holder.tv_smin.setText(" "+round(singleDashTest.getSmin(),1));
-                holder.tv_smin.setCompoundDrawablesWithIntrinsicBounds( R.drawable.downclrarrow, 0, 0, 0);
-            }
-
-            if(singleDashTest.getSman()>singleDashTest.getOmax()){
-                holder.tv_smax.setText(" "+round(singleDashTest.getSman(),1));
-                holder.tv_smax.setCompoundDrawablesWithIntrinsicBounds( R.drawable.upclrarrow, 0, 0, 0);
-            }else{
-                holder.tv_smax.setText(" "+round(singleDashTest.getSman(),1));
-                holder.tv_smax.setCompoundDrawablesWithIntrinsicBounds( R.drawable.downclrarrow, 0, 0, 0);
-            }
+            holder.tv_smin.setText(" "+round(singleDashTest.getSmin(),1));
+            holder.tv_smax.setText(" "+round(singleDashTest.getSman(),1));
 
             if(singleDashTest.getSavg()>singleDashTest.getOavg()){
                 holder.tv_savg.setText(" "+round(singleDashTest.getSavg(),1));
@@ -104,7 +91,6 @@ public class TestDashAdapter extends RecyclerView.Adapter<TestDashAdapter.MyView
                 holder.tv_savg.setText(" "+round(singleDashTest.getSavg(),1));
                 holder.tv_savg.setCompoundDrawablesWithIntrinsicBounds( R.drawable.downclrarrow, 0, 0, 0);
             }
-
 
             holder.tv_omin.setText(" "+round(singleDashTest.getOmin(),1));
             holder.tv_omax.setText(" "+round(singleDashTest.getOmax(),1));
@@ -117,17 +103,6 @@ public class TestDashAdapter extends RecyclerView.Adapter<TestDashAdapter.MyView
             e.printStackTrace();
             Log.e("TestDashAdp:---",e.toString());
         }
-
-//        holder.btn_details.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//
-//                Intent i=new Intent(mycontext, TestDashActivity.class);
-//                i.putExtra("paperid",singleDashPaper.getPaperid());
-//                i.putExtra("testtype","FLASH");
-//                mycontext.startActivity(i);
-//            }
-//        });
 
     }
 

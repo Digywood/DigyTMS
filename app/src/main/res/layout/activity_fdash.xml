@@ -194,10 +194,26 @@
                 android:layout_margin="2dp"
                 android:orientation="vertical">
 
-                <Spinner
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:id="@+id/sp_fenrollids"/>
+                    android:orientation="horizontal">
+
+                    <Spinner
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:id="@+id/sp_fenrollids"/>
+
+                    <TextView
+                        android:id="@+id/tv_fcourseid"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="courseid"
+                        android:layout_margin="2dp"
+                        android:layout_weight="1"/>
+
+                </LinearLayout>
 
                 <LinearLayout
                     android:layout_width="match_parent"

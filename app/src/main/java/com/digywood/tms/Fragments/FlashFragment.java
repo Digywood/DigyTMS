@@ -61,7 +61,7 @@ public class FlashFragment extends Fragment implements OnChartValueSelectedListe
     ArrayAdapter<String> enrollAdp;
 
     Spinner sp_enrollids;
-    TextView tv_ftottests,tv_fattempted,tv_ftestsasplan,tv_fpercent,tv_fmax,tv_fmin,tv_favg,tv_fRAGattempt,tv_fRAGAVGscore;
+    TextView tv_ftottests,tv_fattempted,tv_ftestsasplan,tv_fpercent,tv_fmax,tv_fmin,tv_favg,tv_fRAGattempt,tv_fRAGAVGscore,tv_courseid;
 
     protected String[] mParties = new String[] {
             "Completed", "Left", "Party C", "Party D", "Party E", "Party F", "Party G", "Party H",
@@ -116,6 +116,7 @@ public class FlashFragment extends Fragment implements OnChartValueSelectedListe
         tv_favg=view.findViewById(R.id.tv_favg);
         tv_fRAGattempt=view.findViewById(R.id.tv_fRAGattempt);
         tv_fRAGAVGscore=view.findViewById(R.id.tv_fRAGAVGscore);
+        tv_courseid=view.findViewById(R.id.tv_fcourseid);
         btn_fdetails = view.findViewById(R.id.btn_fdetails);
 
         sp_enrollids=view.findViewById(R.id.sp_fenrollids);
@@ -169,11 +170,12 @@ public class FlashFragment extends Fragment implements OnChartValueSelectedListe
 
         sp_enrollids.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+            public void onItemSelected(AdapterView<?> parent, View view,int position,long id) {
 
                 SingleEnrollment singleEnrollment=enrollPojos.get(position);
                 enrollid=singleEnrollment.getEnrollid();
                 courseid=singleEnrollment.getEnrollcourseid();
+                tv_courseid.setText(courseid);
             }
 
             @Override

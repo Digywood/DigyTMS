@@ -1017,7 +1017,7 @@ public class FlashCardActivity extends AppCompatActivity {
                                     avgscore=mycursor.getDouble(mycursor.getColumnIndex("avgscore"));
                                 }
                                 Log.e("Scores:---","min:--"+minscore+"  max--"+maxscore+"  avg----"+avgscore);
-                                long uFlag=myhelper.updateTestStatus(testId,attemptnum,minscore,maxscore,avgscore,endDttm,percent);
+                                long uFlag=myhelper.updateTestFlashData(testId,attemptnum,minscore,maxscore,avgscore,endDttm,percent);
                                 if(uFlag>0){
                                     Log.e("FlashCardActivity----","Test Updated");
                                 }else{
@@ -1094,7 +1094,7 @@ public class FlashCardActivity extends AppCompatActivity {
                                     avgscore=mycursor.getDouble(mycursor.getColumnIndex("avgscore"));
                                 }
                                 Log.e("Scores:---","min:--"+minscore+"  max--"+maxscore+"  avg----"+avgscore);
-                                long uFlag=myhelper.updateTestStatus(testId,attemptnum,minscore,maxscore,avgscore,endDttm,percent);
+                                long uFlag=myhelper.updateTestFlashData(testId,attemptnum,minscore,maxscore,avgscore,endDttm,percent);
                                 if(uFlag>0){
                                     Log.e("FlashCardActivity----","Test Updated");
                                 }else{
