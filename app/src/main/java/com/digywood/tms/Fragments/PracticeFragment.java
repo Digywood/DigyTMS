@@ -87,7 +87,7 @@ public class PracticeFragment extends Fragment implements OnChartValueSelectedLi
             "Party I", "Party J", "Party K", "Party L", "Party M", "Party N", "Party O", "Party P"
     };
 
-    TextView tv_ptottests,tv_pattempted,tv_ptestsasplan,tv_ppercent,tv_pmax,tv_pmin,tv_pavg,tv_pRAGattempt,tv_pRAGAVGscore;
+    TextView tv_ptottests,tv_pattempted,tv_ptestsasplan,tv_ppercent,tv_pmax,tv_pmin,tv_pavg,tv_pRAGattempt,tv_pRAGAVGscore,tv_courseid;
 
     private PracticeFragment.OnFragmentInteractionListener mListener;
 
@@ -137,6 +137,7 @@ public class PracticeFragment extends Fragment implements OnChartValueSelectedLi
         tv_pavg=view.findViewById(R.id.tv_pavg);
         tv_pRAGattempt=view.findViewById(R.id.tv_pRAGattempt);
         tv_pRAGAVGscore=view.findViewById(R.id.tv_pRAGAVGscore);
+        tv_courseid=view.findViewById(R.id.tv_pcourseid);
 
         mChart=view.findViewById(R.id.chart1);
         mChart1 =view.findViewById(R.id.bchart1);
@@ -206,6 +207,7 @@ public class PracticeFragment extends Fragment implements OnChartValueSelectedLi
                 SingleEnrollment singleEnrollment=enrollPojos.get(position);
                 enrollid=singleEnrollment.getEnrollid();
                 courseid=singleEnrollment.getEnrollcourseid();
+                tv_courseid.setText(courseid);
             }
 
             @Override

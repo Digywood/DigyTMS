@@ -10,6 +10,8 @@ import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
+
 import com.digywood.tms.Adapters.PaperDashAdapter;
 import com.digywood.tms.Adapters.TestDashAdapter;
 import com.digywood.tms.DBHelper.DBHelper;
@@ -55,6 +57,8 @@ public class TestDashActivity extends AppCompatActivity {
     }
 
     public void getTestsByPaperP(String paperid){
+
+        Toast.makeText(getApplicationContext(),"Practise",Toast.LENGTH_SHORT).show();
         testids.clear();
         Cursor mycursor=myhelper.getTestDataByPaper(paperid);
         if(mycursor.getCount()>0){
@@ -72,27 +76,42 @@ public class TestDashActivity extends AppCompatActivity {
 
         if(testids.size()>0){
 
-            int attemptcount=0;
-            double lastscore=0.0;
+            dashTestList.clear();
+            int attemptcount=0,minattempts=0,maxattepts=0,avgattempts=0;
+            double lastscore=0.0,min=0.0,max=0.0,avg=0.0,bmin=0.0,bmax=0.0,bavg=0.0;
             String lastdate="";
-            double min=0.0;
-            double max=0.0;
-            double avg=0.0;
 
             for(int i=0;i<testids.size();i++){
 
-                int totaltestcount=myhelper.getTestsByPaper(testids.get(i));
-                Cursor mycur=myhelper.getFlashSummaryByPaper(testids.get(i));
+                Cursor mycur=myhelper.getTestPractiseSummary(testids.get(i));
                 if(mycur.getCount()>0){
                     while (mycur.moveToNext()){
-                        attemptcount=mycur.getInt(mycur.getColumnIndex("attemptfcount"));
-                        min=mycur.getDouble(mycur.getColumnIndex("minscore"));
-                        max=mycur.getDouble(mycur.getColumnIndex("maxscore"));
-                        avg=mycur.getDouble(mycur.getColumnIndex("avgscore"));
+                        attemptcount=mycur.getInt(mycur.getColumnIndex("sptu_no_of_attempts"));
+                        lastscore=mycur.getDouble(mycur.getColumnIndex("sptu_last_attempt_percent"));
+                        min=mycur.getDouble(mycur.getColumnIndex("sptu_min_percent"));
+                        max=mycur.getDouble(mycur.getColumnIndex("sptu_max_percent"));
+                        avg=mycur.getDouble(mycur.getColumnIndex("sptu_avg_percent"));
+                        lastdate=mycur.getString(mycur.getColumnIndex("sptu_last_attempt_start_dttm"));
                     }
                 }else{
                     mycur.close();
                 }
+
+                Cursor mycur1=myhelper.getTestAggrigateData(testids.get(i),"PRACTISE");
+                if(mycur1.getCount()>0){
+                    while (mycur1.moveToNext()){
+                        minattempts=mycur1.getInt(mycur1.getColumnIndex("minAttempts"));
+                        maxattepts=mycur1.getInt(mycur1.getColumnIndex("maxAttempts"));
+                        avgattempts=mycur1.getInt(mycur1.getColumnIndex("avgAttempts"));
+                        bmin=mycur1.getDouble(mycur1.getColumnIndex("minPercentage"));
+                        bmax=mycur1.getDouble(mycur1.getColumnIndex("maxPercentage"));
+                        bavg=mycur1.getDouble(mycur1.getColumnIndex("avgPercentage"));
+                    }
+                }else{
+                    mycur1.close();
+                }
+
+                dashTestList.add(new SingleDashTest(testids.get(i),testnames.get(i),attemptcount,lastdate,lastscore,"2018-05-04",min,max,avg,bmin,bmax,bavg,avgattempts,maxattepts,minattempts));
 
             }
         }
@@ -101,6 +120,9 @@ public class TestDashActivity extends AppCompatActivity {
     }
 
     public void getTestsByPaperF(String paperId){
+
+        Toast.makeText(getApplicationContext(),"Flash",Toast.LENGTH_SHORT).show();
+
         testids.clear();
         Cursor mycursor=myhelper.getTestDataByPaper(paperId);
         if(mycursor.getCount()>0){
@@ -118,6 +140,7 @@ public class TestDashActivity extends AppCompatActivity {
 
         if(testids.size()>0){
 
+            dashTestList.clear();
             int attemptcount=0,minattempts=0,maxattepts=0,avgattempts=0;
             double lastscore=0.0,min=0.0,max=0.0,avg=0.0,bmin=0.0,bmax=0.0,bavg=0.0;
             String lastdate="";
@@ -128,10 +151,10 @@ public class TestDashActivity extends AppCompatActivity {
                 if(mycur.getCount()>0){
                     while (mycur.moveToNext()){
                         attemptcount=mycur.getInt(mycur.getColumnIndex("sptuflash_attempts"));
-                        lastscore=mycur.getDouble(mycur.getColumnIndex("lastAttemptScore"));
                         min=mycur.getDouble(mycur.getColumnIndex("min_flashScore"));
                         max=mycur.getDouble(mycur.getColumnIndex("max_flashScore"));
                         avg=mycur.getDouble(mycur.getColumnIndex("avg_flashScore"));
+                        lastscore=mycur.getDouble(mycur.getColumnIndex("lastAttemptScore"));
                         lastdate=mycur.getString(mycur.getColumnIndex("lastAttemptDttm"));
                     }
                 }else{

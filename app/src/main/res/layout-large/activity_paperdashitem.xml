@@ -38,8 +38,8 @@
                         android:layout_height="wrap_content"
                         android:textStyle="bold"
                         android:layout_weight="1"
-                        android:textColor="#000000"
-                        android:textSize="16dp"/>
+                        android:textColor="@color/green"
+                        android:textSize="20sp"/>
 
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -52,7 +52,7 @@
                             android:layout_height="wrap_content"
                             android:text="Total Tests"
                             android:layout_weight="1"
-                            android:textColor="#8e58d1"
+                            android:textColor="@color/green"
                             android:textSize="14dp"/>
 
                         <TextView
@@ -76,7 +76,7 @@
                             android:layout_height="wrap_content"
                             android:text="Attempted"
                             android:layout_weight="1"
-                            android:textColor="#8e58d1"
+                            android:textColor="@color/green"
                             android:textSize="14dp"/>
 
                         <TextView
@@ -90,6 +90,12 @@
                     </LinearLayout>
 
                 </LinearLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="0.2dip"
+                    android:background="#7b7b7b"
+                    android:layout_margin="2dp"/>
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -109,7 +115,7 @@
                             android:background="@drawable/btn_details_bg"
                             android:text="Self"
                             android:padding="3dp"
-                            android:textStyle="italic"
+                            android:textStyle="italic|bold"
                             android:textSize="12sp"
                             android:textColor="#FFFFFF"/>
 
@@ -126,7 +132,7 @@
                             android:layout_height="wrap_content"
                             android:text="Min"
                             android:layout_weight="1"
-                            android:textColor="#8e58d1"
+                            android:textColor="#000000"
                             android:textSize="14dp"/>
 
                         <TextView
@@ -150,7 +156,7 @@
                             android:layout_height="wrap_content"
                             android:text="Max"
                             android:layout_weight="1"
-                            android:textColor="#8e58d1"
+                            android:textColor="#000000"
                             android:textSize="14dp"/>
 
                         <TextView
@@ -174,7 +180,7 @@
                             android:layout_height="wrap_content"
                             android:text="Avg"
                             android:layout_weight="1"
-                            android:textColor="#8e58d1"
+                            android:textColor="#000000"
                             android:textSize="14dp"/>
 
                         <TextView
@@ -188,6 +194,12 @@
                     </LinearLayout>
 
                 </LinearLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="0.2dip"
+                    android:background="#7b7b7b"
+                    android:layout_margin="2dp"/>
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -207,7 +219,7 @@
                             android:background="@drawable/btn_details_bg"
                             android:text="Batch"
                             android:padding="3dp"
-                            android:textStyle="italic"
+                            android:textStyle="italic|bold"
                             android:textSize="12sp"
                             android:textColor="#FFFFFF"/>
 
@@ -224,7 +236,7 @@
                             android:layout_height="wrap_content"
                             android:text="Min"
                             android:layout_weight="1"
-                            android:textColor="#8e58d1"
+                            android:textColor="#000000"
                             android:textSize="14dp"/>
 
                         <TextView
@@ -248,7 +260,7 @@
                             android:layout_height="wrap_content"
                             android:text="Max"
                             android:layout_weight="1"
-                            android:textColor="#8e58d1"
+                            android:textColor="#000000"
                             android:textSize="14dp"/>
 
                         <TextView
@@ -272,7 +284,7 @@
                             android:layout_height="wrap_content"
                             android:text="Avg"
                             android:layout_weight="1"
-                            android:textColor="#8e58d1"
+                            android:textColor="#000000"
                             android:textSize="14dp"/>
 
                         <TextView
@@ -291,14 +303,16 @@
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
+                android:gravity="end|center_vertical"
                 android:layout_weight="8.5">
 
                 <Button
                     android:id="@+id/fpdash_det"
-                    android:layout_width="30dp"
-                    android:layout_height="30dp"
-                    android:background="@drawable/details"/>
+                    android:layout_width="50dp"
+                    android:layout_height="70dp"
+                    android:layout_gravity="center_vertical|end"
+                    android:background="@drawable/details1"/>
 
             </LinearLayout>
 

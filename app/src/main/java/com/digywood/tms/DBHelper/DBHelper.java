@@ -202,7 +202,12 @@ public class DBHelper extends SQLiteOpenHelper {
 
         String AttemptList ="CREATE TABLE `attempt_list` (\n"+
                 "   `Attempt_ID` TEXT,\n"+
-                "   `Attempt_Test_ID` INTEGER,\n"+
+                "   `Attempt_Test_ID` TEXT,\n"+
+                "   `Attempt_enrollId` TEXT DEFAULT NULL,\n"+
+                "   `Attempt_studentId` TEXT DEFAULT NULL,\n"+
+                "   `Attempt_courseId` TEXT DEFAULT NULL,\n"+
+                "   `Attempt_subjectId` TEXT DEFAULT NULL,\n"+
+                "   `Attempt_paperId` TEXT DEFAULT NULL,\n"+
                 "   `Attempt_Status` int(5) NOT NULL,\n"+
                 "   `Attempt_RemainingTime` int(5) DEFAULT NULL,\n"+
                 "   `Attempt_LastQuestion` int(5) DEFAULT NULL,\n"+
@@ -507,8 +512,26 @@ public class DBHelper extends SQLiteOpenHelper {
         return c;
     }
 
+    public Cursor getTestPractiseSummary(String testId){
+        String query ="SELECT sptu_no_of_attempts,sptu_last_attempt_percent,sptu_min_percent,sptu_max_percent,sptu_avg_percent,sptu_last_attempt_start_dttm FROM "+" sptu_student"+" WHERE sptu_ID='"+testId+"'";
+        Cursor c=db.rawQuery(query,null);
+        return c;
+    }
+
     public Cursor getPractiseSummary(){
         String query ="SELECT count(distinct Attempt_Test_ID) as attemptpcount,MIN(Attempt_Percentage) as minscore,MAX(Attempt_Percentage) as maxscore,AVG(Attempt_Percentage) as avgscore FROM "+"attempt_list";
+        Cursor c=db.rawQuery(query,null);
+        return c;
+    }
+
+    public Cursor getPractiseSummaryByPaper(String paperId){
+        String query ="SELECT count(distinct Attempt_Test_ID) as attemptpcount,MIN(Attempt_Percentage) as minscore,MAX(Attempt_Percentage) as maxscore,AVG(Attempt_Percentage) as avgscore FROM "+"attempt_list"+" WHERE Attempt_paperId ='"+paperId+"'";
+        Cursor c=db.rawQuery(query,null);
+        return c;
+    }
+
+    public Cursor getPractiseSummaryByTest(String testId){
+        String query ="SELECT count(distinct Attempt_Test_ID) as attemptpcount,MIN(Attempt_Percentage) as minscore,MAX(Attempt_Percentage) as maxscore,AVG(Attempt_Percentage) as avgscore FROM "+"attempt_list"+" WHERE Attempt_Test_ID ='"+testId+"'";
         Cursor c=db.rawQuery(query,null);
         return c;
     }
@@ -744,7 +767,20 @@ public class DBHelper extends SQLiteOpenHelper {
         return updateFlag;
     }
 
-    public long updateTestStatus(String testid,int attemptcount,Double minscore,Double maxscore,Double avgscore,String Dttm,Double lastAttemptscore){
+    public long updateTestFlashData(String testid,int attemptcount,Double minscore,Double maxscore,Double avgscore,String Dttm,Double lastAttemptscore){
+        long updateFlag=0;
+        ContentValues cv = new ContentValues();
+        cv.put("sptuflash_attempts",attemptcount);
+        cv.put("min_flashScore",minscore);
+        cv.put("max_flashScore",maxscore);
+        cv.put("avg_flashScore",avgscore);
+        cv.put("lastAttemptDttm",Dttm);
+        cv.put("lastAttemptScore",lastAttemptscore);
+        updateFlag=db.update("sptu_student", cv,"sptu_ID='"+testid+"'",null);
+        return  updateFlag;
+    }
+
+    public long updateTestPractiseData(String testid,int attemptcount,Double minscore,Double maxscore,Double avgscore,String Dttm,Double lastAttemptscore){
         long updateFlag=0;
         ContentValues cv = new ContentValues();
         cv.put("sptuflash_attempts",attemptcount);
@@ -1290,13 +1326,18 @@ public class DBHelper extends SQLiteOpenHelper {
 //        db.execSQL("TRUNCATE table " +table);
     }
 
-    public long InsertAttempt( String aId,String testID,int status, int aScore, int attempted, int skipped, int bookmarked, int unattempted, int aperc,long aTime,int index,int pos){
+    public long InsertAttempt( String aId,String testID,String eid,String sid,String cid,String subid,String pid,int status, int aScore, int attempted, int skipped, int bookmarked, int unattempted, int aperc,long aTime,int index,int pos){
 
         long insertFlag=0;
 
         ContentValues cv = new ContentValues();
         cv.put("Attempt_ID", aId);
         cv.put("Attempt_Test_ID", testID);
+        cv.put("Attempt_enrollId", testID);
+        cv.put("Attempt_studentId", testID);
+        cv.put("Attempt_courseId", testID);
+        cv.put("Attempt_subjectId", testID);
+        cv.put("Attempt_paperId", testID);
         cv.put("Attempt_Status", status);
         cv.put("Attempt_Confirmed", attempted);
         cv.put("Attempt_Skipped", skipped);

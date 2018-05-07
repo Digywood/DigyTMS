@@ -19,6 +19,7 @@ public class PaperDashAdapter extends RecyclerView.Adapter<PaperDashAdapter.MyVi
 
     private List<SingleDashPaper> paperdashList;
     Context mycontext;
+    String testtype="";
     private ArrayList<String> chknumberList=new ArrayList<>();
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
@@ -43,9 +44,10 @@ public class PaperDashAdapter extends RecyclerView.Adapter<PaperDashAdapter.MyVi
     }
 
 
-    public PaperDashAdapter(List<SingleDashPaper> paperdashList, Context c) {
+    public PaperDashAdapter(List<SingleDashPaper> paperdashList, Context c,String testtype) {
         this.paperdashList = paperdashList;
         this.mycontext=c;
+        this.testtype=testtype;
     }
 
     public void updateList(List<SingleDashPaper> list){
@@ -65,9 +67,18 @@ public class PaperDashAdapter extends RecyclerView.Adapter<PaperDashAdapter.MyVi
         holder.tv_papername.setText(""+singleDashPaper.getPapername());
         holder.tv_totaltests.setText(""+singleDashPaper.getTotaltests());
         holder.tv_attempttests.setText(""+singleDashPaper.getAttemptedtests());
-        holder.tv_max.setText(""+round(singleDashPaper.getMax(),1));
-        holder.tv_min.setText(""+round(singleDashPaper.getMin(),1));
-        holder.tv_avg.setText(""+round(singleDashPaper.getAvg(),1));
+
+        holder.tv_min.setText(" "+round(singleDashPaper.getMin(),1));
+        holder.tv_max.setText(" "+round(singleDashPaper.getMax(),1));
+
+        if(singleDashPaper.getAvg()>singleDashPaper.getBavg()){
+            holder.tv_avg.setText(" "+round(singleDashPaper.getAvg(),1));
+            holder.tv_avg.setCompoundDrawablesWithIntrinsicBounds( R.drawable.upclrarrow, 0, 0, 0);
+        }else{
+            holder.tv_avg.setText(" "+round(singleDashPaper.getAvg(),1));
+            holder.tv_avg.setCompoundDrawablesWithIntrinsicBounds( R.drawable.downclrarrow, 0, 0, 0);
+        }
+
         holder.tv_bmax.setText(""+round(singleDashPaper.getBmax(),1));
         holder.tv_bmin.setText(""+round(singleDashPaper.getBmin(),1));
         holder.tv_bavg.setText(""+round(singleDashPaper.getBavg(),1));
@@ -78,7 +89,7 @@ public class PaperDashAdapter extends RecyclerView.Adapter<PaperDashAdapter.MyVi
 
                 Intent i=new Intent(mycontext, TestDashActivity.class);
                 i.putExtra("paperid",singleDashPaper.getPaperid());
-                i.putExtra("testtype","FLASH");
+                i.putExtra("testtype",testtype);
                 mycontext.startActivity(i);
             }
         });

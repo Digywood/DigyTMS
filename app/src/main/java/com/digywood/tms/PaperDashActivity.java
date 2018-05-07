@@ -10,6 +10,8 @@ import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
+
 import com.digywood.tms.Adapters.PaperDashAdapter;
 import com.digywood.tms.DBHelper.DBHelper;
 import com.digywood.tms.Pojo.SingleDashPaper;
@@ -50,6 +52,8 @@ public class PaperDashActivity extends AppCompatActivity {
     }
 
     public void getPapersByCourseP(String courseid){
+
+        Toast.makeText(getApplicationContext(),"Practise",Toast.LENGTH_SHORT).show();
         paperids.clear();
         papernames.clear();
         Cursor mycursor=myhelper.getPapersByCourse(courseid);
@@ -68,16 +72,19 @@ public class PaperDashActivity extends AppCompatActivity {
 
         if(paperids.size()>0){
 
+            dashPaperList.clear();
             int attemptcount=0;
             double min=0.0,max=0.0,avg=0.0,bmin=0.0,bmax=0.0,bavg=0.0;
 
             for(int i=0;i<paperids.size();i++){
 
                 int totaltestcount=myhelper.getTestsByPaper(paperids.get(i));
-                Cursor mycur=myhelper.getFlashSummaryByPaper(paperids.get(i));
+
+                Cursor mycur=myhelper.getPractiseSummaryByPaper(paperids.get(i));
                 if(mycur.getCount()>0){
                     while (mycur.moveToNext()){
-                        attemptcount=mycur.getInt(mycur.getColumnIndex("attemptfcount"));
+                        Log.e("Cursor Row:----",""+mycur.getCount()+"  paperid:--"+paperids.get(i));
+                        attemptcount=mycur.getInt(mycur.getColumnIndex("attemptpcount"));
                         min=mycur.getDouble(mycur.getColumnIndex("minscore"));
                         max=mycur.getDouble(mycur.getColumnIndex("maxscore"));
                         avg=mycur.getDouble(mycur.getColumnIndex("avgscore"));
@@ -86,7 +93,18 @@ public class PaperDashActivity extends AppCompatActivity {
                     mycur.close();
                 }
 
-//                dashPaperList.add(new SingleDashPaper(paperids.get(i),papernames.get(i),totaltestcount,attemptcount,max,min,avg));
+                Cursor mycur1=myhelper.getPaperAggrigateData(paperids.get(i),"PRACTISE");
+                if(mycur1.getCount()>0){
+                    while (mycur1.moveToNext()){
+                        bmin=mycur1.getDouble(mycur1.getColumnIndex("minscore"));
+                        bmax=mycur1.getDouble(mycur1.getColumnIndex("maxscore"));
+                        bavg=mycur1.getDouble(mycur1.getColumnIndex("avgscore"));
+                    }
+                }else{
+                    mycur1.close();
+                }
+
+                dashPaperList.add(new SingleDashPaper(paperids.get(i),papernames.get(i),totaltestcount,attemptcount,max,min,avg,bmin,bmax,bavg));
 
             }
         }
@@ -95,6 +113,8 @@ public class PaperDashActivity extends AppCompatActivity {
     }
 
     public void getPapersByCourseF(String courseid){
+
+        Toast.makeText(getApplicationContext(),"Flash",Toast.LENGTH_SHORT).show();
         paperids.clear();
         papernames.clear();
         Cursor mycursor=myhelper.getPapersByCourse(courseid);
@@ -113,6 +133,7 @@ public class PaperDashActivity extends AppCompatActivity {
 
         if(paperids.size()>0){
 
+            dashPaperList.clear();
             int attemptcount=0;
             double min=0.0,max=0.0,avg=0.0,bmin=0.0,bmax=0.0,bavg=0.0;
 
@@ -132,11 +153,12 @@ public class PaperDashActivity extends AppCompatActivity {
                 }
 
                 Cursor mycur1=myhelper.getPaperAggrigateData(paperids.get(i),"FLASH");
+                Log.e("PaperDashActivity--",""+mycur1.getCount());
                 if(mycur1.getCount()>0){
                     while (mycur1.moveToNext()){
-                        min=mycur1.getDouble(mycur1.getColumnIndex("minscore"));
-                        max=mycur1.getDouble(mycur1.getColumnIndex("maxscore"));
-                        avg=mycur1.getDouble(mycur1.getColumnIndex("avgscore"));
+                        bmin=mycur1.getDouble(mycur1.getColumnIndex("minscore"));
+                        bmax=mycur1.getDouble(mycur1.getColumnIndex("maxscore"));
+                        bavg=mycur1.getDouble(mycur1.getColumnIndex("avgscore"));
                     }
                 }else{
                     mycur1.close();
@@ -154,7 +176,7 @@ public class PaperDashActivity extends AppCompatActivity {
         if (dashPaperList.size() != 0) {
             Log.e("Advtlist.size()", "comes:" + dashPaperList.size());
             tv_emptyptests.setVisibility(View.GONE);
-            pdAdp = new PaperDashAdapter(dashPaperList,PaperDashActivity.this);
+            pdAdp = new PaperDashAdapter(dashPaperList,PaperDashActivity.this,"PRACTISE");
             myLayoutManager = new LinearLayoutManager(PaperDashActivity.this,LinearLayoutManager.VERTICAL,false);
             rv_ptests.setLayoutManager(myLayoutManager);
             rv_ptests.setItemAnimator(new DefaultItemAnimator());
@@ -169,7 +191,7 @@ public class PaperDashActivity extends AppCompatActivity {
         if (dashPaperList.size() != 0) {
             Log.e("Advtlist.size()", "comes:" + dashPaperList.size());
             tv_emptyptests.setVisibility(View.GONE);
-            pdAdp = new PaperDashAdapter(dashPaperList,PaperDashActivity.this);
+            pdAdp = new PaperDashAdapter(dashPaperList,PaperDashActivity.this,"FLASH");
             myLayoutManager = new LinearLayoutManager(PaperDashActivity.this,LinearLayoutManager.VERTICAL,false);
             rv_ptests.setLayoutManager(myLayoutManager);
             rv_ptests.setItemAnimator(new DefaultItemAnimator());
