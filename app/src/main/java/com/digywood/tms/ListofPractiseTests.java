@@ -63,7 +63,7 @@ public class ListofPractiseTests extends AppCompatActivity {
     ArrayList<String> localPathList;
     ArrayList<String> alreadydwdList;
     ArrayList<SingleTest> dwdupdateList;
-    FloatingActionButton fab_download;
+//    FloatingActionButton fab_download;
     LinearLayoutManager myLayoutManager;
     String enrollid="",courseid="",paperid="",subjectid="",downloadjsonpath="",path="",localpath="",filedata="",groupdata="",tfiledwdpath="";
 
@@ -89,7 +89,7 @@ public class ListofPractiseTests extends AppCompatActivity {
 
         rv_tests=findViewById(R.id.rv_listoftests);
         tv_emptytests=findViewById(R.id.tv_testemptydata);
-        fab_download=findViewById(R.id.fab_download);
+//        fab_download=findViewById(R.id.fab_download);
         testidList=new ArrayList<>();
         finalUrls=new ArrayList<>();
         finalNames=new ArrayList<>();
@@ -116,46 +116,46 @@ public class ListofPractiseTests extends AppCompatActivity {
 
         getTestIdsFromLocal();
 
-        fab_download.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                try{
-                    selectedtestidList=tAdp.getchkTests();
-
-                    alreadydwdList=tAdp.getdwdchkTests();
-
-                }catch (Exception e){
-                    e.printStackTrace();
-                    Log.e("ListofPractiseTests--",e.toString());
-                }
-
-                if(alreadydwdList.size()!=0){
-                    showAlert("You have selected already downloaded tests,would you like download again?");
-                }else{
-                    if(selectedtestidList.size()!=0){
-                        currentitem=0;
-                        if(checkPermission()){
-                            new AsyncCheckInternet(ListofPractiseTests.this,new INetStatus() {
-                                @Override
-                                public void inetSatus(Boolean netStatus) {
-                                    if(netStatus){
-                                        downloadTest(selectedtestidList.get(0));
-                                    }else {
-                                        Toast.makeText(getApplicationContext(),"No internet,Please Check your connection",Toast.LENGTH_SHORT).show();
-                                    }
-                                }
-                            }).execute();
-                        }else{
-                            requestPermission();
-                        }
-
-                    }else{
-                        Toast.makeText(getApplicationContext(),"Please Choose tests to be downloaded",Toast.LENGTH_SHORT).show();
-                    }
-                }
-            }
-        });
+//        fab_download.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//
+//                try{
+//                    selectedtestidList=tAdp.getchkTests();
+//
+//                    alreadydwdList=tAdp.getdwdchkTests();
+//
+//                }catch (Exception e){
+//                    e.printStackTrace();
+//                    Log.e("ListofPractiseTests--",e.toString());
+//                }
+//
+//                if(alreadydwdList.size()!=0){
+//                    showAlert("You have selected already downloaded tests,would you like download again?");
+//                }else{
+//                    if(selectedtestidList.size()!=0){
+//                        currentitem=0;
+//                        if(checkPermission()){
+//                            new AsyncCheckInternet(ListofPractiseTests.this,new INetStatus() {
+//                                @Override
+//                                public void inetSatus(Boolean netStatus) {
+//                                    if(netStatus){
+//                                        downloadTest(selectedtestidList.get(0));
+//                                    }else {
+//                                        Toast.makeText(getApplicationContext(),"No internet,Please Check your connection",Toast.LENGTH_SHORT).show();
+//                                    }
+//                                }
+//                            }).execute();
+//                        }else{
+//                            requestPermission();
+//                        }
+//
+//                    }else{
+//                        Toast.makeText(getApplicationContext(),"Please Choose tests to be downloaded",Toast.LENGTH_SHORT).show();
+//                    }
+//                }
+//            }
+//        });
 
     }
 
@@ -581,15 +581,15 @@ public class ListofPractiseTests extends AppCompatActivity {
                             if(checkFlag>0){
                                 Log.e("ListofPractiseTests----","Test Already Exists");
                             }else{
-                                long insertFlag=myhelper.insertPractiseTest(myObj.getInt("sptu_key"),myObj.getString("sptu_org_id"),myObj.getString("sptu_entroll_id"),myObj.getString("sptu_student_ID"),
-                                        myObj.getString("sptu_batch"),myObj.getString("sptu_ID"),myObj.getString("sptu_paper_ID"),myObj.getString("sptu_subjet_ID"),
-                                        myObj.getString("sptu_course_id"),myObj.getString("sptu_start_date"),myObj.getString("sptu_end_date"),myObj.getString("sptu_dwnld_status"),
-                                        myObj.getInt("sptu_no_of_questions"),myObj.getDouble("sptu_tot_marks"),myObj.getDouble("stpu_min_marks"),myObj.getDouble("sptu_max_marks"));
-                                if(insertFlag>0){
-                                    Log.e("ListofPractiseTests----","Test Inserted in Local");
-                                }else{
-                                    Log.e("ListofPractiseTests----","Local Test Insertion Failed");
-                                }
+//                                long insertFlag=myhelper.insertPractiseTest(myObj.getInt("sptu_key"),myObj.getString("sptu_org_id"),myObj.getString("sptu_entroll_id"),myObj.getString("sptu_student_ID"),
+//                                        myObj.getString("sptu_batch"),myObj.getString("sptu_ID"),myObj.getString("sptu_paper_ID"),myObj.getString("sptu_subjet_ID"),
+//                                        myObj.getString("sptu_course_id"),myObj.getString("sptu_start_date"),myObj.getString("sptu_end_date"),myObj.getString("sptu_dwnld_status"),
+//                                        myObj.getInt("sptu_no_of_questions"),myObj.getDouble("sptu_tot_marks"),myObj.getDouble("stpu_min_marks"),myObj.getDouble("sptu_max_marks"));
+//                                if(insertFlag>0){
+//                                    Log.e("ListofPractiseTests----","Test Inserted in Local");
+//                                }else{
+//                                    Log.e("ListofPractiseTests----","Local Test Insertion Failed");
+//                                }
                             }
 
                         }

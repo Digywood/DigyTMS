@@ -88,8 +88,8 @@ public class DashBoardNavActivity extends AppCompatActivity implements Navigatio
         new BagroundTask(URLClass.hosturl +"getStudentFullData.php",hmap,DashBoardNavActivity.this,new IBagroundListener() {
             @Override
             public void bagroundData(String json) {
-                JSONArray ja_enrollments_table,ja_subjects_table,ja_papers_table,ja_tests_table,ja_assesmenttests;
-                JSONObject enrollObj,subjectObj,paperObj,testObj,assesmentObj;
+                JSONArray ja_enrollments_table,ja_subjects_table,ja_papers_table,ja_tests_table,ja_assesmenttests,ja_tdata;
+                JSONObject enrollObj,subjectObj,paperObj,testObj,assesmentObj,testdataObj;
 
                 try{
                     Log.e("MainActivity----","FullData"+json);
@@ -215,7 +215,7 @@ public class DashBoardNavActivity extends AppCompatActivity implements Navigatio
                                     }
                                 }else{
                                     long insertFlag=myhelper.insertPractiseTest(testObj.getInt("sptu_key"),testObj.getString("sptu_org_id"),testObj.getString("sptu_entroll_id"),testObj.getString("sptu_student_ID"),
-                                            testObj.getString("sptu_batch"),testObj.getString("sptu_ID"),testObj.getString("sptu_paper_ID"),testObj.getString("sptu_subjet_ID"),
+                                            testObj.getString("sptu_batch"),testObj.getString("sptu_ID"),testObj.getString("sptu_name"),testObj.getString("sptu_paper_ID"),testObj.getString("sptu_subjet_ID"),
                                             testObj.getString("sptu_course_id"),testObj.getString("sptu_start_date"),testObj.getString("sptu_end_date"),testObj.getString("sptu_dwnld_status"),
                                             testObj.getInt("sptu_no_of_questions"),testObj.getDouble("sptu_tot_marks"),testObj.getDouble("stpu_min_marks"),testObj.getDouble("sptu_max_marks"));
                                     if(insertFlag>0){
@@ -266,6 +266,39 @@ public class DashBoardNavActivity extends AppCompatActivity implements Navigatio
                     }
                     else {
                         Log.e("AssesmentTests--","No AssesmentTests: ");
+                    }
+
+                    Object obj6=myObj.get("testdata");
+
+                    if (obj6 instanceof JSONArray)
+                    {
+                        long tdatadelcount=myhelper.deleteTestRawData();
+                        Log.e("tdatadelcount----",""+tdatadelcount);
+                        ja_tdata=myObj.getJSONArray("testdata");
+                        if(ja_tdata!=null && ja_tdata.length()>0){
+                            Log.e("tdataLength---",""+ja_tdata.length());
+                            int p=0,q=0;
+                            for(int i=0;i<ja_tdata.length();i++){
+
+                                testdataObj=ja_tdata.getJSONObject(i);
+                                long insertFlag=myhelper.insertTestAggrigateRecord(testdataObj.getInt("testKey"),testdataObj.getString("testId"),testdataObj.getString("testType"),testdataObj.getString("test_OrgId"),
+                                        testdataObj.getString("test_batchId"),testdataObj.getString("test_courseId"),testdataObj.getString("test_paperId"),testdataObj.getString("test_subjectId"),
+                                        testdataObj.getDouble("minPercentage"),testdataObj.getDouble("maxPercentage"),testdataObj.getDouble("avgPercentage"),testdataObj.getInt("minAttempts"),
+                                        testdataObj.getInt("maxAttempts"),testdataObj.getInt("avgAttempts"),testdataObj.getInt("flag"),testdataObj.getString("createdBy"),
+                                        testdataObj.getString("createdDttm"),testdataObj.getString("modifiedBy"),testdataObj.getString("modifiedDttm"));
+                                if(insertFlag>0){
+                                    p++;
+                                }else {
+                                    q++;
+                                }
+                            }
+                            Log.e("TestRawData--","Inserted: "+p);
+                        }else{
+                            Log.e("TestRawData--","Empty Json Array: ");
+                        }
+                    }
+                    else {
+                        Log.e("TestRawData--","No Tests Data: ");
                     }
 
 

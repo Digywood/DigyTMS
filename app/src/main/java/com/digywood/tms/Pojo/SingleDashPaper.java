@@ -4,13 +4,13 @@ public class SingleDashPaper {
 
     private String paperid,papername;
     private int totaltests,attemptedtests;
-    private Double max,min,avg;
+    private Double max,min,avg,bmin,bmax,bavg;
 
     public SingleDashPaper(){
 
     }
 
-    public SingleDashPaper(String paperid,String papername,int tottests,int atmtests,double max,double min,double avg){
+    public SingleDashPaper(String paperid,String papername,int tottests,int atmtests,double max,double min,double avg,double bmin,double bmax,double bavg){
 
         this.paperid=paperid;
         this.papername=papername;
@@ -19,6 +19,9 @@ public class SingleDashPaper {
         this.max=max;
         this.min=min;
         this.avg=avg;
+        this.bmax=bmax;
+        this.bmin=bmin;
+        this.bavg=bavg;
 
     }
 
@@ -76,5 +79,29 @@ public class SingleDashPaper {
 
     public void setAvg(Double avg) {
         this.avg = avg;
+    }
+
+    public Double getBmin() {
+        return bmin;
+    }
+
+    public void setBmin(Double bmin) {
+        this.bmin = bmin;
+    }
+
+    public Double getBmax() {
+        return bmax;
+    }
+
+    public void setBmax(Double bmax) {
+        this.bmax = bmax;
+    }
+
+    public Double getBavg() {
+        return bavg;
+    }
+
+    public void setBavg(Double bavg) {
+        this.bavg = bavg;
     }
 }

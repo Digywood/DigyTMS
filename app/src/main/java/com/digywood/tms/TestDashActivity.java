@@ -20,16 +20,16 @@ import java.util.ArrayList;
 
 public class TestDashActivity extends AppCompatActivity {
 
-    String paperid="",testtype="",lastdate="";;
+    String paperid="",testtype="";;
     RecyclerView rv_tests;
     TextView tv_emptytests;
     DBHelper myhelper;
-    int attemptcount=0;
-    Double min=0.0,max=0.0,avg=0.0,lastscore=0.0;
+    Double lastscore=0.0;
     TestDashAdapter tdAdp;
     LinearLayoutManager myLayoutManager;
     ArrayList<SingleDashTest> dashTestList=new ArrayList<>();
     ArrayList<String> testids=new ArrayList<>();
+    ArrayList<String> testnames=new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,7 +60,9 @@ public class TestDashActivity extends AppCompatActivity {
         if(mycursor.getCount()>0){
             while (mycursor.moveToNext()){
                 String testid=mycursor.getString(mycursor.getColumnIndex("sptu_ID"));
-                testids.add(paperid);
+                String testname=mycursor.getString(mycursor.getColumnIndex("sptu_name"));
+                testids.add(testid);
+                testnames.add(testname);
             }
             Log.e("CourseActivity----",""+testids.size());
             mycursor.close();
@@ -70,11 +72,15 @@ public class TestDashActivity extends AppCompatActivity {
 
         if(testids.size()>0){
 
+            int attemptcount=0;
+            double lastscore=0.0;
+            String lastdate="";
+            double min=0.0;
+            double max=0.0;
+            double avg=0.0;
+
             for(int i=0;i<testids.size();i++){
-                attemptcount=0;
-                min=0.0;
-                max=0.0;
-                avg=0.0;
+
                 int totaltestcount=myhelper.getTestsByPaper(testids.get(i));
                 Cursor mycur=myhelper.getFlashSummaryByPaper(testids.get(i));
                 if(mycur.getCount()>0){
@@ -88,8 +94,6 @@ public class TestDashActivity extends AppCompatActivity {
                     mycur.close();
                 }
 
-//                dashPaperList.add(new SingleDashPaper(paperids.get(i),papernames.get(i),totaltestcount,attemptcount,max,min,avg));
-
             }
         }
 
@@ -102,7 +106,9 @@ public class TestDashActivity extends AppCompatActivity {
         if(mycursor.getCount()>0){
             while (mycursor.moveToNext()){
                 String testid=mycursor.getString(mycursor.getColumnIndex("sptu_ID"));
+                String testname=mycursor.getString(mycursor.getColumnIndex("sptu_name"));
                 testids.add(testid);
+                testnames.add(testname);
             }
             Log.e("CourseActivity----",""+testids.size());
             mycursor.close();
@@ -112,13 +118,12 @@ public class TestDashActivity extends AppCompatActivity {
 
         if(testids.size()>0){
 
+            int attemptcount=0,minattempts=0,maxattepts=0,avgattempts=0;
+            double lastscore=0.0,min=0.0,max=0.0,avg=0.0,bmin=0.0,bmax=0.0,bavg=0.0;
+            String lastdate="";
+
             for(int i=0;i<testids.size();i++){
-                attemptcount=0;
-                lastscore=0.0;
-                lastdate="";
-                min=0.0;
-                max=0.0;
-                avg=0.0;
+
                 Cursor mycur=myhelper.getTestFlashSummary(testids.get(i));
                 if(mycur.getCount()>0){
                     while (mycur.moveToNext()){
@@ -133,7 +138,21 @@ public class TestDashActivity extends AppCompatActivity {
                     mycur.close();
                 }
 
-                dashTestList.add(new SingleDashTest(testids.get(i),"Sample",attemptcount,lastdate,lastscore,"2018-05-04",min,max,avg,0.0,0.0,0.0,0,0,0));
+                Cursor mycur1=myhelper.getTestAggrigateData(testids.get(i),"FLASH");
+                if(mycur1.getCount()>0){
+                    while (mycur1.moveToNext()){
+                        minattempts=mycur1.getInt(mycur1.getColumnIndex("minAttempts"));
+                        maxattepts=mycur1.getInt(mycur1.getColumnIndex("maxAttempts"));
+                        avgattempts=mycur1.getInt(mycur1.getColumnIndex("avgAttempts"));
+                        bmin=mycur1.getDouble(mycur1.getColumnIndex("minPercentage"));
+                        bmax=mycur1.getDouble(mycur1.getColumnIndex("maxPercentage"));
+                        bavg=mycur1.getDouble(mycur1.getColumnIndex("avgPercentage"));
+                    }
+                }else{
+                    mycur1.close();
+                }
+
+                dashTestList.add(new SingleDashTest(testids.get(i),testnames.get(i),attemptcount,lastdate,lastscore,"2018-05-04",min,max,avg,bmin,bmax,bavg,avgattempts,maxattepts,minattempts));
 
             }
         }
