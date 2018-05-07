@@ -107,6 +107,7 @@ public class DBHelper extends SQLiteOpenHelper {
                 "  `sptu_student_ID` text DEFAULT NULL,\n" +
                 "  `sptu_batch` text DEFAULT NULL,\n" +
                 "  `sptu_ID` text DEFAULT NULL,\n" +
+                "  `sptu_name` varchar(50) DEFAULT NULL,\n" +
                 "  `sptu_paper_ID` text DEFAULT NULL,\n" +
                 "  `sptu_subjet_ID` text DEFAULT NULL,\n" +
                 "  `sptu_course_id` text DEFAULT NULL,\n" +
@@ -176,6 +177,28 @@ public class DBHelper extends SQLiteOpenHelper {
                 "  `satu_mod_by` text DEFAULT NULL,\n" +
                 "  `satu_mod_dttm` datetime DEFAULT NULL)";
         db.execSQL(tbl_satu_student);
+
+        String tbl_test_main="CREATE TABLE IF NOT EXISTS `test_main` (\n" +
+                "  `testKey` integer PRIMARY KEY,\n" +
+                "  `testId` text DEFAULT NULL,\n" +
+                "  `testType` text DEFAULT NULL,\n" +
+                "  `test_OrgId` text DEFAULT NULL,\n" +
+                "  `test_batchId` text DEFAULT NULL,\n" +
+                "  `test_courseId` text DEFAULT NULL,\n" +
+                "  `test_paperId` text DEFAULT NULL,\n" +
+                "  `test_subjectId` text DEFAULT NULL,\n" +
+                "  `minPercentage` double DEFAULT NULL,\n" +
+                "  `maxPercentage` double DEFAULT NULL,\n" +
+                "  `avgPercentage` double DEFAULT NULL,\n" +
+                "  `minAttempts` int(5) DEFAULT NULL,\n" +
+                "  `maxAttempts` int(5) DEFAULT NULL,\n" +
+                "  `avgAttempts` int(5) DEFAULT NULL,\n" +
+                "  `flag` int(2) DEFAULT NULL,\n" +
+                "  `createdBy` varchar(45) DEFAULT NULL,\n" +
+                "  `createdDttm` varchar(45) DEFAULT NULL,\n" +
+                "  `modifiedBy` varchar(45) DEFAULT NULL,\n" +
+                "  `modifiedDttm` varchar(45) DEFAULT NULL)";
+        db.execSQL(tbl_test_main);
 
         String AttemptList ="CREATE TABLE `attempt_list` (\n"+
                 "   `Attempt_ID` TEXT,\n"+
@@ -325,6 +348,50 @@ public class DBHelper extends SQLiteOpenHelper {
     @Override
     public void onDowngrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         super.onDowngrade(db, oldVersion, newVersion);
+    }
+
+    public long insertTestAggrigateRecord(int tkey,String tid,String testtype,String torgid,String tbatchid,String tcourseid,String tpaperid,String tsubjectid,double minpercent,double maxpercent,double avgpercent,int minattempts,int maxattempts,int avgattempts,int flag,String createby,String cdttm,String modifiedby,String mdttm){
+        long insertFlag=0;
+        ContentValues cv = new ContentValues();
+        cv.put("testKey",tkey);
+        cv.put("testId",tid);
+        cv.put("testType",testtype);
+        cv.put("test_OrgId",torgid);
+        cv.put("test_batchId",tbatchid);
+        cv.put("test_courseId",tcourseid);
+        cv.put("test_paperId",tpaperid);
+        cv.put("test_subjectId",tsubjectid);
+        cv.put("minPercentage",minpercent);
+        cv.put("maxPercentage",maxpercent);
+        cv.put("avgPercentage",avgpercent);
+        cv.put("minAttempts",minattempts);
+        cv.put("maxAttempts",maxattempts);
+        cv.put("avgAttempts",avgattempts);
+        cv.put("flag",flag);
+        cv.put("createdBy",createby);
+        cv.put("createdDttm",cdttm);
+        cv.put("modifiedBy",modifiedby);
+        cv.put("modifiedDttm",mdttm);
+        insertFlag = db.insert("test_main",null, cv);
+        return insertFlag;
+    }
+
+    public Cursor getTestAggrigateData(String testId,String testtype){
+        String query ="SELECT minPercentage,maxPercentage,avgPercentage,minAttempts,maxAttempts,avgAttempts FROM "+" test_main"+" WHERE testId='"+testId+"' and testType='"+testtype+"'";
+        Cursor c=db.rawQuery(query,null);
+        return c;
+    }
+
+    public Cursor getPaperAggrigateData(String paperId,String testtype){
+        String query ="SELECT MIN(minPercentage) as minscore,MAX(maxPercentage) as maxscore,AVG(avgPercentage) as avgscore FROM "+" test_main"+" WHERE test_paperId='"+paperId+"' and testType='"+testtype+"'";
+        Cursor c=db.rawQuery(query,null);
+        return c;
+    }
+
+    public long deleteTestRawData(){
+        long deleteFlag=0;
+        deleteFlag=db.delete("test_main", null,null);
+        return  deleteFlag;
     }
 
     public long insertAssesmentTest(int tkey,String torgid,String tenrollid,String tstudentid,String tbatch,String tid,String tpid,String tsid,String tcid,String tstartdate,String tenddate,String tdwdstatus,int tnoofques,String testfilename,String testKey,Double ttotalmarks,Double tminmarks,Double tmaxmarks){
@@ -618,7 +685,7 @@ public class DBHelper extends SQLiteOpenHelper {
         return  deleteFlag;
     }
 
-    public long insertPractiseTest(int tkey,String torgid,String tenrollid,String tstudentid,String tbatch,String tid,String tpid,String tsid,String tcid,String tstartdate,String tenddate,String tdwdstatus,int tnoofques,Double ttotalmarks,Double tminmarks,Double tmaxmarks){
+    public long insertPractiseTest(int tkey,String torgid,String tenrollid,String tstudentid,String tbatch,String tid,String testname,String tpid,String tsid,String tcid,String tstartdate,String tenddate,String tdwdstatus,int tnoofques,Double ttotalmarks,Double tminmarks,Double tmaxmarks){
         long insertFlag=0;
         ContentValues cv = new ContentValues();
         cv.put("sptu_key",tkey);
@@ -627,6 +694,7 @@ public class DBHelper extends SQLiteOpenHelper {
         cv.put("sptu_student_ID",tstudentid);
         cv.put("sptu_batch",tbatch);
         cv.put("sptu_ID",tid);
+        cv.put("sptu_name",testname);
         cv.put("sptu_paper_ID",tpid);
         cv.put("sptu_subjet_ID",tsid);
         cv.put("sptu_course_id",tcid);
@@ -712,7 +780,7 @@ public class DBHelper extends SQLiteOpenHelper {
     }
 
     public Cursor getTestDataByPaper(String paperid){
-        Cursor c =db.query("sptu_student", new String[] {"sptu_entroll_id,sptu_student_ID,sptu_ID"},"sptu_paper_ID='"+paperid+"'", null, null, null,null);
+        Cursor c =db.query("sptu_student", new String[] {"sptu_entroll_id,sptu_student_ID,sptu_ID,sptu_name"},"sptu_paper_ID='"+paperid+"'", null, null, null,null);
         return c;
     }
 

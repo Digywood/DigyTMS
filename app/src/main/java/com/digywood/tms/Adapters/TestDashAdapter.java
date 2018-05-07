@@ -2,7 +2,9 @@ package com.digywood.tms.Adapters;
 
 import android.content.Context;
 import android.content.Intent;
+import android.icu.text.SimpleDateFormat;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,7 +17,10 @@ import com.digywood.tms.R;
 import com.digywood.tms.TestDashActivity;
 
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
+import java.util.TimeZone;
 
 public class TestDashAdapter extends RecyclerView.Adapter<TestDashAdapter.MyViewHolder>{
 
@@ -49,7 +54,6 @@ public class TestDashAdapter extends RecyclerView.Adapter<TestDashAdapter.MyView
         }
     }
 
-
     public TestDashAdapter(List<SingleDashTest> paperdashList, Context c) {
         this.testdashList = paperdashList;
         this.mycontext=c;
@@ -69,20 +73,50 @@ public class TestDashAdapter extends RecyclerView.Adapter<TestDashAdapter.MyView
     public void onBindViewHolder(final TestDashAdapter.MyViewHolder holder, final int position) {
         final SingleDashTest singleDashTest = testdashList.get(position);
 
-        holder.tv_testname.setText(singleDashTest.getTestname());
-        holder.tv_noofattempts.setText(""+singleDashTest.getNoofattempts());
-        holder.tv_lastdate.setText(singleDashTest.getDttm());
-        holder.tv_lastscore.setText(""+round(singleDashTest.getLatestpercenatage(),1)+" %");
-        holder.tv_uploaddttm.setText(singleDashTest.getUploaddttm());
-        holder.tv_smin.setText(""+round(singleDashTest.getSmin(),1)+" %");
-        holder.tv_smax.setText(""+round(singleDashTest.getSman(),1)+" %");
-        holder.tv_savg.setText(""+round(singleDashTest.getSavg(),1)+" %");
-        holder.tv_omin.setText(""+round(singleDashTest.getOmin(),1)+" %");
-        holder.tv_omax.setText(""+round(singleDashTest.getOmax(),1)+" %");
-        holder.tv_oavg.setText(""+round(singleDashTest.getOavg(),1)+" %");
-        holder.tv_avgattempts.setText(""+singleDashTest.getAvgattempts());
-        holder.tv_maxattempts.setText(""+singleDashTest.getMaxattempts());
-        holder.tv_minattempts.setText(""+singleDashTest.getMinattempts());
+        try{
+
+            holder.tv_testname.setText(singleDashTest.getTestname());
+            holder.tv_noofattempts.setText(""+singleDashTest.getNoofattempts());
+            holder.tv_lastdate.setText(""+singleDashTest.getDttm());
+            holder.tv_lastscore.setText(""+round(singleDashTest.getLatestpercenatage(),1)+" %");
+            holder.tv_uploaddttm.setText(singleDashTest.getUploaddttm());
+
+            if(singleDashTest.getSmin()>singleDashTest.getOmin()){
+                holder.tv_smin.setText(" "+round(singleDashTest.getSmin(),1));
+                holder.tv_smin.setCompoundDrawablesWithIntrinsicBounds( R.drawable.upclrarrow, 0, 0, 0);
+            }else{
+                holder.tv_smin.setText(" "+round(singleDashTest.getSmin(),1));
+                holder.tv_smin.setCompoundDrawablesWithIntrinsicBounds( R.drawable.downclrarrow, 0, 0, 0);
+            }
+
+            if(singleDashTest.getSman()>singleDashTest.getOmax()){
+                holder.tv_smax.setText(" "+round(singleDashTest.getSman(),1));
+                holder.tv_smax.setCompoundDrawablesWithIntrinsicBounds( R.drawable.upclrarrow, 0, 0, 0);
+            }else{
+                holder.tv_smax.setText(" "+round(singleDashTest.getSman(),1));
+                holder.tv_smax.setCompoundDrawablesWithIntrinsicBounds( R.drawable.downclrarrow, 0, 0, 0);
+            }
+
+            if(singleDashTest.getSavg()>singleDashTest.getOavg()){
+                holder.tv_savg.setText(" "+round(singleDashTest.getSavg(),1));
+                holder.tv_savg.setCompoundDrawablesWithIntrinsicBounds( R.drawable.upclrarrow, 0, 0, 0);
+            }else{
+                holder.tv_savg.setText(" "+round(singleDashTest.getSavg(),1));
+                holder.tv_savg.setCompoundDrawablesWithIntrinsicBounds( R.drawable.downclrarrow, 0, 0, 0);
+            }
+
+
+            holder.tv_omin.setText(" "+round(singleDashTest.getOmin(),1));
+            holder.tv_omax.setText(" "+round(singleDashTest.getOmax(),1));
+            holder.tv_oavg.setText(" "+round(singleDashTest.getOavg(),1));
+            holder.tv_avgattempts.setText(""+singleDashTest.getAvgattempts());
+            holder.tv_maxattempts.setText(""+singleDashTest.getMaxattempts());
+            holder.tv_minattempts.setText(""+singleDashTest.getMinattempts());
+
+        }catch (Exception e){
+            e.printStackTrace();
+            Log.e("TestDashAdp:---",e.toString());
+        }
 
 //        holder.btn_details.setOnClickListener(new View.OnClickListener() {
 //            @Override

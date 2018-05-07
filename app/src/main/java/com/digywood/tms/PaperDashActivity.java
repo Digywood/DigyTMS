@@ -21,8 +21,6 @@ public class PaperDashActivity extends AppCompatActivity {
     TextView tv_emptyptests;
     DBHelper myhelper;
     String courseid="",testtype="";
-    int attemptcount=0;
-    Double min=0.0,max=0.0,avg=0.0;
     PaperDashAdapter pdAdp;
     LinearLayoutManager myLayoutManager;
     ArrayList<SingleDashPaper> dashPaperList=new ArrayList<>();
@@ -70,11 +68,11 @@ public class PaperDashActivity extends AppCompatActivity {
 
         if(paperids.size()>0){
 
+            int attemptcount=0;
+            double min=0.0,max=0.0,avg=0.0,bmin=0.0,bmax=0.0,bavg=0.0;
+
             for(int i=0;i<paperids.size();i++){
-                attemptcount=0;
-                min=0.0;
-                max=0.0;
-                avg=0.0;
+
                 int totaltestcount=myhelper.getTestsByPaper(paperids.get(i));
                 Cursor mycur=myhelper.getFlashSummaryByPaper(paperids.get(i));
                 if(mycur.getCount()>0){
@@ -88,7 +86,7 @@ public class PaperDashActivity extends AppCompatActivity {
                     mycur.close();
                 }
 
-                dashPaperList.add(new SingleDashPaper(paperids.get(i),papernames.get(i),totaltestcount,attemptcount,max,min,avg));
+//                dashPaperList.add(new SingleDashPaper(paperids.get(i),papernames.get(i),totaltestcount,attemptcount,max,min,avg));
 
             }
         }
@@ -115,12 +113,12 @@ public class PaperDashActivity extends AppCompatActivity {
 
         if(paperids.size()>0){
 
+            int attemptcount=0;
+            double min=0.0,max=0.0,avg=0.0,bmin=0.0,bmax=0.0,bavg=0.0;
+
             for(int i=0;i<paperids.size();i++){
-                attemptcount=0;
-                min=0.0;
-                max=0.0;
-                avg=0.0;
                 int totaltestcount=myhelper.getTestsByPaper(paperids.get(i));
+
                 Cursor mycur=myhelper.getFlashSummaryByPaper(paperids.get(i));
                 if(mycur.getCount()>0){
                     while (mycur.moveToNext()){
@@ -133,7 +131,18 @@ public class PaperDashActivity extends AppCompatActivity {
                     mycur.close();
                 }
 
-                dashPaperList.add(new SingleDashPaper(paperids.get(i),papernames.get(i),totaltestcount,attemptcount,max,min,avg));
+                Cursor mycur1=myhelper.getPaperAggrigateData(paperids.get(i),"FLASH");
+                if(mycur1.getCount()>0){
+                    while (mycur1.moveToNext()){
+                        min=mycur1.getDouble(mycur1.getColumnIndex("minscore"));
+                        max=mycur1.getDouble(mycur1.getColumnIndex("maxscore"));
+                        avg=mycur1.getDouble(mycur1.getColumnIndex("avgscore"));
+                    }
+                }else{
+                    mycur1.close();
+                }
+
+                dashPaperList.add(new SingleDashPaper(paperids.get(i),papernames.get(i),totaltestcount,attemptcount,max,min,avg,bmin,bmax,bavg));
 
             }
         }

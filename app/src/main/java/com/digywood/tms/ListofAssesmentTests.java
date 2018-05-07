@@ -405,15 +405,15 @@ public class ListofAssesmentTests extends AppCompatActivity {
                             if(checkFlag>0){
                                 Log.e("ListofPractiseTests----","Test Already Exists");
                             }else{
-                                long insertFlag=myhelper.insertPractiseTest(myObj.getInt("sptu_key"),myObj.getString("sptu_org_id"),myObj.getString("sptu_entroll_id"),myObj.getString("sptu_student_ID"),
-                                        myObj.getString("sptu_batch"),myObj.getString("sptu_ID"),myObj.getString("sptu_paper_ID"),myObj.getString("sptu_subjet_ID"),
-                                        myObj.getString("sptu_course_id"),myObj.getString("sptu_start_date"),myObj.getString("sptu_end_date"),myObj.getString("sptu_dwnld_status"),
-                                        myObj.getInt("sptu_no_of_questions"),myObj.getDouble("sptu_tot_marks"),myObj.getDouble("stpu_min_marks"),myObj.getDouble("sptu_max_marks"));
-                                if(insertFlag>0){
-                                    Log.e("ListofPractiseTests----","Test Inserted in Local");
-                                }else{
-                                    Log.e("ListofPractiseTests----","Local Test Insertion Failed");
-                                }
+//                                long insertFlag=myhelper.insertPractiseTest(myObj.getInt("sptu_key"),myObj.getString("sptu_org_id"),myObj.getString("sptu_entroll_id"),myObj.getString("sptu_student_ID"),
+//                                        myObj.getString("sptu_batch"),myObj.getString("sptu_ID"),myObj.getString("sptu_paper_ID"),myObj.getString("sptu_subjet_ID"),
+//                                        myObj.getString("sptu_course_id"),myObj.getString("sptu_start_date"),myObj.getString("sptu_end_date"),myObj.getString("sptu_dwnld_status"),
+//                                        myObj.getInt("sptu_no_of_questions"),myObj.getDouble("sptu_tot_marks"),myObj.getDouble("stpu_min_marks"),myObj.getDouble("sptu_max_marks"));
+//                                if(insertFlag>0){
+//                                    Log.e("ListofPractiseTests----","Test Inserted in Local");
+//                                }else{
+//                                    Log.e("ListofPractiseTests----","Local Test Insertion Failed");
+//                                }
                             }
 
                         }
