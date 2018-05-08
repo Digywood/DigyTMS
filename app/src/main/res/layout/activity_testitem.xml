@@ -29,9 +29,9 @@
 
                 <ImageView
                     android:id="@+id/iv_history"
-                    android:layout_width="40dp"
-                    android:layout_height="40dp"
-                    android:layout_marginStart="20dp"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:layout_marginStart="6dp"
                     android:src="@drawable/ic_history_black_36dp" />
 
                 <TextView
@@ -40,8 +40,9 @@
                     android:layout_height="match_parent"
                     android:layout_weight="1"
                     android:gravity="center"
+                    android:textStyle="bold"
                     android:hint="testid"
-                    android:textColor="#000000"
+                    android:textColor="@color/green"
                     android:textSize="16dp" />
 
                 <TextView
@@ -54,9 +55,10 @@
 
                 <ImageView
                     android:id="@+id/iv_download"
-                    android:layout_width="40dp"
-                    android:layout_height="40dp"
-                    android:layout_marginEnd="20dp"
+                    android:layout_width="25dp"
+                    android:layout_height="25dp"
+                    android:layout_marginTop="2dp"
+                    android:layout_marginEnd="6dp"
                     android:src="@drawable/download" />
 
             </LinearLayout>
@@ -84,6 +86,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:gravity="center_horizontal|top"
+                        android:textColor="#000000"
                         android:text="Practice Test" />
 
                     <LinearLayout android:layout_width="match_parent"
@@ -130,6 +133,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:gravity="center_horizontal"
+                        android:textColor="#000000"
                         android:text="Flash Card" />
 
                     <LinearLayout android:layout_width="match_parent"
@@ -150,90 +154,8 @@
                 </LinearLayout>
 
             </LinearLayout>
-        </LinearLayout>
-
-
-        <!--        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1">
-
-            <Button
-                android:id="@+id/btn_teststart"
-                android:layout_width="wrap_content"
-                android:layout_height="35dp"
-                android:textColor="#000000"
-                android:background="@drawable/btn_shape"
-                android:text="play"/>
 
         </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1">
-
-            <Button
-                android:id="@+id/btn_testresume"
-                android:layout_width="wrap_content"
-                android:layout_height="35dp"
-                android:textColor="#000000"
-                android:background="@drawable/btn_shape"
-                android:text="Review"/>
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1">
-
-            <CheckBox
-                android:id="@+id/cb_testselection"
-                android:layout_width="wrap_content"
-                android:layout_height="35dp" />
-
-        </LinearLayout>
-
-        <TextView
-            android:id="@+id/tv_teststatus"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="teststatus"
-            android:gravity="center_vertical"
-            android:textColor="#000000"
-            android:layout_weight="1"
-            android:textSize="14dp"/>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1">
-
-            <Button
-                android:id="@+id/btn_fteststart"
-                android:layout_width="wrap_content"
-                android:layout_height="35dp"
-                android:textColor="#000000"
-                android:background="@drawable/btn_shape"
-                android:text="Start"/>
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1">
-
-            <Button
-                android:id="@+id/btn_fattempthistory"
-                android:layout_width="wrap_content"
-                android:layout_height="35dp"
-                android:textColor="#000000"
-                android:background="@drawable/btn_shape"
-                android:text="History"/>
-
-        </LinearLayout>-->
 
     </android.support.v7.widget.CardView>
 

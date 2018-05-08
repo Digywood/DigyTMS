@@ -207,7 +207,8 @@ public class PracticeFragment extends Fragment implements OnChartValueSelectedLi
                 SingleEnrollment singleEnrollment=enrollPojos.get(position);
                 enrollid=singleEnrollment.getEnrollid();
                 courseid=singleEnrollment.getEnrollcourseid();
-                tv_courseid.setText(courseid);
+                String cname=myhelper.getCoursenameById(courseid);
+                tv_courseid.setText(cname);
             }
 
             @Override
