@@ -449,6 +449,7 @@ public class TestActivity extends AppCompatActivity implements
                                                 try {
                                                     long value = dataObj.UpdateAttempt(generateUniqueId(0),attempt.getString("ptu_test_ID"),2, 0,dataObj.getQuestionAttempted(),dataObj.getQuestionSkipped(),dataObj.getQustionBookmarked(),dataObj.getQustionNotAttempted(), 0, millisRemaining, index, pos);
                                                     if (value <= 0) {
+                                                        Log.e("PaperId: ","pid  "+paperid);
                                                         long ret = dataObj.InsertAttempt(generateUniqueId(1),attempt.getString("ptu_test_ID"),enrollid,"",courseid,subjectId,paperid,2, 0,dataObj.getQuestionAttempted(),dataObj.getQuestionSkipped(),dataObj.getQustionBookmarked(),dataObj.getQustionNotAttempted(), 0, millisRemaining, index, pos);
                                                         Log.e("Insertion",""+ret);
                                                     }
@@ -845,6 +846,7 @@ public class TestActivity extends AppCompatActivity implements
                                 try {
                                     long value = dataObj.UpdateAttempt(generateUniqueId(0),attempt.getString("ptu_test_ID"),2, 0,dataObj.getQuestionAttempted(),dataObj.getQuestionSkipped(),dataObj.getQustionBookmarked(),dataObj.getQustionNotAttempted(), 0, millisRemaining, index, pos);
                                     if (value <= 0) {
+                                        Log.e("PaperId: ","pid  "+paperid);
                                         long ret = dataObj.InsertAttempt(generateUniqueId(0),attempt.getString("ptu_test_ID"),enrollid,"",courseid,subjectId,paperid,2, 0,dataObj.getQuestionAttempted(),dataObj.getQuestionSkipped(),dataObj.getQustionBookmarked(),dataObj.getQustionNotAttempted(), 0, millisRemaining, index, pos);
                                         Log.e("Insertion",""+ret);
                                     }

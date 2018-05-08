@@ -53,7 +53,6 @@ public class PaperDashActivity extends AppCompatActivity {
 
     public void getPapersByCourseP(String courseid){
 
-        Toast.makeText(getApplicationContext(),"Practise",Toast.LENGTH_SHORT).show();
         paperids.clear();
         papernames.clear();
         Cursor mycursor=myhelper.getPapersByCourse(courseid);
@@ -84,6 +83,8 @@ public class PaperDashActivity extends AppCompatActivity {
                 if(mycur.getCount()>0){
                     while (mycur.moveToNext()){
                         Log.e("Cursor Row:----",""+mycur.getCount()+"  paperid:--"+paperids.get(i));
+                        Log.e("Cursor Data:----","min: "+mycur.getDouble(mycur.getColumnIndex("minscore"))+" max:  "+mycur.getDouble(mycur.getColumnIndex("maxscore"))+"  avg: "+mycur.getDouble(mycur.getColumnIndex("avgscore")));
+
                         attemptcount=mycur.getInt(mycur.getColumnIndex("attemptpcount"));
                         min=mycur.getDouble(mycur.getColumnIndex("minscore"));
                         max=mycur.getDouble(mycur.getColumnIndex("maxscore"));
@@ -114,7 +115,6 @@ public class PaperDashActivity extends AppCompatActivity {
 
     public void getPapersByCourseF(String courseid){
 
-        Toast.makeText(getApplicationContext(),"Flash",Toast.LENGTH_SHORT).show();
         paperids.clear();
         papernames.clear();
         Cursor mycursor=myhelper.getPapersByCourse(courseid);

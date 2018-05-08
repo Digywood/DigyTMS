@@ -2,8 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:layout_margin="2dp">
+    android:layout_height="match_parent">
 
     <ScrollView
         android:layout_width="match_parent"
@@ -24,10 +23,10 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="7"
-                    android:id="@+id/sp_penrollids"/>
+                    android:id="@+id/sp_fenrollids"/>
 
                 <TextView
-                    android:id="@+id/tv_pcourseid"
+                    android:id="@+id/tv_fcourseid"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:textColor="@color/green"
@@ -48,16 +47,10 @@
                     android:orientation="vertical"
                     android:layout_weight="1">
 
-                    <LinearLayout
-                        android:layout_width="200dp"
-                        android:layout_height="200dp">
-
-                        <com.github.mikephil.charting.charts.PieChart
-                            android:id="@+id/chart1"
-                            android:layout_width="200dp"
-                            android:layout_height="200dp" />
-
-                    </LinearLayout>
+                    <com.github.mikephil.charting.charts.PieChart
+                        android:id="@+id/chart2"
+                        android:layout_width="250dp"
+                        android:layout_height="250dp" />
 
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -74,13 +67,14 @@
                             android:textColor="@color/green"/>
 
                         <TextView
-                            android:id="@+id/tv_ptottests"
+                            android:id="@+id/tv_ftottests"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:text="0"
                             android:layout_weight="8"
                             android:textStyle="bold"
                             android:textColor="#000000"/>
+
                     </LinearLayout>
 
                     <LinearLayout
@@ -98,7 +92,7 @@
                             android:textColor="@color/green"/>
 
                         <TextView
-                            android:id="@+id/tv_pattempted"
+                            android:id="@+id/tv_fattempted"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:text="0"
@@ -123,7 +117,7 @@
                             android:textColor="@color/green"/>
 
                         <TextView
-                            android:id="@+id/tv_ptestsasplan"
+                            android:id="@+id/tv_ftestsasplan"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:text="0"
@@ -149,7 +143,7 @@
                             android:textColor="@color/green"/>
 
                         <TextView
-                            android:id="@+id/tv_ppercent"
+                            android:id="@+id/tv_fpercent"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:text="0"
@@ -174,7 +168,7 @@
                             android:textColor="@color/green"/>
 
                         <TextView
-                            android:id="@+id/tv_pRAGattempt"
+                            android:id="@+id/tv_fRAGattempt"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:text="0"
@@ -199,7 +193,7 @@
                             android:textColor="@color/green"/>
 
                         <TextView
-                            android:id="@+id/tv_pRAGAVGscore"
+                            android:id="@+id/tv_fRAGAVGscore"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:text="0"
@@ -210,7 +204,7 @@
                     </LinearLayout>
 
                     <Button
-                        android:id="@+id/btn_pdetails"
+                        android:id="@+id/btn_fdetails"
                         android:layout_width="wrap_content"
                         android:layout_height="30dp"
                         android:text="Details >>"
@@ -224,15 +218,15 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:layout_margin="2dp"
                     android:padding="3dp"
+                    android:layout_margin="2dp"
                     android:orientation="vertical">
 
                     <com.github.mikephil.charting.charts.BarChart
-                        android:id="@+id/bchart1"
+                        android:id="@+id/bchart2"
                         android:layout_marginTop="5dp"
                         android:layout_width="match_parent"
-                        android:layout_height="250dp"/>
+                        android:layout_height="300dp"/>
 
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -242,7 +236,6 @@
                         <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:gravity="center_horizontal|center_vertical"
                             android:layout_weight="1"
                             android:weightSum="10"
                             android:orientation="horizontal">
@@ -250,16 +243,17 @@
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:layout_marginRight="5dp"
                                 android:text="Max"
+                                android:layout_weight="2"
                                 android:textStyle="bold"
                                 android:textColor="@color/green"/>
 
                             <TextView
-                                android:id="@+id/tv_pmax"
+                                android:id="@+id/tv_fmax"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="0"
+                                android:layout_weight="8"
                                 android:textStyle="bold"
                                 android:textColor="#000000"/>
 
@@ -268,24 +262,24 @@
                         <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:gravity="center_horizontal|center_vertical"
                             android:layout_weight="1"
                             android:weightSum="10"
                             android:orientation="horizontal">
 
                             <TextView
                                 android:layout_width="wrap_content"
-                                android:layout_height="match_parent"
-                                android:layout_marginRight="5dp"
+                                android:layout_height="wrap_content"
                                 android:text="Min"
-                                android:textColor="@color/green"
-                                android:textStyle="bold" />
+                                android:layout_weight="2"
+                                android:textStyle="bold"
+                                android:textColor="@color/green"/>
 
                             <TextView
-                                android:id="@+id/tv_pmin"
+                                android:id="@+id/tv_fmin"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="0"
+                                android:layout_weight="8"
                                 android:textStyle="bold"
                                 android:textColor="#000000"/>
 
@@ -294,7 +288,6 @@
                         <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:gravity="center_horizontal|center_vertical"
                             android:layout_weight="1"
                             android:weightSum="10"
                             android:orientation="horizontal">
@@ -302,16 +295,17 @@
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:layout_marginRight="5dp"
                                 android:text="Avg"
+                                android:layout_weight="2"
                                 android:textStyle="bold"
                                 android:textColor="@color/green"/>
 
                             <TextView
-                                android:id="@+id/tv_pavg"
+                                android:id="@+id/tv_favg"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="0"
+                                android:layout_weight="8"
                                 android:textStyle="bold"
                                 android:textColor="#000000"/>
 

@@ -88,8 +88,8 @@ public class DashBoardNavActivity extends AppCompatActivity implements Navigatio
         new BagroundTask(URLClass.hosturl +"getStudentFullData.php",hmap,DashBoardNavActivity.this,new IBagroundListener() {
             @Override
             public void bagroundData(String json) {
-                JSONArray ja_enrollments_table,ja_subjects_table,ja_papers_table,ja_tests_table,ja_assesmenttests,ja_tdata;
-                JSONObject enrollObj,subjectObj,paperObj,testObj,assesmentObj,testdataObj;
+                JSONArray ja_enrollments_table,ja_courses_table,ja_papers_table,ja_tests_table,ja_assesmenttests,ja_tdata;
+                JSONObject enrollObj,courseObj,paperObj,testObj,assesmentObj,testdataObj;
 
                 try{
                     Log.e("MainActivity----","FullData"+json);
@@ -127,34 +127,36 @@ public class DashBoardNavActivity extends AppCompatActivity implements Navigatio
                         Log.e("Enrollments--","No Enrollments: ");
                     }
 
-                    Object obj2=myObj.get("subjects");
+                    Object obj2=myObj.get("courses");
 
                     if (obj2 instanceof JSONArray)
                     {
-                        long subdelcount=myhelper.deleteAllSubjects();
-                        Log.e("subdelcount---",""+subdelcount);
-                        ja_subjects_table=myObj.getJSONArray("subjects");
-                        if(ja_subjects_table!=null && ja_subjects_table.length()>0){
-                            Log.e("subLength---",""+ja_subjects_table.length());
+                        long coursedelcount=myhelper.deleteAllCourses();
+                        Log.e("coursedelcount---",""+coursedelcount);
+                        ja_courses_table=myObj.getJSONArray("courses");
+                        if(ja_courses_table!=null && ja_courses_table.length()>0){
+                            Log.e("courseLength---",""+ja_courses_table.length());
                             int p=0,q=0;
-                            for(int i=0;i<ja_subjects_table.length();i++){
+                            for(int i=0;i<ja_courses_table.length();i++){
 
-                                subjectObj=ja_subjects_table.getJSONObject(i);
-                                long insertFlag=myhelper.insertSubject(subjectObj.getInt("Subject_key"),subjectObj.getString("Course_ID"),subjectObj.getString("Subject_ID"),subjectObj.getString("Subject_Name"),
-                                        subjectObj.getString("Subject_ShortName"),subjectObj.getInt("Subject_Seq_no"),subjectObj.getString("Subject_Type"),subjectObj.getString("Subject_status"));
+                                courseObj=ja_courses_table.getJSONObject(i);
+
+                                long insertFlag=myhelper.insertCourse(courseObj.getInt("Course_Key"),courseObj.getString("Course_ID"),courseObj.getString("Course_Name"),courseObj.getString("Course_Short_name"),
+                                        courseObj.getString("Course_Type"),courseObj.getString("Course_Category"),courseObj.getString("Course_sub_category"),courseObj.getString("Course_duration_uom"),
+                                        courseObj.getString("Cousre_Duration_min"),courseObj.getString("Course_Duration_Max"),courseObj.getString("Course_Status"));
                                 if(insertFlag>0){
                                     p++;
                                 }else {
                                     q++;
                                 }
                             }
-                            Log.e("Subjects--","Inserted: "+p);
+                            Log.e("Courses--","Inserted: "+p);
                         }else{
-                            Log.e("Subjects--","Empty Json Array: ");
+                            Log.e("Courses--","Empty Json Array: ");
                         }
                     }
                     else {
-                        Log.e("Subjects--","No Subjects: ");
+                        Log.e("Courses--","No Courses: ");
                     }
 
                     Object obj3=myObj.get("papers");

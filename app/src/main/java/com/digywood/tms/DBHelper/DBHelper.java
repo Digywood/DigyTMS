@@ -57,6 +57,29 @@ public class DBHelper extends SQLiteOpenHelper {
                 "  `Enroll_mod_dttm` datetime DEFAULT NULL)";
         db.execSQL(tbl_enrollments);
 
+        String tbl_courses="CREATE TABLE `course_master` (\n" +
+                "  `Course_Key` integer PRIMARY KEY,\n" +
+                "  `Course_ID` text DEFAULT NULL,\n" +
+                "  `Course_Name` text DEFAULT NULL,\n" +
+                "  `Course_Short_name` text DEFAULT NULL,\n" +
+                "  `Course_Type` text DEFAULT NULL,\n" +
+                "  `Course_Category` text DEFAULT NULL,\n" +
+                "  `Course_sub_category` text DEFAULT NULL,\n" +
+                "  `Course_duration_uom` text DEFAULT NULL,\n" +
+                "  `Cousre_Duration_min` text DEFAULT NULL,\n" +
+                "  `Course_Duration_Max` text DEFAULT NULL,\n" +
+                "  `Curese_buffer_01` text DEFAULT NULL,\n" +
+                "  `Curese_buffer_02` text DEFAULT NULL,\n" +
+                "  `Curese_buffer_03` text DEFAULT NULL,\n" +
+                "  `Curese_buffer_04` text DEFAULT NULL,\n" +
+                "  `Curese_buffer_05` text DEFAULT NULL,\n" +
+                "  `Course_Status` text DEFAULT NULL,\n" +
+                "  `Course_created_by` text DEFAULT NULL,\n" +
+                "  `Course_created_DtTm` datetime DEFAULT NULL,\n" +
+                "  `Course_mod_by` text DEFAULT NULL,\n" +
+                "  `Course_mod_DtTm` datetime DEFAULT NULL)";
+        db.execSQL(tbl_courses);
+
         String tbl_subjects="CREATE TABLE IF NOT EXISTS `subjects` (\n" +
                 "  `Subject_key` integer,\n" +
                 "  `Course_ID` text DEFAULT NULL,\n" +
@@ -666,6 +689,43 @@ public class DBHelper extends SQLiteOpenHelper {
     public long deleteAllSubjects(){
         long deleteFlag=0;
         deleteFlag=db.delete("subjects", null, null);
+        return  deleteFlag;
+    }
+
+    public long insertCourse(int ckey,String cid,String cname,String cshname,String ctype,String ccategory,String csubcategory,String cduration,String cminduration,String cmaxduration,String cstatus){
+        long insertFlag=0;
+        ContentValues cv = new ContentValues();
+        cv.put("Course_Key",ckey);
+        cv.put("Course_ID",cid);
+        cv.put("Course_Name",cname);
+        cv.put("Course_Short_name",cshname);
+        cv.put("Course_Type",ctype);
+        cv.put("Course_Category",ccategory);
+        cv.put("Course_sub_category",csubcategory);
+        cv.put("Course_duration_uom",cduration);
+        cv.put("Cousre_Duration_min",cminduration);
+        cv.put("Course_Duration_Max",cmaxduration);
+        cv.put("Course_Status",cstatus);
+        insertFlag = db.insert("course_master",null, cv);
+        return insertFlag;
+    }
+
+    public String getCoursenameById(String courseId){
+        String cname="";
+        Cursor c =db.query("course_master", new String[] {"Course_Name"},"Course_ID='"+courseId+"'", null, null, null,null);
+        if(c.getCount()>0){
+            while (c.moveToNext()){
+                cname=c.getString(c.getColumnIndex("Course_Name"));
+            }
+        }else {
+            c.close();
+        }
+        return cname;
+    }
+
+    public long deleteAllCourses(){
+        long deleteFlag=0;
+        deleteFlag=db.delete("course_master", null, null);
         return  deleteFlag;
     }
 
@@ -1333,11 +1393,11 @@ public class DBHelper extends SQLiteOpenHelper {
         ContentValues cv = new ContentValues();
         cv.put("Attempt_ID", aId);
         cv.put("Attempt_Test_ID", testID);
-        cv.put("Attempt_enrollId", testID);
-        cv.put("Attempt_studentId", testID);
-        cv.put("Attempt_courseId", testID);
-        cv.put("Attempt_subjectId", testID);
-        cv.put("Attempt_paperId", testID);
+        cv.put("Attempt_enrollId", eid);
+        cv.put("Attempt_studentId", sid);
+        cv.put("Attempt_courseId", cid);
+        cv.put("Attempt_subjectId", subid);
+        cv.put("Attempt_paperId", pid);
         cv.put("Attempt_Status", status);
         cv.put("Attempt_Confirmed", attempted);
         cv.put("Attempt_Skipped", skipped);

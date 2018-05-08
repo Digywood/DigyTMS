@@ -58,7 +58,6 @@ public class TestDashActivity extends AppCompatActivity {
 
     public void getTestsByPaperP(String paperid){
 
-        Toast.makeText(getApplicationContext(),"Practise",Toast.LENGTH_SHORT).show();
         testids.clear();
         Cursor mycursor=myhelper.getTestDataByPaper(paperid);
         if(mycursor.getCount()>0){
@@ -120,8 +119,6 @@ public class TestDashActivity extends AppCompatActivity {
     }
 
     public void getTestsByPaperF(String paperId){
-
-        Toast.makeText(getApplicationContext(),"Flash",Toast.LENGTH_SHORT).show();
 
         testids.clear();
         Cursor mycursor=myhelper.getTestDataByPaper(paperId);
