@@ -20,7 +20,6 @@ import com.digywood.tms.AsynTasks.BagroundTask;
 import com.digywood.tms.DBHelper.DBHelper;
 import org.json.JSONArray;
 import org.json.JSONObject;
-
 import java.util.HashMap;
 
 public class MainActivity extends AppCompatActivity {

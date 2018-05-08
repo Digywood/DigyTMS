@@ -47,7 +47,7 @@ public class AttemptDataActivity extends AppCompatActivity {
 
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tab_layout);
         tabLayout.addTab(tabLayout.newTab().setText("Practice Test"));
-        tabLayout.addTab(tabLayout.newTab().setText("FlashCards"));
+        tabLayout.addTab(tabLayout.newTab().setText("Flash Cards"));
         tabLayout.setTabGravity(TabLayout.GRAVITY_CENTER);
 
         final ViewPager viewPager = (ViewPager) findViewById(R.id.pager);
@@ -149,5 +149,16 @@ public class AttemptDataActivity extends AppCompatActivity {
         value = value * factor;
         long tmp = Math.round(value);
         return (double) tmp / factor;
+    }
+
+    @Override
+    public boolean onSupportNavigateUp() {
+        finish();
+        return true;
+    }
+
+    @Override
+    public void onBackPressed() {
+        finish();
     }
 }

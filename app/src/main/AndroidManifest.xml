@@ -33,7 +33,7 @@
             android:parentActivityName=".MainActivity"
             android:screenOrientation="landscape" />
         <activity
-            android:name=".CourseActivity"
+            android:name=".PaperActivity"
             android:parentActivityName=".LandingActivity"
             android:screenOrientation="landscape" />
         <activity android:name=".EnrollRequestActivity"
@@ -42,11 +42,11 @@
             android:parentActivityName=".DashBoardNavActivity"/>
         <activity
             android:name=".ListofPractiseTests"
-            android:parentActivityName=".CourseActivity"
+            android:parentActivityName=".PaperActivity"
             android:screenOrientation="landscape" />
         <activity
             android:name=".ListofAssesmentTests"
-            android:parentActivityName=".CourseActivity"
+            android:parentActivityName=".PaperActivity"
             android:screenOrientation="landscape" />
         <activity
             android:name=".TestActivity"
@@ -86,10 +86,12 @@
         <activity
             android:name=".PaperDashActivity"
             android:label="@string/paperdashlabel"
-            android:screenOrientation="landscape" />
+            android:screenOrientation="landscape"
+            android:parentActivityName=".DashBoardNavActivity"/>
         <activity android:name=".TestDashActivity"
             android:label="@string/testdashlabel"
-            android:screenOrientation="landscape"></activity>
+            android:screenOrientation="landscape"
+            android:parentActivityName=".PaperDashActivity"></activity>
     </application>
 
 </manifest>
