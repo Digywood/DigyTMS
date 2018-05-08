@@ -255,6 +255,7 @@ public class ScoreActivity extends AppCompatActivity {
                 intent.putExtra("courseid", courseid);
                 intent.putExtra("paperid",paperid);
                 startActivity(intent);
+                finish();
             }
         });
 

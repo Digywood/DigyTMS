@@ -10,12 +10,8 @@ import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
-import android.widget.Toast;
-
-import com.digywood.tms.Adapters.PaperDashAdapter;
 import com.digywood.tms.Adapters.TestDashAdapter;
 import com.digywood.tms.DBHelper.DBHelper;
-import com.digywood.tms.Pojo.SingleDashPaper;
 import com.digywood.tms.Pojo.SingleDashTest;
 
 import java.util.ArrayList;
@@ -67,7 +63,7 @@ public class TestDashActivity extends AppCompatActivity {
                 testids.add(testid);
                 testnames.add(testname);
             }
-            Log.e("CourseActivity----",""+testids.size());
+            Log.e("PaperActivity----",""+testids.size());
             mycursor.close();
         }else{
             mycursor.close();
@@ -129,7 +125,7 @@ public class TestDashActivity extends AppCompatActivity {
                 testids.add(testid);
                 testnames.add(testname);
             }
-            Log.e("CourseActivity----",""+testids.size());
+            Log.e("PaperActivity----",""+testids.size());
             mycursor.close();
         }else{
             mycursor.close();
@@ -208,6 +204,17 @@ public class TestDashActivity extends AppCompatActivity {
             tv_emptytests.setText("No Tests Attempt History");
             tv_emptytests.setVisibility(View.VISIBLE);
         }
+    }
+
+    @Override
+    public boolean onSupportNavigateUp() {
+        finish();
+        return true;
+    }
+
+    @Override
+    public void onBackPressed() {
+        finish();
     }
 
 }

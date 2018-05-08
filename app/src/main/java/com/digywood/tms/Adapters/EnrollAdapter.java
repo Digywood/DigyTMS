@@ -8,7 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
-import com.digywood.tms.CourseActivity;
+import com.digywood.tms.PaperActivity;
 import com.digywood.tms.R;
 import com.digywood.tms.Pojo.SingleEnrollment;
 import java.util.ArrayList;
@@ -62,7 +62,7 @@ public class EnrollAdapter extends  RecyclerView.Adapter<EnrollAdapter.MyViewHol
         holder.btn_start.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent i=new Intent(mycontext,CourseActivity.class);
+                Intent i=new Intent(mycontext,PaperActivity.class);
                 i.putExtra("enrollid",singleenroll.getEnrollid());
                 i.putExtra("courseid",singleenroll.getEnrollcourseid());
                 mycontext.startActivity(i);

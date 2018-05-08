@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.digywood.tms.AttemptDataActivity;
 import com.digywood.tms.Pojo.SingleDashPaper;
 import com.digywood.tms.Pojo.SingleDashTest;
 import com.digywood.tms.R;
@@ -31,6 +32,7 @@ public class TestDashAdapter extends RecyclerView.Adapter<TestDashAdapter.MyView
         public TextView tv_testid,tv_testname,tv_noofattempts,tv_lastdate;
         public TextView tv_lastscore,tv_uploaddttm,tv_smin,tv_smax,tv_savg;
         public TextView tv_omin,tv_omax,tv_oavg,tv_avgattempts,tv_maxattempts,tv_minattempts;
+        Button btn_details;
 
         public MyViewHolder(View view) {
             super(view);
@@ -49,7 +51,8 @@ public class TestDashAdapter extends RecyclerView.Adapter<TestDashAdapter.MyView
             tv_oavg =view.findViewById(R.id.ftdash_oavgmarks);
             tv_avgattempts =view.findViewById(R.id.ftdash_oavgattempts);
             tv_maxattempts =view.findViewById(R.id.ftdash_omaxattempts);
-            tv_minattempts =view.findViewById(R.id.ftdash_ominattempts);
+            tv_minattempts =view.findViewById(R.id.ftdash_ominattempts);;
+            btn_details =view.findViewById(R.id.btn_ftdash_details);
 
         }
     }
@@ -98,6 +101,15 @@ public class TestDashAdapter extends RecyclerView.Adapter<TestDashAdapter.MyView
             holder.tv_avgattempts.setText(""+singleDashTest.getAvgattempts());
             holder.tv_maxattempts.setText(""+singleDashTest.getMaxattempts());
             holder.tv_minattempts.setText(""+singleDashTest.getMinattempts());
+
+            holder.btn_details.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent i=new Intent(mycontext, AttemptDataActivity.class);
+                    i.putExtra("testId",singleDashTest.getTestid());
+                    mycontext.startActivity(i);
+                }
+            });
 
         }catch (Exception e){
             e.printStackTrace();

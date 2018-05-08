@@ -450,7 +450,7 @@ public class FlashFragment extends Fragment implements OnChartValueSelectedListe
     }
 
     private SpannableString generateCenterSpannableText(String value) {
-        SpannableString s = new SpannableString("Performance \n"+value+"%");
+        SpannableString s = new SpannableString(value+"%");
         return s;
     }
 

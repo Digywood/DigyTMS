@@ -9,7 +9,6 @@ import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.ActionBar;
@@ -63,7 +62,6 @@ public class ListofPractiseTests extends AppCompatActivity {
     ArrayList<String> localPathList;
     ArrayList<String> alreadydwdList;
     ArrayList<SingleTest> dwdupdateList;
-//    FloatingActionButton fab_download;
     LinearLayoutManager myLayoutManager;
     String enrollid="",courseid="",paperid="",subjectid="",downloadjsonpath="",path="",localpath="",filedata="",groupdata="",tfiledwdpath="";
 
@@ -539,20 +537,12 @@ public class ListofPractiseTests extends AppCompatActivity {
     @Override
     public boolean onSupportNavigateUp() {
         finish();
-        Intent i=new Intent(getApplicationContext(),CourseActivity.class);
-        i.putExtra("enrollid",enrollid);
-        i.putExtra("courseid",courseid);
-        startActivity(i);
         return true;
     }
 
     @Override
     public void onBackPressed() {
         finish();
-        Intent i=new Intent(getApplicationContext(),CourseActivity.class);
-        i.putExtra("enrollid",enrollid);
-        i.putExtra("courseid",courseid);
-        startActivity(i);
     }
 
     public void getTestIds(){
@@ -758,8 +748,7 @@ public class ListofPractiseTests extends AppCompatActivity {
                     @Override
                     public void inetSatus(Boolean netStatus) {
                         if(netStatus){
-                            path=enrollid+"/"+courseid+"/"+subjectid+"/"+paperid+"/"+selectedtestidList.get(currentitem)+"/";
-                            downloadTest(selectedtestidList.get(currentitem));
+
                         }else {
                             Toast.makeText(getApplicationContext(),"No internet,Please Check your connection",Toast.LENGTH_SHORT).show();
                         }
