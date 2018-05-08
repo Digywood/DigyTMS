@@ -22,17 +22,18 @@
                 <Spinner
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_weight="7"
+                    android:layout_weight="7.5"
                     android:id="@+id/sp_fenrollids"/>
 
                 <TextView
                     android:id="@+id/tv_fcourseid"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:gravity="center_horizontal|center_vertical"
                     android:textColor="@color/green"
                     android:hint="courseid"
                     android:layout_margin="2dp"
-                    android:layout_weight="3"/>
+                    android:layout_weight="2.5"/>
 
             </LinearLayout>
 
@@ -44,11 +45,13 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_margin="8dp"
                     android:orientation="vertical"
                     android:layout_weight="1">
 
                     <com.github.mikephil.charting.charts.PieChart
                         android:id="@+id/chart2"
+                        android:layout_gravity="center_horizontal"
                         android:layout_width="200dp"
                         android:layout_height="200dp" />
 
@@ -62,7 +65,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:text="Total Tests"
-                            android:layout_weight="2"
+                            android:layout_weight="3"
                             android:textStyle="bold"
                             android:textColor="@color/green"/>
 
@@ -71,7 +74,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:text="0"
-                            android:layout_weight="8"
+                            android:layout_weight="7"
                             android:textStyle="bold"
                             android:textColor="#000000"/>
 
@@ -87,7 +90,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:text="Attempted"
-                            android:layout_weight="2"
+                            android:layout_weight="3"
                             android:textStyle="bold"
                             android:textColor="@color/green"/>
 
@@ -96,7 +99,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:text="0"
-                            android:layout_weight="8"
+                            android:layout_weight="7"
                             android:textStyle="bold"
                             android:textColor="#000000"/>
 
@@ -112,7 +115,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:text="Tests as per Plan"
-                            android:layout_weight="2"
+                            android:layout_weight="3"
                             android:textStyle="bold"
                             android:textColor="@color/green"/>
 
@@ -121,7 +124,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:text="0"
-                            android:layout_weight="8"
+                            android:layout_weight="7"
                             android:textStyle="bold"
                             android:textColor="#000000"/>
 
@@ -138,7 +141,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:text="%"
-                            android:layout_weight="2"
+                            android:layout_weight="3"
                             android:textStyle="bold"
                             android:textColor="@color/green"/>
 
@@ -147,7 +150,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:text="0"
-                            android:layout_weight="8"
+                            android:layout_weight="7"
                             android:textStyle="bold"
                             android:textColor="#000000"/>
 
@@ -162,7 +165,7 @@
                         <TextView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_weight="2"
+                            android:layout_weight="3"
                             android:text="RAG for Attempts"
                             android:textColor="@color/green"
                             android:textStyle="bold" />
@@ -172,7 +175,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:text="0"
-                            android:layout_weight="8"
+                            android:layout_weight="7"
                             android:textStyle="bold"
                             android:textColor="#000000"/>
 
@@ -188,7 +191,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:text="RAG for AVG score"
-                            android:layout_weight="2"
+                            android:layout_weight="3"
                             android:textStyle="bold"
                             android:textColor="@color/green"/>
 
@@ -197,20 +200,11 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:text="0"
-                            android:layout_weight="8"
+                            android:layout_weight="7"
                             android:textStyle="bold"
                             android:textColor="#000000"/>
 
                     </LinearLayout>
-
-                    <Button
-                        android:id="@+id/btn_fdetails"
-                        android:layout_width="wrap_content"
-                        android:layout_height="30dp"
-                        android:text="Details >>"
-                        android:background="@drawable/btn_details_bg"
-                        android:textColor="#FFFFFF"
-                        android:layout_gravity="center"/>
 
                 </LinearLayout>
 
@@ -226,7 +220,7 @@
                         android:id="@+id/bchart2"
                         android:layout_marginTop="5dp"
                         android:layout_width="match_parent"
-                        android:layout_height="200dp"/>
+                        android:layout_height="250dp"/>
 
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -312,6 +306,16 @@
                         </LinearLayout>
 
                     </LinearLayout>
+
+                    <Button
+                        android:id="@+id/btn_fdetails"
+                        android:layout_width="wrap_content"
+                        android:layout_marginTop="5dp"
+                        android:layout_height="30dp"
+                        android:text="Details >>"
+                        android:background="@drawable/btn_details_bg"
+                        android:textColor="#FFFFFF"
+                        android:layout_gravity="center"/>
 
                 </LinearLayout>
 

@@ -38,14 +38,6 @@
                     android:textSize="16sp"
                     android:hint="studentid"/>
 
-                <TextView
-                    android:id="@+id/tv_enrollid"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textColor="#FFFFFF"
-                    android:textSize="12sp"
-                    android:hint="enrollid"/>
-
             </LinearLayout>
 
             </android.support.v7.widget.Toolbar>

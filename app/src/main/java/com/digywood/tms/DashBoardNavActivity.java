@@ -37,7 +37,7 @@ import java.util.HashMap;
 public class DashBoardNavActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
     View header;
-    TextView tv_name,tv_email,tv_studentid,tv_enrollid;
+    TextView tv_name,tv_email,tv_studentid;
     String studentid,spersonname,email;
     HashMap<String,String> hmap=new HashMap<>();
     DBHelper myhelper;
@@ -48,9 +48,6 @@ public class DashBoardNavActivity extends AppCompatActivity implements Navigatio
         setContentView(R.layout.activity_dash_board);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         tv_studentid=toolbar.findViewById(R.id.tv_studentid);
-        tv_studentid.setText("SAA00001");
-        tv_enrollid=toolbar.findViewById(R.id.tv_enrollid);
-        tv_enrollid.setText("EAA000001");
         setSupportActionBar(toolbar);
 
         myhelper=new DBHelper(this);
@@ -70,6 +67,7 @@ public class DashBoardNavActivity extends AppCompatActivity implements Navigatio
             studentid=cmgintent.getStringExtra("studentid");
             spersonname=cmgintent.getStringExtra("sname");
             email=cmgintent.getStringExtra("email");
+            tv_studentid.setText(studentid);
         }
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
