@@ -198,12 +198,6 @@ public class PractiseTestAdapter extends RecyclerView.Adapter<PractiseTestAdapte
                     e.printStackTrace();
                 }
 
-/*                if (value) {
-
-                } else {
-                    Toast.makeText(mycontext, "FILES NOT DOWNLOADED", Toast.LENGTH_LONG).show();
-                }*/
-
             }
         });
 
@@ -214,7 +208,6 @@ public class PractiseTestAdapter extends RecyclerView.Adapter<PractiseTestAdapte
                 Cursor mycursor = myhelper.getSingleTestData(singletest.getTestid());
                 if (mycursor.getCount() > 0) {
                     while (mycursor.moveToNext()) {
-
 //                        studentid=mycursor.getString(mycursor.getColumnIndex("sptu_student_ID"));
                         enrollid = mycursor.getString(mycursor.getColumnIndex("sptu_entroll_id"));
                         courseid = mycursor.getString(mycursor.getColumnIndex("sptu_course_id"));
@@ -227,14 +220,13 @@ public class PractiseTestAdapter extends RecyclerView.Adapter<PractiseTestAdapte
                 }
 
                 try {
-                    String tPath = URLClass.mainpath + enrollid + "/" + courseid + "/" + subjectId + "/" + paperid + "/" + singletest.getTestid() + "/";
+                    String tPath = URLClass.mainpath+enrollid +"/"+courseid+"/"+subjectId+"/"+paperid+"/"+singletest.getTestid()+"/";
 
-                    File file = new File(tPath + singletest.getTestid() + ".json");
+                    File file = new File(tPath +singletest.getTestid() + ".json");
                     if (!file.exists()) {
                         showAlert("Main JSON file for test " + singletest.getTestid() + " is not found! \n Please download test data if not ");
                     } else {
                         BufferedReader br = new BufferedReader(new FileReader(tPath + singletest.getTestid() + ".json"));
-//                    BufferedReader br = new BufferedReader(new FileReader(URLClass.mainpath+enrollid+"/"+courseid+"/"+subjectId+"/"+paperid+"/"+singletest.getTestid()+"/"+singletest.getTestid()+"EAAA000009/SSCT1001/SSCS0002/PAA002/PTU0002/"+"PTU0002_01"+".json"));
                         StringBuilder sb = new StringBuilder();
                         String line = br.readLine();
 
@@ -247,8 +239,16 @@ public class PractiseTestAdapter extends RecyclerView.Adapter<PractiseTestAdapte
                         fimageList = readJson(filedata);
                         br.close();
 
-                        myparser = new JSONParser(filedata, tPath + "/flashAttempts/", "FLASH", mycontext);
-
+                        int seccount=myhelper.getPtuSecCount(singletest.getTestid());
+                        if(seccount>0){
+                            myparser = new JSONParser(filedata,tPath + "/flashAttempts/", "FLASH", mycontext);
+                            Intent i = new Intent(mycontext, FlashCardActivity.class);
+                            i.putExtra("testId", testList.get(position).getTestid());
+                            i.putExtra("testPath", tPath);
+                            mycontext.startActivity(i);
+                        }else{
+                            showAlert("Test Configuration is not Available for " + singletest.getTestid() + " \n Please download test data if not ");
+                        }
 
                         //                    if (fimageList.size() != 0) {
 //
@@ -279,10 +279,6 @@ public class PractiseTestAdapter extends RecyclerView.Adapter<PractiseTestAdapte
 //                    } else {
 //                        Log.e("FlashCardActivity---", "No Questions to Display");
 //                    }
-                        Intent i = new Intent(mycontext, FlashCardActivity.class);
-                        i.putExtra("testId", testList.get(position).getTestid());
-                        i.putExtra("testPath", tPath);
-                        mycontext.startActivity(i);
 
                     }
 

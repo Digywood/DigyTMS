@@ -50,7 +50,7 @@
                         android:text="Total Tests"
                         android:layout_weight="2"
                         android:textStyle="bold"
-                        android:textColor="#8e58d1"/>
+                        android:textColor="@color/green"/>
 
                     <TextView
                         android:id="@+id/tv_atottests"
@@ -75,7 +75,7 @@
                         android:text="Attempted"
                         android:layout_weight="2"
                         android:textStyle="bold"
-                        android:textColor="#8e58d1"/>
+                        android:textColor="@color/green"/>
 
                     <TextView
                         android:id="@+id/tv_aattempted"
@@ -100,7 +100,7 @@
                         android:text="Tests as per Plan"
                         android:layout_weight="2"
                         android:textStyle="bold"
-                        android:textColor="#8e58d1"/>
+                        android:textColor="@color/green"/>
 
                     <TextView
                         android:id="@+id/tv_atestsasplan"
@@ -125,7 +125,7 @@
                         android:text="%"
                         android:layout_weight="2"
                         android:textStyle="bold"
-                        android:textColor="#8e58d1"/>
+                        android:textColor="@color/green"/>
 
                     <TextView
                         android:id="@+id/tv_apercent"
@@ -150,7 +150,7 @@
                         android:text="Max"
                         android:layout_weight="2"
                         android:textStyle="bold"
-                        android:textColor="#8e58d1"/>
+                        android:textColor="@color/green"/>
 
                     <TextView
                         android:id="@+id/tv_amax"
@@ -175,7 +175,7 @@
                         android:text="Min"
                         android:layout_weight="2"
                         android:textStyle="bold"
-                        android:textColor="#8e58d1"/>
+                        android:textColor="@color/green"/>
 
                     <TextView
                         android:id="@+id/tv_amin"
@@ -200,7 +200,7 @@
                         android:text="Avg"
                         android:layout_weight="2"
                         android:textStyle="bold"
-                        android:textColor="#8e58d1"/>
+                        android:textColor="@color/green"/>
 
                     <TextView
                         android:id="@+id/tv_aavg"
@@ -225,7 +225,7 @@
                         android:text="RAG for Attempts"
                         android:layout_weight="2"
                         android:textStyle="bold"
-                        android:textColor="#8e58d1"/>
+                        android:textColor="@color/green"/>
 
                     <TextView
                         android:id="@+id/tv_aRAGattempt"
@@ -250,7 +250,7 @@
                         android:text="RAG for AVG score"
                         android:layout_weight="2"
                         android:textStyle="bold"
-                        android:textColor="#8e58d1"/>
+                        android:textColor="@color/green"/>
 
                     <TextView
                         android:id="@+id/tv_aRAGAVGscore"

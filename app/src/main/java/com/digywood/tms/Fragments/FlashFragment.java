@@ -417,9 +417,12 @@ public class FlashFragment extends Fragment implements OnChartValueSelectedListe
 
         ArrayList<BarEntry> yVals1 = new ArrayList<BarEntry>();
 
-        yVals1.add(new BarEntry(1,20.0f));
-        yVals1.add(new BarEntry(2,45.78f));
-        yVals1.add(new BarEntry(3,89.0f));
+        Float min1=(Float.parseFloat(String.valueOf(min)));
+        Float avg1=(Float.parseFloat(String.valueOf(avg)));
+        Float max1=(Float.parseFloat(String.valueOf(max)));
+        yVals1.add(new BarEntry(1,min1));
+        yVals1.add(new BarEntry(2,avg1));
+        yVals1.add(new BarEntry(3,max1));
 
         BarDataSet set1;
 

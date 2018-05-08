@@ -594,6 +594,11 @@ public class DBHelper extends SQLiteOpenHelper {
         return  count;
     }
 
+    public int getPtuSecCount(String testId){
+        Cursor c =db.query("ptu_sections", new String[] {"Ptu_section_course_ID,Ptu_section_paper_ID"},"Ptu_ID='"+testId+"'", null, null, null,null);
+        return c.getCount();
+    }
+
     public long insertStudent(int skey,String sid,String sname,String sgender,String sedu,String sdob,String saddress1,String saddress2,String scity,String sstate,String scountry,String smobile,String semail,String spassword,String smacid,String sstatus,String screateby,String screateddatetime){
         long insertFlag=0;
         ContentValues cv = new ContentValues();

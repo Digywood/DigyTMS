@@ -29,6 +29,8 @@
                     android:id="@+id/tv_fcourseid"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:gravity="center_horizontal|center_vertical"
+                    android:textStyle="bold"
                     android:textColor="@color/green"
                     android:hint="courseid"
                     android:layout_margin="2dp"
@@ -44,173 +46,188 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_margin="10dp"
                     android:orientation="vertical"
                     android:layout_weight="1">
 
                     <com.github.mikephil.charting.charts.PieChart
                         android:id="@+id/chart2"
+                        android:layout_gravity="center_horizontal"
                         android:layout_width="250dp"
                         android:layout_height="250dp" />
 
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:weightSum="10"
                         android:orientation="horizontal">
 
-                        <TextView
+                        <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:text="Total Tests"
-                            android:layout_weight="2"
-                            android:textStyle="bold"
-                            android:textColor="@color/green"/>
+                            android:layout_weight="1"
+                            android:orientation="vertical">
 
-                        <TextView
-                            android:id="@+id/tv_ftottests"
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:weightSum="10"
+                                android:orientation="horizontal">
+
+                                <TextView
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:text="Total Tests"
+                                    android:layout_weight="2"
+                                    android:textStyle="bold"
+                                    android:textColor="@color/green"/>
+
+                                <TextView
+                                    android:id="@+id/tv_ftottests"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:text="0"
+                                    android:layout_weight="8"
+                                    android:textStyle="bold"
+                                    android:textColor="#000000"/>
+
+                            </LinearLayout>
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:weightSum="10"
+                                android:orientation="horizontal">
+
+                                <TextView
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:text="Attempted"
+                                    android:layout_weight="2"
+                                    android:textStyle="bold"
+                                    android:textColor="@color/green"/>
+
+                                <TextView
+                                    android:id="@+id/tv_fattempted"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:text="0"
+                                    android:layout_weight="8"
+                                    android:textStyle="bold"
+                                    android:textColor="#000000"/>
+
+                            </LinearLayout>
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:weightSum="10"
+                                android:orientation="horizontal">
+
+                                <TextView
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:text="Tests as per Plan"
+                                    android:layout_weight="2"
+                                    android:textStyle="bold"
+                                    android:textColor="@color/green"/>
+
+                                <TextView
+                                    android:id="@+id/tv_ftestsasplan"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:text="0"
+                                    android:layout_weight="8"
+                                    android:textStyle="bold"
+                                    android:textColor="#000000"/>
+
+                            </LinearLayout>
+
+                        </LinearLayout>
+
+                        <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:text="0"
-                            android:layout_weight="8"
-                            android:textStyle="bold"
-                            android:textColor="#000000"/>
+                            android:layout_weight="1"
+                            android:orientation="vertical">
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:weightSum="10"
+                                android:orientation="horizontal">
+
+                                <TextView
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:text="%"
+                                    android:layout_weight="2"
+                                    android:textStyle="bold"
+                                    android:textColor="@color/green"/>
+
+                                <TextView
+                                    android:id="@+id/tv_fpercent"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:text="0"
+                                    android:layout_weight="8"
+                                    android:textStyle="bold"
+                                    android:textColor="#000000"/>
+
+                            </LinearLayout>
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:weightSum="10"
+                                android:orientation="horizontal">
+
+                                <TextView
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:text="RAG for Attempts"
+                                    android:layout_weight="2"
+                                    android:textStyle="bold"
+                                    android:textColor="@color/green"/>
+
+                                <TextView
+                                    android:id="@+id/tv_fRAGattempt"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:text="0"
+                                    android:layout_weight="8"
+                                    android:textStyle="bold"
+                                    android:textColor="#000000"/>
+
+                            </LinearLayout>
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:weightSum="10"
+                                android:orientation="horizontal">
+
+                                <TextView
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:text="RAG for AVG score"
+                                    android:layout_weight="2"
+                                    android:textStyle="bold"
+                                    android:textColor="@color/green"/>
+
+                                <TextView
+                                    android:id="@+id/tv_fRAGAVGscore"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:text="0"
+                                    android:layout_weight="8"
+                                    android:textStyle="bold"
+                                    android:textColor="#000000"/>
+
+                            </LinearLayout>
+
+                        </LinearLayout>
 
                     </LinearLayout>
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:weightSum="10"
-                        android:orientation="horizontal">
-
-                        <TextView
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:text="Attempted"
-                            android:layout_weight="2"
-                            android:textStyle="bold"
-                            android:textColor="@color/green"/>
-
-                        <TextView
-                            android:id="@+id/tv_fattempted"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:text="0"
-                            android:layout_weight="8"
-                            android:textStyle="bold"
-                            android:textColor="#000000"/>
-
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:weightSum="10"
-                        android:orientation="horizontal">
-
-                        <TextView
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:text="Tests as per Plan"
-                            android:layout_weight="2"
-                            android:textStyle="bold"
-                            android:textColor="@color/green"/>
-
-                        <TextView
-                            android:id="@+id/tv_ftestsasplan"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:text="0"
-                            android:layout_weight="8"
-                            android:textStyle="bold"
-                            android:textColor="#000000"/>
-
-                    </LinearLayout>
-
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:weightSum="10"
-                        android:orientation="horizontal">
-
-                        <TextView
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:text="%"
-                            android:layout_weight="2"
-                            android:textStyle="bold"
-                            android:textColor="@color/green"/>
-
-                        <TextView
-                            android:id="@+id/tv_fpercent"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:text="0"
-                            android:layout_weight="8"
-                            android:textStyle="bold"
-                            android:textColor="#000000"/>
-
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:weightSum="10"
-                        android:orientation="horizontal">
-
-                        <TextView
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:text="RAG for Attempts"
-                            android:layout_weight="2"
-                            android:textStyle="bold"
-                            android:textColor="@color/green"/>
-
-                        <TextView
-                            android:id="@+id/tv_fRAGattempt"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:text="0"
-                            android:layout_weight="8"
-                            android:textStyle="bold"
-                            android:textColor="#000000"/>
-
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:weightSum="10"
-                        android:orientation="horizontal">
-
-                        <TextView
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:text="RAG for AVG score"
-                            android:layout_weight="2"
-                            android:textStyle="bold"
-                            android:textColor="@color/green"/>
-
-                        <TextView
-                            android:id="@+id/tv_fRAGAVGscore"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:text="0"
-                            android:layout_weight="8"
-                            android:textStyle="bold"
-                            android:textColor="#000000"/>
-
-                    </LinearLayout>
-
-                    <Button
-                        android:id="@+id/btn_fdetails"
-                        android:layout_width="wrap_content"
-                        android:layout_height="30dp"
-                        android:text="Details >>"
-                        android:background="@drawable/btn_details_bg"
-                        android:textColor="#FFFFFF"
-                        android:layout_gravity="center"/>
 
                 </LinearLayout>
 
@@ -236,6 +253,7 @@
                         <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
+                            android:gravity="center_horizontal|center_vertical"
                             android:layout_weight="1"
                             android:weightSum="10"
                             android:orientation="horizontal">
@@ -243,8 +261,8 @@
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
+                                android:layout_marginRight="5dp"
                                 android:text="Max"
-                                android:layout_weight="2"
                                 android:textStyle="bold"
                                 android:textColor="@color/green"/>
 
@@ -253,7 +271,6 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="0"
-                                android:layout_weight="8"
                                 android:textStyle="bold"
                                 android:textColor="#000000"/>
 
@@ -262,6 +279,7 @@
                         <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
+                            android:gravity="center_horizontal|center_vertical"
                             android:layout_weight="1"
                             android:weightSum="10"
                             android:orientation="horizontal">
@@ -269,8 +287,8 @@
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
+                                android:layout_marginRight="5dp"
                                 android:text="Min"
-                                android:layout_weight="2"
                                 android:textStyle="bold"
                                 android:textColor="@color/green"/>
 
@@ -279,7 +297,6 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="0"
-                                android:layout_weight="8"
                                 android:textStyle="bold"
                                 android:textColor="#000000"/>
 
@@ -288,6 +305,7 @@
                         <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
+                            android:gravity="center_horizontal|center_vertical"
                             android:layout_weight="1"
                             android:weightSum="10"
                             android:orientation="horizontal">
@@ -295,8 +313,8 @@
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
+                                android:layout_marginRight="5dp"
                                 android:text="Avg"
-                                android:layout_weight="2"
                                 android:textStyle="bold"
                                 android:textColor="@color/green"/>
 
@@ -305,13 +323,22 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="0"
-                                android:layout_weight="8"
                                 android:textStyle="bold"
                                 android:textColor="#000000"/>
 
                         </LinearLayout>
 
                     </LinearLayout>
+
+                    <Button
+                        android:id="@+id/btn_fdetails"
+                        android:layout_width="wrap_content"
+                        android:layout_marginTop="5dp"
+                        android:layout_height="30dp"
+                        android:text="Details >>"
+                        android:background="@drawable/btn_details_bg"
+                        android:textColor="#FFFFFF"
+                        android:layout_gravity="center"/>
 
                 </LinearLayout>
 
