@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
+import android.graphics.Color;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.RecyclerView;
 import android.text.Html;
@@ -26,6 +27,15 @@ import com.digywood.tms.ReviewActivity;
 import com.digywood.tms.SaveJSONdataToFile;
 import com.digywood.tms.TestActivity;
 import com.digywood.tms.URLClass;
+import com.github.mikephil.charting.charts.PieChart;
+import com.github.mikephil.charting.components.Description;
+import com.github.mikephil.charting.data.Entry;
+import com.github.mikephil.charting.data.PieData;
+import com.github.mikephil.charting.data.PieDataSet;
+import com.github.mikephil.charting.data.PieEntry;
+import com.github.mikephil.charting.highlight.Highlight;
+import com.github.mikephil.charting.interfaces.datasets.IDataSet;
+import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -35,12 +45,14 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by prasa on 2018-02-27.
  */
 
-public class PractiseTestAdapter extends RecyclerView.Adapter<PractiseTestAdapter.MyViewHolder> {
+public class PractiseTestAdapter extends RecyclerView.Adapter<PractiseTestAdapter.MyViewHolder> implements
+        OnChartValueSelectedListener {
 
     ArrayList<SingleTest> testList;
     ArrayList<String> downloadedList = new ArrayList<>();
@@ -49,6 +61,7 @@ public class PractiseTestAdapter extends RecyclerView.Adapter<PractiseTestAdapte
     ArrayList<String> chktestList = new ArrayList<>();
     ArrayList<String> fimageList = new ArrayList<>();
     Context mycontext;
+
     DBHelper myhelper;
     Boolean value = false;
     JSONParser myparser;
@@ -56,9 +69,10 @@ public class PractiseTestAdapter extends RecyclerView.Adapter<PractiseTestAdapte
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
 
-        public TextView tv_testid, tv_teststatus;
+        public TextView tv_testid, tv_teststatus,tv_testAttempt,tv_min,tv_max;
         public Button btn_pstart, btn_review, btn_fstart;
         ImageView iv_history;
+        PieChart test_pieChart,flash_pieChart;
 //        public CheckBox cb_download;
 
         public MyViewHolder(View view) {
@@ -69,6 +83,9 @@ public class PractiseTestAdapter extends RecyclerView.Adapter<PractiseTestAdapte
             btn_review = view.findViewById(R.id.btn_review);
             btn_fstart = view.findViewById(R.id.btn_fstart);
             iv_history = view.findViewById(R.id.iv_history);
+            test_pieChart = (PieChart) view.findViewById(R.id.test_piechart);
+            tv_testAttempt = view.findViewById(R.id.tv_testAttempt);
+            flash_pieChart = (PieChart) view.findViewById(R.id.flash_piechart);
 //            cb_download = view.findViewById(R.id.cb_testselection);
         }
     }
@@ -86,8 +103,76 @@ public class PractiseTestAdapter extends RecyclerView.Adapter<PractiseTestAdapte
     }
 
     @Override
+    public void onValueSelected(Entry e, Highlight h) {
+
+    }
+
+    @Override
+    public void onNothingSelected() {
+
+    }
+
+    @Override
     public void onBindViewHolder(final MyViewHolder holder, final int position) {
+
         final SingleTest singletest = testList.get(position);
+        List<PieEntry> yvalues = new ArrayList<PieEntry>();
+        holder.tv_testAttempt.setText(String.valueOf(myhelper.getTestAttempCount(singletest.getTestid()))+" Attempts");
+        yvalues.add(new PieEntry(20f, 0));
+        yvalues.add(new PieEntry(80f, 0));
+        List<Integer> colors = new ArrayList<>();
+        colors.add(Color.rgb(100,196,125));
+        colors.add(Color.rgb(201,201,201));
+        PieDataSet dataSet = new PieDataSet(yvalues, "Average Score");
+        dataSet.setColors(colors);
+        PieData data = new PieData(dataSet);
+        holder.test_pieChart.setDrawHoleEnabled(true);
+        holder.test_pieChart.setRotationEnabled(true);
+        //test_pieChart.setUsePercentValues(true);
+        Description description = new Description();
+        description.setText("Avg. Score");
+        description.setTextSize(15);
+        holder.test_pieChart.setDescription(description);
+        holder.test_pieChart.setHoleColor(Color.WHITE);
+        holder.test_pieChart.setTransparentCircleRadius(68f);
+        holder.test_pieChart.setHoleRadius(68f);
+        holder.test_pieChart.setTransparentCircleAlpha(0);
+        holder.test_pieChart.setCenterText("20%");
+        holder.test_pieChart.setCenterTextSize(20);
+        holder.test_pieChart.setCenterTextColor(mycontext.getResources().getColor(R.color.green));
+        holder.test_pieChart.setData(data);
+
+        for (IDataSet<?> set : holder.test_pieChart.getData().getDataSets())
+            set.setDrawValues(!set.isDrawValuesEnabled());
+
+        holder.test_pieChart.invalidate();
+
+        holder.flash_pieChart.setDrawHoleEnabled(true);
+        holder.flash_pieChart.setRotationEnabled(true);
+        //test_pieChart.setUsePercentValues(true);
+        Description f_description = new Description();
+        description.setText("Avg. Score");
+        description.setTextSize(15);
+        holder.flash_pieChart.setDescription(description);
+        holder.flash_pieChart.setHoleColor(Color.WHITE);
+        holder.flash_pieChart.setTransparentCircleRadius(68f);
+        holder.flash_pieChart.setHoleRadius(68f);
+        holder.flash_pieChart.setTransparentCircleAlpha(0);
+        holder.flash_pieChart.setCenterText("20%");
+        holder.flash_pieChart.setCenterTextSize(15);
+        holder.test_pieChart.setCenterTextColor(mycontext.getResources().getColor(R.color.green));
+        holder.flash_pieChart.setCenterTextColor(Color.BLACK);
+        holder.flash_pieChart.setData(data);
+
+/*
+        for (IDataSet<?> set : holder.flash_pieChart.getData().getDataSets())
+            set.setDrawValues(!set.isDrawValuesEnabled());
+
+        holder.flash_pieChart.invalidate();
+*/
+
+
+
         holder.tv_testid.setText(singletest.getTestid());
         holder.tv_teststatus.setText(singletest.getStatus());
         final DBHelper dataObj = new DBHelper(mycontext);
@@ -149,7 +234,7 @@ public class PractiseTestAdapter extends RecyclerView.Adapter<PractiseTestAdapte
                 int count = dataObj.getAttempCount();
                 Cursor c = dataObj.getAttempt(dataObj.getLastTestAttempt(singletest.getTestid()));
                 Log.e("attempt_created:", ""+count);
-//                Log.e("value",""+c.getInt(c.getColumnIndex("Attempt_Status")));
+//                Log.e("valu-e",""+c.getInt(c.getColumnIndex("Attempt_Status")));
                 //if cursor has values then the test is being resumed and data is retrieved from database
                 if (c.getCount() > 0) {
                     c.moveToLast();
@@ -245,7 +330,7 @@ public class PractiseTestAdapter extends RecyclerView.Adapter<PractiseTestAdapte
 //                            }
 //                            showAlert(sbm.toString());
 //                        } else {
-//                            Intent i = new Intent(mycontext, FlashCardActivity.class);
+//                            -Intent i = new Intent(mycontext, FlashCardActivity.class);
 //                            i.putExtra("testId",testList.get(position).getTestid());
 //                            i.putExtra("testPath",tPath);
 //                            mycontext.startActivity(i);
@@ -415,7 +500,6 @@ public class PractiseTestAdapter extends RecyclerView.Adapter<PractiseTestAdapte
                     } else {
 
                     }
-
                     if (downloadfileList.contains(singlequesObj.getString("qbm_image_file"))) {
 
                     } else {
