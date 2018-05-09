@@ -7,5 +7,5 @@
         android:right="1dp"
         android:top="1dp"
         android:bottom="1dp"/>
-    <solid android:color="#8e58d1"/>
+    <solid android:color="@color/green"/>
 </shape>

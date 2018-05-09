@@ -1,6 +1,5 @@
 package com.digywood.tms.Fragments;
 
-
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
@@ -20,7 +19,6 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.Spinner;
 import android.widget.TextView;
-
 import com.digywood.tms.Charts.DayAxisValueFormatter;
 import com.digywood.tms.Charts.MyAxisValueFormatter;
 import com.digywood.tms.Charts.XYMarkerView;
@@ -45,7 +43,6 @@ import com.github.mikephil.charting.formatter.PercentFormatter;
 import com.github.mikephil.charting.highlight.Highlight;
 import com.github.mikephil.charting.interfaces.datasets.IBarDataSet;
 import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
-
 import java.util.ArrayList;
 
 public class PracticeFragment extends Fragment implements OnChartValueSelectedListener {
@@ -87,7 +84,7 @@ public class PracticeFragment extends Fragment implements OnChartValueSelectedLi
             "Party I", "Party J", "Party K", "Party L", "Party M", "Party N", "Party O", "Party P"
     };
 
-    TextView tv_ptottests,tv_pattempted,tv_ptestsasplan,tv_ppercent,tv_pmax,tv_pmin,tv_pavg,tv_pRAGattempt,tv_pRAGAVGscore;
+    TextView tv_ptottests,tv_pattempted,tv_ptestsasplan,tv_ppercent,tv_pmax,tv_pmin,tv_pavg,tv_pRAGattempt,tv_pRAGAVGscore,tv_courseid;
 
     private PracticeFragment.OnFragmentInteractionListener mListener;
 
@@ -137,6 +134,7 @@ public class PracticeFragment extends Fragment implements OnChartValueSelectedLi
         tv_pavg=view.findViewById(R.id.tv_pavg);
         tv_pRAGattempt=view.findViewById(R.id.tv_pRAGattempt);
         tv_pRAGAVGscore=view.findViewById(R.id.tv_pRAGAVGscore);
+        tv_courseid=view.findViewById(R.id.tv_pcourseid);
 
         mChart=view.findViewById(R.id.chart1);
         mChart1 =view.findViewById(R.id.bchart1);
@@ -206,6 +204,8 @@ public class PracticeFragment extends Fragment implements OnChartValueSelectedLi
                 SingleEnrollment singleEnrollment=enrollPojos.get(position);
                 enrollid=singleEnrollment.getEnrollid();
                 courseid=singleEnrollment.getEnrollcourseid();
+                String cname=myhelper.getCoursenameById(courseid);
+                tv_courseid.setText(cname);
             }
 
             @Override
@@ -413,9 +413,12 @@ public class PracticeFragment extends Fragment implements OnChartValueSelectedLi
 
         ArrayList<BarEntry> yVals1 = new ArrayList<BarEntry>();
 
-        yVals1.add(new BarEntry(1,20.0f));
-        yVals1.add(new BarEntry(2,45.78f));
-        yVals1.add(new BarEntry(3,89.0f));
+        Float min1=(Float.parseFloat(String.valueOf(min)));
+        Float avg1=(Float.parseFloat(String.valueOf(avg)));
+        Float max1=(Float.parseFloat(String.valueOf(max)));
+        yVals1.add(new BarEntry(1,min1));
+        yVals1.add(new BarEntry(2,avg1));
+        yVals1.add(new BarEntry(3,max1));
 
         BarDataSet set1;
 

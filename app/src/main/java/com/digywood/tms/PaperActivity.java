@@ -1,10 +1,14 @@
 package com.digywood.tms;
 
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
+import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -22,12 +26,16 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public class CourseActivity extends AppCompatActivity {
+import static android.Manifest.permission.READ_EXTERNAL_STORAGE;
+import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
+
+public class PaperActivity extends AppCompatActivity {
 
     Button btn_practise,btn_asessment,btn_testpage;
     ArrayList<String> papernameList;
     ArrayList<String> paperidList;
     ArrayAdapter<String> paperAdp;
+    public static final int RequestPermissionCode = 1;
     String testtype="practise",courseid="",enrollid="";
     HashMap<String,String> hmap=new HashMap<>();
     Spinner sp_papers;
@@ -36,7 +44,7 @@ public class CourseActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_course);
+        setContentView(R.layout.activity_paper);
 
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
@@ -90,25 +98,15 @@ public class CourseActivity extends AppCompatActivity {
         btn_testpage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                int pos=sp_papers.getSelectedItemPosition();
-                if(pos==0){
-                    Toast.makeText(getApplicationContext(),"Please Choose Valid Paper",Toast.LENGTH_SHORT).show();
-                }else{
-                    if(testtype.equalsIgnoreCase("practise")){
-                        Intent i=new Intent(getApplicationContext(),ListofPractiseTests.class);
-                        Log.e("JSON---",courseid+paperidList.get(pos-1));
-                        i.putExtra("enrollid",enrollid);
-                        i.putExtra("courseid",courseid);
-                        i.putExtra("paperid",paperidList.get(pos-1));
-                        startActivity(i);
+                if(paperidList.size()!=0){
+
+                    if(checkPermission()){
+                        navigateTestActivity();
                     }else{
-                        Intent i=new Intent(getApplicationContext(),ListofAssesmentTests.class);
-                        Log.e("JSON---",courseid+paperidList.get(pos-1));
-                        i.putExtra("enrollid",enrollid);
-                        i.putExtra("courseid",courseid);
-                        i.putExtra("paperid",paperidList.get(pos-1));
-                        startActivity(i);
+                        requestPermission();
                     }
+                }else{
+
                 }
             }
         });
@@ -120,7 +118,7 @@ public class CourseActivity extends AppCompatActivity {
     public void getPapersDataFromLocal(){
         paperidList.clear();
         papernameList.clear();
-        Cursor mycursor=myhelper.getStudentPapers();
+        Cursor mycursor=myhelper.getPapersByCourse(courseid);
         if(mycursor.getCount()>0){
             papernameList.add("Select");
             while (mycursor.moveToNext()){
@@ -129,12 +127,12 @@ public class CourseActivity extends AppCompatActivity {
                 paperidList.add(paperid);
                 papernameList.add(papername);
             }
-            Log.e("CourseActivity----",""+paperidList.size());
+            Log.e("PaperActivity----",""+paperidList.size());
             mycursor.close();
         }else{
             mycursor.close();
         }
-        paperAdp= new ArrayAdapter(CourseActivity.this,android.R.layout.simple_spinner_item,papernameList);
+        paperAdp= new ArrayAdapter(PaperActivity.this,android.R.layout.simple_spinner_item,papernameList);
         paperAdp.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         sp_papers.setAdapter(paperAdp);
     }
@@ -142,11 +140,11 @@ public class CourseActivity extends AppCompatActivity {
     public void getPapersData(){
         hmap.clear();
         hmap.put("courseid",courseid);
-        new BagroundTask(URLClass.hosturl + "getPapersByCourseId.php",hmap,CourseActivity.this,new IBagroundListener() {
+        new BagroundTask(URLClass.hosturl + "getPapersByCourseId.php",hmap,PaperActivity.this,new IBagroundListener() {
             @Override
             public void bagroundData(String json) {
                 try{
-                    Log.e("CourseActivity------","json:comes"+json);
+                    Log.e("PaperActivity------","json:comes"+json);
                     if(json.equalsIgnoreCase("Papers_Not_Exist")){
 
                         Toast.makeText(getApplicationContext(),"No Papers Found on this course",Toast.LENGTH_SHORT).show();
@@ -164,15 +162,15 @@ public class CourseActivity extends AppCompatActivity {
 
                             long checkFlag=myhelper.checkPaper(myObj.getInt("Paper_Key"));
                             if(checkFlag>0){
-                                Log.e("CourseActivity----","Paper Already Exists");
+                                Log.e("PaperActivity----","Paper Already Exists");
                             }else{
                                 long insertFlag=myhelper.insertPaper(myObj.getInt("Paper_Key"),myObj.getString("Paper_ID"),myObj.getString("Paper_Seq_no"),myObj.getString("Subject_ID"),
                                         myObj.getString("Course_ID"),myObj.getString("Paper_Name"),myObj.getString("Paper_Short_Name"),myObj.getString("Paper_Min_Pass_Marks"),
                                         myObj.getString("Paper_Max_Marks"));
                                 if(insertFlag>0){
-                                    Log.e("CourseActivity----","Paper Inserted in Local");
+                                    Log.e("PaperActivity----","Paper Inserted in Local");
                                 }else{
-                                    Log.e("CourseActivity----","Local Paper Insertion Failed");
+                                    Log.e("PaperActivity----","Local Paper Insertion Failed");
                                 }
                             }
 
@@ -181,16 +179,75 @@ public class CourseActivity extends AppCompatActivity {
                     getPapersDataFromLocal();
                 }catch (Exception e){
                     e.printStackTrace();
-                    Log.e("CourseActivity------",e.toString());
+                    Log.e("PaperActivity------",e.toString());
                 }
             }
         }).execute();
+    }
+
+    public void navigateTestActivity(){
+        int pos=sp_papers.getSelectedItemPosition();
+        if(pos==0){
+            Toast.makeText(getApplicationContext(),"Please Choose Valid Paper",Toast.LENGTH_SHORT).show();
+        }else{
+            if(testtype.equalsIgnoreCase("practise")){
+                Intent i=new Intent(getApplicationContext(),ListofPractiseTests.class);
+                Log.e("JSON---",courseid+paperidList.get(pos-1));
+                i.putExtra("enrollid",enrollid);
+                i.putExtra("courseid",courseid);
+                i.putExtra("paperid",paperidList.get(pos-1));
+                startActivity(i);
+                finish();
+            }else{
+                Intent i=new Intent(getApplicationContext(),ListofAssesmentTests.class);
+                Log.e("JSON---",courseid+paperidList.get(pos-1));
+                i.putExtra("enrollid",enrollid);
+                i.putExtra("courseid",courseid);
+                i.putExtra("paperid",paperidList.get(pos-1));
+                startActivity(i);
+                finish();
+            }
+        }
     }
 
     @Override
     public boolean onSupportNavigateUp() {
         finish();
         return true;
+    }
+
+    @Override
+    public void onBackPressed() {
+        finish();
+    }
+
+    public boolean checkPermission() {
+        int result = ContextCompat.checkSelfPermission(getApplicationContext(),
+                WRITE_EXTERNAL_STORAGE);
+        int result1 = ContextCompat.checkSelfPermission(getApplicationContext(),
+                READ_EXTERNAL_STORAGE);
+        return result == PackageManager.PERMISSION_GRANTED && result1==PackageManager.PERMISSION_GRANTED;
+    }
+
+    private void requestPermission() {
+        ActivityCompat.requestPermissions(PaperActivity.this, new
+                String[]{WRITE_EXTERNAL_STORAGE,READ_EXTERNAL_STORAGE},RequestPermissionCode);
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+
+        if(requestCode == RequestPermissionCode){
+            if(grantResults.length >0 && grantResults[0] == PackageManager.PERMISSION_GRANTED && grantResults[1] == PackageManager.PERMISSION_GRANTED){
+                navigateTestActivity();
+            }
+            else {
+                Toast.makeText(PaperActivity.this, "This permission required to use full functionality of application!", Toast.LENGTH_SHORT).show();
+            }
+            return;
+        }
+
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
     }
 
 }

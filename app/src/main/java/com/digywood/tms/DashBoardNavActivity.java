@@ -3,8 +3,6 @@ package com.digywood.tms;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -37,7 +35,7 @@ import java.util.HashMap;
 public class DashBoardNavActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
     View header;
-    TextView tv_name,tv_email,tv_studentid,tv_enrollid;
+    TextView tv_name,tv_email,tv_studentid;
     String studentid,spersonname,email;
     HashMap<String,String> hmap=new HashMap<>();
     DBHelper myhelper;
@@ -48,9 +46,6 @@ public class DashBoardNavActivity extends AppCompatActivity implements Navigatio
         setContentView(R.layout.activity_dash_board);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         tv_studentid=toolbar.findViewById(R.id.tv_studentid);
-        tv_studentid.setText("SAA00001");
-        tv_enrollid=toolbar.findViewById(R.id.tv_enrollid);
-        tv_enrollid.setText("EAA000001");
         setSupportActionBar(toolbar);
 
         myhelper=new DBHelper(this);
@@ -70,6 +65,7 @@ public class DashBoardNavActivity extends AppCompatActivity implements Navigatio
             studentid=cmgintent.getStringExtra("studentid");
             spersonname=cmgintent.getStringExtra("sname");
             email=cmgintent.getStringExtra("email");
+            tv_studentid.setText(studentid);
         }
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
@@ -88,8 +84,8 @@ public class DashBoardNavActivity extends AppCompatActivity implements Navigatio
         new BagroundTask(URLClass.hosturl +"getStudentFullData.php",hmap,DashBoardNavActivity.this,new IBagroundListener() {
             @Override
             public void bagroundData(String json) {
-                JSONArray ja_enrollments_table,ja_subjects_table,ja_papers_table,ja_tests_table,ja_assesmenttests;
-                JSONObject enrollObj,subjectObj,paperObj,testObj,assesmentObj;
+                JSONArray ja_enrollments_table,ja_courses_table,ja_papers_table,ja_tests_table,ja_assesmenttests,ja_tdata;
+                JSONObject enrollObj,courseObj,paperObj,testObj,assesmentObj,testdataObj;
 
                 try{
                     Log.e("MainActivity----","FullData"+json);
@@ -127,34 +123,36 @@ public class DashBoardNavActivity extends AppCompatActivity implements Navigatio
                         Log.e("Enrollments--","No Enrollments: ");
                     }
 
-                    Object obj2=myObj.get("subjects");
+                    Object obj2=myObj.get("courses");
 
                     if (obj2 instanceof JSONArray)
                     {
-                        long subdelcount=myhelper.deleteAllSubjects();
-                        Log.e("subdelcount---",""+subdelcount);
-                        ja_subjects_table=myObj.getJSONArray("subjects");
-                        if(ja_subjects_table!=null && ja_subjects_table.length()>0){
-                            Log.e("subLength---",""+ja_subjects_table.length());
+                        long coursedelcount=myhelper.deleteAllCourses();
+                        Log.e("coursedelcount---",""+coursedelcount);
+                        ja_courses_table=myObj.getJSONArray("courses");
+                        if(ja_courses_table!=null && ja_courses_table.length()>0){
+                            Log.e("courseLength---",""+ja_courses_table.length());
                             int p=0,q=0;
-                            for(int i=0;i<ja_subjects_table.length();i++){
+                            for(int i=0;i<ja_courses_table.length();i++){
 
-                                subjectObj=ja_subjects_table.getJSONObject(i);
-                                long insertFlag=myhelper.insertSubject(subjectObj.getInt("Subject_key"),subjectObj.getString("Course_ID"),subjectObj.getString("Subject_ID"),subjectObj.getString("Subject_Name"),
-                                        subjectObj.getString("Subject_ShortName"),subjectObj.getInt("Subject_Seq_no"),subjectObj.getString("Subject_Type"),subjectObj.getString("Subject_status"));
+                                courseObj=ja_courses_table.getJSONObject(i);
+
+                                long insertFlag=myhelper.insertCourse(courseObj.getInt("Course_Key"),courseObj.getString("Course_ID"),courseObj.getString("Course_Name"),courseObj.getString("Course_Short_name"),
+                                        courseObj.getString("Course_Type"),courseObj.getString("Course_Category"),courseObj.getString("Course_sub_category"),courseObj.getString("Course_duration_uom"),
+                                        courseObj.getString("Cousre_Duration_min"),courseObj.getString("Course_Duration_Max"),courseObj.getString("Course_Status"));
                                 if(insertFlag>0){
                                     p++;
                                 }else {
                                     q++;
                                 }
                             }
-                            Log.e("Subjects--","Inserted: "+p);
+                            Log.e("Courses--","Inserted: "+p);
                         }else{
-                            Log.e("Subjects--","Empty Json Array: ");
+                            Log.e("Courses--","Empty Json Array: ");
                         }
                     }
                     else {
-                        Log.e("Subjects--","No Subjects: ");
+                        Log.e("Courses--","No Courses: ");
                     }
 
                     Object obj3=myObj.get("papers");
@@ -215,7 +213,7 @@ public class DashBoardNavActivity extends AppCompatActivity implements Navigatio
                                     }
                                 }else{
                                     long insertFlag=myhelper.insertPractiseTest(testObj.getInt("sptu_key"),testObj.getString("sptu_org_id"),testObj.getString("sptu_entroll_id"),testObj.getString("sptu_student_ID"),
-                                            testObj.getString("sptu_batch"),testObj.getString("sptu_ID"),testObj.getString("sptu_paper_ID"),testObj.getString("sptu_subjet_ID"),
+                                            testObj.getString("sptu_batch"),testObj.getString("sptu_ID"),testObj.getString("sptu_name"),testObj.getString("sptu_paper_ID"),testObj.getString("sptu_subjet_ID"),
                                             testObj.getString("sptu_course_id"),testObj.getString("sptu_start_date"),testObj.getString("sptu_end_date"),testObj.getString("sptu_dwnld_status"),
                                             testObj.getInt("sptu_no_of_questions"),testObj.getDouble("sptu_tot_marks"),testObj.getDouble("stpu_min_marks"),testObj.getDouble("sptu_max_marks"));
                                     if(insertFlag>0){
@@ -266,6 +264,39 @@ public class DashBoardNavActivity extends AppCompatActivity implements Navigatio
                     }
                     else {
                         Log.e("AssesmentTests--","No AssesmentTests: ");
+                    }
+
+                    Object obj6=myObj.get("testdata");
+
+                    if (obj6 instanceof JSONArray)
+                    {
+                        long tdatadelcount=myhelper.deleteTestRawData();
+                        Log.e("tdatadelcount----",""+tdatadelcount);
+                        ja_tdata=myObj.getJSONArray("testdata");
+                        if(ja_tdata!=null && ja_tdata.length()>0){
+                            Log.e("tdataLength---",""+ja_tdata.length());
+                            int p=0,q=0;
+                            for(int i=0;i<ja_tdata.length();i++){
+
+                                testdataObj=ja_tdata.getJSONObject(i);
+                                long insertFlag=myhelper.insertTestAggrigateRecord(testdataObj.getInt("testKey"),testdataObj.getString("testId"),testdataObj.getString("testType"),testdataObj.getString("test_OrgId"),
+                                        testdataObj.getString("test_batchId"),testdataObj.getString("test_courseId"),testdataObj.getString("test_paperId"),testdataObj.getString("test_subjectId"),
+                                        testdataObj.getDouble("minPercentage"),testdataObj.getDouble("maxPercentage"),testdataObj.getDouble("avgPercentage"),testdataObj.getInt("minAttempts"),
+                                        testdataObj.getInt("maxAttempts"),testdataObj.getInt("avgAttempts"),testdataObj.getInt("flag"),testdataObj.getString("createdBy"),
+                                        testdataObj.getString("createdDttm"),testdataObj.getString("modifiedBy"),testdataObj.getString("modifiedDttm"));
+                                if(insertFlag>0){
+                                    p++;
+                                }else {
+                                    q++;
+                                }
+                            }
+                            Log.e("TestRawData--","Inserted: "+p);
+                        }else{
+                            Log.e("TestRawData--","Empty Json Array: ");
+                        }
+                    }
+                    else {
+                        Log.e("TestRawData--","No Tests Data: ");
                     }
 
 

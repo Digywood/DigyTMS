@@ -20,18 +20,29 @@ import android.widget.Button;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+import com.digywood.tms.Charts.DayAxisValueFormatter;
+import com.digywood.tms.Charts.MyAxisValueFormatter;
+import com.digywood.tms.Charts.XYMarkerView;
 import com.digywood.tms.DBHelper.DBHelper;
 import com.digywood.tms.PaperDashActivity;
 import com.digywood.tms.Pojo.SingleEnrollment;
 import com.digywood.tms.R;
+import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.charts.PieChart;
 import com.github.mikephil.charting.components.Legend;
+import com.github.mikephil.charting.components.XAxis;
+import com.github.mikephil.charting.components.YAxis;
+import com.github.mikephil.charting.data.BarData;
+import com.github.mikephil.charting.data.BarDataSet;
+import com.github.mikephil.charting.data.BarEntry;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.PieData;
 import com.github.mikephil.charting.data.PieDataSet;
 import com.github.mikephil.charting.data.PieEntry;
+import com.github.mikephil.charting.formatter.IAxisValueFormatter;
 import com.github.mikephil.charting.formatter.PercentFormatter;
 import com.github.mikephil.charting.highlight.Highlight;
+import com.github.mikephil.charting.interfaces.datasets.IBarDataSet;
 import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
 
 import java.util.ArrayList;
@@ -52,6 +63,7 @@ public class FlashFragment extends Fragment implements OnChartValueSelectedListe
     Button btn_fdetails;
     int totptestcount=0,attemptpcount=0;
     private PieChart mChart;
+    public BarChart mChart1;
     float attemptpercent=0.0f;
     Double min=0.0,max=0.0,avg=0.0;
     String enrollid="",courseid="";
@@ -61,7 +73,7 @@ public class FlashFragment extends Fragment implements OnChartValueSelectedListe
     ArrayAdapter<String> enrollAdp;
 
     Spinner sp_enrollids;
-    TextView tv_ftottests,tv_fattempted,tv_ftestsasplan,tv_fpercent,tv_fmax,tv_fmin,tv_favg,tv_fRAGattempt,tv_fRAGAVGscore;
+    TextView tv_ftottests,tv_fattempted,tv_ftestsasplan,tv_fpercent,tv_fmax,tv_fmin,tv_favg,tv_fRAGattempt,tv_fRAGAVGscore,tv_courseid;
 
     protected String[] mParties = new String[] {
             "Completed", "Left", "Party C", "Party D", "Party E", "Party F", "Party G", "Party H",
@@ -116,6 +128,7 @@ public class FlashFragment extends Fragment implements OnChartValueSelectedListe
         tv_favg=view.findViewById(R.id.tv_favg);
         tv_fRAGattempt=view.findViewById(R.id.tv_fRAGattempt);
         tv_fRAGAVGscore=view.findViewById(R.id.tv_fRAGAVGscore);
+        tv_courseid=view.findViewById(R.id.tv_fcourseid);
         btn_fdetails = view.findViewById(R.id.btn_fdetails);
 
         sp_enrollids=view.findViewById(R.id.sp_fenrollids);
@@ -123,6 +136,8 @@ public class FlashFragment extends Fragment implements OnChartValueSelectedListe
         myhelper=new DBHelper(getActivity());
 
         mChart=view.findViewById(R.id.chart2);
+
+        mChart1 =view.findViewById(R.id.bchart2);
 
         return view;
     }
@@ -169,11 +184,13 @@ public class FlashFragment extends Fragment implements OnChartValueSelectedListe
 
         sp_enrollids.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+            public void onItemSelected(AdapterView<?> parent, View view,int position,long id) {
 
                 SingleEnrollment singleEnrollment=enrollPojos.get(position);
                 enrollid=singleEnrollment.getEnrollid();
                 courseid=singleEnrollment.getEnrollcourseid();
+                String cname=myhelper.getCoursenameById(courseid);
+                tv_courseid.setText(cname);
             }
 
             @Override
@@ -242,6 +259,65 @@ public class FlashFragment extends Fragment implements OnChartValueSelectedListe
         l.setDrawInside(false);
         l.setEnabled(false);
 
+        mChart1.setDrawBarShadow(false);
+        mChart1.setDrawValueAboveBar(true);
+
+        mChart1.getDescription().setEnabled(false);
+
+        // if more than 60 entries are displayed in the chart, no values will be
+        // drawn
+        mChart1.setMaxVisibleValueCount(10);
+
+        // scaling can now only be done on x- and y-axis separately
+        mChart1.setPinchZoom(false);
+
+        mChart1.setDrawGridBackground(false);
+        // mChart.setDrawYLabels(false);
+
+        IAxisValueFormatter xAxisFormatter = new DayAxisValueFormatter(mChart1);
+
+        XAxis xAxis = mChart1.getXAxis();
+        xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
+//        xAxis.setTypeface(mTfLight);
+        xAxis.setDrawGridLines(false);
+//        xAxis.setGranularity(1f); // only intervals of 1 day
+        xAxis.setLabelCount(3);
+        xAxis.setValueFormatter(xAxisFormatter);
+
+        IAxisValueFormatter custom = new MyAxisValueFormatter();
+
+        YAxis leftAxis = mChart1.getAxisLeft();
+//        leftAxis.setTypeface(mTfLight);
+        leftAxis.setLabelCount(10, false);
+        leftAxis.setValueFormatter(custom);
+        leftAxis.setPosition(YAxis.YAxisLabelPosition.OUTSIDE_CHART);
+        leftAxis.setSpaceTop(15f);
+        leftAxis.setAxisMinimum(0f); // this replaces setStartAtZero(true)
+
+        YAxis rightAxis = mChart1.getAxisRight();
+        rightAxis.setDrawGridLines(false);
+//        rightAxis.setTypeface(mTfLight);
+        rightAxis.setLabelCount(10, false);
+        rightAxis.setValueFormatter(custom);
+        rightAxis.setSpaceTop(15f);
+        rightAxis.setAxisMinimum(0f); // this replaces setStartAtZero(true)
+
+        Legend leg = mChart1.getLegend();
+        leg.setVerticalAlignment(Legend.LegendVerticalAlignment.BOTTOM);
+        leg.setHorizontalAlignment(Legend.LegendHorizontalAlignment.LEFT);
+        leg.setOrientation(Legend.LegendOrientation.HORIZONTAL);
+        leg.setDrawInside(false);
+        leg.setForm(Legend.LegendForm.SQUARE);
+        leg.setFormSize(9f);
+        leg.setTextSize(11f);
+        leg.setXEntrySpace(4f);
+
+        XYMarkerView mv = new XYMarkerView(getActivity(),xAxisFormatter);
+        mv.setChartView(mChart1); // For bounds control
+        mChart1.setMarker(mv); // Set the marker to the chart
+
+        setData1(3,100);
+
     }
 
     // TODO: Rename method, update argument and hook method into UI event
@@ -306,23 +382,6 @@ public class FlashFragment extends Fragment implements OnChartValueSelectedListe
         // add a lot of colors
 
         ArrayList<Integer> colors = new ArrayList<>();
-//
-//        for (int c : ColorTemplate.VORDIPLOM_COLORS)
-//            colors.add(c);
-//
-//        for (int c : ColorTemplate.JOYFUL_COLORS)
-//            colors.add(c);
-//
-//        for (int c : ColorTemplate.COLORFUL_COLORS)
-//            colors.add(c);
-//
-//        for (int c : ColorTemplate.LIBERTY_COLORS)
-//            colors.add(c);
-//
-//        for (int c : ColorTemplate.PASTEL_COLORS)
-//            colors.add(c);
-//
-//        colors.add(ColorTemplate.getHoloBlue());
 
         colors.add(Color.rgb(100, 196, 125));
         colors.add(Color.rgb(67, 65, 64));
@@ -352,8 +411,46 @@ public class FlashFragment extends Fragment implements OnChartValueSelectedListe
         mChart.invalidate();
     }
 
+    private void setData1(int count, float range) {
+
+        float start = 1f;
+
+        ArrayList<BarEntry> yVals1 = new ArrayList<BarEntry>();
+
+        Float min1=(Float.parseFloat(String.valueOf(min)));
+        Float avg1=(Float.parseFloat(String.valueOf(avg)));
+        Float max1=(Float.parseFloat(String.valueOf(max)));
+        yVals1.add(new BarEntry(1,min1));
+        yVals1.add(new BarEntry(2,avg1));
+        yVals1.add(new BarEntry(3,max1));
+
+        BarDataSet set1;
+
+        set1 = new BarDataSet(yVals1, "Min:Avg:Max");
+
+        set1.setDrawIcons(false);
+
+        int colors[]={Color.rgb(67, 65, 64),Color.rgb(204,204,0),Color.rgb(100, 196, 125)};
+
+        set1.setColors(colors);
+
+        ArrayList<IBarDataSet> dataSets = new ArrayList<>();
+        dataSets.add(set1);
+
+        BarData data = new BarData(dataSets);
+        data.setValueTextSize(10f);
+//            data.setValueTypeface(mTfLight);
+        data.setBarWidth(0.4f);
+
+        mChart1.setData(data);
+        mChart1.getData().setHighlightEnabled(!mChart1.getData().isHighlightEnabled());
+        mChart1.setPinchZoom(false);
+        mChart1.setAutoScaleMinMaxEnabled(false);
+        mChart1.invalidate();
+    }
+
     private SpannableString generateCenterSpannableText(String value) {
-        SpannableString s = new SpannableString("Performance \n"+value+"%");
+        SpannableString s = new SpannableString(value+"%");
         return s;
     }
 

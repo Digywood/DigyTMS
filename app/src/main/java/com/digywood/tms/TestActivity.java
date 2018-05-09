@@ -76,7 +76,7 @@ public class TestActivity extends AppCompatActivity implements
     ImageView fullscreen;
     GridView gridView;
     Spinner sections;
-    String jsonPath,imgPath, photoPath, Seq, Id, path, enrollid, courseid, subjectId, paperid, testid, groupId;
+    String jsonPath,imgPath, photoPath, Seq, Id, path,enrollid,courseid,subjectId,paperid,testid,groupId;
     final String notAttempted = "NOT_ATTEMPTED", attempted = "ATTEMPTED", skipped = "SKIPPED", bookmarked = "BOOKMARKED",not_confirmed = "NOT_CONFIRMED",confirmed = "CONFIRMED";
     EncryptDecrypt encObj;
     RecyclerView question_scroll;
@@ -296,7 +296,7 @@ public class TestActivity extends AppCompatActivity implements
                 pos = c.getInt(c.getColumnIndex("Attempt_LastSection"));
             }
             //inserting new Test record in local database
-            long ret = dataObj.InsertAttempt(generateUniqueId(1),attempt.getString("ptu_test_ID"),1, 0,dataObj.getQuestionAttempted(),dataObj.getQuestionSkipped(),dataObj.getQustionBookmarked(),dataObj.getQustionNotAttempted(), 0, millisRemaining, index, pos);
+            long ret = dataObj.InsertAttempt(generateUniqueId(1),attempt.getString("ptu_test_ID"),enrollid,"",courseid,subjectId,paperid,1, 0,dataObj.getQuestionAttempted(),dataObj.getQuestionSkipped(),dataObj.getQustionBookmarked(),dataObj.getQustionNotAttempted(), 0, millisRemaining, index, pos);
             Log.e("New Test Insertion",""+ret);
 
         } catch (JSONException e) {
@@ -449,7 +449,8 @@ public class TestActivity extends AppCompatActivity implements
                                                 try {
                                                     long value = dataObj.UpdateAttempt(generateUniqueId(0),attempt.getString("ptu_test_ID"),2, 0,dataObj.getQuestionAttempted(),dataObj.getQuestionSkipped(),dataObj.getQustionBookmarked(),dataObj.getQustionNotAttempted(), 0, millisRemaining, index, pos);
                                                     if (value <= 0) {
-                                                        long ret = dataObj.InsertAttempt(generateUniqueId(1),attempt.getString("ptu_test_ID"),2, 0,dataObj.getQuestionAttempted(),dataObj.getQuestionSkipped(),dataObj.getQustionBookmarked(),dataObj.getQustionNotAttempted(), 0, millisRemaining, index, pos);
+                                                        Log.e("PaperId: ","pid  "+paperid);
+                                                        long ret = dataObj.InsertAttempt(generateUniqueId(1),attempt.getString("ptu_test_ID"),enrollid,"",courseid,subjectId,paperid,2, 0,dataObj.getQuestionAttempted(),dataObj.getQuestionSkipped(),dataObj.getQustionBookmarked(),dataObj.getQustionNotAttempted(), 0, millisRemaining, index, pos);
                                                         Log.e("Insertion",""+ret);
                                                     }
                                                     SaveJSONdataToFile.objectToFile(URLClass.mainpath + path + "Attempt/" + testid + ".json", attempt.toString());
@@ -845,7 +846,8 @@ public class TestActivity extends AppCompatActivity implements
                                 try {
                                     long value = dataObj.UpdateAttempt(generateUniqueId(0),attempt.getString("ptu_test_ID"),2, 0,dataObj.getQuestionAttempted(),dataObj.getQuestionSkipped(),dataObj.getQustionBookmarked(),dataObj.getQustionNotAttempted(), 0, millisRemaining, index, pos);
                                     if (value <= 0) {
-                                        long ret = dataObj.InsertAttempt(generateUniqueId(0),attempt.getString("ptu_test_ID"),2, 0,dataObj.getQuestionAttempted(),dataObj.getQuestionSkipped(),dataObj.getQustionBookmarked(),dataObj.getQustionNotAttempted(), 0, millisRemaining, index, pos);
+                                        Log.e("PaperId: ","pid  "+paperid);
+                                        long ret = dataObj.InsertAttempt(generateUniqueId(0),attempt.getString("ptu_test_ID"),enrollid,"",courseid,subjectId,paperid,2, 0,dataObj.getQuestionAttempted(),dataObj.getQuestionSkipped(),dataObj.getQustionBookmarked(),dataObj.getQustionNotAttempted(), 0, millisRemaining, index, pos);
                                         Log.e("Insertion",""+ret);
                                     }
                                     SaveJSONdataToFile.objectToFile(URLClass.mainpath + path + "Attempt/" + testid + ".json", attempt.toString());

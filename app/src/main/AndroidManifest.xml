@@ -33,17 +33,20 @@
             android:parentActivityName=".MainActivity"
             android:screenOrientation="landscape" />
         <activity
-            android:name=".CourseActivity"
+            android:name=".PaperActivity"
             android:parentActivityName=".LandingActivity"
             android:screenOrientation="landscape" />
-        <activity android:name=".EnrollRequestActivity" />
+        <activity android:name=".EnrollRequestActivity"
+            android:screenOrientation="landscape"
+            android:label="@string/enrolllabel"
+            android:parentActivityName=".DashBoardNavActivity"/>
         <activity
             android:name=".ListofPractiseTests"
-            android:parentActivityName=".CourseActivity"
+            android:parentActivityName=".PaperActivity"
             android:screenOrientation="landscape" />
         <activity
             android:name=".ListofAssesmentTests"
-            android:parentActivityName=".CourseActivity"
+            android:parentActivityName=".PaperActivity"
             android:screenOrientation="landscape" />
         <activity
             android:name=".TestActivity"
@@ -80,16 +83,15 @@
             android:name=".DashBoardNavActivity"
             android:screenOrientation="landscape"
             android:theme="@style/AppTheme.NoActionBar"/>
-            android:label="@string/title_activity_dash_board"
-            android:screenOrientation="landscape"
-            android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".PaperDashActivity"
             android:label="@string/paperdashlabel"
-            android:screenOrientation="landscape" />
+            android:screenOrientation="landscape"
+            android:parentActivityName=".DashBoardNavActivity"/>
         <activity android:name=".TestDashActivity"
             android:label="@string/testdashlabel"
-            android:screenOrientation="landscape"></activity>
+            android:screenOrientation="landscape"
+            android:parentActivityName=".PaperDashActivity"></activity>
     </application>
 
 </manifest>

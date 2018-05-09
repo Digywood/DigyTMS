@@ -20,7 +20,6 @@ import com.digywood.tms.AsynTasks.BagroundTask;
 import com.digywood.tms.DBHelper.DBHelper;
 import org.json.JSONArray;
 import org.json.JSONObject;
-
 import java.util.HashMap;
 
 public class MainActivity extends AppCompatActivity {
@@ -172,6 +171,7 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Intent i=new Intent(getApplicationContext(),RegistrationActivity.class);
                 startActivity(i);
+
             }
         });
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
