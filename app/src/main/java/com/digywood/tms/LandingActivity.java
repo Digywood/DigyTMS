@@ -102,7 +102,7 @@ public class LandingActivity extends AppCompatActivity {
                             enrollids.add(enrollid);
                             enrollcourseids.add(enrollcourseid);
 
-                            long checkFlag=myhelper.checkEnrollment(myObj.getInt("Enroll_key"));
+                            long checkFlag=myhelper.checkEnrollment(myObj.getString("Enroll_ID"));
                             if(checkFlag>0){
                                 Log.e("LandingActivity----","Enroll Already Exists");
                             }else{
@@ -268,7 +268,7 @@ public class LandingActivity extends AppCompatActivity {
 
                                 testObj=ja_tests_table.getJSONObject(i);
 
-                                Cursor mycursor=myhelper.getSingleTestData(testObj.getString("sptu_ID"));
+                                Cursor mycursor=myhelper.checkPractiseTest(testObj.getString("sptu_ID"));
                                 if(mycursor.getCount()>0){
                                     long updateFlag=myhelper.updatePractiseTestData(testObj.getString("sptu_org_id"),testObj.getString("sptu_entroll_id"),testObj.getString("sptu_student_ID"),
                                             testObj.getString("sptu_batch"),testObj.getString("sptu_ID"),testObj.getString("sptu_paper_ID"),testObj.getString("sptu_subjet_ID"),

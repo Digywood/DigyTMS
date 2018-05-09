@@ -10,8 +10,6 @@ import com.github.mikephil.charting.formatter.IAxisValueFormatter;
 public class DayAxisValueFormatter implements IAxisValueFormatter
 {
 
-    int i=0;
-
     protected String[] mMonths = new String[]{
             "Min", "Avg", "Max"
     };
@@ -25,8 +23,11 @@ public class DayAxisValueFormatter implements IAxisValueFormatter
     @Override
     public String getFormattedValue(float value, AxisBase axis) {
 
-        String monthName = mMonths[i % mMonths.length];
-        i++;
+        int month = (int) value;
+        if(month>0){
+            month=month-1;
+        }
+        String monthName = mMonths[month % mMonths.length];
         return monthName;
     }
 }
