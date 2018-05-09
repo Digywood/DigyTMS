@@ -797,7 +797,7 @@ public class DBHelper extends SQLiteOpenHelper {
         return insertFlag;
     }
 
-    public long updateTest(String tID,String tsid,String tcid,int tnoofques,Double ttotalmarks,Double tminmarks,Double tmaxmarks,Double avgscore,Double percentage){
+    public long updateTest(String tID,String tsid,String tcid,int tnoofques,Double ttotalmarks,Double tminmarks,Double tmaxmarks,Double avgscore,Double tminperc, Double tmaxperc, Double tavgperc){
         long updateFlag=0;
         ContentValues cv = new ContentValues();
         cv.put("sptu_subjet_ID",tsid);
@@ -805,8 +805,11 @@ public class DBHelper extends SQLiteOpenHelper {
         cv.put("sptu_no_of_questions",tnoofques);
         cv.put("sptu_tot_marks",ttotalmarks);
         cv.put("stpu_min_marks",tminmarks);
+        cv.put("sptu_min_percent",tminperc);
         cv.put("sptu_max_marks",tmaxmarks);
+        cv.put("sptu_max_percent",tmaxperc);
         cv.put("sptu_avg_marks",avgscore);
+        cv.put("sptu_avg_percent",tavgperc);
         updateFlag=db.update("sptu_student", cv,"sptu_ID='"+tID+"'",null);
         return  updateFlag;
     }

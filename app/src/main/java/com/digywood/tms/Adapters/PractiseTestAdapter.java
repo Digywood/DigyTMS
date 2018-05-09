@@ -116,15 +116,6 @@ public class PractiseTestAdapter extends RecyclerView.Adapter<PractiseTestAdapte
         return new PractiseTestAdapter.MyViewHolder(itemView);
     }
 
-    @Override
-    public void onValueSelected(Entry e, Highlight h) {
-
-    }
-
-    @Override
-    public void onNothingSelected() {
-
-    }
 
     @Override
     public void onBindViewHolder(final MyViewHolder holder, final int position) {

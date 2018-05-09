@@ -119,7 +119,8 @@ public class ScoreActivity extends AppCompatActivity {
                 MaxMarks = Double.valueOf(attempt.getString("ptu_positive_marks")) * dataObj.getQuestionCount();
                 Percentage = (  TotalPositive / MaxMarks )*100;
             }
-
+            testId = attempt.getString("ptu_test_ID");
+            long flag = dataObj.UpdateAttempt(dataObj.getLastAttempt(), attempt.getString("ptu_test_ID"), 2,MaxMarks, dataObj.getQuestionAttempted(), dataObj.getQuestionSkipped(), dataObj.getQustionBookmarked(), dataObj.getQustionNotAttempted(),Percentage , 0, 0, 0);
             Cursor mycursor=dataObj.getTestRawData(testId);
             if(mycursor.getCount()>0) {
                 while (mycursor.moveToNext()) {
@@ -127,15 +128,15 @@ public class ScoreActivity extends AppCompatActivity {
                     maxscore = mycursor.getDouble(mycursor.getColumnIndex("maxscore"));
                     avgscore = mycursor.getDouble(mycursor.getColumnIndex("avgscore"));
                 }
-                Log.e("ScoreActivity-->","Data Exists");
+                Log.e("ScoreActivity-->",""+maxscore);
             }
             TotalScore = TotalPositive - TotalNegative;
-            testId = attempt.getString("ptu_test_ID");
-            long flag = dataObj.UpdateAttempt(dataObj.getLastAttempt(), attempt.getString("ptu_test_ID"), 2,MaxMarks, dataObj.getQuestionAttempted(), dataObj.getQuestionSkipped(), dataObj.getQustionBookmarked(), dataObj.getQustionNotAttempted(), 0, 0, 0, 0);
+
+//            long tflag =
             if(flag > 0){
-                long qflag = dataObj.updateTest(testId,subjectid,courseid,dataObj.getQuestionCount(),MaxMarks,minscore,maxscore,avgscore,Percentage);
+                long qflag = dataObj.updateTest(testId,subjectid,courseid,dataObj.getQuestionCount(),MaxMarks,minscore,maxscore,avgscore,minscore,maxscore,avgscore);
                 if(qflag > 0){
-                    //only if the data is inserted into the table, it should be displaued on screen
+                    //only if the data is inserted into the table, it should be displayed on screen
                     Cursor cursor = dataObj.getSubcategories();
                     ArrayList<String> subcatList = new ArrayList<>();
                     if(cursor.getCount() > 0){
@@ -220,14 +221,7 @@ public class ScoreActivity extends AppCompatActivity {
 
                 }
             }
-/*            if(qflag > 0){
-               Log.e("ScoreActivity-->","Update Successful");
-            }else
-                Log.e("ScoreActivity-->","Update Failed");
-            long value = dataObj.UpdateAttempt(dataObj.getAttempCount(),attempt.getString("ptu_test_ID"),2, 0,dataObj.getQuestionAttempted(),dataObj.getQuestionSkipped(),dataObj.getQustionBookmarked(),dataObj.getQustionNotAttempted(), 0, 0, 0, 0);
-            if (value >= 0) {
-                dataObj.InsertAttempt(attempt.getString("ptu_test_ID"),2, 0,dataObj.getQuestionAttempted(),dataObj.getQuestionSkipped(),dataObj.getQustionBookmarked(),dataObj.getQustionNotAttempted(), 0, 0, 0, 0);
-            }*/
+
             tv_test.setText(testId);
         } catch (JSONException|NumberFormatException e) {
             e.printStackTrace();
