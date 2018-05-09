@@ -158,18 +158,9 @@ public class ScoreActivity extends AppCompatActivity {
                         TableRow.LayoutParams params = new TableRow.LayoutParams(0, TableLayout.LayoutParams.WRAP_CONTENT, 1f);
                         tv_category.setLayoutParams(params);
                         tv_category.setGravity(Gravity.CENTER);
-                        Log.d("category",subcatList.get(i));
+                        Log.d("sections",subcatList.get(i));
                         tv_category.setTextColor(Color.BLACK);
                         tr.addView(tv_category);
-                        //subcategory name
-                        TextView tv_subcategory  = new TextView(this);
-                        tv_subcategory.setText(subcatList.get(i));
-                        params = new TableRow.LayoutParams(0, TableLayout.LayoutParams.WRAP_CONTENT, 1f);
-                        tv_subcategory.setLayoutParams(params);
-                        tv_subcategory.setGravity(Gravity.CENTER);
-                        Log.d("subcategory",subcatList.get(i));
-                        tv_subcategory.setTextColor(Color.BLACK);
-                        tr.addView(tv_subcategory);
                         //Number of Questions
                         TextView tv_noOfQuestions  = new TextView(this);
                         tv_noOfQuestions.setText(String.valueOf(dataObj.getSubcatQuestions(subcatList.get(i))));
@@ -238,7 +229,7 @@ public class ScoreActivity extends AppCompatActivity {
         tv_totalPositive.setText(String.valueOf(TotalPositive));
         tv_totalNegative.setText(String.valueOf(TotalNegative));
         tv_totalScore.setText(String.valueOf(TotalScore));
-        tv_totalPercentage.setText(String.valueOf(Percentage) + " %");
+        tv_totalPercentage.setText(String.format("%.1f", Percentage) + " %");
 
 
         btn_save.setOnClickListener(new View.OnClickListener() {

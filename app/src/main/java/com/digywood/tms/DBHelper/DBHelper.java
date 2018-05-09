@@ -1461,7 +1461,7 @@ public class DBHelper extends SQLiteOpenHelper {
 
     public int getTestAttempCount(String testId){
         int count=0;
-        String countQuery = "select Attempt_ID from attempt_list WHERE Attempt_Test_ID = '"+testId+"'";
+        String countQuery = "select Attempt_ID from attempt_list WHERE Attempt_Test_ID = '"+testId+"' and Attempt_Status != 0";
         Cursor c = db.rawQuery(countQuery, null);
         count=c.getCount();
         return count;

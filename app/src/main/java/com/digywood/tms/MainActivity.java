@@ -140,7 +140,6 @@ public class MainActivity extends AppCompatActivity {
                                                             i.putExtra("sname",studentname);
                                                             i.putExtra("email",semail);
                                                             startActivity(i);
-                                                            finish();
                                                         }else{
                                                             Toast.makeText(getApplicationContext(),"Wrong Password",Toast.LENGTH_SHORT).show();
                                                         }

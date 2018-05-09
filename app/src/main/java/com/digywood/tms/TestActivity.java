@@ -276,16 +276,13 @@ public class TestActivity extends AppCompatActivity implements
         });
 
         try {
-/*
-            count = dataObj.getLastAttempt();
-            c = dataObj.getAttempt(count);*/
             //if cursor has values then the test is being resumed and data is retrieved from database
             if (getIntent().getStringExtra("status").equalsIgnoreCase("NEW")) {
                 newTest();
             }
             else {
-                c.moveToLast();
-                Log.e("TestingJson", ""+c.getInt(c.getColumnIndex("Attempt_Status"))+" "+c.getCount());
+                c = dataObj.getAttempt(dataObj.getLastAttempt());
+//                Log.e("TestingJson", ""+c.getInt(c.getColumnIndex("Attempt_Status"))+" "+c.getCount());
                 millisStart = c.getLong(c.getColumnIndex("Attempt_RemainingTime"));
                 attempt = new JSONObject(getIntent().getStringExtra("json"));
                 attemptsectionarray = new JSONArray();
@@ -774,12 +771,6 @@ public class TestActivity extends AppCompatActivity implements
                     dataObj.InsertQuestion(attempt.getString("ptu_test_ID"), null, Id, Seq,questionobj.getString("qbm_Chapter_name"),questionobj.getString("qbm_Sub_CategoryName"), Integer.valueOf(questionobj.getString("qbm_marks")), Double.valueOf(questionobj.getString("qbm_negative_mrk")), 0, 0, indx, listOfLists.get(pos).get(index).getQ_status(), opAdapter.getSelectedSequence(), opAdapter.getFlag());
                 }
                 Log.e("CurrentStatus", "" + dataObj.getPosition(Id));
-                /*// Saving time remaining
-                long value = dataObj.UpdateAttempt(count, attempt.getString("ptu_test_ID"), 1, 0, dataObj.getQuestionAttempted(), dataObj.getQuestionSkipped(), dataObj.getQustionBookmarked(), dataObj.getQustionNotAttempted(), 0, millisRemaining, index, pos);
-                Log.e("WriteOption:", "" + value);
-                if (value <= 0) {
-                    dataObj.InsertAttempt(attempt.getString("ptu_test_ID"), 1, 0, dataObj.getQuestionAttempted(), dataObj.getQuestionSkipped(), dataObj.getQustionBookmarked(), dataObj.getQustionNotAttempted(), 0, millisRemaining, index, pos);
-                }*/
             }
 
         } catch (JSONException e) {
@@ -856,10 +847,6 @@ public class TestActivity extends AppCompatActivity implements
                                         makeSceneTransitionAnimation(TestActivity.this, finish_view, "transition");
                                 int revealX = (int) (finish_view.getX() + finish_view.getWidth() / 2);
                                 int revealY = (int) (finish_view.getY() + finish_view.getHeight() / 2);
-//                                count = dataObj.getAttempCount();
-//
-//                                c = dataObj.getAttempt(count);
-//                                c.moveToFirst();
                                 Intent intent = new Intent(TestActivity.this, ScoreActivity.class);
                                 bundle = new Bundle();
                                 bundle.putString("JSON", attempt.toString());
@@ -1015,12 +1002,12 @@ public class TestActivity extends AppCompatActivity implements
         question_img.setImageBitmap(b);
 /*        Animation fadeimage = AnimationUtils.loadAnimation(TestActivity.this, R.anim.fade_in);
         question_img.startAnimation(fadeimage);*/
-        question_img.setOnTouchListener(new View.OnTouchListener() {
+/*        question_img.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
                 return gd.onTouchEvent(event);
             }
-        });
+        });*/
 
         optionsArray = questionobj.getJSONArray("Options");
         optionsList = new ArrayList<>();

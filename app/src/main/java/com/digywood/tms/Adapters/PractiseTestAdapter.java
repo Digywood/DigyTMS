@@ -76,14 +76,15 @@ public class PractiseTestAdapter extends RecyclerView.Adapter<PractiseTestAdapte
     DBHelper myhelper;
     Boolean value = false;
     JSONParser myparser;
+    Double minscore,maxscore,avgscore;
     public static final int RequestPermissionCode = 1;
     String filedata = "", path, jsonPath, attemptPath, photoPath, enrollid, courseid,groupdata="";
     String subjectId, paperid, testid, fullTest, attempt,json,downloadjsonpath="",tfiledwdpath="",localpath="";
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
 
-        public TextView tv_testid, tv_teststatus,tv_testAttempt,tv_min,tv_max;
-        public Button btn_pstart, btn_review, btn_fstart;
+        public TextView tv_testid, tv_teststatus,tv_testAttempt,tv_attempt_min,tv_attempt_max;
+        ImageView iv_start,iv_resume,iv_review,iv_fstart;
         ImageView iv_history,iv_download;
         PieChart test_pieChart,flash_pieChart;
 //        public CheckBox cb_download;
@@ -92,13 +93,16 @@ public class PractiseTestAdapter extends RecyclerView.Adapter<PractiseTestAdapte
             super(view);
             tv_testid = view.findViewById(R.id.tv_testid);
             tv_teststatus = view.findViewById(R.id.tv_teststatus);
-            btn_pstart = view.findViewById(R.id.btn_pstart);
-            btn_review = view.findViewById(R.id.btn_review);
-            btn_fstart = view.findViewById(R.id.btn_fstart);
+            iv_start = view.findViewById(R.id.iv_start);
+            iv_resume = view.findViewById(R.id.iv_resume);
+            iv_review = view.findViewById(R.id.iv_review);
+            iv_fstart = view.findViewById(R.id.iv_fstart);
             iv_history = view.findViewById(R.id.iv_history);
             iv_download = view.findViewById(R.id.iv_download);
             test_pieChart = (PieChart) view.findViewById(R.id.test_piechart);
             tv_testAttempt = view.findViewById(R.id.tv_testAttempt);
+            tv_attempt_max = view.findViewById(R.id.tv_attempt_max);
+            tv_attempt_min = view.findViewById(R.id.tv_attempt_min);
             flash_pieChart = (PieChart) view.findViewById(R.id.flash_piechart);
 //            cb_download = view.findViewById(R.id.cb_testselection);
         }
@@ -121,10 +125,22 @@ public class PractiseTestAdapter extends RecyclerView.Adapter<PractiseTestAdapte
     public void onBindViewHolder(final MyViewHolder holder, final int position) {
 
         final SingleTest singletest = testList.get(position);
+        Cursor mycursor=myhelper.getTestRawData(singletest.getTestid());
+        if(mycursor.getCount()>0) {
+            while (mycursor.moveToNext()) {
+                minscore = mycursor.getDouble(mycursor.getColumnIndex("minscore"));
+                maxscore = mycursor.getDouble(mycursor.getColumnIndex("maxscore"));
+                avgscore = mycursor.getDouble(mycursor.getColumnIndex("avgscore"));
+            }
+        }
         List<PieEntry> yvalues = new ArrayList<PieEntry>();
-        holder.tv_testAttempt.setText(String.valueOf(myhelper.getTestAttempCount(singletest.getTestid()))+" Attempts");
-        yvalues.add(new PieEntry(20f, 0));
-        yvalues.add(new PieEntry(80f, 0));
+        holder.tv_testAttempt.setText(String.valueOf(myhelper.getTestAttempCount(singletest.getTestid())));
+        holder.tv_attempt_min.setText(String.format("%.1f", minscore));
+        holder.tv_attempt_max.setText(String.format("%.1f", maxscore));
+        float a = avgscore.floatValue();
+        float b = 100 - a;
+        yvalues.add(new PieEntry(a, 0));
+        yvalues.add(new PieEntry(b, 0));
         List<Integer> colors = new ArrayList<>();
         colors.add(Color.rgb(100,196,125));
         colors.add(Color.rgb(201,201,201));
@@ -135,17 +151,17 @@ public class PractiseTestAdapter extends RecyclerView.Adapter<PractiseTestAdapte
         holder.test_pieChart.setRotationEnabled(true);
         //test_pieChart.setUsePercentValues(true);
         Description description = new Description();
-        description.setText("Avg. Score");
+        description.setText("");
         description.setTextSize(15);
         holder.test_pieChart.setDescription(description);
         holder.test_pieChart.setHoleColor(Color.WHITE);
         holder.test_pieChart.setTransparentCircleRadius(68f);
         holder.test_pieChart.setHoleRadius(68f);
         holder.test_pieChart.setTransparentCircleAlpha(0);
-        holder.test_pieChart.setCenterText("20%");
+        holder.test_pieChart.setCenterText(String.format("%.1f", avgscore)+"%");
         holder.test_pieChart.setCenterTextSize(20);
-        holder.test_pieChart.setCenterTextColor(mycontext.getResources().getColor(R.color.green));
         holder.test_pieChart.setData(data);
+        holder.test_pieChart.getLegend().setEnabled(false);
 
         for (IDataSet<?> set : holder.test_pieChart.getData().getDataSets())
             set.setDrawValues(!set.isDrawValuesEnabled());
@@ -156,7 +172,7 @@ public class PractiseTestAdapter extends RecyclerView.Adapter<PractiseTestAdapte
         holder.flash_pieChart.setRotationEnabled(true);
         //test_pieChart.setUsePercentValues(true);
         Description f_description = new Description();
-        description.setText("Avg. Score");
+        description.setText("");
         description.setTextSize(15);
         holder.flash_pieChart.setDescription(description);
         holder.flash_pieChart.setHoleColor(Color.WHITE);
@@ -165,37 +181,31 @@ public class PractiseTestAdapter extends RecyclerView.Adapter<PractiseTestAdapte
         holder.flash_pieChart.setTransparentCircleAlpha(0);
         holder.flash_pieChart.setCenterText("20%");
         holder.flash_pieChart.setCenterTextSize(15);
-        holder.test_pieChart.setCenterTextColor(mycontext.getResources().getColor(R.color.green));
         holder.flash_pieChart.setCenterTextColor(Color.BLACK);
         holder.flash_pieChart.setData(data);
-
+        holder.flash_pieChart.getLegend().setEnabled(false);
 /*
         for (IDataSet<?> set : holder.flash_pieChart.getData().getDataSets())
             set.setDrawValues(!set.isDrawValuesEnabled());
-
         holder.flash_pieChart.invalidate();
 */
-
-
-
         holder.tv_testid.setText(singletest.getTestid());
         holder.tv_teststatus.setText(singletest.getStatus());
         final DBHelper dataObj = new DBHelper(mycontext);
         if (dataObj.getQuestionCount() == 0) {
-            holder.btn_review.setEnabled(false);
+            holder.iv_review.setEnabled(false);
         } else
-            holder.btn_review.setEnabled(true);
+            holder.iv_review.setEnabled(true);
         int count = dataObj.getAttempCount();
         Cursor c = dataObj.getAttempt(dataObj.getLastAttempt());
-        Log.e("Cursor Count---",""+c.getCount());
         //if cursor has values then the test is being resumed and data is retrieved from database
         if (c.getCount() > 0) {
             c.moveToLast();
             if (c.getInt(c.getColumnIndex("Attempt_Status")) == 1) {
                 Log.e("TAdapter",""+c.getString(c.getColumnIndex("Attempt_Test_ID")));
                 if(c.getString(c.getColumnIndex("Attempt_Test_ID")).equalsIgnoreCase(singletest.getTestid())) {
-                    holder.btn_review.setText("Resume");
-                    holder.btn_review.setOnClickListener(new View.OnClickListener() {
+                    holder.iv_resume.setVisibility(View.VISIBLE);
+                    holder.iv_resume.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
                             try {
@@ -213,9 +223,9 @@ public class PractiseTestAdapter extends RecyclerView.Adapter<PractiseTestAdapte
                     });
                 }
             } else {
-                holder.btn_review.setText("Review");
                 testid = singletest.getTestid();
-                holder.btn_review.setOnClickListener(new View.OnClickListener() {
+                holder.iv_review.setVisibility(View.VISIBLE);
+                holder.iv_review.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         try {
@@ -232,7 +242,7 @@ public class PractiseTestAdapter extends RecyclerView.Adapter<PractiseTestAdapte
             }
         }
 
-        holder.btn_pstart.setOnClickListener(new View.OnClickListener() {
+        holder.iv_start.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 dataObj.Destroy("attempt_data");
@@ -265,7 +275,7 @@ public class PractiseTestAdapter extends RecyclerView.Adapter<PractiseTestAdapte
             }
         });
 
-        holder.btn_fstart.setOnClickListener(new View.OnClickListener() {
+        holder.iv_fstart.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
