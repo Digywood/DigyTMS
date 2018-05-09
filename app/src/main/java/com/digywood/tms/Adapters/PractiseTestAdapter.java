@@ -270,7 +270,7 @@ public class PractiseTestAdapter extends RecyclerView.Adapter<PractiseTestAdapte
             @Override
             public void onClick(View v) {
 
-                Cursor mycursor = myhelper.getSingleTestData(singletest.getTestid());
+                Cursor mycursor = myhelper.checkPractiseTest(singletest.getTestid());
                 if (mycursor.getCount() > 0) {
                     while (mycursor.moveToNext()) {
 //                        studentid=mycursor.getString(mycursor.getColumnIndex("sptu_student_ID"));
@@ -344,10 +344,6 @@ public class PractiseTestAdapter extends RecyclerView.Adapter<PractiseTestAdapte
 //                    } else {
 //                        Log.e("FlashCardActivity---", "No Questions to Display");
 //                    }
-                        Intent i = new Intent(mycontext, FlashCardActivity.class);
-                        i.putExtra("testId", testList.get(position).getTestid());
-                        i.putExtra("testPath", tPath);
-                        mycontext.startActivity(i);
 
                     }
 
@@ -391,7 +387,7 @@ public class PractiseTestAdapter extends RecyclerView.Adapter<PractiseTestAdapte
 
                                 }
 
-                                Cursor mycursor=myhelper.getSingleTestData(singletest.getTestid());
+                                Cursor mycursor=myhelper.checkPractiseTest(singletest.getTestid());
                                 if(mycursor.getCount()>0){
                                     while(mycursor.moveToNext()){
 

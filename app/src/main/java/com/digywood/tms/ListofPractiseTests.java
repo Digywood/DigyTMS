@@ -114,47 +114,6 @@ public class ListofPractiseTests extends AppCompatActivity {
 
         getTestIdsFromLocal();
 
-//        fab_download.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//
-//                try{
-//                    selectedtestidList=tAdp.getchkTests();
-//
-//                    alreadydwdList=tAdp.getdwdchkTests();
-//
-//                }catch (Exception e){
-//                    e.printStackTrace();
-//                    Log.e("ListofPractiseTests--",e.toString());
-//                }
-//
-//                if(alreadydwdList.size()!=0){
-//                    showAlert("You have selected already downloaded tests,would you like download again?");
-//                }else{
-//                    if(selectedtestidList.size()!=0){
-//                        currentitem=0;
-//                        if(checkPermission()){
-//                            new AsyncCheckInternet(ListofPractiseTests.this,new INetStatus() {
-//                                @Override
-//                                public void inetSatus(Boolean netStatus) {
-//                                    if(netStatus){
-//                                        downloadTest(selectedtestidList.get(0));
-//                                    }else {
-//                                        Toast.makeText(getApplicationContext(),"No internet,Please Check your connection",Toast.LENGTH_SHORT).show();
-//                                    }
-//                                }
-//                            }).execute();
-//                        }else{
-//                            requestPermission();
-//                        }
-//
-//                    }else{
-//                        Toast.makeText(getApplicationContext(),"Please Choose tests to be downloaded",Toast.LENGTH_SHORT).show();
-//                    }
-//                }
-//            }
-//        });
-
     }
 
     public void downloadTest(String filename){
@@ -180,7 +139,7 @@ public class ListofPractiseTests extends AppCompatActivity {
 
                         }
 
-                        Cursor mycursor=myhelper.getSingleTestData(selectedtestidList.get(currentitem));
+                        Cursor mycursor=myhelper.checkPractiseTest(selectedtestidList.get(currentitem));
                         if(mycursor.getCount()>0){
                             while(mycursor.moveToNext()){
 
