@@ -541,8 +541,8 @@ public class DBHelper extends SQLiteOpenHelper {
         return c;
     }
 
-    public Cursor getPractiseSummary(){
-        String query ="SELECT count(distinct Attempt_Test_ID) as attemptpcount,MIN(Attempt_Percentage) as minscore,MAX(Attempt_Percentage) as maxscore,AVG(Attempt_Percentage) as avgscore FROM "+"attempt_list";
+    public Cursor getPractiseSummary(String enrollId){
+        String query ="SELECT count(distinct Attempt_Test_ID) as attemptpcount,MIN(Attempt_Percentage) as minscore,MAX(Attempt_Percentage) as maxscore,AVG(Attempt_Percentage) as avgscore FROM "+"attempt_list"+" WHERE Attempt_enrollId ='"+enrollId+"'";
         Cursor c=db.rawQuery(query,null);
         return c;
     }

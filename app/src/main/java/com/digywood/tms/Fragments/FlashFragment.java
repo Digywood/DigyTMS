@@ -163,23 +163,7 @@ public class FlashFragment extends Fragment implements OnChartValueSelectedListe
         }
 
         if(enrollIds.size()>0){
-            totptestcount=myhelper.getPTestsCount(sp_enrollids.getSelectedItem().toString());
-            tv_ftottests.setText(""+totptestcount);
-            Cursor mycur=myhelper.getFlashSummary(sp_enrollids.getSelectedItem().toString());
-            if(mycur.getCount()>0){
-                while (mycur.moveToNext()){
-                    attemptpcount=mycur.getInt(mycur.getColumnIndex("attemptfcount"));
-                    min=mycur.getDouble(mycur.getColumnIndex("minscore"));
-                    max=mycur.getDouble(mycur.getColumnIndex("maxscore"));
-                    avg=mycur.getDouble(mycur.getColumnIndex("avgscore"));
-                    tv_fattempted.setText(""+attemptpcount);
-                    tv_fmax.setText(""+round(max,1));
-                    tv_fmin.setText(""+round(min,1));
-                    tv_favg.setText(""+round(avg,1));
-                }
-            }else{
-                mycur.close();
-            }
+            updateData(sp_enrollids.getSelectedItem().toString());
         }
 
         sp_enrollids.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -191,6 +175,7 @@ public class FlashFragment extends Fragment implements OnChartValueSelectedListe
                 courseid=singleEnrollment.getEnrollcourseid();
                 String cname=myhelper.getCoursenameById(courseid);
                 tv_courseid.setText(cname);
+                updateData(singleEnrollment.getEnrollid());
             }
 
             @Override
@@ -476,6 +461,31 @@ public class FlashFragment extends Fragment implements OnChartValueSelectedListe
     @Override
     public void onNothingSelected() {
         Log.i("PieChart", "nothing selected");
+    }
+
+    public void updateData(String enrollId){
+        totptestcount=myhelper.getPTestsCount(enrollId);
+        tv_ftottests.setText(""+totptestcount);
+        Cursor mycur=myhelper.getFlashSummary(enrollId);
+        if(mycur.getCount()>0){
+            while (mycur.moveToNext()){
+                attemptpcount=mycur.getInt(mycur.getColumnIndex("attemptfcount"));
+                min=mycur.getDouble(mycur.getColumnIndex("minscore"));
+                max=mycur.getDouble(mycur.getColumnIndex("maxscore"));
+                avg=mycur.getDouble(mycur.getColumnIndex("avgscore"));
+                tv_fattempted.setText(""+attemptpcount);
+                tv_fmax.setText(""+round(max,1));
+                tv_fmin.setText(""+round(min,1));
+                tv_favg.setText(""+round(avg,1));
+            }
+        }else{
+            mycur.close();
+        }
+
+        attemptpercent=(Float.parseFloat(String.valueOf(attemptpcount))/totptestcount)*100;
+        setData(attemptpercent,100);
+        setData1(3,100);
+
     }
 
 }

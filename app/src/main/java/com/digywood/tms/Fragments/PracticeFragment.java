@@ -168,24 +168,7 @@ public class PracticeFragment extends Fragment implements OnChartValueSelectedLi
         }
 
         if(enrollIds.size()>0){
-            totptestcount=myhelper.getPTestsCount(sp_enrollids.getSelectedItem().toString());
-            tv_ptottests.setText(""+totptestcount);
-
-            Cursor mycur1=myhelper.getPractiseSummary();
-            if(mycur1.getCount()>0){
-                while (mycur1.moveToNext()){
-                    attemptpcount=mycur1.getInt(mycur1.getColumnIndex("attemptpcount"));
-                    min=mycur1.getDouble(mycur1.getColumnIndex("minscore"));
-                    max=mycur1.getDouble(mycur1.getColumnIndex("maxscore"));
-                    avg=mycur1.getDouble(mycur1.getColumnIndex("avgscore"));
-                    tv_pattempted.setText(""+attemptpcount);
-                    tv_pmax.setText(""+round(max,1));
-                    tv_pmin.setText(""+round(min,1));
-                    tv_pavg.setText(""+round(avg,1));
-                }
-            }else{
-                mycur1.close();
-            }
+            updateData(sp_enrollids.getSelectedItem().toString());
         }
 
         btn_pdetails.setOnClickListener(new View.OnClickListener() {
@@ -206,6 +189,7 @@ public class PracticeFragment extends Fragment implements OnChartValueSelectedLi
                 courseid=singleEnrollment.getEnrollcourseid();
                 String cname=myhelper.getCoursenameById(courseid);
                 tv_courseid.setText(cname);
+                updateData(singleEnrollment.getEnrollid());
             }
 
             @Override
@@ -479,6 +463,32 @@ public class PracticeFragment extends Fragment implements OnChartValueSelectedLi
     @Override
     public void onNothingSelected() {
         Log.i("PieChart", "nothing selected");
+    }
+
+    public void updateData(String enrollId){
+        totptestcount=myhelper.getPTestsCount(enrollId);
+        tv_ptottests.setText(""+totptestcount);
+
+        Cursor mycur1=myhelper.getPractiseSummary(enrollId);
+        if(mycur1.getCount()>0){
+            while (mycur1.moveToNext()){
+                attemptpcount=mycur1.getInt(mycur1.getColumnIndex("attemptpcount"));
+                min=mycur1.getDouble(mycur1.getColumnIndex("minscore"));
+                max=mycur1.getDouble(mycur1.getColumnIndex("maxscore"));
+                avg=mycur1.getDouble(mycur1.getColumnIndex("avgscore"));
+                tv_pattempted.setText(""+attemptpcount);
+                tv_pmax.setText(""+round(max,1));
+                tv_pmin.setText(""+round(min,1));
+                tv_pavg.setText(""+round(avg,1));
+            }
+        }else{
+            mycur1.close();
+        }
+
+        attemptpercent=(Float.parseFloat(String.valueOf(attemptpcount))/totptestcount)*100;
+
+        setData(attemptpercent,100);
+        setData1(3,100);
     }
 
 }
