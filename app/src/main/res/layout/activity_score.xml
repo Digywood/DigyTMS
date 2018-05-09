@@ -31,168 +31,173 @@
             android:elevation="5dp"
             app:cardElevation="5dp"
             app:cardUseCompatPadding="true">
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:id="@+id/details">
 
-            <TextView
+            <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Course :"
-                android:id="@+id/tv_course_label"
-                android:layout_marginStart="10dp"
-                android:textColor="@android:color/black"
-                android:textSize="20sp" />
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/tv_course"
-                android:layout_toEndOf="@id/tv_course_label"
-                android:layout_marginStart="10dp"
-                android:textColor="@android:color/black"
-                android:textSize="20sp" />
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Subject : "
-                android:id="@+id/tv_subject_label"
-                android:layout_below="@id/tv_course_label"
-                android:layout_marginStart="10dp"
-                android:textColor="@android:color/black"
-                android:textSize="20sp" />
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/tv_subject"
-                android:layout_below="@+id/tv_course_label"
-                android:layout_toEndOf="@id/tv_subject_label"
-                android:layout_marginStart="10dp"
-                android:textColor="@android:color/black"
-                android:textSize="20sp" />
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Test : "
-                android:id="@+id/tv_test_label"
-                android:layout_below="@id/tv_subject_label"
-                android:layout_marginStart="10dp"
-                android:textColor="@android:color/black"
-                android:textSize="20sp" />
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/tv_test"
-                android:layout_below="@id/tv_subject_label"
-                android:layout_toEndOf="@id/tv_test_label"
-                android:layout_marginStart="10dp"
-                android:textColor="@android:color/black"
-                android:textSize="20sp" />
+                android:orientation="vertical">
 
-        </RelativeLayout>
-        </android.support.v7.widget.CardView>
+                <RelativeLayout
+                    android:id="@+id/details"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
 
-        <android.support.v7.widget.CardView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:elevation="5dp"
-            app:cardElevation="5dp"
-            app:cardUseCompatPadding="true">
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:id="@+id/line1">
+                    <TextView
+                        android:id="@+id/tv_course_label"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="10dp"
+                        android:text="Course :"
+                        android:textColor="@android:color/black"
+                        android:textSize="20sp" />
 
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/confirm_icon"
-                app:srcCompat="@drawable/number_confirm"/>
+                    <TextView
+                        android:id="@+id/tv_course"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="10dp"
+                        android:layout_toEndOf="@id/tv_course_label"
+                        android:textColor="@android:color/black"
+                        android:textSize="20sp" />
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="No. of Questions attempted: "
-                android:id="@+id/tv_attempted_label"
-                android:layout_toEndOf="@id/confirm_icon"
-                android:layout_marginStart="10dp"
-                android:textColor="@android:color/black"
-                android:textSize="20sp" />
+                    <TextView
+                        android:id="@+id/tv_subject_label"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentTop="true"
+                        android:layout_marginStart="14dp"
+                        android:layout_toEndOf="@+id/tv_course"
+                        android:text="Subject : "
+                        android:textColor="@android:color/black"
+                        android:textSize="20sp" />
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_toEndOf="@id/tv_attempted_label"
-                android:layout_marginStart="5dp"
-                android:textColor="@android:color/black"
-                android:textSize="20sp"
-                android:id="@+id/tv_attempted"/>
+                    <TextView
+                        android:id="@+id/tv_subject"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentTop="true"
+                        android:layout_marginStart="10dp"
+                        android:layout_toEndOf="@+id/tv_subject_label"
+                        android:textColor="@android:color/black"
+                        android:textSize="20sp" />
 
-                <ImageView
-                    android:id="@+id/skipped_icon"
-                    android:layout_below="@id/tv_attempted_label"
-                    android:layout_marginTop="5dp"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    app:srcCompat="@drawable/number_skipped" />
+                    <TextView
+                        android:id="@+id/tv_test_label"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentTop="true"
+                        android:layout_marginStart="16dp"
+                        android:layout_toEndOf="@+id/tv_subject"
+                        android:text="Test : "
+                        android:textColor="@android:color/black"
+                        android:textSize="20sp" />
 
-                <TextView
-                    android:id="@+id/tv_skipped_label"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="10dp"
-                    android:layout_below="@id/tv_attempted_label"
-                    android:layout_marginTop="5dp"
-                    android:layout_toEndOf="@id/skipped_icon"
-                    android:text="No. of Questions skipped: "
-                    android:textColor="@android:color/black"
-                    android:textSize="20sp" />
+                    <TextView
+                        android:id="@+id/tv_test"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentTop="true"
+                        android:layout_marginStart="10dp"
+                        android:layout_toEndOf="@+id/tv_test_label"
+                        android:textColor="@android:color/black"
+                        android:textSize="20sp" />
 
-                <TextView
-                    android:id="@+id/tv_skipped"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="5dp"
-                    android:layout_marginTop="5dp"
-                    android:layout_below="@id/tv_attempted_label"
-                    android:layout_toEndOf="@id/tv_skipped_label"
-                    android:textColor="@android:color/black"
-                    android:textSize="20sp" />
+                </RelativeLayout>
 
-                <ImageView
-                    android:id="@+id/bookmarked_icon"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@id/tv_skipped_label"
-                    android:layout_marginTop="5dp"
-                    app:srcCompat="@drawable/number_bookmark" />
 
-                <TextView
-                    android:id="@+id/tv_bookmarked_label"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="10dp"
-                    android:layout_toEndOf="@id/bookmarked_icon"
-                    android:layout_below="@id/tv_skipped_label"
-                    android:layout_marginTop="5dp"
-                    android:text="No. of Questions bookmarked: "
-                    android:textColor="@android:color/black"
-                    android:textSize="20sp" />
+                <RelativeLayout
+                    android:id="@+id/line1"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
 
-                <TextView
-                    android:id="@+id/tv_bookmarked"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="5dp"
-                    android:layout_below="@id/tv_skipped_label"
-                    android:layout_marginTop="5dp"
-                    android:layout_toEndOf="@id/tv_bookmarked_label"
-                    android:textColor="@android:color/black"
-                    android:textSize="20sp" />
+                    <ImageView
+                        android:id="@+id/confirm_icon"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        app:srcCompat="@drawable/number_confirm" />
 
-            </RelativeLayout>
+                    <TextView
+                        android:id="@+id/tv_attempted_label"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="10dp"
+                        android:layout_toEndOf="@id/confirm_icon"
+                        android:text="Attempted: "
+                        android:textColor="@android:color/black"
+                        android:textSize="20sp" />
+
+                    <TextView
+                        android:id="@+id/tv_attempted"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="5dp"
+                        android:layout_toEndOf="@id/tv_attempted_label"
+                        android:textColor="@android:color/black"
+                        android:textSize="20sp" />
+
+                    <ImageView
+                        android:id="@+id/skipped_icon"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentTop="true"
+                        android:layout_marginStart="8dp"
+                        android:layout_toEndOf="@+id/tv_attempted"
+                        app:srcCompat="@drawable/number_skipped" />
+
+                    <TextView
+                        android:id="@+id/tv_skipped_label"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignBottom="@+id/skipped_icon"
+                        android:layout_marginStart="7dp"
+                        android:layout_toEndOf="@+id/skipped_icon"
+                        android:text="Skipped: "
+                        android:textColor="@android:color/black"
+                        android:textSize="20sp" />
+
+                    <TextView
+                        android:id="@+id/tv_skipped"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentTop="true"
+                        android:layout_marginStart="9dp"
+                        android:layout_toEndOf="@+id/tv_skipped_label"
+                        android:textColor="@android:color/black"
+                        android:textSize="20sp" />
+
+                    <ImageView
+                        android:id="@+id/bookmarked_icon"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignTop="@+id/tv_skipped_label"
+                        android:layout_marginStart="10dp"
+                        android:layout_toEndOf="@+id/tv_skipped"
+                        app:srcCompat="@drawable/number_bookmark" />
+
+                    <TextView
+                        android:id="@+id/tv_bookmarked_label"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignTop="@+id/bookmarked_icon"
+                        android:layout_marginStart="11dp"
+                        android:layout_toEndOf="@+id/bookmarked_icon"
+                        android:text="Bookmarked: "
+                        android:textColor="@android:color/black"
+                        android:textSize="20sp" />
+
+                    <TextView
+                        android:id="@+id/tv_bookmarked"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentTop="true"
+                        android:layout_marginStart="12dp"
+                        android:layout_toEndOf="@+id/tv_bookmarked_label"
+                        android:textColor="@android:color/black"
+                        android:textSize="20sp" />
+
+                </RelativeLayout>
+            </LinearLayout>
+
 
         </android.support.v7.widget.CardView>
 
@@ -228,139 +233,197 @@
                     android:textColor="@android:color/black"
                     android:textSize="20sp" />
 
-                <TextView
-                    android:id="@+id/tv_totalCorrect_label"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@id/tv_totalQuestions_label"
-                    android:layout_marginStart="10dp"
-                    android:text="Total no. of Correct Answers : "
-                    android:textColor="@android:color/black"
-                    android:textSize="20sp" />
-
-                <TextView
-                    android:id="@+id/tv_totalCorrect"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@+id/tv_totalQuestions_label"
-                    android:layout_marginStart="10dp"
-                    android:layout_toEndOf="@id/tv_totalCorrect_label"
-                    android:textColor="@android:color/black"
-                    android:textSize="20sp" />
-
-                <TextView
-                    android:id="@+id/tv_totalWrong_label"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@id/tv_totalCorrect_label"
-                    android:layout_marginStart="10dp"
-                    android:text="Total no. of Wrong Answers : "
-                    android:textColor="@android:color/black"
-                    android:textSize="20sp" />
-
-                <TextView
-                    android:id="@+id/tv_totalWrong"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@+id/tv_totalCorrect_label"
-                    android:layout_marginStart="10dp"
-                    android:layout_toEndOf="@id/tv_totalWrong_label"
-                    android:textColor="@android:color/black"
-                    android:textSize="20sp" />
-
-                <TextView
-                    android:id="@+id/tv_totalPositive_label"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@id/tv_totalWrong_label"
-                    android:layout_marginStart="10dp"
-                    android:text="Total Positive marks : "
-                    android:textColor="@android:color/black"
-                    android:textSize="20sp" />
-
-                <TextView
-                    android:id="@+id/tv_totalPositive"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@+id/tv_totalWrong_label"
-                    android:layout_marginStart="10dp"
-                    android:layout_toEndOf="@id/tv_totalPositive_label"
-                    android:textColor="@android:color/black"
-                    android:textSize="20sp" />
-
-                <TextView
-                    android:id="@+id/tv_totalNegative_label"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@id/tv_totalPositive_label"
-                    android:layout_marginStart="10dp"
-                    android:text="Total Negative marks : "
-                    android:textColor="@android:color/black"
-                    android:textSize="20sp" />
-
-                <TextView
-                    android:id="@+id/tv_totalNegative"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@+id/tv_totalPositive_label"
-                    android:layout_marginStart="10dp"
-                    android:layout_toEndOf="@id/tv_totalNegative_label"
-                    android:textColor="@android:color/black"
-                    android:textSize="20sp" />
-
-                <View
+                <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="2dp"
-                    android:layout_below="@id/tv_totalNegative_label"
-                    android:layout_marginBottom="2dp"
-                    android:layout_marginTop="2dp"
-                    android:background="#000000" />
-
-                <TextView
-                    android:id="@+id/tv_totalScore_label"
-                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_below="@id/tv_totalNegative_label"
-                    android:layout_marginStart="10dp"
-                    android:text="Total Score : "
-                    android:textColor="@android:color/black"
-                    android:textSize="20sp"
-                    android:textStyle="bold" />
+                    android:orientation="horizontal"
+                    android:id="@+id/division"
+                    android:layout_below="@+id/tv_totalQuestions"
+                    android:weightSum="2">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="vertical"
+                        android:layout_weight="1">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal">
+
+                            <TextView
+                                android:id="@+id/tv_totalCorrect_label"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="10dp"
+                                android:text="Total no. of Correct Answers : "
+                                android:textColor="@android:color/black"
+                                android:textSize="20sp" />
+
+                            <TextView
+                                android:id="@+id/tv_totalCorrect"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="10dp"
+                                android:layout_toEndOf="@id/tv_totalCorrect_label"
+                                android:textColor="@android:color/black"
+                                android:textSize="20sp" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal">
+
+                        <TextView
+                            android:id="@+id/tv_totalPositive_label"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="10dp"
+                            android:text="Total Positive marks : "
+                            android:textColor="@android:color/black"
+                            android:textSize="20sp" />
+
+                        <TextView
+                            android:id="@+id/tv_totalPositive"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="10dp"
+                            android:layout_toEndOf="@id/tv_totalPositive_label"
+                            android:textColor="@android:color/black"
+                            android:textSize="20sp" />
+                        </LinearLayout>
+                    </LinearLayout>
 
 
-                <TextView
-                    android:id="@+id/tv_totalScore"
-                    android:layout_width="wrap_content"
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal">
+
+                            <TextView
+                                android:id="@+id/tv_totalWrong_label"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_below="@id/tv_totalCorrect_label"
+                                android:layout_marginStart="10dp"
+                                android:text="Total no. of Wrong Answers : "
+                                android:textColor="@android:color/black"
+                                android:textSize="20sp" />
+
+                            <TextView
+                                android:id="@+id/tv_totalWrong"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_below="@+id/tv_totalCorrect_label"
+                                android:layout_marginStart="10dp"
+                                android:layout_toEndOf="@id/tv_totalWrong_label"
+                                android:textColor="@android:color/black"
+                                android:textSize="20sp" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal">
+
+                        <TextView
+                            android:id="@+id/tv_totalNegative_label"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_below="@id/tv_totalPositive_label"
+                            android:layout_marginStart="10dp"
+                            android:text="Total Negative marks : "
+                            android:textColor="@android:color/black"
+                            android:textSize="20sp" />
+
+                        <TextView
+                            android:id="@+id/tv_totalNegative"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_below="@+id/tv_totalPositive_label"
+                            android:layout_marginStart="10dp"
+                            android:layout_toEndOf="@id/tv_totalNegative_label"
+                            android:textColor="@android:color/black"
+                            android:textSize="20sp" />
+                        </LinearLayout>
+                    </LinearLayout>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_below="@+id/tv_totalNegative_label"
-                    android:layout_marginStart="10dp"
-                    android:layout_toEndOf="@id/tv_totalScore_label"
-                    android:textColor="@android:color/black"
-                    android:textSize="20sp" />
+                    android:layout_below="@+id/division"
+                    android:orientation="vertical">
 
-                <TextView
-                    android:id="@+id/tv_totalPercentage_label"
-                    android:layout_width="wrap_content"
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="2dp"
+                        android:layout_marginBottom="2dp"
+                        android:layout_marginTop="2dp"
+                        android:background="#000000" />
+
+                    <LinearLayout
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_below="@id/tv_totalScore_label"
-                    android:layout_marginStart="10dp"
-                    android:layout_marginTop="5dp"
-                    android:text="Total Percentage : "
-                    android:textColor="@android:color/black"
-                    android:textSize="20sp"
-                    android:textStyle="bold" />
+                    android:orientation="horizontal">
+
+                        <TextView
+                            android:id="@+id/tv_totalScore_label"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="10dp"
+                            android:text="Total Score : "
+                            android:textColor="@android:color/black"
+                            android:textSize="20sp"
+                            android:textStyle="bold" />
 
 
-                <TextView
-                    android:id="@+id/tv_totalPercentage"
-                    android:layout_width="wrap_content"
+                        <TextView
+                            android:id="@+id/tv_totalScore"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="10dp"
+                            android:textColor="@android:color/black"
+                            android:textSize="20sp" />
+                    </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_below="@id/tv_totalScore_label"
-                    android:layout_marginStart="10dp"
-                    android:layout_marginTop="5dp"
-                    android:layout_toEndOf="@id/tv_totalPercentage_label"
-                    android:textColor="@android:color/black"
-                    android:textSize="20sp" />
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/tv_totalPercentage_label"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/tv_totalScore_label"
+                        android:layout_marginStart="10dp"
+                        android:layout_marginTop="5dp"
+                        android:text="Total Percentage : "
+                        android:textColor="@android:color/black"
+                        android:textSize="20sp"
+                        android:textStyle="bold" />
+
+
+                    <TextView
+                        android:id="@+id/tv_totalPercentage"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/tv_totalScore_label"
+                        android:layout_marginStart="10dp"
+                        android:layout_marginTop="5dp"
+                        android:layout_toEndOf="@id/tv_totalPercentage_label"
+                        android:textColor="@android:color/black"
+                        android:textSize="20sp" />
+                </LinearLayout>
+                </LinearLayout>
 
 
             </RelativeLayout>
