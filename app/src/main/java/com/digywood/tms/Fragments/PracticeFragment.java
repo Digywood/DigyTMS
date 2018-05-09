@@ -19,6 +19,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.Spinner;
 import android.widget.TextView;
+
 import com.digywood.tms.Charts.DayAxisValueFormatter;
 import com.digywood.tms.Charts.MyAxisValueFormatter;
 import com.digywood.tms.Charts.XYMarkerView;
@@ -263,13 +264,15 @@ public class PracticeFragment extends Fragment implements OnChartValueSelectedLi
         mChart1.setDrawGridBackground(false);
         // mChart.setDrawYLabels(false);
 
+        mChart1.animateY(3000);
+
         IAxisValueFormatter xAxisFormatter = new DayAxisValueFormatter(mChart1);
 
         XAxis xAxis = mChart1.getXAxis();
         xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
 //        xAxis.setTypeface(mTfLight);
         xAxis.setDrawGridLines(false);
-//        xAxis.setGranularity(1f); // only intervals of 1 day
+        xAxis.setGranularity(1f);
         xAxis.setLabelCount(3);
         xAxis.setValueFormatter(xAxisFormatter);
 
@@ -488,6 +491,7 @@ public class PracticeFragment extends Fragment implements OnChartValueSelectedLi
         attemptpercent=(Float.parseFloat(String.valueOf(attemptpcount))/totptestcount)*100;
 
         setData(attemptpercent,100);
+        mChart1.animateY(3000);
         setData1(3,100);
     }
 

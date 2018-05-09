@@ -178,7 +178,7 @@ public class FlashCardActivity extends AppCompatActivity {
         }
 
         if(testId!=null){
-            Cursor mycursor=myhelper.getSingleTestData(testId);
+            Cursor mycursor=myhelper.checkPractiseTest(testId);
             if(mycursor.getCount()>0){
                 while(mycursor.moveToNext()){
 

@@ -19,7 +19,6 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.Spinner;
 import android.widget.TextView;
-
 import com.digywood.tms.Charts.DayAxisValueFormatter;
 import com.digywood.tms.Charts.MyAxisValueFormatter;
 import com.digywood.tms.Charts.XYMarkerView;
@@ -44,7 +43,6 @@ import com.github.mikephil.charting.formatter.PercentFormatter;
 import com.github.mikephil.charting.highlight.Highlight;
 import com.github.mikephil.charting.interfaces.datasets.IBarDataSet;
 import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
-
 import java.util.ArrayList;
 
 public class FlashFragment extends Fragment implements OnChartValueSelectedListener {
@@ -258,6 +256,8 @@ public class FlashFragment extends Fragment implements OnChartValueSelectedListe
 
         mChart1.setDrawGridBackground(false);
         // mChart.setDrawYLabels(false);
+
+        mChart1.animateY(3000);
 
         IAxisValueFormatter xAxisFormatter = new DayAxisValueFormatter(mChart1);
 
@@ -483,7 +483,13 @@ public class FlashFragment extends Fragment implements OnChartValueSelectedListe
         }
 
         attemptpercent=(Float.parseFloat(String.valueOf(attemptpcount))/totptestcount)*100;
+
+        Double d = new Double(avg);
+        int i = d.intValue();
+        mChart.setCenterText(generateCenterSpannableText(String.valueOf(i)));
+
         setData(attemptpercent,100);
+        mChart1.animateY(3000);
         setData1(3,100);
 
     }

@@ -1,11 +1,15 @@
 package com.digywood.tms;
 
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v7.app.AlertDialog;
+import android.text.Html;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
@@ -17,6 +21,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.ArrayAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
 import com.digywood.tms.AsynTasks.AsyncCheckInternet;
@@ -26,6 +31,7 @@ import com.digywood.tms.Fragments.CourseFragment;
 import com.digywood.tms.Fragments.DashBoardFragment;
 import com.digywood.tms.Fragments.EnrollFragment;
 import com.digywood.tms.Fragments.LearningsFragment;
+import com.digywood.tms.Pojo.SingleEnrollment;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -75,6 +81,15 @@ public class DashBoardNavActivity extends AppCompatActivity implements Navigatio
         tv_name.setText(spersonname);
         tv_email=header.findViewById(R.id.tv_hsemail);
         tv_email.setText(email);
+
+//        Cursor mycursor=myhelper.getAllEnrolls();
+//        Log.e("EnrollCount---",""+mycursor.getCount());
+//        if(mycursor.getCount()>0){
+//
+//        }else{
+//            mycursor.close();
+//            showAlert("No Existing Enrollments Found \n Please Sync from Server");
+//        }
     }
 
     public void getStudentAllData(){
@@ -96,25 +111,39 @@ public class DashBoardNavActivity extends AppCompatActivity implements Navigatio
 
                     if (obj1 instanceof JSONArray)
                     {
-                        long prefdelcount=myhelper.deleteAllEnrollments();
-                        Log.e("enrolldelcount---",""+prefdelcount);
+//                        long enrolldelcount=myhelper.deleteAllEnrollments();
+//                        Log.e("enrolldelcount---",""+enrolldelcount);
                         ja_enrollments_table=myObj.getJSONArray("enrollments");
                         if(ja_enrollments_table!=null && ja_enrollments_table.length()>0){
                             Log.e("enrollLength---",""+ja_enrollments_table.length());
-                            int p=0,q=0;
+                            int p=0,q=0,r=0,s=0;
                             for(int i=0;i<ja_enrollments_table.length();i++){
 
                                 enrollObj=ja_enrollments_table.getJSONObject(i);
-                                long insertFlag=myhelper.insertEnrollment(enrollObj.getInt("Enroll_key"),enrollObj.getString("Enroll_ID"),enrollObj.getString("Enroll_org_id"),enrollObj.getString("Enroll_Student_ID"),
-                                        enrollObj.getString("Enroll_batch_ID"),enrollObj.getString("Enroll_course_ID"),enrollObj.getString("Enroll_batch_start_Dt"),enrollObj.getString("Enroll_batch_end_Dt"),
-                                        enrollObj.getString("Enroll_Device_ID"),enrollObj.getString("Enroll_Date"),enrollObj.getString("Enroll_Status"));
-                                if(insertFlag>0){
-                                    p++;
-                                }else {
-                                    q++;
+
+                                long checkFlag=myhelper.checkEnrollment(enrollObj.getString("Enroll_ID"));
+
+                                if(checkFlag>0){
+                                    long updateFlag=myhelper.updateEnrollment(enrollObj.getString("Enroll_ID"),enrollObj.getString("Enroll_org_id"),enrollObj.getString("Enroll_Student_ID"),
+                                            enrollObj.getString("Enroll_batch_ID"),enrollObj.getString("Enroll_course_ID"),enrollObj.getString("Enroll_batch_start_Dt"),enrollObj.getString("Enroll_batch_end_Dt"),
+                                            enrollObj.getString("Enroll_Device_ID"),enrollObj.getString("Enroll_Date"),enrollObj.getString("Enroll_Status"));
+                                    if(updateFlag>0){
+                                        r++;
+                                    }else {
+                                        s++;
+                                    }
+                                }else{
+                                    long insertFlag=myhelper.insertEnrollment(enrollObj.getInt("Enroll_key"),enrollObj.getString("Enroll_ID"),enrollObj.getString("Enroll_org_id"),enrollObj.getString("Enroll_Student_ID"),
+                                            enrollObj.getString("Enroll_batch_ID"),enrollObj.getString("Enroll_course_ID"),enrollObj.getString("Enroll_batch_start_Dt"),enrollObj.getString("Enroll_batch_end_Dt"),
+                                            enrollObj.getString("Enroll_Device_ID"),enrollObj.getString("Enroll_Date"),enrollObj.getString("Enroll_Status"));
+                                    if(insertFlag>0){
+                                        p++;
+                                    }else {
+                                        q++;
+                                    }
                                 }
                             }
-                            Log.e("Enrollments--","Inserted: "+p);
+                            Log.e("Enrollments--","Inserted: "+p+"  Updated: "+r);
                         }else{
                             Log.e("Enrollments--","Empty Json Array: ");
                         }
@@ -200,7 +229,7 @@ public class DashBoardNavActivity extends AppCompatActivity implements Navigatio
 
                                 testObj=ja_tests_table.getJSONObject(i);
 
-                                Cursor mycursor=myhelper.getSingleTestData(testObj.getString("sptu_ID"));
+                                Cursor mycursor=myhelper.checkPractiseTest(testObj.getString("sptu_ID"));
                                 if(mycursor.getCount()>0){
                                     long updateFlag=myhelper.updatePractiseTestData(testObj.getString("sptu_org_id"),testObj.getString("sptu_entroll_id"),testObj.getString("sptu_student_ID"),
                                             testObj.getString("sptu_batch"),testObj.getString("sptu_ID"),testObj.getString("sptu_paper_ID"),testObj.getString("sptu_subjet_ID"),
@@ -237,27 +266,43 @@ public class DashBoardNavActivity extends AppCompatActivity implements Navigatio
 
                     if (obj5 instanceof JSONArray)
                     {
-                        long atestdelcount=myhelper.deleteAllAssesmentTests();
-                        Log.e("assesmentdelcount----",""+atestdelcount);
+//                        long atestdelcount=myhelper.deleteAllAssesmentTests();
+//                        Log.e("assesmentdelcount----",""+atestdelcount);
                         ja_assesmenttests=myObj.getJSONArray("assesmenttests");
                         if(ja_assesmenttests!=null && ja_assesmenttests.length()>0){
                             Log.e("atestLength---",""+ja_assesmenttests.length());
-                            int p=0,q=0;
+                            int p=0,q=0,r=0,s=0;
                             for(int i=0;i<ja_assesmenttests.length();i++){
 
                                 assesmentObj=ja_assesmenttests.getJSONObject(i);
-                                long insertFlag=myhelper.insertAssesmentTest(assesmentObj.getInt("satu_key"),assesmentObj.getString("satu_org_id"),assesmentObj.getString("satu_entroll_id"),assesmentObj.getString("satu_student_id"),
-                                        assesmentObj.getString("satu_batch"),assesmentObj.getString("satu_ID"),assesmentObj.getString("satu_paper_ID"),assesmentObj.getString("satu_subjet_ID"),
-                                        assesmentObj.getString("satu_course_id"),assesmentObj.getString("satu_start_date"),assesmentObj.getString("satu_end_date"),assesmentObj.getString("satu_dwnld_status"),
-                                        assesmentObj.getInt("satu_no_of_questions"),assesmentObj.getString("satu_file"),assesmentObj.getString("satu_exam_key"),assesmentObj.getDouble("satu_tot_marks"),
-                                        assesmentObj.getDouble("satu_min_marks"),assesmentObj.getDouble("satu_max_marks"));
-                                if(insertFlag>0){
-                                    p++;
-                                }else {
-                                    q++;
+
+                                Cursor mycursor=myhelper.checkAssessmentTest(assesmentObj.getString("satu_ID"));
+
+                                if(mycursor.getCount()>0){
+                                    long updateFlag=myhelper.updateAssesmentTest(assesmentObj.getString("satu_org_id"),assesmentObj.getString("satu_entroll_id"),assesmentObj.getString("satu_student_id"),
+                                            assesmentObj.getString("satu_batch"),assesmentObj.getString("satu_ID"),assesmentObj.getString("satu_paper_ID"),assesmentObj.getString("satu_subjet_ID"),
+                                            assesmentObj.getString("satu_course_id"),assesmentObj.getString("satu_start_date"),assesmentObj.getString("satu_end_date"),assesmentObj.getString("satu_dwnld_status"),
+                                            assesmentObj.getInt("satu_no_of_questions"),assesmentObj.getString("satu_file"),assesmentObj.getString("satu_exam_key"),assesmentObj.getDouble("satu_tot_marks"),
+                                            assesmentObj.getDouble("satu_min_marks"),assesmentObj.getDouble("satu_max_marks"));
+                                    if(updateFlag>0){
+                                        r++;
+                                    }else {
+                                        s++;
+                                    }
+                                }else{
+                                    long insertFlag=myhelper.insertAssesmentTest(assesmentObj.getInt("satu_key"),assesmentObj.getString("satu_org_id"),assesmentObj.getString("satu_entroll_id"),assesmentObj.getString("satu_student_id"),
+                                            assesmentObj.getString("satu_batch"),assesmentObj.getString("satu_ID"),assesmentObj.getString("satu_paper_ID"),assesmentObj.getString("satu_subjet_ID"),
+                                            assesmentObj.getString("satu_course_id"),assesmentObj.getString("satu_start_date"),assesmentObj.getString("satu_end_date"),assesmentObj.getString("satu_dwnld_status"),
+                                            assesmentObj.getInt("satu_no_of_questions"),assesmentObj.getString("satu_file"),assesmentObj.getString("satu_exam_key"),assesmentObj.getDouble("satu_tot_marks"),
+                                            assesmentObj.getDouble("satu_min_marks"),assesmentObj.getDouble("satu_max_marks"));
+                                    if(insertFlag>0){
+                                        p++;
+                                    }else {
+                                        q++;
+                                    }
                                 }
                             }
-                            Log.e("AssesmentTests--","Inserted: "+p);
+                            Log.e("AssesmentTests--","Inserted: "+p+"   Updated:  "+r);
                         }else{
                             Log.e("AssesmentTests--","Empty Json Array: ");
                         }
@@ -270,27 +315,48 @@ public class DashBoardNavActivity extends AppCompatActivity implements Navigatio
 
                     if (obj6 instanceof JSONArray)
                     {
-                        long tdatadelcount=myhelper.deleteTestRawData();
-                        Log.e("tdatadelcount----",""+tdatadelcount);
+//                        long tdatadelcount=myhelper.deleteTestRawData();
+//                        Log.e("tdatadelcount----",""+tdatadelcount);
                         ja_tdata=myObj.getJSONArray("testdata");
                         if(ja_tdata!=null && ja_tdata.length()>0){
                             Log.e("tdataLength---",""+ja_tdata.length());
-                            int p=0,q=0;
+                            int p=0,q=0,r=0,s=0;
                             for(int i=0;i<ja_tdata.length();i++){
 
                                 testdataObj=ja_tdata.getJSONObject(i);
-                                long insertFlag=myhelper.insertTestAggrigateRecord(testdataObj.getInt("testKey"),testdataObj.getString("testId"),testdataObj.getString("testType"),testdataObj.getString("test_OrgId"),
-                                        testdataObj.getString("test_batchId"),testdataObj.getString("test_courseId"),testdataObj.getString("test_paperId"),testdataObj.getString("test_subjectId"),
-                                        testdataObj.getDouble("minPercentage"),testdataObj.getDouble("maxPercentage"),testdataObj.getDouble("avgPercentage"),testdataObj.getInt("minAttempts"),
-                                        testdataObj.getInt("maxAttempts"),testdataObj.getInt("avgAttempts"),testdataObj.getInt("flag"),testdataObj.getString("createdBy"),
-                                        testdataObj.getString("createdDttm"),testdataObj.getString("modifiedBy"),testdataObj.getString("modifiedDttm"));
-                                if(insertFlag>0){
-                                    p++;
-                                }else {
-                                    q++;
+
+                                Cursor mycursor=myhelper.checkTestAggrigateData(testdataObj.getString("testId"),testdataObj.getString("testType"));
+
+                                if(mycursor.getCount()>0){
+
+                                    long updateFlag=myhelper.updateTestAggrigateRecord(testdataObj.getString("testId"),testdataObj.getString("testType"),testdataObj.getString("test_OrgId"),
+                                            testdataObj.getString("test_batchId"),testdataObj.getString("test_courseId"),testdataObj.getString("test_paperId"),testdataObj.getString("test_subjectId"),
+                                            testdataObj.getDouble("minPercentage"),testdataObj.getDouble("maxPercentage"),testdataObj.getDouble("avgPercentage"),testdataObj.getInt("minAttempts"),
+                                            testdataObj.getInt("maxAttempts"),testdataObj.getInt("avgAttempts"),testdataObj.getInt("flag"),testdataObj.getString("createdBy"),
+                                            testdataObj.getString("createdDttm"),testdataObj.getString("modifiedBy"),testdataObj.getString("modifiedDttm"));
+                                    if(updateFlag>0){
+                                        r++;
+                                    }else {
+                                        s++;
+                                    }
+
+                                }else{
+
+                                    long insertFlag=myhelper.insertTestAggrigateRecord(testdataObj.getInt("testKey"),testdataObj.getString("testId"),testdataObj.getString("testType"),testdataObj.getString("test_OrgId"),
+                                            testdataObj.getString("test_batchId"),testdataObj.getString("test_courseId"),testdataObj.getString("test_paperId"),testdataObj.getString("test_subjectId"),
+                                            testdataObj.getDouble("minPercentage"),testdataObj.getDouble("maxPercentage"),testdataObj.getDouble("avgPercentage"),testdataObj.getInt("minAttempts"),
+                                            testdataObj.getInt("maxAttempts"),testdataObj.getInt("avgAttempts"),testdataObj.getInt("flag"),testdataObj.getString("createdBy"),
+                                            testdataObj.getString("createdDttm"),testdataObj.getString("modifiedBy"),testdataObj.getString("modifiedDttm"));
+                                    if(insertFlag>0){
+                                        p++;
+                                    }else {
+                                        q++;
+                                    }
+
                                 }
+
                             }
-                            Log.e("TestRawData--","Inserted: "+p);
+                            Log.e("TestRawData--","Inserted: "+p+"  Updated:  "+r);
                         }else{
                             Log.e("TestRawData--","Empty Json Array: ");
                         }
@@ -416,5 +482,23 @@ public class DashBoardNavActivity extends AppCompatActivity implements Navigatio
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
+
+//    public void showAlert(String messege) {
+//        AlertDialog.Builder builder = new AlertDialog.Builder((Context)DashBoardNavActivity.class,R.style.ALERT_THEME);
+//        builder.setMessage(Html.fromHtml("<font color='#FFFFFF'>" + messege + "</font>"))
+//                .setCancelable(false)
+//                .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+//                    public void onClick(DialogInterface dialog, int id) {
+//
+//                        dialog.cancel();
+//
+//                    }
+//                });
+//        AlertDialog alert = builder.create();
+//        //Setting the title manually
+//        alert.setTitle("Alert!");
+//        alert.setIcon(R.drawable.warning);
+//        alert.show();
+//    }
 
 }
