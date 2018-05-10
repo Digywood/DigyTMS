@@ -8,17 +8,44 @@
     android:orientation="vertical"
     tools:context="com.digywood.tms.DbActivity">
 
-    <android.support.design.widget.TabLayout
-        android:id="@+id/dash_tablayout"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:tabTextColor="@color/white"
-        app:tabSelectedTextColor="@color/colorPrimary"
-        app:tabIndicatorColor="@color/colorPrimary"
-        android:layout_gravity="center_horizontal|center_vertical"
-        android:elevation="6dp"
-        android:background="@drawable/tablayout_bg"
-        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"/>
+        android:orientation="horizontal">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1">
+
+            <android.support.design.widget.TabLayout
+                android:id="@+id/dash_tablayout"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1.5"
+                app:tabTextColor="@color/white"
+                app:tabSelectedTextColor="@color/colorPrimary"
+                app:tabIndicatorColor="@color/colorPrimary"
+                android:layout_gravity="center_horizontal|center_vertical"
+                android:elevation="6dp"
+                android:background="@drawable/tablayout_bg"
+                android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"/>
+
+        </LinearLayout>
+
+        <Button
+            android:id="@+id/btn_mylearnings"
+            android:layout_width="match_parent"
+            android:layout_height="30dp"
+            android:layout_margin="2dp"
+            android:layout_weight="8.5"
+            android:text="My Learning"
+            android:textStyle="bold"
+            android:background="@drawable/btn_details_bg"
+            android:textColor="#FFFFFF"
+            android:layout_gravity="center" />
+
+    </LinearLayout>
 
     <android.support.v4.view.ViewPager
         android:id="@+id/dash_viewpager"
