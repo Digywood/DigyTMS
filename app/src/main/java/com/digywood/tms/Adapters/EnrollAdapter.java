@@ -42,7 +42,7 @@ public class EnrollAdapter extends  RecyclerView.Adapter<EnrollAdapter.MyViewHol
     }
 
 
-    public EnrollAdapter(List<SingleEnrollment> surveyList,Context c) {
+    public EnrollAdapter(List<SingleEnrollment> surveyList, Context c) {
         this.enrollList = surveyList;
         this.mycontext=c;
     }
@@ -72,7 +72,6 @@ public class EnrollAdapter extends  RecyclerView.Adapter<EnrollAdapter.MyViewHol
         holder.btn_enrolldet.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 Intent i=new Intent(mycontext,PaperActivity.class);
                 i.putExtra("enrollid",singleenroll.getEnrollid());
                 i.putExtra("courseid",singleenroll.getCourseid());
