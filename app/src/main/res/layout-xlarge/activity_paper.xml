@@ -14,66 +14,24 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="8dp"
-            android:orientation="horizontal">
+            android:orientation="vertical">
 
-            <Button
-                android:id="@+id/btn_practise"
-                android:layout_width="match_parent"
-                android:layout_height="200dp"
-                android:text="Practise Test"
-                android:layout_weight="1"
-                android:textSize="18sp"
-                android:textColor="@color/colorAccent"
-                android:layout_marginRight="3dp"
-                android:background="@drawable/btn_shape"/>
-
-            <Button
-                android:id="@+id/btn_asessment"
-                android:layout_width="match_parent"
-                android:background="@drawable/btn_shape"
-                android:text="Asessment Test"
-                android:textSize="18sp"
-                android:layout_marginLeft="3dp"
-                android:layout_weight="1"
-                android:layout_height="200dp" />
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="8dp"
-            android:orientation="horizontal">
-
-            <TextView
+            <GridView
+                android:id="@+id/paper_grid"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textColor="#000000"
-                android:textSize="16dp"
-                android:layout_gravity="center_horizontal|center_vertical|center"
-                android:layout_weight="1"
-                android:text="Choose Paper"/>
-
-            <Spinner
-                android:id="@+id/sp_papers"
-                android:layout_width="match_parent"
-                android:layout_height="40dp"
-                android:layout_margin="16dp"
-                android:layout_weight="1"
-                android:background="@drawable/spinner_shape" />
+                android:layout_margin="5dp"
+                android:gravity="center"
+                android:layout_gravity="center"
+                android:numColumns="auto_fit"
+                android:horizontalSpacing="8dp"
+                android:verticalSpacing="24dp"
+                android:scrollbars="vertical"
+                android:stretchMode="spacingWidthUniform"
+                android:columnWidth="500dp">
+            </GridView>
 
         </LinearLayout>
-
-        <Button
-            android:id="@+id/btn_testpage"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textColor="#000000"
-            android:layout_marginTop="20dp"
-            android:layout_gravity="center_horizontal|center_vertical|center"
-            android:background="@drawable/btn_shape"
-            android:text="Go to Test"/>
 
     </LinearLayout>
 
