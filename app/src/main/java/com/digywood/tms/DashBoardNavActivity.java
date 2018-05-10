@@ -1,15 +1,11 @@
 package com.digywood.tms;
 
-import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v7.app.AlertDialog;
-import android.text.Html;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
@@ -21,7 +17,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.ArrayAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
 import com.digywood.tms.AsynTasks.AsyncCheckInternet;
@@ -30,8 +25,6 @@ import com.digywood.tms.DBHelper.DBHelper;
 import com.digywood.tms.Fragments.CourseFragment;
 import com.digywood.tms.Fragments.DashBoardFragment;
 import com.digywood.tms.Fragments.EnrollFragment;
-import com.digywood.tms.Fragments.LearningsFragment;
-import com.digywood.tms.Pojo.SingleEnrollment;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -94,7 +87,7 @@ public class DashBoardNavActivity extends AppCompatActivity implements Navigatio
 
     public void getStudentAllData(){
         hmap.clear();
-        Log.e("LandingActivity---",studentid);
+        Log.e("LearningActivity---",studentid);
         hmap.put("studentid",studentid);
         new BagroundTask(URLClass.hosturl +"getStudentFullData.php",hmap,DashBoardNavActivity.this,new IBagroundListener() {
             @Override
@@ -440,16 +433,7 @@ public class DashBoardNavActivity extends AppCompatActivity implements Navigatio
                 e.printStackTrace();
             }
 
-        } else if (id == R.id.nav_mylearnings) {
-
-            fragmentClass = LearningsFragment.class;
-            try {
-                fragment = (Fragment) fragmentClass.newInstance();
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-
-        } else if (id == R.id.nav_enrollments) {
+        }  else if (id == R.id.nav_enrollments) {
 
             fragmentClass = EnrollFragment.class;
             try {

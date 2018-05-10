@@ -470,7 +470,7 @@ public class PractiseTestAdapter extends RecyclerView.Adapter<PractiseTestAdapte
                                                     }
 
                                                 }else{
-                                                    Log.e("LandingActivity----","No Downloaded Images for test");
+                                                    Log.e("LearningActivity----","No Downloaded Images for test");
                                                 }
 
                                                 if(finalNames.size()!=0){
@@ -786,25 +786,39 @@ public class PractiseTestAdapter extends RecyclerView.Adapter<PractiseTestAdapte
 
                     if (obj1 instanceof JSONArray)
                     {
-                        long Qgroupdelcount=myhelper.deleteTestGroups(testid);
-                        Log.e("groupdelcount---",""+Qgroupdelcount);
+//                        long Qgroupdelcount=myhelper.deleteTestGroups(testid);
+//                        Log.e("groupdelcount---",""+Qgroupdelcount);
                         groupArray=myObj.getJSONArray("qbgroup");
                         if(groupArray!=null && groupArray.length()>0){
                             Log.e("groupLength---",""+groupArray.length());
-                            int p=0,q=0;
+                            int p=0,q=0,r=0,s=0;
                             for(int i=0;i<groupArray.length();i++){
 
                                 groupObj=groupArray.getJSONObject(i);
-                                long insertFlag=myhelper.insertQuesGroup(groupObj.getInt("qbg_key"),groupObj.getString("qbg_ID"),testid,groupObj.getString("qbg_media_type"),groupObj.getString("qbg_media_file"),
-                                        groupObj.getString("qbg_text"),groupObj.getInt("qbg_no_questions"),groupObj.getInt("qbg_no_pick"),groupObj.getString("qbg_status"),
-                                        groupObj.getString("qbg_created_by"),groupObj.getString("qbg_created_dttm"),groupObj.getString("qbg_mod_by"),groupObj.getString("qbg_mod_dttm"),groupObj.getString("qbg_type"));
-                                if(insertFlag>0){
-                                    p++;
-                                }else {
-                                    q++;
+
+                                Cursor mycursor=myhelper.checkQuesGroup(groupObj.getString("qbg_ID"));
+
+                                if(mycursor.getCount()>0){
+                                    long updateFlag=myhelper.updateQuesGroup(groupObj.getString("qbg_ID"),testid,groupObj.getString("qbg_media_type"),groupObj.getString("qbg_media_file"),
+                                            groupObj.getString("qbg_text"),groupObj.getInt("qbg_no_questions"),groupObj.getInt("qbg_no_pick"),groupObj.getString("qbg_status"),
+                                            groupObj.getString("qbg_created_by"),groupObj.getString("qbg_created_dttm"),groupObj.getString("qbg_mod_by"),groupObj.getString("qbg_mod_dttm"),groupObj.getString("qbg_type"));
+                                    if(updateFlag>0){
+                                        r++;
+                                    }else {
+                                        s++;
+                                    }
+                                }else{
+                                    long insertFlag=myhelper.insertQuesGroup(groupObj.getInt("qbg_key"),groupObj.getString("qbg_ID"),testid,groupObj.getString("qbg_media_type"),groupObj.getString("qbg_media_file"),
+                                            groupObj.getString("qbg_text"),groupObj.getInt("qbg_no_questions"),groupObj.getInt("qbg_no_pick"),groupObj.getString("qbg_status"),
+                                            groupObj.getString("qbg_created_by"),groupObj.getString("qbg_created_dttm"),groupObj.getString("qbg_mod_by"),groupObj.getString("qbg_mod_dttm"),groupObj.getString("qbg_type"));
+                                    if(insertFlag>0){
+                                        p++;
+                                    }else {
+                                        q++;
+                                    }
                                 }
                             }
-                            Log.e("BackGroundTask--","Inserted: "+p);
+                            Log.e("BackGroundTask--","Inserted: "+p+"  Updated:  "+r);
                         }else{
                             Log.e("QGroups--","Empty Json Array: ");
                         }
@@ -817,24 +831,41 @@ public class PractiseTestAdapter extends RecyclerView.Adapter<PractiseTestAdapte
 
                     if (obj2 instanceof JSONArray)
                     {
-                        long Qconfigcount=myhelper.deleteQuesConfig(testid);
-                        Log.e("QuesConDelCount---",""+Qconfigcount);
+//                        long Qconfigcount=myhelper.deleteQuesConfig(testid);
+//                        Log.e("QuesConDelCount---",""+Qconfigcount);
                         quesConfigArray=myObj.getJSONArray("ques_config");
                         if(quesConfigArray!=null && quesConfigArray.length()>0){
                             Log.e("QuesConLength---",""+quesConfigArray.length());
-                            int p=0,q=0;
+                            int p=0,q=0,r=0,s=0;
                             for(int i=0;i<quesConfigArray.length();i++){
 
                                 qconObj=quesConfigArray.getJSONObject(i);
-                                long insertFlag=myhelper.insertQuesConfig(qconObj.getInt("ques_configkey"),qconObj.getString("courseId"),qconObj.getString("subjectId"),qconObj.getString("paperId"),
-                                        qconObj.getString("testId"),qconObj.getString("categoryId"),qconObj.getString("subcategoryId"),qconObj.getInt("avail_count"),qconObj.getInt("pickup_count"),qconObj.getInt("min_pickup_count"),qconObj.getString("ques_configstatus"));
-                                if(insertFlag>0){
-                                    p++;
-                                }else {
-                                    q++;
+
+                                Cursor mycursor=myhelper.checkQuesConfig(qconObj.getString("testId"),qconObj.getString("subcategoryId"));
+
+                                if(mycursor.getCount()>0){
+
+                                    long updateFlag=myhelper.updateQuesConfig(qconObj.getString("courseId"),qconObj.getString("subjectId"),qconObj.getString("paperId"),
+                                            qconObj.getString("testId"),qconObj.getString("categoryId"),qconObj.getString("subcategoryId"),qconObj.getInt("avail_count"),qconObj.getInt("pickup_count"),qconObj.getInt("min_pickup_count"),qconObj.getString("ques_configstatus"));
+                                    if(updateFlag>0){
+                                        r++;
+                                    }else {
+                                        s++;
+                                    }
+
+                                }else{
+
+                                    long insertFlag=myhelper.insertQuesConfig(qconObj.getInt("ques_configkey"),qconObj.getString("courseId"),qconObj.getString("subjectId"),qconObj.getString("paperId"),
+                                            qconObj.getString("testId"),qconObj.getString("categoryId"),qconObj.getString("subcategoryId"),qconObj.getInt("avail_count"),qconObj.getInt("pickup_count"),qconObj.getInt("min_pickup_count"),qconObj.getString("ques_configstatus"));
+                                    if(insertFlag>0){
+                                        p++;
+                                    }else {
+                                        q++;
+                                    }
+
                                 }
                             }
-                            Log.e("BackGroundTask--","Inserted: "+p);
+                            Log.e("BackGroundTask--","Inserted: "+p+"  Updated:  "+r);
                         }else{
                             Log.e("QuesConfig--","Empty Json Array: ");
                         }
@@ -847,25 +878,39 @@ public class PractiseTestAdapter extends RecyclerView.Adapter<PractiseTestAdapte
 
                     if (obj3 instanceof JSONArray)
                     {
-                        long Gconfigdelcount=myhelper.deleteGroupsConfig(testid);
-                        Log.e("groupcondelcount---",""+Gconfigdelcount);
+//                        long Gconfigdelcount=myhelper.deleteGroupsConfig(testid);
+//                        Log.e("groupcondelcount---",""+Gconfigdelcount);
                         groupConfigArray=myObj.getJSONArray("groupques_config");
                         if(groupConfigArray!=null && groupConfigArray.length()>0){
                             Log.e("groupconLength---",""+groupConfigArray.length());
-                            int p=0,q=0;
+                            int p=0,q=0,r=0,s=0;
                             for(int i=0;i<groupConfigArray.length();i++){
 
                                 gquesconObj=groupConfigArray.getJSONObject(i);
-                                long insertFlag=myhelper.insertGroupConfig(gquesconObj.getInt("groupques_configKey"),gquesconObj.getString("courseId"),gquesconObj.getString("subjectId"),gquesconObj.getString("paperId"),
-                                        gquesconObj.getString("testId"),gquesconObj.getString("sectionId"),gquesconObj.getString("groupType"),gquesconObj.getInt("groupavail_count"),
-                                        gquesconObj.getInt("grouppickup_count"),gquesconObj.getString("groupques_configstatus"));
-                                if(insertFlag>0){
-                                    p++;
-                                }else {
-                                    q++;
+
+                                Cursor mycursor=myhelper.checkGroupConfig(gquesconObj.getString("testId"),gquesconObj.getString("sectionId"),gquesconObj.getString("groupType"));
+
+                                if(mycursor.getCount()>0){
+                                    long updateFlag=myhelper.updateGroupConfig(gquesconObj.getString("courseId"),gquesconObj.getString("subjectId"),gquesconObj.getString("paperId"),
+                                            gquesconObj.getString("testId"),gquesconObj.getString("sectionId"),gquesconObj.getString("groupType"),gquesconObj.getInt("groupavail_count"),
+                                            gquesconObj.getInt("grouppickup_count"),gquesconObj.getString("groupques_configstatus"));
+                                    if(updateFlag>0){
+                                        r++;
+                                    }else {
+                                        s++;
+                                    }
+                                }else{
+                                    long insertFlag=myhelper.insertGroupConfig(gquesconObj.getInt("groupques_configKey"),gquesconObj.getString("courseId"),gquesconObj.getString("subjectId"),gquesconObj.getString("paperId"),
+                                            gquesconObj.getString("testId"),gquesconObj.getString("sectionId"),gquesconObj.getString("groupType"),gquesconObj.getInt("groupavail_count"),
+                                            gquesconObj.getInt("grouppickup_count"),gquesconObj.getString("groupques_configstatus"));
+                                    if(insertFlag>0){
+                                        p++;
+                                    }else {
+                                        q++;
+                                    }
                                 }
                             }
-                            Log.e("BackGroundTask--","Inserted: "+p);
+                            Log.e("BackGroundTask--","Inserted: "+p+"  Updated:  "+r);
                         }else{
                             Log.e("GroupConfig--","Empty Json Array: ");
                         }
@@ -878,25 +923,41 @@ public class PractiseTestAdapter extends RecyclerView.Adapter<PractiseTestAdapte
 
                     if (obj4 instanceof JSONArray)
                     {
-                        long sectiondelcount=myhelper.deletePtuSections(testid);
-                        Log.e("sectiondelcount---",""+sectiondelcount);
+//                        long sectiondelcount=myhelper.deletePtuSections(testid);
+//                        Log.e("sectiondelcount---",""+sectiondelcount);
                         sectionArray=myObj.getJSONArray("sections");
                         if(sectionArray!=null && sectionArray.length()>0){
                             Log.e("sectionLength---",""+sectionArray.length());
-                            int p=0,q=0;
+                            int p=0,q=0,r=0,s=0;
                             for(int i=0;i<sectionArray.length();i++){
 
                                 sectionObj=sectionArray.getJSONObject(i);
-                                long insertFlag=myhelper.insertPtuSection(sectionObj.getInt("Ptu_section_key"),sectionObj.getString("Ptu_ID"),sectionObj.getInt("Ptu_section_sequence"),sectionObj.getString("Ptu_section_ID"),
-                                        sectionObj.getString("Ptu_section_paper_ID"),sectionObj.getString("Ptu_section_subject_ID"),sectionObj.getString("Ptu_section_course_ID"),sectionObj.getInt("Ptu_section_min_questions"),
-                                        sectionObj.getInt("Ptu_section_max_questions"),sectionObj.getInt("Ptu_sec_tot_groups"),sectionObj.getInt("Ptu_sec_no_groups"),sectionObj.getString("Ptu_section_status"),sectionObj.getString("Ptu_section_name"));
-                                if(insertFlag>0){
-                                    p++;
-                                }else {
-                                    q++;
+
+                                Cursor mycursor=myhelper.checkPtuSection(sectionObj.getString("Ptu_ID"),sectionObj.getString("Ptu_section_ID"));
+
+                                if(mycursor.getCount()>0){
+
+                                    long updateFlag=myhelper.updatePtuSection(sectionObj.getString("Ptu_ID"),sectionObj.getInt("Ptu_section_sequence"),sectionObj.getString("Ptu_section_ID"),
+                                            sectionObj.getString("Ptu_section_paper_ID"),sectionObj.getString("Ptu_section_subject_ID"),sectionObj.getString("Ptu_section_course_ID"),sectionObj.getInt("Ptu_section_min_questions"),
+                                            sectionObj.getInt("Ptu_section_max_questions"),sectionObj.getInt("Ptu_sec_tot_groups"),sectionObj.getInt("Ptu_sec_no_groups"),sectionObj.getString("Ptu_section_status"),sectionObj.getString("Ptu_section_name"));
+                                    if(updateFlag>0){
+                                        r++;
+                                    }else {
+                                        s++;
+                                    }
+                                }else{
+
+                                    long insertFlag=myhelper.insertPtuSection(sectionObj.getInt("Ptu_section_key"),sectionObj.getString("Ptu_ID"),sectionObj.getInt("Ptu_section_sequence"),sectionObj.getString("Ptu_section_ID"),
+                                            sectionObj.getString("Ptu_section_paper_ID"),sectionObj.getString("Ptu_section_subject_ID"),sectionObj.getString("Ptu_section_course_ID"),sectionObj.getInt("Ptu_section_min_questions"),
+                                            sectionObj.getInt("Ptu_section_max_questions"),sectionObj.getInt("Ptu_sec_tot_groups"),sectionObj.getInt("Ptu_sec_no_groups"),sectionObj.getString("Ptu_section_status"),sectionObj.getString("Ptu_section_name"));
+                                    if(insertFlag>0){
+                                        p++;
+                                    }else {
+                                        q++;
+                                    }
                                 }
                             }
-                            Log.e("BackGroundTask--","Inserted: "+p);
+                            Log.e("BackGroundTask--","Inserted: "+p+"  Updated:  "+r);
                         }else{
                             Log.e("Sections--","Empty Json Array: ");
                         }

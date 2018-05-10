@@ -630,13 +630,10 @@ public class DBHelper extends SQLiteOpenHelper {
         return insertFlag;
     }
 
-    public long updatePtuSection(int seckey,String testid,int secseq,String secid,String spid,String ssid,String scid,int minques,int maxques,int totgroups,int nogroups,String sstatus,String sname){
-        long insertFlag=0;
+    public long updatePtuSection(String testid,int secseq,String secid,String spid,String ssid,String scid,int minques,int maxques,int totgroups,int nogroups,String sstatus,String sname){
+        long updateFlag=0;
         ContentValues cv = new ContentValues();
-        cv.put("Ptu_section_key",seckey);
-        cv.put("Ptu_ID",testid);
         cv.put("Ptu_section_sequence",secseq);
-        cv.put("Ptu_section_ID",secid);
         cv.put("Ptu_section_paper_ID",spid);
         cv.put("Ptu_section_subject_ID",ssid);
         cv.put("Ptu_section_course_ID",scid);
@@ -646,8 +643,13 @@ public class DBHelper extends SQLiteOpenHelper {
         cv.put("Ptu_sec_no_groups",nogroups);
         cv.put("Ptu_section_status",sstatus);
         cv.put("Ptu_section_name",sname);
-        insertFlag = db.insert("ptu_sections",null, cv);
-        return insertFlag;
+        updateFlag = db.update("ptu_sections",cv,"Ptu_ID='"+testid+"' and Ptu_section_ID='"+secid+"'",null);
+        return updateFlag;
+    }
+
+    public Cursor checkPtuSection(String testId,String sectionId){
+        Cursor c =db.query("ptu_sections", new String[] {"Ptu_ID,Ptu_section_ID"},"Ptu_ID='"+testId+"' and Ptu_section_ID='"+sectionId+"'", null, null, null,null);
+        return c;
     }
 
     public long deletePtuSections(String testid){
@@ -748,13 +750,10 @@ public class DBHelper extends SQLiteOpenHelper {
         return returnrows;
     }
 
-    public ArrayList<SingleEnrollment> getStudentEnrolls(){
+    public Cursor getStudentEnrolls(){
         ArrayList<SingleEnrollment> enrollList=new ArrayList<>();
-        Cursor c =db.query("enrollments", new String[] {"Enroll_ID,Enroll_Student_ID,Enroll_batch_ID,Enroll_course_ID"},null, null, null, null,null);
-        while (c.moveToNext()) {
-            enrollList.add(new SingleEnrollment(c.getString(c.getColumnIndex("Enroll_ID")),c.getString(c.getColumnIndex("Enroll_course_ID"))));
-        }
-        return enrollList;
+        Cursor c =db.query("enrollments", new String[] {"Enroll_ID,Enroll_org_id,Enroll_Student_ID,Enroll_batch_ID,Enroll_course_ID"},null, null, null, null,null);
+        return c;
     }
 
     public long deleteAllEnrollments(){
@@ -1072,6 +1071,11 @@ public class DBHelper extends SQLiteOpenHelper {
         return updateFlag;
     }
 
+    public Cursor checkQuesGroup(String groupId){
+        Cursor c =db.query("qb_group", new String[] {"testId,qbg_media_file,qbg_status"},"qbg_ID='"+groupId+"'", null, null, null,null);
+        return c;
+    }
+
     public long deleteTestGroups(String testid){
         long deleteFlag=0;
         deleteFlag=db.delete("qb_group", "testId='"+testid+"'", null);
@@ -1105,10 +1109,9 @@ public class DBHelper extends SQLiteOpenHelper {
         return insertFlag;
     }
 
-    public long updateQuesConfig(int qconkey,String cid,String sid,String pid,String tid,String catid,String scatid,int availcount,int pickupcount,int mincount,String status){
-        long insertFlag=0;
+    public long updateQuesConfig(String cid,String sid,String pid,String tid,String catid,String scatid,int availcount,int pickupcount,int mincount,String status){
+        long updateFlag=0;
         ContentValues cv = new ContentValues();
-        cv.put("ques_configkey",qconkey);
         cv.put("courseId",cid);
         cv.put("subjectId",sid);
         cv.put("paperId",pid);
@@ -1119,8 +1122,13 @@ public class DBHelper extends SQLiteOpenHelper {
         cv.put("pickup_count",pickupcount);
         cv.put("min_pickup_count",mincount);
         cv.put("ques_configstatus",status);
-        insertFlag = db.insert("ques_config",null, cv);
-        return insertFlag;
+        updateFlag = db.update("ques_config",cv,"testId='"+tid+"' and subcategoryId='"+scatid+"'",null);
+        return updateFlag;
+    }
+
+    public Cursor checkQuesConfig(String testId,String subcatId){
+        Cursor c =db.query("ques_config", new String[] {"testId,subcategoryId"},"testId='"+testId+"' and subcategoryId='"+subcatId+"'", null, null, null,null);
+        return c;
     }
 
     public long deleteQuesConfig(String testid){
@@ -1155,21 +1163,22 @@ public class DBHelper extends SQLiteOpenHelper {
         return insertFlag;
     }
 
-    public long updateGroupConfig(int gconfigkey,String cid,String sid,String pid,String tid,String secid,String gtype,int availcount,int pickupcount,String status){
-        long insertFlag=0;
+    public long updateGroupConfig(String cid,String sid,String pid,String tid,String secid,String gtype,int availcount,int pickupcount,String status){
+        long updateFlag=0;
         ContentValues cv = new ContentValues();
-        cv.put("groupques_configKey",gconfigkey);
         cv.put("courseId",cid);
         cv.put("subjectId",sid);
         cv.put("paperId",pid);
-        cv.put("testId",tid);
-        cv.put("sectionId",secid);
-        cv.put("groupType",gtype);
         cv.put("groupavail_count",availcount);
         cv.put("grouppickup_count",pickupcount);
         cv.put("groupques_configstatus",status);
-        insertFlag = db.insert("groupques_config",null, cv);
-        return insertFlag;
+        updateFlag = db.update("groupques_config",cv,"testId='"+tid+"' and sectionId='"+secid+"' and groupType='"+gtype+"'",null);
+        return updateFlag;
+    }
+
+    public Cursor checkGroupConfig(String testId,String sectionId,String groupType){
+        Cursor c =db.query("groupques_config", new String[] {"testId,sectionId,groupType"},"testId='"+testId+"' and sectionId='"+sectionId+"' and groupType='"+groupType+"'", null, null, null,null);
+        return c;
     }
 
     public long deleteGroupsConfig(String testid){
