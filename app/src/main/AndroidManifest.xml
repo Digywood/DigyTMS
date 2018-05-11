@@ -44,10 +44,12 @@
             android:parentActivityName=".DashBoardNavActivity"/>
         <activity
             android:name=".ListofPractiseTests"
+            android:label="@string/ptestslabel"
             android:parentActivityName=".PaperActivity"
             android:screenOrientation="landscape" />
         <activity
             android:name=".ListofAssesmentTests"
+            android:label="@string/atestslabel"
             android:parentActivityName=".PaperActivity"
             android:screenOrientation="landscape" />
         <activity
@@ -83,6 +85,7 @@
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".DashBoardNavActivity"
+            android:label="@string/dashlabel"
             android:screenOrientation="landscape"
             android:theme="@style/AppTheme.NoActionBar"/>
         <activity

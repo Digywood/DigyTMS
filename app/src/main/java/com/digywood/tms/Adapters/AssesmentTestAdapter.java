@@ -18,11 +18,17 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.digywood.tms.AsynTasks.BagroundTask;
+import com.digywood.tms.AsynTasks.DownloadFileAsync;
 import com.digywood.tms.DBHelper.DBHelper;
 import com.digywood.tms.AttemptDataActivity;
 import com.digywood.tms.FlashCardActivity;
+import com.digywood.tms.IBagroundListener;
+import com.digywood.tms.IDownloadStatus;
 import com.digywood.tms.JSONParser;
+import com.digywood.tms.Pojo.SingleDWDQues;
 import com.digywood.tms.Pojo.SingleTest;
 import com.digywood.tms.R;
 import com.digywood.tms.ReviewActivity;
@@ -38,6 +44,7 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 /**
  * Created by prasa on 2018-02-27.
@@ -48,13 +55,17 @@ public class AssesmentTestAdapter extends RecyclerView.Adapter<AssesmentTestAdap
     ArrayList<SingleTest> testList;
     ArrayList<String> downloadedList = new ArrayList<>();
     ArrayList<String> downloadfileList = new ArrayList<>();
-    ArrayList<String> groupIds = new ArrayList<>();
+    ArrayList<String> localPathList=new ArrayList();
+    ArrayList<SingleDWDQues> chapterFileList=new ArrayList<>();
     ArrayList<String> chktestList = new ArrayList<>();
-    ArrayList<String> fimageList = new ArrayList<>();
+    ArrayList<String> finalUrls=new ArrayList<>();
+    ArrayList<String> finalNames=new ArrayList<>();
+    HashMap<String,String> hmap=new HashMap<>();
     Context mycontext;
     DBHelper myhelper;
     Boolean value = false;
     JSONParser myparser;
+    String downloadjsonpath="",tfiledwdpath="",localpath="";
     String filedata = "", path, jsonPath, attemptPath, photoPath, enrollid, courseid, subjectId, paperid, testid,fullTest ,attempt ,json;
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
@@ -133,46 +144,198 @@ public class AssesmentTestAdapter extends RecyclerView.Adapter<AssesmentTestAdap
                 popupBuilder.setView(msg);
             }
         });
-    }
 
-      /*  holder.cb_download.setOnClickListener(new View.OnClickListener() {
+        holder.iv_download.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
-                if (holder.cb_download.isChecked()) {
-                    if (singletest.getStatus().equalsIgnoreCase("DOWNLOADED")) {
-                        downloadedList.add(singletest.getTestid());
-                    } else {
+                finalUrls.clear();
+                finalNames.clear();
+                filedata="";
 
-                    }
+                hmap.clear();
+                hmap.put("testid",singletest.getTestid());
+                hmap.put("status","STARTED");
+                new BagroundTask(URLClass.hosturl +"updatePractiseTestStatus.php",hmap,mycontext,new IBagroundListener() {
+                    @Override
+                    public void bagroundData(String json) {
+                        try{
+                            Log.e("UploadStatus---",json);
+                            if(json.equalsIgnoreCase("Updated")){
 
-                    if (chktestList.size() != 0) {
-                        if (chktestList.contains(singletest.getTestid())) {
+//                                long updateFlag=myhelper.updatePTestStatus(singletest.getTestid(),"STARTED");
+//                                if(updateFlag>0){
+//                                    Log.e("LocalStatusUpdate---","Updated Locally");
+//                                }else{
+//
+//                                }
 
-                        } else {
-                            chktestList.add(singletest.getTestid());
+                                Cursor mycursor=myhelper.checkAssessmentTest(singletest.getTestid());
+                                if(mycursor.getCount()>0){
+                                    while(mycursor.moveToNext()){
+
+                                        enrollid=mycursor.getString(mycursor.getColumnIndex("satu_entroll_id"));
+                                        courseid=mycursor.getString(mycursor.getColumnIndex("satu_course_id"));
+                                        subjectId=mycursor.getString(mycursor.getColumnIndex("satu_subjet_ID"));
+                                        paperid=mycursor.getString(mycursor.getColumnIndex("satu_paper_ID"));
+
+                                    }
+                                }else{
+                                    mycursor.close();
+                                }
+
+                                path=courseid+"/"+subjectId+"/"+paperid+"/"+singletest.getTestid()+"/";
+
+                                downloadjsonpath=URLClass.downloadjson+"courses/"+path+singletest.getTestid()+".json";
+
+                                tfiledwdpath=URLClass.downloadjson+"courses/"+path;
+
+                                localpath=enrollid+"/"+courseid+"/"+subjectId+"/"+paperid+"/"+singletest.getTestid()+"/";
+
+                                File myFile1 = new File(URLClass.mainpath+localpath+singletest.getTestid()+".json");
+                                if(myFile1.exists()){
+
+                                }else{
+                                    finalUrls.add(downloadjsonpath);
+                                    finalNames.add(singletest.getTestid()+".json");
+                                    localPathList.add(URLClass.mainpath+localpath);
+                                }
+
+                                new DownloadFileAsync(mycontext,localPathList,finalUrls,finalNames,new IDownloadStatus() {
+                                    @Override
+                                    public void downloadStatus(String status) {
+
+                                        try{
+                                            if(status.equalsIgnoreCase("Completed")){
+
+                                                finalUrls.clear();
+                                                finalNames.clear();
+                                                localPathList.clear();
+
+                                                filedata="";
+
+                                                try{
+                                                    BufferedReader br = new BufferedReader(new FileReader(URLClass.mainpath+localpath+singletest.getTestid()+".json"));
+                                                    StringBuilder sb = new StringBuilder();
+                                                    String line = br.readLine();
+
+                                                    while (line != null) {
+                                                        sb.append(line);
+                                                        sb.append("\n");
+                                                        line = br.readLine();
+                                                    }
+                                                    filedata=sb.toString();
+                                                    br.close();
+                                                }catch (Exception e){
+                                                    e.printStackTrace();
+                                                    Log.e("TestActivity1-----",e.toString());
+                                                }
+
+                                                parseJson(filedata);
+
+                                                if(downloadfileList.size()!=0){
+
+                                                    for(int i=0;i<chapterFileList.size();i++){
+
+                                                        SingleDWDQues sdq=chapterFileList.get(i);
+
+                                                        Log.e("AssessmentAdp:--",""+sdq.getSubjectId());
+
+                                                        File myFile1 = new File(URLClass.mainpath+enrollid+"/"+courseid+"/"+sdq.getSubjectId()+"/"+sdq.getPaperId()+"/"+sdq.getChapterId()+"/"+sdq.getFileName());
+                                                        if(myFile1.exists()){
+
+                                                        }else{
+
+                                                            String tPath=URLClass.downloadjson+"courses/"+courseid+"/"+sdq.getSubjectId()+"/"+sdq.getPaperId()+"/";
+                                                            finalUrls.add(tPath+sdq.getChapterId()+"/"+sdq.getFileName());
+                                                            finalNames.add(sdq.getFileName());
+                                                            localPathList.add(URLClass.mainpath+enrollid+"/"+courseid+"/"+sdq.getSubjectId()+"/"+sdq.getPaperId()+"/"+sdq.getChapterId()+"/");
+                                                        }
+                                                    }
+
+                                                }else{
+                                                    Log.e("LearningActivity----","No Downloaded Images for test");
+                                                }
+
+                                                if(finalNames.size()!=0){
+
+                                                    new DownloadFileAsync(mycontext,localPathList,finalUrls,finalNames,new IDownloadStatus() {
+                                                        @Override
+                                                        public void downloadStatus(String status) {
+
+                                                            try{
+                                                                if(status.equalsIgnoreCase("Completed")){
+                                                                    hmap.clear();
+                                                                    hmap.put("testid",singletest.getTestid());
+                                                                    hmap.put("status","Downloaded");
+                                                                    new BagroundTask(URLClass.hosturl +"updatePractiseTestStatus.php",hmap, mycontext, new IBagroundListener() {
+                                                                        @Override
+                                                                        public void bagroundData(String json) {
+                                                                            try {
+
+                                                                                Log.e("UploadStatus---",json);
+                                                                                if(json.equalsIgnoreCase("Updated")){
+//                                                                                    long updateFlag=myhelper.updatePTestStatus(singletest.getTestid(),"DOWNLOADED");
+//                                                                                    if(updateFlag>0){
+//                                                                                        Log.e("LocalStatusUpdate---","Updated Locally");
+//                                                                                    }else{
+//
+//                                                                                    }
+
+                                                                                    Toast.makeText(mycontext,"All Downloaded",Toast.LENGTH_SHORT).show();
+                                                                                }else{
+
+                                                                                }
+
+                                                                            } catch (Exception e) {
+                                                                                e.printStackTrace();
+                                                                                Log.e("ListofPractiseTests----", e.toString());
+                                                                            }
+                                                                        }
+                                                                    }).execute();
+
+                                                                }else{
+
+                                                                }
+
+                                                            }catch (Exception e){
+
+                                                                e.printStackTrace();
+                                                                Log.e("DownloadFile----",e.toString());
+                                                            }
+                                                        }
+                                                    }).execute();
+
+                                                }else{
+
+                                                    Toast.makeText(mycontext,"All Downloaded",Toast.LENGTH_SHORT).show();
+
+                                                }
+
+                                            }else{
+
+                                            }
+                                        }catch (Exception e){
+
+                                            e.printStackTrace();
+                                            Log.e("DownloadFile----",e.toString());
+                                        }
+                                    }
+                                }).execute();
+                            }else{
+                                Toast.makeText(mycontext,"Unable download test",Toast.LENGTH_SHORT).show();
+                            }
+                        }catch (Exception e){
+                            e.printStackTrace();
+                            Log.e("ListofPractiseTests----",e.toString());
                         }
-                    } else {
-                        chktestList.add(singletest.getTestid());
+
                     }
-
-                } else {
-
-                    if (downloadedList.contains(singletest.getTestid())) {
-                        downloadedList.remove(singletest.getTestid());
-                    }
-
-                    chktestList.remove(singletest.getTestid());
-                }
+                }).execute();
 
             }
         });
 
-    }
-*/
-    public void updateTests(ArrayList<SingleTest> list) {
-        testList = list;
-        notifyDataSetChanged();
     }
 
     public ArrayList<String> getchkTests() {
@@ -230,4 +393,103 @@ public class AssesmentTestAdapter extends RecyclerView.Adapter<AssesmentTestAdap
         } else
             return attemptPath;
     }
+
+    public void parseJson(String json){
+
+        downloadfileList.clear();
+        chapterFileList.clear();
+        localPathList.clear();
+
+        JSONArray secArray,quesArray,optionsArray,additionsArray;
+        JSONObject mainObj,secObj,singlequesObj,optionsObj,additionsObj;
+        try{
+            mainObj=new JSONObject(json);
+            Log.e("JSON--",mainObj.getString("atu_ID"));
+
+            secArray=mainObj.optJSONArray("Sections");
+
+            for(int d=0;d<secArray.length();d++){
+
+                secObj=secArray.getJSONObject(d);
+                quesArray=secObj.optJSONArray("Questions");
+
+                for(int i=0;i<quesArray.length();i++){
+
+                    singlequesObj=quesArray.getJSONObject(i);
+
+                    String chapterid=singlequesObj.getString("qbm_ChapterID");
+                    String paperid=singlequesObj.getString("qbm_Paper_ID");
+                    String subid=singlequesObj.getString("qbm_SubjectID");
+
+                    if(singlequesObj.getString("qbm_group_flag").equalsIgnoreCase("YES")){
+
+                        if(downloadfileList.contains(singlequesObj.getString("gbg_media_file"))){
+
+                        }else{
+                            downloadfileList.add(singlequesObj.getString("gbg_media_file"));
+                            chapterFileList.add(new SingleDWDQues(chapterid,paperid,subid,singlequesObj.getString("gbg_media_file")));
+                        }
+
+                    }else{
+
+                    }
+
+                    if(downloadfileList.contains(singlequesObj.getString("qbm_image_file"))){
+
+                    }else{
+                        downloadfileList.add(singlequesObj.getString("qbm_image_file"));
+                        chapterFileList.add(new SingleDWDQues(chapterid,paperid,subid,singlequesObj.getString("qbm_image_file")));
+                    }
+
+                    if(downloadfileList.contains(singlequesObj.getString("qbm_Review_Images"))){
+
+                    }else{
+                        downloadfileList.add(singlequesObj.getString("qbm_Review_Images"));
+                        chapterFileList.add(new SingleDWDQues(chapterid,paperid,subid,singlequesObj.getString("qbm_Review_Images")));
+                    }
+
+                    if(downloadfileList.contains(singlequesObj.getString("qbm_flash_image"))){
+
+                    }else{
+                        downloadfileList.add(singlequesObj.getString("qbm_flash_image"));
+                        chapterFileList.add(new SingleDWDQues(chapterid,paperid,subid,singlequesObj.getString("qbm_flash_image")));
+                    }
+
+                    optionsArray=singlequesObj.getJSONArray("Options");
+                    for(int j=0;j<optionsArray.length();j++){
+
+                        optionsObj=optionsArray.getJSONObject(j);
+                        if(downloadfileList.contains(optionsObj.getString("qbo_media_file"))){
+
+                        }else{
+                            downloadfileList.add(optionsObj.getString("qbo_media_file"));
+                            chapterFileList.add(new SingleDWDQues(chapterid,paperid,subid,optionsObj.getString("qbo_media_file")));
+                        }
+                    }
+
+                    additionsArray=singlequesObj.getJSONArray("Review");
+                    for(int k=0;k<additionsArray.length();k++){
+
+                        additionsObj=additionsArray.getJSONObject(k);
+                        if(downloadfileList.contains(additionsObj.getString("qba_media_file"))){
+
+                        }else{
+                            downloadfileList.add(additionsObj.getString("qba_media_file"));
+                            chapterFileList.add(new SingleDWDQues(chapterid,paperid,subid,additionsObj.getString("qba_media_file")));
+                        }
+
+                    }
+
+                }
+
+            }
+
+            Log.e("JSONPARSE---",""+downloadfileList.size());
+
+        }catch (Exception e){
+            e.printStackTrace();
+            Log.e("JSONPARSE---",e.toString());
+        }
+    }
+
 }
