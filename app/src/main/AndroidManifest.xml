@@ -85,7 +85,6 @@
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".DashBoardNavActivity"
-            android:label="@string/dashlabel"
             android:screenOrientation="landscape"
             android:theme="@style/AppTheme.NoActionBar"/>
         <activity
