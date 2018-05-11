@@ -57,6 +57,10 @@
             android:screenOrientation="landscape"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
+            android:name=".AssessmentTestActivity"
+            android:screenOrientation="landscape"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
             android:name=".ScoreActivity"
             android:label="@string/title_activity_score"
             android:screenOrientation="landscape"

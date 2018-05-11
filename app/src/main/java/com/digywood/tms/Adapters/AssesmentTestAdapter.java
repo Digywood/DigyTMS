@@ -1,5 +1,6 @@
 package com.digywood.tms.Adapters;
 
+import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -12,17 +13,22 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.digywood.tms.AssessmentTestActivity;
 import com.digywood.tms.AsynTasks.BagroundTask;
 import com.digywood.tms.AsynTasks.DownloadFileAsync;
 import com.digywood.tms.DBHelper.DBHelper;
 
+import com.digywood.tms.IBagroundListener;
+import com.digywood.tms.IDownloadStatus;
 import com.digywood.tms.JSONParser;
+import com.digywood.tms.Pojo.SingleAssessment;
 import com.digywood.tms.Pojo.SingleDWDQues;
 import com.digywood.tms.Pojo.SingleTest;
 import com.digywood.tms.R;
@@ -30,17 +36,20 @@ import com.digywood.tms.SaveJSONdataToFile;
 import com.digywood.tms.PracticeTestActivity;
 import com.digywood.tms.URLClass;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-/**
- * Created by prasa on 2018-02-27.
- */
-
 public class AssesmentTestAdapter extends RecyclerView.Adapter<AssesmentTestAdapter.MyViewHolder> {
 
-    ArrayList<SingleTest> testList;
+    ArrayList<SingleAssessment> testList;
+    Dialog mydialog;
     ArrayList<String> downloadedList = new ArrayList<>();
     ArrayList<String> downloadfileList = new ArrayList<>();
     ArrayList<String> localPathList=new ArrayList();
@@ -54,7 +63,7 @@ public class AssesmentTestAdapter extends RecyclerView.Adapter<AssesmentTestAdap
     Boolean value = false;
     JSONParser myparser;
     String downloadjsonpath="",tfiledwdpath="",localpath="";
-    String filedata = "", path, jsonPath, attemptPath, photoPath, enrollid, courseid, subjectId, paperid, testid,fullTest ,attempt ,json;
+    String filedata = "", path, jsonPath, assessmentPath, photoPath, enrollid, courseid, subjectId, paperid, testid,fullTest ,assessment ,json;
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
 
@@ -71,7 +80,7 @@ public class AssesmentTestAdapter extends RecyclerView.Adapter<AssesmentTestAdap
         }
     }
 
-    public AssesmentTestAdapter(ArrayList<SingleTest> testList, Context c) {
+    public AssesmentTestAdapter(ArrayList<SingleAssessment> testList, Context c) {
         this.testList = testList;
         this.mycontext = c;
         myhelper=new DBHelper(c);
@@ -85,53 +94,126 @@ public class AssesmentTestAdapter extends RecyclerView.Adapter<AssesmentTestAdap
 
     @Override
     public void onBindViewHolder(final MyViewHolder holder, final int position) {
-        final SingleTest singletest = testList.get(position);
+        final SingleAssessment singletest = testList.get(position);
         holder.tv_testid.setText(singletest.getTestid());
         holder.tv_teststatus.setText(singletest.getStatus());
 
         holder.iv_start.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                mydialog = new Dialog(mycontext);
+                mydialog.getWindow();
+                mydialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                mydialog.setContentView(R.layout.assessmentauth);
+                mydialog.show();
+
+
+                final EditText key = mydialog.findViewById(R.id.et_key);
+                Button submit = mydialog.findViewById(R.id.btn_submit_auth);
+                Button cancel = mydialog.findViewById(R.id.btn_cancel_auth);
+
+                cancel.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+
+                        mydialog.cancel();
+                    }
+                });
+
+                submit.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Cursor cursor = myhelper.validateAssessmentTestKey(singletest.getTestid());
+                        Log.e("Auth",""+cursor.getCount());
+                        if(cursor.getCount()> 0){
+                            while (cursor.moveToNext()){
+                                String auth = cursor.getString(cursor.getColumnIndex("satu_exam_key"));
+                                if(auth.equals(key.getText().toString())){
+                                    int count = myhelper.getAttempCount();
+                                    Cursor c = myhelper.getAttempt(myhelper.getLastTestAttempt(singletest.getTestid()));
+                                    //if cursor has values then the test is being resumed and data is retrieved from database
+                                    if (c.getCount() > 0) {
+                                        c.moveToLast();
+                                        if (c.getInt(c.getColumnIndex("Attempt_Status")) != 2) {
+                                            myhelper.DeleteAttempt(myhelper.getLastTestAttempt(singletest.getTestid()));
+                                        }
+                                    }
+                                    try {
+                                        Log.e("AuthTest",""+getExternalPath(mycontext, singletest));
+                                        fullTest = new String(SaveJSONdataToFile.bytesFromFile(getExternalPath(mycontext, singletest)), "UTF-8");
+                                        assessment = new String(SaveJSONdataToFile.bytesFromFile(getExternalPath(mycontext, singletest) ), "UTF-8");
+                                        Intent i = new Intent(mycontext, AssessmentTestActivity.class);
+                                        i.putExtra("json", assessment);
+                                        i.putExtra("test", testid);
+                                        i.putExtra("status", "NEW");
+                                        mycontext.startActivity(i);
+                                    } catch (IOException | ClassNotFoundException | NullPointerException e) {
+                                        e.printStackTrace();
+                                        Log.e("Error",e.toString());
+                                    }
+
+                                }
+                            }
+                        }
+                        mydialog.cancel();
+                    }
+                });
+
+            }
+        });
+
+/*        holder.iv_start.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
                 AlertDialog.Builder popupBuilder = new AlertDialog.Builder(mycontext);
                 TextView msg = new TextView(mycontext);
-                msg.setText("Central");
+                msg.setText("Enter Assessment Test Key");
                 msg.setGravity(Gravity.CENTER_HORIZONTAL);
-                EditText key = new EditText(mycontext);
+                final EditText key = new EditText(mycontext);
                 key.setGravity(Gravity.CENTER_HORIZONTAL);
                 Button enter = new Button(mycontext);
+                enter.setText("Submit");
                 enter.setGravity(Gravity.CENTER_HORIZONTAL);
                 enter.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
+                        Cursor cursor = myhelper.validateAssessmentTestKey(singletest.getTestid());
+                        if(cursor.getCount()> 0){
+                            while (cursor.moveToNext()){
+                                String auth = cursor.getString(cursor.getColumnIndex("satu_exam_key"));
+                                if(auth.equals(key.getText().toString())){
+                                    int count = myhelper.getAttempCount();
+                                    Cursor c = myhelper.getAttempt(myhelper.getLastTestAttempt(singletest.getTestid()));
+                                    //if cursor has values then the test is being resumed and data is retrieved from database
+                                    if (c.getCount() > 0) {
+                                        c.moveToLast();
+                                        if (c.getInt(c.getColumnIndex("Attempt_Status")) != 2) {
+                                            myhelper.DeleteAttempt(myhelper.getLastTestAttempt(singletest.getTestid()));
+                                        }
+                                    }
+                                    try {
+                                        fullTest = new String(SaveJSONdataToFile.bytesFromFile(getExternalPath(mycontext, singletest)), "UTF-8");
+                                        assessment = new String(SaveJSONdataToFile.bytesFromFile(getExternalPath(mycontext, singletest) ), "UTF-8");
+                                        Intent i = new Intent(mycontext, AssessmentTestActivity.class);
+                                        i.putExtra("json", assessment);
+                                        i.putExtra("test", testid);
+                                        i.putExtra("status", "NEW");
+                                        mycontext.startActivity(i);
+                                    } catch (IOException | ClassNotFoundException | NullPointerException e) {
+                                        e.printStackTrace();
+                                    }
 
-                        myhelper.Destroy("attempt_data");
-                        int count = myhelper.getAttempCount();
-                        Cursor c = myhelper.getAttempt(myhelper.getLastTestAttempt(singletest.getTestid()));
-                        //if cursor has values then the test is being resumed and data is retrieved from database
-                        if (c.getCount() > 0) {
-                            c.moveToLast();
-                            if (c.getInt(c.getColumnIndex("Attempt_Status")) != 2) {
-                                myhelper.DeleteAttempt(myhelper.getLastTestAttempt(singletest.getTestid()));
+                                }
                             }
-                        }
-                        try {
-
-                            fullTest = new String(SaveJSONdataToFile.bytesFromFile(getExternalPath(mycontext, singletest, "BASE") + testid + ".json"), "UTF-8");
-                            JSONParser obj = new JSONParser(fullTest, getExternalPath(mycontext, singletest, "ATTEMPT"), "PRACTICE", mycontext);
-                            attempt = new String(SaveJSONdataToFile.bytesFromFile(getExternalPath(mycontext, singletest, "ATTEMPT") + testid + ".json"), "UTF-8");
-                            Intent i = new Intent(mycontext, PracticeTestActivity.class);
-                            i.putExtra("json", attempt);
-                            i.putExtra("test", testid);
-                            i.putExtra("status", "NEW");
-                            mycontext.startActivity(i);
-                        } catch (IOException | ClassNotFoundException | NullPointerException e) {
-                            e.printStackTrace();
                         }
                     }
                 });
                 popupBuilder.setView(msg);
+                popupBuilder.setView(key);
+                popupBuilder.setView(enter);
+                popupBuilder.create().show();
             }
-        });
+        });*/
 
         holder.iv_download.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -357,29 +439,26 @@ public class AssesmentTestAdapter extends RecyclerView.Adapter<AssesmentTestAdap
         alert.show();
     }
 
-    public String getExternalPath(Context context, SingleTest singletest, String type) {
+    public String getExternalPath(Context context, SingleAssessment singletest) {
         DBHelper dataObj = new DBHelper(context);
         testid = singletest.getTestid();
-        Cursor cursor = dataObj.getSingleStudentTests(testid);
+        Cursor cursor = dataObj.getSingleAssessmentTests(testid);
 
         if (cursor.getCount() > 0) {
             while (cursor.moveToNext()) {
-                enrollid = cursor.getString(cursor.getColumnIndex("sptu_entroll_id"));
-                courseid = cursor.getString(cursor.getColumnIndex("sptu_course_id"));
-                subjectId = cursor.getString(cursor.getColumnIndex("sptu_subjet_ID"));
-                paperid = cursor.getString(cursor.getColumnIndex("sptu_paper_ID"));
+                enrollid = cursor.getString(cursor.getColumnIndex("satu_entroll_id"));
+                courseid = cursor.getString(cursor.getColumnIndex("satu_course_id"));
+                subjectId = cursor.getString(cursor.getColumnIndex("satu_subjet_ID"));
+                paperid = cursor.getString(cursor.getColumnIndex("satu_paper_ID"));
             }
         }
 
         Log.e("path_vars", enrollid + " " + courseid + " " + subjectId + " " + paperid + " " + testid);
         path = enrollid + "/" + courseid + "/" + subjectId + "/" + paperid + "/" + testid + "/";
         photoPath = URLClass.mainpath + path;
-        attemptPath = URLClass.mainpath + path + "Attempt/";
+        assessmentPath = URLClass.mainpath + path + testid +".json";
         jsonPath = URLClass.mainpath + path;
-        if (type.equals("BASE")) {
-            return jsonPath;
-        } else
-            return attemptPath;
+        return assessmentPath;
     }
 
     public void parseJson(String json){

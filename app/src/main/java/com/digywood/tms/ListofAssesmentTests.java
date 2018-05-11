@@ -28,6 +28,7 @@ import com.digywood.tms.AsynTasks.AsyncCheckInternet;
 import com.digywood.tms.AsynTasks.BagroundTask;
 import com.digywood.tms.AsynTasks.DownloadFileAsync;
 import com.digywood.tms.DBHelper.DBHelper;
+import com.digywood.tms.Pojo.SingleAssessment;
 import com.digywood.tms.Pojo.SingleDWDQues;
 import com.digywood.tms.Pojo.SingleTest;
 import org.json.JSONArray;
@@ -41,7 +42,7 @@ import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
 public class ListofAssesmentTests extends AppCompatActivity {
 
     HashMap<String,String> hmap=new HashMap<>();
-    ArrayList<SingleTest> testidList;
+    ArrayList<SingleAssessment> testidList;
     ArrayList<String> subjectIds;
     ArrayList<String> groupIds=new ArrayList<>();
     RecyclerView rv_tests;
@@ -115,7 +116,7 @@ public class ListofAssesmentTests extends AppCompatActivity {
             Cursor mycursor=myhelper.getAssesmentTestsByEnroll(enrollid);
             if(mycursor.getCount()>0){
                 while (mycursor.moveToNext()) {
-                    testidList.add(new SingleTest(mycursor.getString(mycursor.getColumnIndex("satu_ID")),mycursor.getString(mycursor.getColumnIndex("satu_subjet_ID")),mycursor.getString(mycursor.getColumnIndex("satu_dwnld_status"))));
+                    testidList.add(new SingleAssessment(mycursor.getString(mycursor.getColumnIndex("satu_ID")),mycursor.getString(mycursor.getColumnIndex("satu_subjet_ID")),mycursor.getString(mycursor.getColumnIndex("satu_dwnld_status"))));
                 }
             }else {
                 mycursor.close();
@@ -144,19 +145,19 @@ public class ListofAssesmentTests extends AppCompatActivity {
                         for(int i=0;i<ja.length();i++){
 
                             myObj=ja.getJSONObject(i);
-                            String testid=myObj.getString("sptu_ID");
-                            subjectid=myObj.getString("sptu_subjet_ID");
-                            String status=myObj.getString("sptu_dwnld_status");
-                            testidList.add(new SingleTest(testid,subjectid,status));
+                            String testid=myObj.getString("atu_ID");
+                            subjectid=myObj.getString("atu_subjet_ID");
+                            String status=myObj.getString("atu_dwnld_status");
+                            testidList.add(new SingleAssessment(testid,subjectid,status));
 
-                            long checkFlag=myhelper.checkTest(myObj.getInt("sptu_key"));
+                            long checkFlag=myhelper.checkTest(myObj.getInt("atu_key"));
                             if(checkFlag>0){
                                 Log.e("ListofPractiseTests----","Test Already Exists");
                             }else{
-//                                long insertFlag=myhelper.insertPractiseTest(myObj.getInt("sptu_key"),myObj.getString("sptu_org_id"),myObj.getString("sptu_entroll_id"),myObj.getString("sptu_student_ID"),
-//                                        myObj.getString("sptu_batch"),myObj.getString("sptu_ID"),myObj.getString("sptu_paper_ID"),myObj.getString("sptu_subjet_ID"),
-//                                        myObj.getString("sptu_course_id"),myObj.getString("sptu_start_date"),myObj.getString("sptu_end_date"),myObj.getString("sptu_dwnld_status"),
-//                                        myObj.getInt("sptu_no_of_questions"),myObj.getDouble("sptu_tot_marks"),myObj.getDouble("stpu_min_marks"),myObj.getDouble("sptu_max_marks"));
+//                                long insertFlag=myhelper.insertPractiseTest(myObj.getInt("atu_key"),myObj.getString("atu_org_id"),myObj.getString("atu_entroll_id"),myObj.getString("atu_student_ID"),
+//                                        myObj.getString("atu_batch"),myObj.getString("atu_ID"),myObj.getString("atu_paper_ID"),myObj.getString("atu_subjet_ID"),
+//                                        myObj.getString("atu_course_id"),myObj.getString("atu_start_date"),myObj.getString("atu_end_date"),myObj.getString("atu_dwnld_status"),
+//                                        myObj.getInt("atu_no_of_questions"),myObj.getDouble("atu_tot_marks"),myObj.getDouble("stpu_min_marks"),myObj.getDouble("atu_max_marks"));
 //                                if(insertFlag>0){
 //                                    Log.e("ListofPractiseTests----","Test Inserted in Local");
 //                                }else{
