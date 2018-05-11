@@ -1,5 +1,6 @@
 package com.digywood.tms;
 
+import android.app.Dialog;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
@@ -17,10 +18,14 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
+import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.GridView;
+import android.widget.ImageButton;
+import android.widget.RadioGroup;
+import android.widget.RatingBar;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -47,8 +52,10 @@ public class PaperActivity extends AppCompatActivity {
     ArrayList<String> paperidList;
     ArrayList<SinglePaper> paperList;
     GridView papergridView;
+    SinglePaper singlePaper;
+    Dialog mydialog;
     public static final int RequestPermissionCode = 1;
-    String testtype="practise",courseid="",enrollid="";
+    String testtype="",courseid="",enrollid="";
     HashMap<String,String> hmap=new HashMap<>();
     DBHelper myhelper;
     LinearLayoutManager myLayoutManager;
@@ -89,8 +96,33 @@ public class PaperActivity extends AppCompatActivity {
         }
 
         papergridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            public void onItemClick(AdapterView<?> parent, View v,int position, long id) {
-                SinglePaper singlePaper=paperList.get(position);
+            public void onItemClick(AdapterView<?> parent,View v,int position, long id) {
+
+                singlePaper=paperList.get(position);
+
+//                mydialog = new Dialog(PaperActivity.this);
+//                mydialog.getWindow();
+//                mydialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+//                mydialog.setContentView(R.layout.activity_testpopup);
+//                mydialog.show();
+//                mydialog.setCanceledOnTouchOutside(false);
+//
+//                RadioGroup rg_testpopup=mydialog.findViewById(R.id.rg_testpopup);
+//                RadioGroup rg = (RadioGroup) findViewById(R.id.radioGroup1);
+//
+//                Button btn_go =mydialog.findViewById(R.id.btn_popgo);
+//
+//                btn_go.setOnClickListener(new View.OnClickListener() {
+//                    @Override
+//                    public void onClick(View view) {
+//                        Intent i=new Intent(getApplicationContext(),ListofPractiseTests.class);
+//                        i.putExtra("enrollid",enrollid);
+//                        i.putExtra("courseid",courseid);
+//                        i.putExtra("paperid",singlePaper.getPaperId());
+//                        startActivity(i);
+//                    }
+//                });
+
                 Intent i=new Intent(getApplicationContext(),ListofPractiseTests.class);
                 i.putExtra("enrollid",enrollid);
                 i.putExtra("courseid",courseid);
@@ -98,42 +130,6 @@ public class PaperActivity extends AppCompatActivity {
                 startActivity(i);
             }
         });
-
-//        btn_practise.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                testtype="practise";
-//                btn_practise.setTextColor(getApplicationContext().getResources().getColor(R.color.colorAccent));
-//                btn_asessment.setTextColor(getApplicationContext().getResources().getColor(R.color.colorPrimaryDark));
-//            }
-//        });
-//
-//        btn_asessment.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                testtype="asessment";
-//                btn_practise.setTextColor(getApplicationContext().getResources().getColor(R.color.colorPrimaryDark));
-//                btn_asessment.setTextColor(getApplicationContext().getResources().getColor(R.color.colorAccent));
-//            }
-//        });
-//
-//        btn_testpage.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//
-//                if(paperidList.size()!=0){
-//
-//                    if(checkPermission()){
-//                        navigateTestActivity();
-//                    }else{
-//                        requestPermission();
-//                    }
-//                }else{
-//
-//                }
-//
-//            }
-//        });
 
         getPapersFromLocal();
 
