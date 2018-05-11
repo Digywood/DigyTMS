@@ -78,7 +78,7 @@
                 android:textSize="12dp"/>
 
             <ImageView
-                android:id="@+id/cb_atestselection"
+                android:id="@+id/iv_atestdownload"
                 android:layout_width="wrap_content"
                 android:layout_height="35dp"
                 android:layout_weight="1"

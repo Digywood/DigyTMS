@@ -60,8 +60,7 @@ public class AssesmentTestAdapter extends RecyclerView.Adapter<AssesmentTestAdap
     public class MyViewHolder extends RecyclerView.ViewHolder {
 
         public TextView tv_testid, tv_teststatus;
-        public ImageView iv_start, iv_resume,btn_fstart,btn_fattempthistory;
-        public CheckBox cb_download;
+        public ImageView iv_start, iv_resume,btn_fstart,iv_download;
 
         public MyViewHolder(View view) {
             super(view);
@@ -69,7 +68,7 @@ public class AssesmentTestAdapter extends RecyclerView.Adapter<AssesmentTestAdap
             tv_teststatus = view.findViewById(R.id.tv_ateststatus);
             iv_start = view.findViewById(R.id.iv_start);
             iv_resume = view.findViewById(R.id.iv_resume);
-            cb_download = view.findViewById(R.id.cb_atestselection);
+            iv_download = view.findViewById(R.id.iv_atestdownload);
         }
     }
 
