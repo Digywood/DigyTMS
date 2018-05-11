@@ -375,7 +375,6 @@ public class ReviewActivity extends AppCompatActivity implements
                         if (index < buffer.length() - 1) {
                             setQBackground(pos,index);
                             index++;
-                            Log.e("ValuesIf--->", "" + pos + "," + index);
                             setQuestion(pos, index, edit);
                             checkRadio();
                         } else if (index == buffer.length() - 1) {

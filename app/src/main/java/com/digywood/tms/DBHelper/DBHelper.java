@@ -1314,11 +1314,6 @@ public class DBHelper extends SQLiteOpenHelper {
         return updateFlag;
     }
 
-    public long updateStatus(String qId, String status){
-        long updateFlag=0;
-        String query ="UPDATE attempt_data SET Question_Status ='"+status+"' WHERE Question_ID='"+qId+"'";
-        return updateFlag;
-    }
 
     public Cursor getSections(){
         String query ="SELECT DISTINCT Question_Section FROM attempt_data";
@@ -1357,6 +1352,38 @@ public class DBHelper extends SQLiteOpenHelper {
     }
 
     public int getSectionQuesCorrect(String subct){
+        String query ="SELECT * FROM attempt_data WHERE  Option_Answer_Flag = 'YES' and Question_Section ='"+subct+"' and Question_Status <> 'SKIPPED'";
+        Cursor c=db.rawQuery(query,null);
+        int count = c.getCount();
+        c.close();
+        return count;
+    }
+
+    public int getSubCatQuestions(String subct){
+        String query ="SELECT * FROM attempt_data WHERE Question_Section ='"+subct+"'";
+        Cursor c=db.rawQuery(query,null);
+        int count = c.getCount();
+        c.close();
+        return count;
+    }
+
+    public int getSubCatQuesAns(String subct){
+        String query ="SELECT * FROM attempt_data WHERE Question_Section ='"+subct+"' and Question_Status NOT IN ('NOT_ATTEMPTED','SKIPPED')";
+        Cursor c=db.rawQuery(query,null);
+        int count = c.getCount();
+        c.close();
+        return count;
+    }
+
+    public int getSubCatQuesSkip(String subct){
+        String query ="SELECT * FROM attempt_data WHERE Question_Section ='"+subct+"' and Question_Status <> 'SKIPPED'";
+        Cursor c=db.rawQuery(query,null);
+        int count = c.getCount();
+        c.close();
+        return count;
+    }
+
+    public int getSubCatQuesCorrect(String subct){
         String query ="SELECT * FROM attempt_data WHERE  Option_Answer_Flag = 'YES' and Question_Section ='"+subct+"' and Question_Status <> 'SKIPPED'";
         Cursor c=db.rawQuery(query,null);
         int count = c.getCount();

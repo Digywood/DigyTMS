@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <RelativeLayout
+        android:id="@+id/subcatTotal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <TableLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/tbl_details">
+
+            <TableRow
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:id="@+id/row_header"
+                android:weightSum="7">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:textSize="20sp"
+                    android:textColor="@android:color/black"
+                    android:text="Category"/>
+
+                <View
+                    android:layout_width="2dp"
+                    android:layout_height="match_parent"
+                    android:layout_marginStart="2dp"
+                    android:layout_marginEnd="2dp"
+                    android:textColor="@android:color/black"
+                    android:background="#000000" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:textSize="20sp"
+                    android:textColor="@android:color/black"
+                    android:text="Subcat"/>
+
+                <View
+                    android:layout_width="2dp"
+                    android:layout_height="match_parent"
+                    android:layout_marginStart="2dp"
+                    android:layout_marginEnd="2dp"
+                    android:textColor="@android:color/black"
+                    android:background="#000000" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:textSize="20sp"
+                    android:textColor="@android:color/black"
+                    android:text="No.of Qs."/>
+
+                <View
+                    android:layout_width="2dp"
+                    android:layout_height="match_parent"
+                    android:layout_marginStart="2dp"
+                    android:layout_marginEnd="2dp"
+                    android:background="#000000" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:textSize="20sp"
+                    android:textColor="@android:color/black"
+                    android:text="Attempt"/>
+
+                <View
+                    android:layout_width="2dp"
+                    android:layout_height="match_parent"
+                    android:layout_marginStart="2dp"
+                    android:layout_marginEnd="2dp"
+                    android:background="#000000" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:textSize="20sp"
+                    android:textColor="@android:color/black"
+                    android:text="Skipped"/>
+
+                <View
+                    android:layout_width="2dp"
+                    android:layout_height="match_parent"
+                    android:layout_marginStart="2dp"
+                    android:layout_marginEnd="2dp"
+                    android:background="#000000" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:textSize="20sp"
+                    android:textColor="@android:color/black"
+                    android:text="Correct"/>
+
+                <View
+                    android:layout_width="2dp"
+                    android:layout_height="match_parent"
+                    android:layout_marginStart="2dp"
+                    android:layout_marginEnd="2dp"
+                    android:background="#000000" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:textSize="20sp"
+                    android:textColor="@android:color/black"
+                    android:text="Percentage"/>
+            </TableRow>
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="2dp"
+                android:background="#000000" />
+        </TableLayout>
+    </RelativeLayout>
+
+</LinearLayout>

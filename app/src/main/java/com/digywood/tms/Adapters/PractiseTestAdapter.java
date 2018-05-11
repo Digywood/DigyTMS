@@ -90,11 +90,11 @@ public class PractiseTestAdapter extends RecyclerView.Adapter<PractiseTestAdapte
             iv_fstart = view.findViewById(R.id.iv_fstart);
             iv_history = view.findViewById(R.id.iv_history);
             iv_download = view.findViewById(R.id.iv_download);
-            test_pieChart = (PieChart) view.findViewById(R.id.test_piechart);
+//            test_pieChart = (PieChart) view.findViewById(R.id.test_piechart);
             tv_testAttempt = view.findViewById(R.id.tv_testAttempt);
             tv_attempt_max = view.findViewById(R.id.tv_attempt_max);
             tv_attempt_min = view.findViewById(R.id.tv_attempt_min);
-            flash_pieChart = (PieChart) view.findViewById(R.id.flash_piechart);
+//            flash_pieChart = (PieChart) view.findViewById(R.id.flash_piechart);
 //            cb_download = view.findViewById(R.id.cb_testselection);
         }
     }
@@ -125,7 +125,7 @@ public class PractiseTestAdapter extends RecyclerView.Adapter<PractiseTestAdapte
             }
         }
         List<PieEntry> yvalues = new ArrayList<PieEntry>();
-        holder.tv_testAttempt.setText(String.valueOf(myhelper.getTestAttempCount(singletest.getTestid())));
+/*        holder.tv_testAttempt.setText(String.valueOf(myhelper.getTestAttempCount(singletest.getTestid())));
         holder.tv_attempt_min.setText(String.format("%.1f", minscore));
         holder.tv_attempt_max.setText(String.format("%.1f", maxscore));
         float a = avgscore.floatValue();
@@ -174,7 +174,7 @@ public class PractiseTestAdapter extends RecyclerView.Adapter<PractiseTestAdapte
         holder.flash_pieChart.setCenterTextSize(15);
         holder.flash_pieChart.setCenterTextColor(Color.BLACK);
         holder.flash_pieChart.setData(data);
-        holder.flash_pieChart.getLegend().setEnabled(false);
+        holder.flash_pieChart.getLegend().setEnabled(false);*/
 
         holder.tv_testid.setText(singletest.getTestid());
         holder.tv_teststatus.setText(singletest.getStatus());
