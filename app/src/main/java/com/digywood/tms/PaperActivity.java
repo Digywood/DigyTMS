@@ -118,6 +118,7 @@ public class PaperActivity extends AppCompatActivity {
                         i.putExtra("courseid",courseid);
                         i.putExtra("paperid",singlePaper.getPaperId());
                         startActivity(i);
+                        mydialog.cancel();
                     }
                 });
 
@@ -129,30 +130,9 @@ public class PaperActivity extends AppCompatActivity {
                         i.putExtra("courseid",courseid);
                         i.putExtra("paperid",singlePaper.getPaperId());
                         startActivity(i);
+                        mydialog.cancel();
                     }
                 });
-
-//                RadioGroup rg_testpopup=mydialog.findViewById(R.id.rg_testpopup);
-//                RadioGroup rg = (RadioGroup) findViewById(R.id.radioGroup1);
-//
-//                Button btn_go =mydialog.findViewById(R.id.btn_popgo);
-//
-//                btn_go.setOnClickListener(new View.OnClickListener() {
-//                    @Override
-//                    public void onClick(View view) {
-//                        Intent i=new Intent(getApplicationContext(),ListofPractiseTests.class);
-//                        i.putExtra("enrollid",enrollid);
-//                        i.putExtra("courseid",courseid);
-//                        i.putExtra("paperid",singlePaper.getPaperId());
-//                        startActivity(i);
-//                    }
-//                });
-
-//                Intent i=new Intent(getApplicationContext(),ListofPractiseTests.class);
-//                i.putExtra("enrollid",enrollid);
-//                i.putExtra("courseid",courseid);
-//                i.putExtra("paperid",singlePaper.getPaperId());
-//                startActivity(i);
             }
         });
 
@@ -180,8 +160,8 @@ public class PaperActivity extends AppCompatActivity {
         if(paperidList.size()>0){
 
             paperList.clear();
-            int ptestcount=0,atestcount=0,pattemptcount=0,fattemptcount=0,aattemptcount=0,pprogress,fprogress,aprogress;
-            double pmin=0.0,pmax=0.0,pavg=0.0,fmin=0.0,fmax=0.0,favg=0.0,amin=0.0,amax=0.0,aavg=0.0;
+            int ptestcount=0,atestcount=0,pattemptcount=0,fattemptcount=0,aattemptcount=0;
+            double pmin=0.0,pmax=0.0,pavg=0.0,fmin=0.0,fmax=0.0,favg=0.0,amin=0.0,amax=0.0,aavg=0.0,pprogress=0.0,fprogress=0.0,aprogress=0.0;
 
             for(int i=0;i<paperidList.size();i++){
 
@@ -201,10 +181,10 @@ public class PaperActivity extends AppCompatActivity {
                 }
 
                 if(ptestcount>0){
-                    pprogress=pattemptcount/ptestcount;
-                    Log.e("PaperActivity----",""+pprogress);
+                    Double varcount=Double.parseDouble(String.valueOf(pattemptcount));
+                    pprogress=(varcount/ptestcount)*100;
                 }else{
-                    pprogress=0;
+                    pprogress=0.0;
                 }
 
                 Cursor mycur1=myhelper.getFlashSummaryByPaper(paperidList.get(i));
@@ -221,28 +201,30 @@ public class PaperActivity extends AppCompatActivity {
                 }
 
                 if(ptestcount>0){
-                    fprogress=fattemptcount/ptestcount;
+                    Double varcount=Double.parseDouble(String.valueOf(fattemptcount));
+                    fprogress=(varcount/ptestcount)*100;
                 }else {
                     fprogress=0;
                 }
 
                 atestcount=myhelper.getAssessmentTestsByPaper(paperidList.get(i));
 
-                Cursor mycur2=myhelper.getPractiseSummaryByPaper(paperidList.get(i));
-                if(mycur2.getCount()>0){
-                    while (mycur2.moveToNext()){
-
-                        aattemptcount=mycur2.getInt(mycur2.getColumnIndex("attemptpcount"));
-                        amin=mycur2.getDouble(mycur2.getColumnIndex("minscore"));
-                        amax=mycur2.getDouble(mycur2.getColumnIndex("maxscore"));
-                        aavg=mycur2.getDouble(mycur2.getColumnIndex("avgscore"));
-                    }
-                }else{
-                    mycur2.close();
-                }
+//                Cursor mycur2=myhelper.getPractiseSummaryByPaper(paperidList.get(i));
+//                if(mycur2.getCount()>0){
+//                    while (mycur2.moveToNext()){
+//
+//                        aattemptcount=mycur2.getInt(mycur2.getColumnIndex("attemptpcount"));
+//                        amin=mycur2.getDouble(mycur2.getColumnIndex("minscore"));
+//                        amax=mycur2.getDouble(mycur2.getColumnIndex("maxscore"));
+//                        aavg=mycur2.getDouble(mycur2.getColumnIndex("avgscore"));
+//                    }
+//                }else{
+//                    mycur2.close();
+//                }
 
                 if(atestcount>0){
-                    aprogress=aattemptcount/atestcount;
+                    Double varcount=Double.parseDouble(String.valueOf(aattemptcount));
+                    aprogress=(varcount/atestcount)*100;
                 }else{
                     aprogress=0;
                 }

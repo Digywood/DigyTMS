@@ -2,7 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
     android:layout_width="600dp"
-    android:layout_height="300sp"
+    android:layout_height="200sp"
     android:background="@color/white">
 
     <LinearLayout
@@ -13,23 +13,21 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:gravity="center_vertical|center_horizontal"
             android:layout_margin="16dp"
             android:id="@+id/ll_practise"
             android:layout_weight="1"
             android:orientation="vertical">
 
             <ImageView
-                android:layout_width="300dp"
-                android:layout_height="match_parent"
-                android:gravity="center_vertical|center_horizontal"
-                android:src="@drawable/practicetest"
-                android:layout_weight="1"/>
+                android:layout_width="match_parent"
+                android:layout_height="150dp"
+                android:src="@drawable/practicetest" />
 
             <TextView
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:gravity="center_vertical|center_horizontal"
-                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:gravity="center_horizontal"
                 android:text="Practise Tests"
                 android:textStyle="bold"
                 android:textSize="22sp"
@@ -41,28 +39,27 @@
             android:layout_width="0.1dip"
             android:layout_height="match_parent"
             android:background="#000000"
-            android:layout_marginBottom="20dp"
-            android:layout_marginTop="20dp"/>
+            android:layout_marginBottom="50dp"
+            android:layout_marginTop="50dp"/>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:gravity="center_vertical|center_horizontal"
             android:layout_margin="16dp"
             android:id="@+id/ll_assessment"
             android:layout_weight="1"
             android:orientation="vertical">
 
             <ImageView
-                android:layout_width="200dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
+                android:layout_width="match_parent"
+                android:layout_height="150dp"
                 android:src="@drawable/assessmenttest" />
 
             <TextView
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:gravity="center_vertical|center_horizontal"
+                android:layout_height="wrap_content"
+                android:gravity="center_horizontal"
                 android:text="Assessment Tests"
                 android:textStyle="bold"
                 android:textSize="22sp"
