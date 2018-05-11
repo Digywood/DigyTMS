@@ -4,15 +4,19 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
+import android.media.Image;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.RecyclerView;
 import android.text.Html;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.digywood.tms.DBHelper.DBHelper;
@@ -56,15 +60,15 @@ public class AssesmentTestAdapter extends RecyclerView.Adapter<AssesmentTestAdap
     public class MyViewHolder extends RecyclerView.ViewHolder {
 
         public TextView tv_testid, tv_teststatus;
-        public Button btn_start, btn_resume,btn_fstart,btn_fattempthistory;
+        public ImageView iv_start, iv_resume,btn_fstart,btn_fattempthistory;
         public CheckBox cb_download;
 
         public MyViewHolder(View view) {
             super(view);
             tv_testid = view.findViewById(R.id.tv_atestid);
             tv_teststatus = view.findViewById(R.id.tv_ateststatus);
-            btn_start = view.findViewById(R.id.btn_ateststart);
-            btn_resume = view.findViewById(R.id.btn_atestresume);
+            iv_start = view.findViewById(R.id.iv_start);
+            iv_resume = view.findViewById(R.id.iv_resume);
             cb_download = view.findViewById(R.id.cb_atestselection);
         }
     }
@@ -87,14 +91,52 @@ public class AssesmentTestAdapter extends RecyclerView.Adapter<AssesmentTestAdap
         holder.tv_testid.setText(singletest.getTestid());
         holder.tv_teststatus.setText(singletest.getStatus());
 
-        holder.btn_start.setOnClickListener(new View.OnClickListener() {
+        holder.iv_start.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                AlertDialog.Builder popupBuilder = new AlertDialog.Builder(mycontext);
+                TextView msg = new TextView(mycontext);
+                msg.setText("Central");
+                msg.setGravity(Gravity.CENTER_HORIZONTAL);
+                EditText key = new EditText(mycontext);
+                key.setGravity(Gravity.CENTER_HORIZONTAL);
+                Button enter = new Button(mycontext);
+                enter.setGravity(Gravity.CENTER_HORIZONTAL);
+                enter.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
 
+                        myhelper.Destroy("attempt_data");
+                        int count = myhelper.getAttempCount();
+                        Cursor c = myhelper.getAttempt(myhelper.getLastTestAttempt(singletest.getTestid()));
+                        //if cursor has values then the test is being resumed and data is retrieved from database
+                        if (c.getCount() > 0) {
+                            c.moveToLast();
+                            if (c.getInt(c.getColumnIndex("Attempt_Status")) != 2) {
+                                myhelper.DeleteAttempt(myhelper.getLastTestAttempt(singletest.getTestid()));
+                            }
+                        }
+                        try {
+
+                            fullTest = new String(SaveJSONdataToFile.bytesFromFile(getExternalPath(mycontext, singletest, "BASE") + testid + ".json"), "UTF-8");
+                            JSONParser obj = new JSONParser(fullTest, getExternalPath(mycontext, singletest, "ATTEMPT"), "PRACTICE", mycontext);
+                            attempt = new String(SaveJSONdataToFile.bytesFromFile(getExternalPath(mycontext, singletest, "ATTEMPT") + testid + ".json"), "UTF-8");
+                            Intent i = new Intent(mycontext, TestActivity.class);
+                            i.putExtra("json", attempt);
+                            i.putExtra("test", testid);
+                            i.putExtra("status", "NEW");
+                            mycontext.startActivity(i);
+                        } catch (IOException | ClassNotFoundException | NullPointerException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                });
+                popupBuilder.setView(msg);
             }
         });
+    }
 
-        holder.cb_download.setOnClickListener(new View.OnClickListener() {
+      /*  holder.cb_download.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
@@ -128,7 +170,7 @@ public class AssesmentTestAdapter extends RecyclerView.Adapter<AssesmentTestAdap
         });
 
     }
-
+*/
     public void updateTests(ArrayList<SingleTest> list) {
         testList = list;
         notifyDataSetChanged();
@@ -163,5 +205,30 @@ public class AssesmentTestAdapter extends RecyclerView.Adapter<AssesmentTestAdap
         alert.setTitle("Alert!");
         alert.setIcon(R.drawable.warning);
         alert.show();
+    }
+
+    public String getExternalPath(Context context, SingleTest singletest, String type) {
+        DBHelper dataObj = new DBHelper(context);
+        testid = singletest.getTestid();
+        Cursor cursor = dataObj.getSingleStudentTests(testid);
+
+        if (cursor.getCount() > 0) {
+            while (cursor.moveToNext()) {
+                enrollid = cursor.getString(cursor.getColumnIndex("sptu_entroll_id"));
+                courseid = cursor.getString(cursor.getColumnIndex("sptu_course_id"));
+                subjectId = cursor.getString(cursor.getColumnIndex("sptu_subjet_ID"));
+                paperid = cursor.getString(cursor.getColumnIndex("sptu_paper_ID"));
+            }
+        }
+
+        Log.e("path_vars", enrollid + " " + courseid + " " + subjectId + " " + paperid + " " + testid);
+        path = enrollid + "/" + courseid + "/" + subjectId + "/" + paperid + "/" + testid + "/";
+        photoPath = URLClass.mainpath + path;
+        attemptPath = URLClass.mainpath + path + "Attempt/";
+        jsonPath = URLClass.mainpath + path;
+        if (type.equals("BASE")) {
+            return jsonPath;
+        } else
+            return attemptPath;
     }
 }

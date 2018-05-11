@@ -175,11 +175,7 @@ public class PractiseTestAdapter extends RecyclerView.Adapter<PractiseTestAdapte
         holder.flash_pieChart.setCenterTextColor(Color.BLACK);
         holder.flash_pieChart.setData(data);
         holder.flash_pieChart.getLegend().setEnabled(false);
-/*
-        for (IDataSet<?> set : holder.flash_pieChart.getData().getDataSets())
-            set.setDrawValues(!set.isDrawValuesEnabled());
-        holder.flash_pieChart.invalidate();
-*/
+
         holder.tv_testid.setText(singletest.getTestid());
         holder.tv_teststatus.setText(singletest.getStatus());
         final DBHelper dataObj = new DBHelper(mycontext);
@@ -193,7 +189,6 @@ public class PractiseTestAdapter extends RecyclerView.Adapter<PractiseTestAdapte
         if (c.getCount() > 0) {
             c.moveToLast();
             if (c.getInt(c.getColumnIndex("Attempt_Status")) == 1) {
-                Log.e("TAdapter",""+c.getString(c.getColumnIndex("Attempt_Test_ID")));
                 if(c.getString(c.getColumnIndex("Attempt_Test_ID")).equalsIgnoreCase(singletest.getTestid())) {
                     holder.iv_resume.setVisibility(View.VISIBLE);
                     holder.iv_resume.setOnClickListener(new View.OnClickListener() {
@@ -201,7 +196,6 @@ public class PractiseTestAdapter extends RecyclerView.Adapter<PractiseTestAdapte
                         public void onClick(View v) {
                             try {
                                 attempt = new String(SaveJSONdataToFile.bytesFromFile(getExternalPath(mycontext, singletest, "ATTEMPT") + testid + ".json"), "UTF-8");
-                                Log.e("Attempt_testadapter", attempt.toString());
                                 Intent i = new Intent(mycontext, TestActivity.class);
                                 i.putExtra("json", attempt);
                                 i.putExtra("test", testid);
@@ -240,11 +234,9 @@ public class PractiseTestAdapter extends RecyclerView.Adapter<PractiseTestAdapte
                 int count = dataObj.getAttempCount();
                 Cursor c = dataObj.getAttempt(dataObj.getLastTestAttempt(singletest.getTestid()));
                 Log.e("attempt_created:", ""+count);
-//                Log.e("valu-e",""+c.getInt(c.getColumnIndex("Attempt_Status")));
                 //if cursor has values then the test is being resumed and data is retrieved from database
                 if (c.getCount() > 0) {
                     c.moveToLast();
-                    Log.e("value", "" + c.getInt(c.getColumnIndex("Attempt_Status")));
                     if (c.getInt(c.getColumnIndex("Attempt_Status")) != 2) {
                         dataObj.DeleteAttempt(dataObj.getLastTestAttempt(singletest.getTestid()));
                     }
@@ -253,7 +245,6 @@ public class PractiseTestAdapter extends RecyclerView.Adapter<PractiseTestAdapte
                     fullTest = new String(SaveJSONdataToFile.bytesFromFile(getExternalPath(mycontext, singletest, "BASE") + testid + ".json"), "UTF-8");
                     JSONParser obj = new JSONParser(fullTest, getExternalPath(mycontext, singletest, "ATTEMPT"), "PRACTICE", mycontext);
                     attempt = new String(SaveJSONdataToFile.bytesFromFile(getExternalPath(mycontext, singletest, "ATTEMPT") + testid + ".json"), "UTF-8");
-                    Log.e("attempt_created:", attempt);
                     Intent i = new Intent(mycontext, TestActivity.class);
                     i.putExtra("json", attempt);
                     i.putExtra("test", testid);
@@ -314,37 +305,6 @@ public class PractiseTestAdapter extends RecyclerView.Adapter<PractiseTestAdapte
                         }else{
                             showAlert("Test Configuration is not Available for " + singletest.getTestid() + " \n Please download test data if not ");
                         }
-
-                        //                    if (fimageList.size() != 0) {
-//
-//                        ArrayList<String> missingfList = new ArrayList<>();
-//
-//                        for (int i = 0; i < fimageList.size(); i++) {
-//                            File myFile = new File(URLClass.mainpath + fimageList.get(i));
-//                            if (myFile.exists()) {
-//
-//                            } else {
-//                                missingfList.add(fimageList.get(i));
-//                            }
-//                        }
-//
-//                        if (missingfList.size() != 0) {
-//                            StringBuilder sbm = new StringBuilder();
-//                            sbm.append("The following file are missing...\n");
-//                            for (int i = 0; i < missingfList.size(); i++) {
-//                                sbm.append(missingfList.get(i) + " , " + "\n");
-//                            }
-//                            showAlert(sbm.toString());
-//                        } else {
-//                            Intent i = new Intent(mycontext, FlashCardActivity.class);
-//                            i.putExtra("testId",testList.get(position).getTestid());
-//                            i.putExtra("testPath",tPath);
-//                            mycontext.startActivity(i);
-//                        }
-//                    } else {
-//                        Log.e("FlashCardActivity---", "No Questions to Display");
-//                    }
-
                     }
 
                 } catch (Exception e) {
@@ -551,40 +511,6 @@ public class PractiseTestAdapter extends RecyclerView.Adapter<PractiseTestAdapte
                 }).execute();
             }
         });
-
- /*       holder.cb_download.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                if (holder.cb_download.isChecked()) {
-                    if (singletest.getStatus().equalsIgnoreCase("DOWNLOADED")) {
-                        downloadedList.add(singletest.getTestid());
-                    } else {
-
-                    }
-
-                    if (chktestList.size() != 0) {
-                        if (chktestList.contains(singletest.getTestid())) {
-
-                        } else {
-                            chktestList.add(singletest.getTestid());
-                        }
-                    } else {
-                        chktestList.add(singletest.getTestid());
-                    }
-
-                } else {
-
-                    if (downloadedList.contains(singletest.getTestid())) {
-                        downloadedList.remove(singletest.getTestid());
-                    }
-
-                    chktestList.remove(singletest.getTestid());
-                }
-
-            }
-        });
-        */
 
     }
 
