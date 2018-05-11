@@ -1,11 +1,15 @@
 package com.digywood.tms;
 
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v7.app.AlertDialog;
+import android.text.Html;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
@@ -75,14 +79,14 @@ public class DashBoardNavActivity extends AppCompatActivity implements Navigatio
         tv_email=header.findViewById(R.id.tv_hsemail);
         tv_email.setText(email);
 
-//        Cursor mycursor=myhelper.getAllEnrolls();
-//        Log.e("EnrollCount---",""+mycursor.getCount());
-//        if(mycursor.getCount()>0){
-//
-//        }else{
-//            mycursor.close();
-//            showAlert("No Existing Enrollments Found \n Please Sync from Server");
-//        }
+        Cursor mycursor=myhelper.getAllEnrolls();
+        Log.e("EnrollCount---",""+mycursor.getCount());
+        if(mycursor.getCount()>0){
+
+        }else{
+            mycursor.close();
+            showAlert("No Existing Enrollments Found \n Please Sync from Server");
+        }
     }
 
     public void getStudentAllData(){
@@ -358,6 +362,9 @@ public class DashBoardNavActivity extends AppCompatActivity implements Navigatio
                         Log.e("TestRawData--","No Tests Data: ");
                     }
 
+                    Intent intent = getIntent();
+                    finish();
+                    startActivity(intent);
 
                 }catch (Exception e){
                     e.printStackTrace();
@@ -467,22 +474,31 @@ public class DashBoardNavActivity extends AppCompatActivity implements Navigatio
         return true;
     }
 
-//    public void showAlert(String messege) {
-//        AlertDialog.Builder builder = new AlertDialog.Builder((Context)DashBoardNavActivity.class,R.style.ALERT_THEME);
-//        builder.setMessage(Html.fromHtml("<font color='#FFFFFF'>" + messege + "</font>"))
-//                .setCancelable(false)
-//                .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
-//                    public void onClick(DialogInterface dialog, int id) {
-//
-//                        dialog.cancel();
-//
-//                    }
-//                });
-//        AlertDialog alert = builder.create();
-//        //Setting the title manually
-//        alert.setTitle("Alert!");
-//        alert.setIcon(R.drawable.warning);
-//        alert.show();
-//    }
+    public void showAlert(String messege) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(DashBoardNavActivity.this,R.style.ALERT_THEME);
+        builder.setMessage(Html.fromHtml("<font color='#FFFFFF'>" + messege + "</font>"))
+                .setCancelable(false)
+                .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+
+                        dialog.cancel();
+//                        new AsyncCheckInternet(DashBoardNavActivity.this, new INetStatus() {
+//                            @Override
+//                            public void inetSatus(Boolean netStatus) {
+//                                if(netStatus){
+//                                    getStudentAllData();
+//                                }else{
+//                                    Toast.makeText(getApplicationContext(),"No internet,Please Check your connection",Toast.LENGTH_SHORT).show();
+//                                }
+//                            }
+//                        });
+                    }
+                });
+        AlertDialog alert = builder.create();
+        //Setting the title manually
+        alert.setTitle("Alert!");
+        alert.setIcon(R.drawable.warning);
+        alert.show();
+    }
 
 }

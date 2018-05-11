@@ -98,10 +98,15 @@ public class PaperAdapter extends BaseAdapter {
             ProgressBar pb_flash=grid.findViewById(R.id.flash_progress);
             ProgressBar pb_assessment=grid.findViewById(R.id.assesment_progress);
 
-
-            pb_practise.setProgress(singlePaper.getPprogress());
-            pb_flash.setProgress(singlePaper.getFprogress());
-            pb_assessment.setProgress(singlePaper.getAprogress());
+            Double d1 = new Double(singlePaper.getPprogress());
+            int pprogress = d1.intValue();
+            pb_practise.setProgress(pprogress);
+            Double d2 = new Double(singlePaper.getFprogress());
+            int fprogress = d2.intValue();
+            pb_flash.setProgress(fprogress);
+            Double d3 = new Double(singlePaper.getAprogress());
+            int aprogress = d3.intValue();
+            pb_assessment.setProgress(aprogress);
 
             Resources res=mContext.getResources();
 
