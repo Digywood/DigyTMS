@@ -44,7 +44,7 @@ public class ScoreActivity extends AppCompatActivity {
     Bundle bundle;
     Double minscore = 0.0,maxscore = 0.0,avgscore = 0.0;
     int CorrectCount = 0,WrongCount = 0,TotalCount = 0,revealX,revealY;
-    Double Percentage,TotalPositive = 0.0,TotalScore = 0.0,MaxMarks= 0.0 ,TotalNegative = 0.0;
+    Double Percentage=0.0,TotalPositive = 0.0,TotalScore = 0.0,MaxMarks= 0.0 ,TotalNegative = 0.0;
     ArrayList<Integer> OptionsList = new ArrayList<>();;
 
     @Override
