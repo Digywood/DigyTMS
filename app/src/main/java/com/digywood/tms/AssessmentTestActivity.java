@@ -227,11 +227,11 @@ public class AssessmentTestActivity extends AppCompatActivity implements
         Cursor cursor = dataObj.getSingleStudentTests(testid);
         if (cursor.getCount() > 0) {
             while (cursor.moveToNext()) {
-                if (cursor.getString(cursor.getColumnIndex("sptu_ID")).equals(testid)) {
-                    enrollid = cursor.getString(cursor.getColumnIndex("sptu_entroll_id"));
-                    courseid = cursor.getString(cursor.getColumnIndex("sptu_course_id"));
-                    subjectId = cursor.getString(cursor.getColumnIndex("sptu_subjet_ID"));
-                    paperid = cursor.getString(cursor.getColumnIndex("sptu_paper_ID"));
+                if (cursor.getString(cursor.getColumnIndex("atu_ID")).equals(testid)) {
+                    enrollid = cursor.getString(cursor.getColumnIndex("atu_entroll_id"));
+                    courseid = cursor.getString(cursor.getColumnIndex("atu_course_id"));
+                    subjectId = cursor.getString(cursor.getColumnIndex("atu_subjet_ID"));
+                    paperid = cursor.getString(cursor.getColumnIndex("atu_paper_ID"));
                 }
             }
         }
