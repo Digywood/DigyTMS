@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -8,16 +8,24 @@
     android:background="@android:color/background_light"
     android:id="@+id/rootLayout"
     tools:context="com.digywood.tms.ScoreActivity">
-    <TextView
-        android:layout_width="wrap_content"
+
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textSize="30sp"
-        android:layout_gravity="center_horizontal"
-        android:text="ScoreCard"/>
+        android:id="@+id/headername">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="30sp"
+            android:gravity="center_horizontal"
+            android:text="ScoreCard" />
+    </LinearLayout>
 
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/headername">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -541,7 +549,7 @@
                                 android:gravity="center"
                                 android:textSize="20sp"
                                 android:textColor="@android:color/black"
-                                android:text="Score"/>
+                                android:text="Percentage"/>
                         </TableRow>
                         <View
                             android:layout_width="match_parent"
@@ -551,11 +559,15 @@
                 </RelativeLayout>
             </android.support.v7.widget.CardView>
 
-            <LinearLayout
+        </LinearLayout>
+    </ScrollView>
+
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:gravity="center_horizontal">
+        android:gravity="center_horizontal"
+        android:layout_alignParentBottom="true"
+        android:orientation="horizontal">
 
         <Button
             android:id="@+id/btn_save"
@@ -563,15 +575,12 @@
             android:layout_height="wrap_content"
             android:text="OK" />
 
-                <Button
-                    android:id="@+id/btn_details"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Details >>" />
+        <Button
+            android:id="@+id/btn_details"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Details >>" />
 
-            </LinearLayout>
+    </LinearLayout>
 
-        </LinearLayout>
-    </ScrollView>
-
-</LinearLayout>
+</RelativeLayout>

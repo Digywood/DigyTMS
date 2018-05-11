@@ -1,9 +1,11 @@
 package com.digywood.tms;
 
 import android.animation.Animator;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
+import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
@@ -12,11 +14,13 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.KeyEvent;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewAnimationUtils;
 import android.view.ViewTreeObserver;
 import android.view.animation.AccelerateInterpolator;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TableLayout;
@@ -35,16 +39,17 @@ import java.util.ArrayList;
 public class ScoreActivity extends AppCompatActivity {
 
     DBHelper dataObj;
-    LinearLayout rootLayout;
+    AlertDialog alertDialog;
+    RelativeLayout rootLayout;
     String enrollid,subjectid,courseid,paperid,testId;
     TextView tv_test,tv_course,tv_subject,tv_attempted,tv_skipped,tv_bookmarked,tv_totalQuestions,tv_totalCorrect,tv_totalWrong,tv_totalNegative,tv_totalPositive,tv_totalScore,tv_totalPercentage;
-    Button btn_save;
+    Button btn_save,btn_details;
     TableLayout tbl1;
     JSONObject attempt;
     Bundle bundle;
     Double minscore = 0.0,maxscore = 0.0,avgscore = 0.0;
     int CorrectCount = 0,WrongCount = 0,TotalCount = 0,revealX,revealY;
-    Double Percentage,TotalPositive = 0.0,TotalScore = 0.0,MaxMarks= 0.0 ,TotalNegative = 0.0;
+    Double Percentage = 0.0,TotalPositive = 0.0,TotalScore = 0.0,MaxMarks= 0.0 ,TotalNegative = 0.0;
     ArrayList<Integer> OptionsList = new ArrayList<>();;
 
     @Override
@@ -101,6 +106,7 @@ public class ScoreActivity extends AppCompatActivity {
         tv_totalScore = findViewById(R.id.tv_totalScore);
         tv_totalPercentage = findViewById(R.id.tv_totalPercentage);
         btn_save = findViewById(R.id.btn_save);
+        btn_details = findViewById(R.id.btn_details);
         dataObj = new DBHelper(ScoreActivity.this);
 
         CorrectCount = dataObj.getCorrectOptionsCount();
@@ -141,14 +147,14 @@ public class ScoreActivity extends AppCompatActivity {
                     ArrayList<String> secList = new ArrayList<>();
                     if(cursor.getCount() > 0){
                         while(cursor.moveToNext()){
-                            secList.add(cursor.getString(cursor.getColumnIndex("Question_SubCategory")));
+                            secList.add(cursor.getString(cursor.getColumnIndex("Question_Section")));
                         }
                         Log.e("Subcategories Count:",""+secList.size());
                     }
                     int count = cursor.getCount();
                     TableRow tr = null;
                     for(int i=0;i< count; i++){
-                        //new Row
+                        //new row
                         tr = new TableRow(this);
                         TableRow.LayoutParams lp = new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT);
                         tr.setLayoutParams(lp);
@@ -272,11 +278,82 @@ public class ScoreActivity extends AppCompatActivity {
     }
 
     protected void exitByBackKey() {
-        Intent intent = new Intent(ScoreActivity.this,ListofPractiseTests.class);
-        intent.putExtra("enrollid",enrollid);
-        intent.putExtra("courseid", courseid);
-        intent.putExtra("paperid",paperid);
-        startActivity(intent);
+        finish();
+    }
+
+    public void initiateFullScreenWindow(int count, ArrayList<String> secList) {
+        //We need to get the instance of the LayoutInflater, use the context of this activity
+        LayoutInflater inflater = (LayoutInflater) ScoreActivity.this
+                .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        View layout = inflater.inflate(R.layout.fullscreen, null);
+        AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);
+        dialogBuilder.setView(layout);
+        TableRow tr = null;
+        for(int i=0;i< count; i++){
+            //new row
+            tr = new TableRow(this);
+            TableRow.LayoutParams lp = new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT);
+            tr.setLayoutParams(lp);
+            //category name
+            TextView tv_category  = new TextView(this);
+            tv_category.setText(secList.get(i));
+            TableRow.LayoutParams params = new TableRow.LayoutParams(0, TableLayout.LayoutParams.WRAP_CONTENT, 1f);
+            tv_category.setLayoutParams(params);
+            tv_category.setGravity(Gravity.CENTER);
+            tv_category.setTextColor(Color.BLACK);
+            tr.addView(tv_category);
+            //Number of Questions
+            TextView tv_noOfQuestions  = new TextView(this);
+            tv_noOfQuestions.setText(String.valueOf(dataObj.getSubCatQuestions(secList.get(i))));
+            params = new TableRow.LayoutParams(0, TableLayout.LayoutParams.WRAP_CONTENT, 1f);
+            tv_noOfQuestions.setLayoutParams(params);
+            tv_noOfQuestions.setGravity(Gravity.CENTER);
+            tv_noOfQuestions.setTextColor(Color.BLACK);
+            tr.addView(tv_noOfQuestions);
+            //Number of Questions Attempted
+            TextView tv_subCatattempted  = new TextView(this);
+            tv_subCatattempted.setText(String.valueOf(dataObj.getSubCatQuesAns(secList.get(i))));
+            params = new TableRow.LayoutParams(0, TableLayout.LayoutParams.WRAP_CONTENT, 1f);
+            tv_subCatattempted.setLayoutParams(params);
+            tv_subCatattempted.setGravity(Gravity.CENTER);
+            tv_subCatattempted.setTextColor(Color.BLACK);
+            tr.addView(tv_subCatattempted);
+            //Number of Questions Skipped
+            TextView tv_subCatskipped  = new TextView(this);
+            tv_subCatskipped.setText(String.valueOf(dataObj.getSubCatQuesSkip(secList.get(i))));
+            params = new TableRow.LayoutParams(0, TableLayout.LayoutParams.WRAP_CONTENT, 1f);
+            tv_subCatskipped.setLayoutParams(params);
+            tv_subCatskipped.setGravity(Gravity.CENTER);
+            tv_subCatskipped.setTextColor(Color.BLACK);
+            tr.addView(tv_subCatskipped);
+            //Number of Questions Correct
+            TextView tv_subCatCorrect  = new TextView(this);
+            tv_subCatCorrect.setText(String.valueOf(dataObj.getSubCatQuesCorrect(secList.get(i))));
+            params = new TableRow.LayoutParams(0, TableLayout.LayoutParams.WRAP_CONTENT, 1f);
+            tv_subCatCorrect.setLayoutParams(params);
+            tv_subCatCorrect.setGravity(Gravity.CENTER);
+            tv_subCatCorrect.setTextColor(Color.BLACK);
+            tr.addView(tv_subCatCorrect);
+            //Percentage Score
+            TextView tv_percentage  = new TextView(this);
+            tv_percentage.setText(String.valueOf(dataObj.getSubCatQuesCorrect(secList.get(i))));
+            params = new TableRow.LayoutParams(0, TableLayout.LayoutParams.WRAP_CONTENT, 1f);
+            tv_percentage.setLayoutParams(params);
+            tv_percentage.setGravity(Gravity.CENTER);
+            tv_percentage.setTextColor(Color.BLACK);
+            tr.addView(tv_percentage);
+
+            tbl1.addView(tr);
+        }
+
+        alertDialog = dialogBuilder.create();
+        alertDialog.show();
+        alertDialog.getWindow().setLayout(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.MATCH_PARENT);
+        alertDialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
+            @Override
+            public void onCancel(DialogInterface dialog) {
+            }
+        });
     }
 
 }
