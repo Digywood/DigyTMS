@@ -72,21 +72,36 @@ public class PaperAdapter extends BaseAdapter {
 
             LinearLayout ll_click=grid.findViewById(R.id.ll_click);
             TextView tv_papername =grid.findViewById(R.id.tv_papername);
+
+            TextView tv_pattemptcount =grid.findViewById(R.id.tv_pattemptcount);
             TextView tv_papermin =grid.findViewById(R.id.tv_paperpmin);
             TextView tv_paperavg =grid.findViewById(R.id.tv_paperpavg);
             TextView tv_papermax =grid.findViewById(R.id.tv_paperpmax);
 
+            tv_pattemptcount.setText(singlePaper.getPattemptcount()+"/"+singlePaper.getPtestcount());
+
+            TextView tv_fattemptcount =grid.findViewById(R.id.tv_fattemptcount);
             TextView tv_paperfmin =grid.findViewById(R.id.tv_paperfmin);
             TextView tv_paperfavg =grid.findViewById(R.id.tv_paperfavg);
             TextView tv_paperfmax =grid.findViewById(R.id.tv_paperfmax);
 
+            tv_fattemptcount.setText(singlePaper.getFattemptcount()+"/"+singlePaper.getPtestcount());
+
+            TextView tv_aattemptcount =grid.findViewById(R.id.tv_aattemptcount);
             TextView tv_paperamin =grid.findViewById(R.id.tv_paperamin);
             TextView tv_paperaavg =grid.findViewById(R.id.tv_paperaavg);
             TextView tv_paperamax =grid.findViewById(R.id.tv_paperamax);
 
+            tv_aattemptcount.setText(singlePaper.getAattemptcount()+"/"+singlePaper.getAtestcount());
+
             ProgressBar pb_practise=grid.findViewById(R.id.practise_progress);
             ProgressBar pb_flash=grid.findViewById(R.id.flash_progress);
             ProgressBar pb_assessment=grid.findViewById(R.id.assesment_progress);
+
+
+            pb_practise.setProgress(singlePaper.getPprogress());
+            pb_flash.setProgress(singlePaper.getFprogress());
+            pb_assessment.setProgress(singlePaper.getAprogress());
 
             Resources res=mContext.getResources();
 
@@ -95,17 +110,17 @@ public class PaperAdapter extends BaseAdapter {
             pb_assessment.setProgressDrawable(res.getDrawable(R.drawable.pb_bg_color));
 
             tv_papername.setText(singlePaper.getPaperName());
-            tv_papermin.setText(""+singlePaper.getMin());
-            tv_paperavg.setText(""+singlePaper.getAvg());
-            tv_papermax.setText(""+singlePaper.getMax());
+            tv_papermin.setText(""+round(singlePaper.getPmin(),1));
+            tv_paperavg.setText(""+round(singlePaper.getPavg(),1));
+            tv_papermax.setText(""+round(singlePaper.getPmax(),1));
 
-            tv_paperfmin.setText(""+0.0);
-            tv_paperfavg.setText(""+0.0);
-            tv_paperfmax.setText(""+0.0);
+            tv_paperfmin.setText(""+round(singlePaper.getFmin(),1));
+            tv_paperfavg.setText(""+round(singlePaper.getFavg(),1));
+            tv_paperfmax.setText(""+round(singlePaper.getFmax(),1));
 
-            tv_paperamin.setText(""+0.0);
-            tv_paperaavg.setText(""+0.0);
-            tv_paperamax.setText(""+0.0);
+            tv_paperamin.setText(""+round(singlePaper.getAmin(),1));
+            tv_paperaavg.setText(""+round(singlePaper.getAavg(),1));
+            tv_paperamax.setText(""+round(singlePaper.getAmax(),1));
 
 //            ll_click.setOnClickListener(new View.OnClickListener() {
 //                @Override
@@ -127,6 +142,15 @@ public class PaperAdapter extends BaseAdapter {
     public void updateGrid(ArrayList<SinglePaper> newList){
         paperList.clear();
         paperList=newList;
+    }
+
+    public static double round(double value, int places) {
+        if (places < 0) throw new IllegalArgumentException();
+
+        long factor = (long) Math.pow(10, places);
+        value = value * factor;
+        long tmp = Math.round(value);
+        return (double) tmp / factor;
     }
 
 }
