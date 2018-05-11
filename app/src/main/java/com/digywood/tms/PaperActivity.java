@@ -100,13 +100,12 @@ public class PaperActivity extends AppCompatActivity {
 
                 singlePaper=paperList.get(position);
 
-//                mydialog = new Dialog(PaperActivity.this);
-//                mydialog.getWindow();
-//                mydialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-//                mydialog.setContentView(R.layout.activity_testpopup);
-//                mydialog.show();
-//                mydialog.setCanceledOnTouchOutside(false);
-//
+                mydialog = new Dialog(PaperActivity.this);
+                mydialog.getWindow();
+                mydialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                mydialog.setContentView(R.layout.activity_testpopup);
+                mydialog.show();
+
 //                RadioGroup rg_testpopup=mydialog.findViewById(R.id.rg_testpopup);
 //                RadioGroup rg = (RadioGroup) findViewById(R.id.radioGroup1);
 //
@@ -123,11 +122,11 @@ public class PaperActivity extends AppCompatActivity {
 //                    }
 //                });
 
-                Intent i=new Intent(getApplicationContext(),ListofPractiseTests.class);
-                i.putExtra("enrollid",enrollid);
-                i.putExtra("courseid",courseid);
-                i.putExtra("paperid",singlePaper.getPaperId());
-                startActivity(i);
+//                Intent i=new Intent(getApplicationContext(),ListofPractiseTests.class);
+//                i.putExtra("enrollid",enrollid);
+//                i.putExtra("courseid",courseid);
+//                i.putExtra("paperid",singlePaper.getPaperId());
+//                startActivity(i);
             }
         });
 
