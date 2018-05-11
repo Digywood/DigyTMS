@@ -3,14 +3,14 @@ package com.digywood.tms.Pojo;
 public class SinglePaper {
 
     private String paperId,paperName;
-    private int ptestcount,atestcount,pattemptcount,fattemptcount,aattemptcount,pprogress,fprogress,aprogress;
-    private double pmin,pavg,pmax,fmin,favg,fmax,amin,aavg,amax;
+    private int ptestcount,atestcount,pattemptcount,fattemptcount,aattemptcount;
+    private double pmin,pavg,pmax,fmin,favg,fmax,amin,aavg,amax,pprogress,fprogress,aprogress;;
 
     public SinglePaper(){
 
     }
 
-    public SinglePaper(String paperid,String papername,int ptestcount,int atestcount,int pattemptcount,int fattemptcount,int aattemptcount,int pprogress,int fprogress,int aprogress,double pmin,double pavg,double pmax,double fmin,double favg,double fmax,double amin,double aavg,double amax){
+    public SinglePaper(String paperid,String papername,int ptestcount,int atestcount,int pattemptcount,int fattemptcount,int aattemptcount,double pprogress,double fprogress,double aprogress,double pmin,double pavg,double pmax,double fmin,double favg,double fmax,double amin,double aavg,double amax){
 
         this.paperId=paperid;
         this.paperName=papername;
@@ -162,27 +162,27 @@ public class SinglePaper {
         this.aattemptcount = aattemptcount;
     }
 
-    public int getPprogress() {
+    public double getPprogress() {
         return pprogress;
     }
 
-    public void setPprogress(int pprogress) {
+    public void setPprogress(double pprogress) {
         this.pprogress = pprogress;
     }
 
-    public int getFprogress() {
+    public double getFprogress() {
         return fprogress;
     }
 
-    public void setFprogress(int fprogress) {
+    public void setFprogress(double fprogress) {
         this.fprogress = fprogress;
     }
 
-    public int getAprogress() {
+    public double getAprogress() {
         return aprogress;
     }
 
-    public void setAprogress(int aprogress) {
+    public void setAprogress(double aprogress) {
         this.aprogress = aprogress;
     }
 }
