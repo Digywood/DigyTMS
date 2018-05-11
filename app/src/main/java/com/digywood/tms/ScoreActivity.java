@@ -249,6 +249,21 @@ public class ScoreActivity extends AppCompatActivity {
                 finish();
             }
         });
+        btn_details.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Cursor cursor = dataObj.getSubcategories();
+                ArrayList<String> catList = new ArrayList<>();
+                Log.e("ScoreCount",""+cursor.getCount());
+                if(cursor.getCount()>0) {
+                    cursor.moveToFirst();
+                    while (cursor.moveToNext()) {
+                        catList.add(cursor.getString(cursor.getColumnIndex("Question_Section")));
+                    }
+                    initiateFullScreenWindow(cursor.getCount(),catList );
+                }
+            }
+        });
 
     }
     protected void revealActivity(int x, int y) {
@@ -285,15 +300,16 @@ public class ScoreActivity extends AppCompatActivity {
         //We need to get the instance of the LayoutInflater, use the context of this activity
         LayoutInflater inflater = (LayoutInflater) ScoreActivity.this
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        View layout = inflater.inflate(R.layout.fullscreen, null);
+        View layout = inflater.inflate(R.layout.detailedscoreview, null);
         AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);
         dialogBuilder.setView(layout);
-        TableRow tr = null;
+        TableLayout tbl = layout.findViewById(R.id.tbl_score_details);
+        TableRow tr1 = null;
         for(int i=0;i< count; i++){
             //new row
-            tr = new TableRow(this);
+            tr1 = new TableRow(this);
             TableRow.LayoutParams lp = new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT);
-            tr.setLayoutParams(lp);
+            tr1.setLayoutParams(lp);
             //category name
             TextView tv_category  = new TextView(this);
             tv_category.setText(secList.get(i));
@@ -301,7 +317,14 @@ public class ScoreActivity extends AppCompatActivity {
             tv_category.setLayoutParams(params);
             tv_category.setGravity(Gravity.CENTER);
             tv_category.setTextColor(Color.BLACK);
-            tr.addView(tv_category);
+            //category name
+            TextView tv_subcat  = new TextView(this);
+            tv_category.setText(secList.get(i));
+            params = new TableRow.LayoutParams(0, TableLayout.LayoutParams.WRAP_CONTENT, 1f);
+            tv_category.setLayoutParams(params);
+            tv_category.setGravity(Gravity.CENTER);
+            tv_category.setTextColor(Color.BLACK);
+            tr1.addView(tv_category);
             //Number of Questions
             TextView tv_noOfQuestions  = new TextView(this);
             tv_noOfQuestions.setText(String.valueOf(dataObj.getSubCatQuestions(secList.get(i))));
@@ -309,7 +332,7 @@ public class ScoreActivity extends AppCompatActivity {
             tv_noOfQuestions.setLayoutParams(params);
             tv_noOfQuestions.setGravity(Gravity.CENTER);
             tv_noOfQuestions.setTextColor(Color.BLACK);
-            tr.addView(tv_noOfQuestions);
+            tr1.addView(tv_noOfQuestions);
             //Number of Questions Attempted
             TextView tv_subCatattempted  = new TextView(this);
             tv_subCatattempted.setText(String.valueOf(dataObj.getSubCatQuesAns(secList.get(i))));
@@ -317,7 +340,7 @@ public class ScoreActivity extends AppCompatActivity {
             tv_subCatattempted.setLayoutParams(params);
             tv_subCatattempted.setGravity(Gravity.CENTER);
             tv_subCatattempted.setTextColor(Color.BLACK);
-            tr.addView(tv_subCatattempted);
+            tr1.addView(tv_subCatattempted);
             //Number of Questions Skipped
             TextView tv_subCatskipped  = new TextView(this);
             tv_subCatskipped.setText(String.valueOf(dataObj.getSubCatQuesSkip(secList.get(i))));
@@ -325,7 +348,7 @@ public class ScoreActivity extends AppCompatActivity {
             tv_subCatskipped.setLayoutParams(params);
             tv_subCatskipped.setGravity(Gravity.CENTER);
             tv_subCatskipped.setTextColor(Color.BLACK);
-            tr.addView(tv_subCatskipped);
+            tr1.addView(tv_subCatskipped);
             //Number of Questions Correct
             TextView tv_subCatCorrect  = new TextView(this);
             tv_subCatCorrect.setText(String.valueOf(dataObj.getSubCatQuesCorrect(secList.get(i))));
@@ -333,7 +356,7 @@ public class ScoreActivity extends AppCompatActivity {
             tv_subCatCorrect.setLayoutParams(params);
             tv_subCatCorrect.setGravity(Gravity.CENTER);
             tv_subCatCorrect.setTextColor(Color.BLACK);
-            tr.addView(tv_subCatCorrect);
+            tr1.addView(tv_subCatCorrect);
             //Percentage Score
             TextView tv_percentage  = new TextView(this);
             tv_percentage.setText(String.valueOf(dataObj.getSubCatQuesCorrect(secList.get(i))));
@@ -341,9 +364,9 @@ public class ScoreActivity extends AppCompatActivity {
             tv_percentage.setLayoutParams(params);
             tv_percentage.setGravity(Gravity.CENTER);
             tv_percentage.setTextColor(Color.BLACK);
-            tr.addView(tv_percentage);
+            tr1.addView(tv_percentage);
 
-            tbl1.addView(tr);
+            tbl.addView(tr1);
         }
 
         alertDialog = dialogBuilder.create();
