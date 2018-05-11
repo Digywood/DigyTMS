@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
-import android.graphics.Color;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.RecyclerView;
 import android.text.Html;
@@ -24,18 +23,14 @@ import com.digywood.tms.IDownloadStatus;
 import com.digywood.tms.JSONParser;
 import com.digywood.tms.DBHelper.DBHelper;
 import com.digywood.tms.Pojo.SingleDWDQues;
+import com.digywood.tms.PracticeTestActivity;
 import com.digywood.tms.R;
 import com.digywood.tms.Pojo.SingleTest;
 import com.digywood.tms.ReviewActivity;
 import com.digywood.tms.SaveJSONdataToFile;
-import com.digywood.tms.TestActivity;
 import com.digywood.tms.URLClass;
 import com.github.mikephil.charting.charts.PieChart;
-import com.github.mikephil.charting.components.Description;
-import com.github.mikephil.charting.data.PieData;
-import com.github.mikephil.charting.data.PieDataSet;
 import com.github.mikephil.charting.data.PieEntry;
-import com.github.mikephil.charting.interfaces.datasets.IDataSet;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -46,7 +41,6 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.List;
 
 
@@ -196,7 +190,7 @@ public class PractiseTestAdapter extends RecyclerView.Adapter<PractiseTestAdapte
                         public void onClick(View v) {
                             try {
                                 attempt = new String(SaveJSONdataToFile.bytesFromFile(getExternalPath(mycontext, singletest, "ATTEMPT") + testid + ".json"), "UTF-8");
-                                Intent i = new Intent(mycontext, TestActivity.class);
+                                Intent i = new Intent(mycontext, PracticeTestActivity.class);
                                 i.putExtra("json", attempt);
                                 i.putExtra("test", testid);
                                 i.putExtra("status", "RESUME");
@@ -245,7 +239,7 @@ public class PractiseTestAdapter extends RecyclerView.Adapter<PractiseTestAdapte
                     fullTest = new String(SaveJSONdataToFile.bytesFromFile(getExternalPath(mycontext, singletest, "BASE") + testid + ".json"), "UTF-8");
                     JSONParser obj = new JSONParser(fullTest, getExternalPath(mycontext, singletest, "ATTEMPT"), "PRACTICE", mycontext);
                     attempt = new String(SaveJSONdataToFile.bytesFromFile(getExternalPath(mycontext, singletest, "ATTEMPT") + testid + ".json"), "UTF-8");
-                    Intent i = new Intent(mycontext, TestActivity.class);
+                    Intent i = new Intent(mycontext, PracticeTestActivity.class);
                     i.putExtra("json", attempt);
                     i.putExtra("test", testid);
                     i.putExtra("status","NEW");

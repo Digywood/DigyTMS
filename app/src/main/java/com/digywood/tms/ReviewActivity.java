@@ -59,7 +59,7 @@ import com.digywood.tms.Pojo.SingleSections;
 
 import static android.Manifest.permission.READ_EXTERNAL_STORAGE;
 import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
-import static com.digywood.tms.TestActivity.count;
+import static com.digywood.tms.PracticeTestActivity.count;
 
 public class ReviewActivity extends AppCompatActivity implements
         AdapterView.OnItemSelectedListener {
@@ -105,7 +105,7 @@ public class ReviewActivity extends AppCompatActivity implements
     SingleGroup group = new SingleGroup();
     SingleSections section = new SingleSections();
     SingleOptions option;
-    TestActivity testObj;
+    PracticeTestActivity testObj;
     SingleQuestionList qListObj;
     OptionsCheckAdapter opAdapter;
     SaveJSONdataToFile save;
@@ -184,7 +184,7 @@ public class ReviewActivity extends AppCompatActivity implements
         setContentView(R.layout.activity_test);
 
         dataObj = new DBHelper(this);
-        testObj = new TestActivity();
+        testObj = new PracticeTestActivity();
 
         question_scroll = findViewById(R.id.question_scroll);
         question_img = findViewById(R.id.question_img);

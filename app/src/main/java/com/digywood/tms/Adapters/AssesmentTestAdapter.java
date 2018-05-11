@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
-import android.media.Image;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.RecyclerView;
 import android.text.Html;
@@ -14,28 +13,18 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.digywood.tms.DBHelper.DBHelper;
-import com.digywood.tms.AttemptDataActivity;
-import com.digywood.tms.FlashCardActivity;
 import com.digywood.tms.JSONParser;
 import com.digywood.tms.Pojo.SingleTest;
 import com.digywood.tms.R;
-import com.digywood.tms.ReviewActivity;
 import com.digywood.tms.SaveJSONdataToFile;
-import com.digywood.tms.TestActivity;
+import com.digywood.tms.PracticeTestActivity;
 import com.digywood.tms.URLClass;
 
-import org.json.JSONArray;
-import org.json.JSONObject;
-
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 
@@ -120,7 +109,7 @@ public class AssesmentTestAdapter extends RecyclerView.Adapter<AssesmentTestAdap
                             fullTest = new String(SaveJSONdataToFile.bytesFromFile(getExternalPath(mycontext, singletest, "BASE") + testid + ".json"), "UTF-8");
                             JSONParser obj = new JSONParser(fullTest, getExternalPath(mycontext, singletest, "ATTEMPT"), "PRACTICE", mycontext);
                             attempt = new String(SaveJSONdataToFile.bytesFromFile(getExternalPath(mycontext, singletest, "ATTEMPT") + testid + ".json"), "UTF-8");
-                            Intent i = new Intent(mycontext, TestActivity.class);
+                            Intent i = new Intent(mycontext, PracticeTestActivity.class);
                             i.putExtra("json", attempt);
                             i.putExtra("test", testid);
                             i.putExtra("status", "NEW");

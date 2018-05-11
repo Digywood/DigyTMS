@@ -51,7 +51,7 @@
             android:parentActivityName=".PaperActivity"
             android:screenOrientation="landscape" />
         <activity
-            android:name=".TestActivity"
+            android:name=".PracticeTestActivity"
             android:screenOrientation="landscape"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity

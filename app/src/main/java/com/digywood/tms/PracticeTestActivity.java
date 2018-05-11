@@ -14,7 +14,6 @@ import android.graphics.Typeface;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.os.Handler;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.content.ContextCompat;
@@ -24,7 +23,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.SimpleItemAnimator;
 import android.util.Log;
 import android.view.GestureDetector;
 import android.view.KeyEvent;
@@ -50,7 +48,6 @@ import org.json.JSONObject;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Locale;
 import java.util.concurrent.TimeUnit;
@@ -67,7 +64,7 @@ import com.digywood.tms.Pojo.SingleSections;
 import static android.Manifest.permission.READ_EXTERNAL_STORAGE;
 import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
 
-public class TestActivity extends AppCompatActivity implements
+public class PracticeTestActivity extends AppCompatActivity implements
         AdapterView.OnItemSelectedListener {
 
     TextView timer, q_no,qno_label;
@@ -86,7 +83,7 @@ public class TestActivity extends AppCompatActivity implements
     ArrayAdapter adapter;
     RecyclerView rv_option;
     ArrayList<String> categories;
-    private static final String TAG = "TestActivity";
+    private static final String TAG = "PracticeTestActivity";
     ArrayList<Integer> oplist = new ArrayList<>();
     ArrayList<Integer> list = new ArrayList<>();
     ArrayList<Integer> optionsTemp = new ArrayList<>();
@@ -219,8 +216,8 @@ public class TestActivity extends AppCompatActivity implements
         btn_group_info.setTypeface(font);
         btn_review.setTypeface(font);
 
-        qAdapter = new QuestionListAdapter(questionOpList, TestActivity.this, getScreenSize());
-        myLayoutManager = new LinearLayoutManager(TestActivity.this, LinearLayoutManager.HORIZONTAL, false);
+        qAdapter = new QuestionListAdapter(questionOpList, PracticeTestActivity.this, getScreenSize());
+        myLayoutManager = new LinearLayoutManager(PracticeTestActivity.this, LinearLayoutManager.HORIZONTAL, false);
         question_scroll.setLayoutManager(myLayoutManager);
         question_scroll.setItemAnimator(new DefaultItemAnimator());
         question_scroll.setAdapter(qAdapter);
@@ -248,7 +245,7 @@ public class TestActivity extends AppCompatActivity implements
         sectionArray = new JSONArray();
         attempt = new JSONObject();
 
-        gd = new GestureDetector(TestActivity.this, new GestureDetector.SimpleOnGestureListener() {
+        gd = new GestureDetector(PracticeTestActivity.this, new GestureDetector.SimpleOnGestureListener() {
 
             @Override
             public boolean onDoubleTap(MotionEvent e) {
@@ -346,7 +343,7 @@ public class TestActivity extends AppCompatActivity implements
 //                    index++;
 //                    gotoQuestion(index);
                 } else
-                    Toast.makeText(TestActivity.this, "No option Selected", Toast.LENGTH_LONG).show();
+                    Toast.makeText(PracticeTestActivity.this, "No option Selected", Toast.LENGTH_LONG).show();
             }
         });
 
@@ -360,7 +357,7 @@ public class TestActivity extends AppCompatActivity implements
                     setQBackground(pos, index);
                     btn_confirm.setBackgroundColor(Color.GREEN);
                 } else
-                    Toast.makeText(TestActivity.this, "No option Selected", Toast.LENGTH_LONG).show();
+                    Toast.makeText(PracticeTestActivity.this, "No option Selected", Toast.LENGTH_LONG).show();
             }
         });
 
@@ -436,7 +433,7 @@ public class TestActivity extends AppCompatActivity implements
                             if (pos == attemptsectionarray.length() - 1) {
                                 btn_next.setText("Finish");
                                 writeOption(opAdapter.getSelectedItem());
-                                AlertDialog alertbox = new AlertDialog.Builder(TestActivity.this)
+                                AlertDialog alertbox = new AlertDialog.Builder(PracticeTestActivity.this)
                                         .setMessage("Do you want to finish Test?" + " " + dataObj.getQuestionCount())
                                         .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
 
@@ -456,7 +453,7 @@ public class TestActivity extends AppCompatActivity implements
                                                 }
 
                                                 ActivityOptionsCompat options = ActivityOptionsCompat.
-                                                        makeSceneTransitionAnimation(TestActivity.this, finish_view, "transition");
+                                                        makeSceneTransitionAnimation(PracticeTestActivity.this, finish_view, "transition");
                                                 int revealX = (int) (finish_view.getX() + finish_view.getWidth() / 2);
                                                 int revealY = (int) (finish_view.getY() + finish_view.getHeight() / 2);
                                                 finish();
@@ -467,7 +464,7 @@ public class TestActivity extends AppCompatActivity implements
 /*                                                if (c.getInt(c.getColumnIndex("Attempt_Status")) == 2)
                                                     Log.e("Test", "Finished");*/
 
-                                                Intent intent = new Intent(TestActivity.this, ScoreActivity.class);
+                                                Intent intent = new Intent(PracticeTestActivity.this, ScoreActivity.class);
                                                 bundle = new Bundle();
                                                 bundle.putString("JSON", attempt.toString());
                                                 bundle.putString("enrollid",enrollid);
@@ -477,7 +474,7 @@ public class TestActivity extends AppCompatActivity implements
                                                 intent.putExtra("BUNDLE", bundle);
                                                 intent.putExtra("Xreveal", revealX);
                                                 intent.putExtra("Yreveal", revealY);
-                                                ActivityCompat.startActivity(TestActivity.this, intent, options.toBundle());
+                                                ActivityCompat.startActivity(PracticeTestActivity.this, intent, options.toBundle());
 
                                             }
                                         })
@@ -639,7 +636,7 @@ public class TestActivity extends AppCompatActivity implements
 
     //method to dynamically request permissions
     private void requestPermission() {
-        ActivityCompat.requestPermissions(TestActivity.this, new
+        ActivityCompat.requestPermissions(PracticeTestActivity.this, new
                 String[]{WRITE_EXTERNAL_STORAGE, READ_EXTERNAL_STORAGE}, RequestPermissionCode);
     }
 
@@ -688,7 +685,7 @@ public class TestActivity extends AppCompatActivity implements
     public void initiatePopupWindow(View v) {
         try {
             //We need to get the instance of the LayoutInflater, use the context of this activity
-            LayoutInflater inflater = (LayoutInflater) TestActivity.this
+            LayoutInflater inflater = (LayoutInflater) PracticeTestActivity.this
                     .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             //Inflate the view from a predefined XML layout
             View view = inflater.inflate(R.layout.popup_screen,
@@ -799,7 +796,7 @@ public class TestActivity extends AppCompatActivity implements
     //method to create a menu window
     public void initiateMenuWindow(View v) {
         //We need to get the instance of the LayoutInflater, use the context of this activity
-        LayoutInflater inflater = (LayoutInflater) TestActivity.this
+        LayoutInflater inflater = (LayoutInflater) PracticeTestActivity.this
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View layout = inflater.inflate(R.layout.menu, null);
         AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);
@@ -827,7 +824,7 @@ public class TestActivity extends AppCompatActivity implements
         finish.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                AlertDialog alertbox = new AlertDialog.Builder(TestActivity.this)
+                AlertDialog alertbox = new AlertDialog.Builder(PracticeTestActivity.this)
                         .setMessage("Do you want to finish Test?" + " " + dataObj.getQuestionCount())
                         .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
 
@@ -844,10 +841,10 @@ public class TestActivity extends AppCompatActivity implements
                                     SaveJSONdataToFile.objectToFile(URLClass.mainpath + path + "Attempt/" + testid + ".json", attempt.toString());
 
                                 ActivityOptionsCompat options = ActivityOptionsCompat.
-                                        makeSceneTransitionAnimation(TestActivity.this, finish_view, "transition");
+                                        makeSceneTransitionAnimation(PracticeTestActivity.this, finish_view, "transition");
                                 int revealX = (int) (finish_view.getX() + finish_view.getWidth() / 2);
                                 int revealY = (int) (finish_view.getY() + finish_view.getHeight() / 2);
-                                Intent intent = new Intent(TestActivity.this, ScoreActivity.class);
+                                Intent intent = new Intent(PracticeTestActivity.this, ScoreActivity.class);
                                 bundle = new Bundle();
                                 bundle.putString("JSON", attempt.toString());
                                 bundle.putString("enrollid",enrollid);
@@ -858,7 +855,7 @@ public class TestActivity extends AppCompatActivity implements
                                 intent.putExtra("Xreveal", revealX);
                                 intent.putExtra("Yreveal", revealY);
                                 finish();
-                                ActivityCompat.startActivity(TestActivity.this, intent, options.toBundle());
+                                ActivityCompat.startActivity(PracticeTestActivity.this, intent, options.toBundle());
                                 } catch (JSONException|IOException|IllegalArgumentException e) {
                                     e.printStackTrace();
                                 }
@@ -896,7 +893,7 @@ public class TestActivity extends AppCompatActivity implements
     //method to generate a window alertbox to display additional information for questions
     public void initiateFullScreenWindow(Bitmap qbitmap, Bitmap abitmap) {
         //We need to get the instance of the LayoutInflater, use the context of this activity
-        LayoutInflater inflater = (LayoutInflater) TestActivity.this
+        LayoutInflater inflater = (LayoutInflater) PracticeTestActivity.this
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View layout = inflater.inflate(R.layout.fullscreen, null);
         AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);
@@ -927,7 +924,7 @@ public class TestActivity extends AppCompatActivity implements
 
     public void initiateSingleImageWindow(Bitmap b) {
         //We need to get the instance of the LayoutInflater, use the context of this activity
-        LayoutInflater inflater = (LayoutInflater) TestActivity.this
+        LayoutInflater inflater = (LayoutInflater) PracticeTestActivity.this
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View layout = inflater.inflate(R.layout.singlescreen, null);
         AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);
@@ -1000,7 +997,7 @@ public class TestActivity extends AppCompatActivity implements
         Bitmap b = BitmapFactory.decodeFile(imgPath+sid+"/"+pid+"/"+cid+"/"+questionobj.getString("qbm_image_file"));
         Log.e("qimage", photoPath + questionobj.getString("qbm_image_file"));
         question_img.setImageBitmap(b);
-/*        Animation fadeimage = AnimationUtils.loadAnimation(TestActivity.this, R.anim.fade_in);
+/*        Animation fadeimage = AnimationUtils.loadAnimation(PracticeTestActivity.this, R.anim.fade_in);
         question_img.startAnimation(fadeimage);*/
 /*        question_img.setOnTouchListener(new View.OnTouchListener() {
             @Override
@@ -1021,7 +1018,7 @@ public class TestActivity extends AppCompatActivity implements
         }
 
         try {
-            opAdapter = new OptionsCheckAdapter(optionsList, TestActivity.this, photoPath, rv_option);
+            opAdapter = new OptionsCheckAdapter(optionsList, PracticeTestActivity.this, photoPath, rv_option);
             Log.e("opSize", ""+oplist.size());
             RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
             rv_option.setLayoutManager(mLayoutManager);
@@ -1172,7 +1169,7 @@ public class TestActivity extends AppCompatActivity implements
                         } catch (JSONException|IOException e) {
                             e.printStackTrace();
                         }
-                        Intent intent = new Intent(TestActivity.this, ListofPractiseTests.class);
+                        Intent intent = new Intent(PracticeTestActivity.this, ListofPractiseTests.class);
                         intent.putExtra("enrollid",enrollid);
                         intent.putExtra("courseid", courseid);
                         intent.putExtra("paperid",paperid);
@@ -1259,7 +1256,7 @@ public class TestActivity extends AppCompatActivity implements
             pos = position;
             //Instantiate grid adapter
             Log.e("Size", "" + listOfLists.size());
-            scrollAdapter = new ScrollGridAdapter(TestActivity.this, attempt.getJSONArray("Sections").getJSONObject(pos).getJSONArray("Questions"), listOfLists.get(pos), getScreenSize());
+            scrollAdapter = new ScrollGridAdapter(PracticeTestActivity.this, attempt.getJSONArray("Sections").getJSONObject(pos).getJSONArray("Questions"), listOfLists.get(pos), getScreenSize());
             setScrollbar(pos);
             if (flag) {
                 index = 0;
@@ -1296,7 +1293,7 @@ public class TestActivity extends AppCompatActivity implements
     @Override
     public void onResume() {
         Log.d(TAG, "onResume:");
-        dataObj = new DBHelper(TestActivity.this);
+        dataObj = new DBHelper(PracticeTestActivity.this);
 //        int count = dataObj.getAttempCount()-1;
         super.onResume();
     }
@@ -1304,7 +1301,7 @@ public class TestActivity extends AppCompatActivity implements
     @Override
     public void onPause() {
         Log.d(TAG, "onPause:");
-        dataObj = new DBHelper(TestActivity.this);
+        dataObj = new DBHelper(PracticeTestActivity.this);
         try {
             long value = dataObj.UpdateAttempt(generateUniqueId(0),attempt.getString("ptu_test_ID"),1, 0,dataObj.getQuestionAttempted(),dataObj.getQuestionSkipped(),dataObj.getQustionBookmarked(),dataObj.getQustionNotAttempted(), 0, millisRemaining, index, pos);
 /*            if (value <= 0) {
