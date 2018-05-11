@@ -15,65 +15,6 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:padding="3dp"
-                android:background="#000000"
-                android:orientation="horizontal">
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="Test Id"
-                    android:textStyle="bold"
-                    android:gravity="center_vertical"
-                    android:textColor="#FFFFFF"
-                    android:layout_weight="1"
-                    android:textSize="16sp"/>
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="Action"
-                    android:textStyle="bold"
-                    android:gravity="center_vertical"
-                    android:textColor="#FFFFFF"
-                    android:layout_weight="1"
-                    android:textSize="16sp"/>
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="Action"
-                    android:textStyle="bold"
-                    android:gravity="center_vertical"
-                    android:textColor="#FFFFFF"
-                    android:layout_weight="1"
-                    android:textSize="16sp"/>
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="Download \n Selection"
-                    android:gravity="center_vertical"
-                    android:textColor="#FFFFFF"
-                    android:textStyle="bold"
-                    android:layout_weight="1"
-                    android:textSize="12sp"/>
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="Download \n Status"
-                    android:gravity="center_vertical"
-                    android:textColor="#FFFFFF"
-                    android:textStyle="bold"
-                    android:layout_weight="1"
-                    android:textSize="12sp"/>
-
-            </LinearLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -102,17 +43,6 @@
 
         </LinearLayout>
 
-        <android.support.design.widget.FloatingActionButton
-            android:id="@+id/fab_atdownload"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="3"
-            android:layout_marginRight="10dp"
-            android:layout_marginBottom="20dp"
-            android:layout_alignParentBottom="true"
-            android:layout_alignParentRight="true"
-            android:tint="#000000"
-            android:src="@drawable/download"/>
     </RelativeLayout>
 
 </android.support.constraint.ConstraintLayout>
