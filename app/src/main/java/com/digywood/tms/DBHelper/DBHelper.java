@@ -507,6 +507,11 @@ public class DBHelper extends SQLiteOpenHelper {
         return  updateFlag;
     }
 
+    public int getAssessmentTestsByPaper(String paperid){
+        Cursor c =db.query("satu_student", new String[] {"satu_entroll_id,satu_ID,satu_course_id"},"satu_paper_ID='"+paperid+"'", null, null, null,null);
+        return c.getCount();
+    }
+
     public Cursor getAssesmentTestData(String testId){
         Cursor c =db.query("satu_student", new String[] {"satu_course_id,satu_subjet_ID,satu_paper_ID,satu_entroll_id,satu_student_id,satu_batch"},"satu_ID='"+testId+"'", null, null, null,null);
         return c;

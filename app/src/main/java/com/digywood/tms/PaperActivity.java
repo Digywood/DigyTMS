@@ -226,26 +226,26 @@ public class PaperActivity extends AppCompatActivity {
                     fprogress=0;
                 }
 
-                atestcount=myhelper.getTestsByPaper(paperidList.get(i));
+                atestcount=myhelper.getAssessmentTestsByPaper(paperidList.get(i));
+
+                Cursor mycur2=myhelper.getPractiseSummaryByPaper(paperidList.get(i));
+                if(mycur2.getCount()>0){
+                    while (mycur2.moveToNext()){
+
+                        aattemptcount=mycur2.getInt(mycur2.getColumnIndex("attemptpcount"));
+                        amin=mycur2.getDouble(mycur2.getColumnIndex("minscore"));
+                        amax=mycur2.getDouble(mycur2.getColumnIndex("maxscore"));
+                        aavg=mycur2.getDouble(mycur2.getColumnIndex("avgscore"));
+                    }
+                }else{
+                    mycur2.close();
+                }
 
                 if(atestcount>0){
                     aprogress=aattemptcount/atestcount;
                 }else{
                     aprogress=0;
                 }
-
-//                Cursor mycur2=myhelper.getPractiseSummaryByPaper(paperidList.get(i));
-//                if(mycur2.getCount()>0){
-//                    while (mycur2.moveToNext()){
-//
-//                        aattemptcount=mycur2.getInt(mycur2.getColumnIndex("attemptpcount"));
-//                        amin=mycur2.getDouble(mycur2.getColumnIndex("minscore"));
-//                        amax=mycur2.getDouble(mycur2.getColumnIndex("maxscore"));
-//                        aavg=mycur2.getDouble(mycur2.getColumnIndex("avgscore"));
-//                    }
-//                }else{
-//                    mycur.close();
-//                }
 
                 paperList.add(new SinglePaper(paperidList.get(i),papernameList.get(i),ptestcount,atestcount,pattemptcount,fattemptcount,aattemptcount,pprogress,fprogress,aprogress,pmin,pavg,pmax,fmin,favg,fmax,amin,aavg,amax));
 
