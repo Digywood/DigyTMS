@@ -24,6 +24,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.GridView;
 import android.widget.ImageButton;
+import android.widget.LinearLayout;
 import android.widget.RadioGroup;
 import android.widget.RatingBar;
 import android.widget.Spinner;
@@ -55,7 +56,7 @@ public class PaperActivity extends AppCompatActivity {
     SinglePaper singlePaper;
     Dialog mydialog;
     public static final int RequestPermissionCode = 1;
-    String testtype="",courseid="",enrollid="";
+    String courseid="",enrollid="";
     HashMap<String,String> hmap=new HashMap<>();
     DBHelper myhelper;
     LinearLayoutManager myLayoutManager;
@@ -106,6 +107,31 @@ public class PaperActivity extends AppCompatActivity {
                 mydialog.setContentView(R.layout.activity_testpopup);
                 mydialog.show();
 
+                LinearLayout ll_pratise=mydialog.findViewById(R.id.ll_practise);
+                LinearLayout ll_assesment=mydialog.findViewById(R.id.ll_assessment);
+
+                ll_pratise.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent i=new Intent(getApplicationContext(),ListofPractiseTests.class);
+                        i.putExtra("enrollid",enrollid);
+                        i.putExtra("courseid",courseid);
+                        i.putExtra("paperid",singlePaper.getPaperId());
+                        startActivity(i);
+                    }
+                });
+
+                ll_assesment.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent i=new Intent(getApplicationContext(),ListofAssesmentTests.class);
+                        i.putExtra("enrollid",enrollid);
+                        i.putExtra("courseid",courseid);
+                        i.putExtra("paperid",singlePaper.getPaperId());
+                        startActivity(i);
+                    }
+                });
+
 //                RadioGroup rg_testpopup=mydialog.findViewById(R.id.rg_testpopup);
 //                RadioGroup rg = (RadioGroup) findViewById(R.id.radioGroup1);
 //
@@ -154,27 +180,74 @@ public class PaperActivity extends AppCompatActivity {
         if(paperidList.size()>0){
 
             paperList.clear();
-            int attemptcount=0;
-            double min=0.0,max=0.0,avg=0.0,bmin=0.0,bmax=0.0,bavg=0.0;
+            int ptestcount=0,atestcount=0,pattemptcount=0,fattemptcount=0,aattemptcount=0,pprogress,fprogress,aprogress;
+            double pmin=0.0,pmax=0.0,pavg=0.0,fmin=0.0,fmax=0.0,favg=0.0,amin=0.0,amax=0.0,aavg=0.0;
 
             for(int i=0;i<paperidList.size();i++){
 
-                int totaltestcount=myhelper.getTestsByPaper(paperidList.get(i));
+                ptestcount=myhelper.getTestsByPaper(paperidList.get(i));
 
                 Cursor mycur=myhelper.getPractiseSummaryByPaper(paperidList.get(i));
                 if(mycur.getCount()>0){
                     while (mycur.moveToNext()){
 
-                        attemptcount=mycur.getInt(mycur.getColumnIndex("attemptpcount"));
-                        min=mycur.getDouble(mycur.getColumnIndex("minscore"));
-                        max=mycur.getDouble(mycur.getColumnIndex("maxscore"));
-                        avg=mycur.getDouble(mycur.getColumnIndex("avgscore"));
+                        pattemptcount=mycur.getInt(mycur.getColumnIndex("attemptpcount"));
+                        pmin=mycur.getDouble(mycur.getColumnIndex("minscore"));
+                        pmax=mycur.getDouble(mycur.getColumnIndex("maxscore"));
+                        pavg=mycur.getDouble(mycur.getColumnIndex("avgscore"));
                     }
                 }else{
                     mycur.close();
                 }
 
-                paperList.add(new SinglePaper(paperidList.get(i),papernameList.get(i),min,avg,max));
+                if(ptestcount>0){
+                    pprogress=pattemptcount/ptestcount;
+                    Log.e("PaperActivity----",""+pprogress);
+                }else{
+                    pprogress=0;
+                }
+
+                Cursor mycur1=myhelper.getFlashSummaryByPaper(paperidList.get(i));
+                if(mycur1.getCount()>0){
+                    while (mycur1.moveToNext()){
+
+                        fattemptcount=mycur1.getInt(mycur1.getColumnIndex("attemptfcount"));
+                        fmin=mycur1.getDouble(mycur1.getColumnIndex("minscore"));
+                        fmax=mycur1.getDouble(mycur1.getColumnIndex("maxscore"));
+                        favg=mycur1.getDouble(mycur1.getColumnIndex("avgscore"));
+                    }
+                }else{
+                    mycur1.close();
+                }
+
+                if(ptestcount>0){
+                    fprogress=fattemptcount/ptestcount;
+                }else {
+                    fprogress=0;
+                }
+
+                atestcount=myhelper.getTestsByPaper(paperidList.get(i));
+
+                if(atestcount>0){
+                    aprogress=aattemptcount/atestcount;
+                }else{
+                    aprogress=0;
+                }
+
+//                Cursor mycur2=myhelper.getPractiseSummaryByPaper(paperidList.get(i));
+//                if(mycur2.getCount()>0){
+//                    while (mycur2.moveToNext()){
+//
+//                        aattemptcount=mycur2.getInt(mycur2.getColumnIndex("attemptpcount"));
+//                        amin=mycur2.getDouble(mycur2.getColumnIndex("minscore"));
+//                        amax=mycur2.getDouble(mycur2.getColumnIndex("maxscore"));
+//                        aavg=mycur2.getDouble(mycur2.getColumnIndex("avgscore"));
+//                    }
+//                }else{
+//                    mycur.close();
+//                }
+
+                paperList.add(new SinglePaper(paperidList.get(i),papernameList.get(i),ptestcount,atestcount,pattemptcount,fattemptcount,aattemptcount,pprogress,fprogress,aprogress,pmin,pavg,pmax,fmin,favg,fmax,amin,aavg,amax));
 
             }
         }
