@@ -243,6 +243,28 @@ public class DBHelper extends SQLiteOpenHelper {
                 "   `Attempt_Percentage` double DEFAULT NULL)";
         db.execSQL(AttemptList);
 
+        String AssesmentTestList ="CREATE TABLE `Assesment_list` (\n"+
+                "   `Assesment_ID` TEXT,\n"+
+                "   `Assesment_Test_ID` TEXT,\n"+
+                "   `Assesment_enrollId` TEXT DEFAULT NULL,\n"+
+                "   `Assesment_studentId` TEXT DEFAULT NULL,\n"+
+                "   `Assesment_courseId` TEXT DEFAULT NULL,\n"+
+                "   `Assesment_subjectId` TEXT DEFAULT NULL,\n"+
+                "   `Assesment_paperId` TEXT DEFAULT NULL,\n"+
+                "   `Assesment_Status` int(5) NOT NULL,\n"+
+                "   `Assesment_Started_dttm` datetime DEFAULT NULL,\n" +
+                "   `Assesment_RemainingTime` int(5) DEFAULT NULL,\n"+
+                "   `Assesment_LastQuestion` int(5) DEFAULT NULL,\n"+
+                "   `Assesment_LastSection` int(5) DEFAULT NULL,\n"+
+                "   `Assesment_Confirmed` int(5) DEFAULT NULL,\n"+
+                "   `Assesment_Skipped` int(5) DEFAULT NULL,\n"+
+                "   `Assesment_Bookmarked` int(5) DEFAULT NULL,\n"+
+                "   `Assesment_UnAttempted` int(5) DEFAULT NULL,\n"+
+                "   `Assesment_Score` double DEFAULT NULL,\n"+
+                "   `Assesment_Percentage` double DEFAULT NULL)";
+        db.execSQL(AssesmentTestList);
+
+
         String AttemptData=" CREATE TABLE `attempt_data` (\n"+
                 "   `Test_ID` varchar(15),\n" +
                 "   `Attempt_ID` TEXT,\n"+
@@ -262,6 +284,26 @@ public class DBHelper extends SQLiteOpenHelper {
                 "   PRIMARY KEY (`Question_ID`)\n"+
                 ")";
         db.execSQL(AttemptData);
+
+        String AssessmentData=" CREATE TABLE `attempt_data` (\n"+
+                "   `Test_ID` varchar(15),\n" +
+                "   `Attempt_ID` TEXT,\n"+
+                "   `Question_ID` varchar(15),\n" +
+                "   `Question_Seq_No` varchar(15) DEFAULT NULL,\n" +
+                "   `Question_Section` varchar(15) DEFAULT NULL,\n" +
+                "   `Question_Category` varchar(15) DEFAULT NULL,\n" +
+                "   `Question_SubCategory` varchar(15) DEFAULT NULL,\n" +
+                "   `Question_Max_Marks` double(15) DEFAULT NULL,\n"+
+                "   `Question_Negative_Marks` double(15) DEFAULT NULL,\n"+
+                "   `Question_Marks_Obtained` double(15) DEFAULT NULL,\n"+
+                "   `Question_Negative_Applied` double(15) DEFAULT NULL,\n"+
+                "   `Question_Option` int(15) DEFAULT NULL,\n"+
+                "   `Question_Status` varchar(20) DEFAULT NULL,\n"+
+                "   `Question_Option_Sequence` varchar(20) DEFAULT NULL,\n"+
+                "   `Option_Answer_Flag` varchar(15) DEFAULT NULL,\n"+
+                "   PRIMARY KEY (`Question_ID`)\n"+
+                ")";
+        db.execSQL(AssessmentData);
 
         String AttemptCategory="CREATE TABLE `attempt_category` (\n"+
                 "   `Attempt_ID` INTEGER,\n"+
@@ -1703,6 +1745,60 @@ public class DBHelper extends SQLiteOpenHelper {
         Cursor c =db.rawQuery(countQuery,null);
         return c;
     }
+
+    public long InsertAssesment( String aId,String testID,String eid,String sid,String cid,String subid,String pid,int status,String dateTime, int aScore, int attempted, int skipped, int bookmarked, int unattempted, int aperc,long aTime,int index,int pos){
+
+        long insertFlag=0;
+
+        ContentValues cv = new ContentValues();
+        cv.put("Assesment_ID", aId);
+        cv.put("Assesment_Test_ID", testID);
+        cv.put("Assesment_enrollId", eid);
+        cv.put("Assesment_studentId", sid);
+        cv.put("Assesment_courseId", cid);
+        cv.put("Assesment_subjectId", subid);
+        cv.put("Assesment_paperId", pid);
+        cv.put("Assesment_Status", status);
+        cv.put("Assesment_Started_dttm", dateTime);
+        cv.put("Assesment_Confirmed", attempted);
+        cv.put("Assesment_Skipped", skipped);
+        cv.put("Assesment_Bookmarked",bookmarked);
+        cv.put("Assesment_UnAttempted", unattempted);
+        cv.put("Assesment_Score",aScore );
+        cv.put("Assesment_Percentage",aperc );
+        cv.put("Assesment_RemainingTime",aTime );
+        cv.put("Assesment_LastQuestion",index );
+        cv.put("Assesment_LastSection",pos );
+        insertFlag = db.insert("Assesment_list",null, cv);
+        return insertFlag;
+    }
+
+    public long UpdateAssesment( String aId,String testID,String eid,String sid,String cid,String subid,String pid,int status,String dateTime, int aScore, int attempted, int skipped, int bookmarked, int unattempted, int aperc,long aTime,int index,int pos){
+
+        long updateFlag=0;
+
+        ContentValues cv = new ContentValues();
+        cv.put("Assesment_Test_ID", testID);
+        cv.put("Assesment_enrollId", eid);
+        cv.put("Assesment_studentId", sid);
+        cv.put("Assesment_courseId", cid);
+        cv.put("Assesment_subjectId", subid);
+        cv.put("Assesment_paperId", pid);
+        cv.put("Assesment_Status", status);
+        cv.put("Assesment_Started_dttm", dateTime);
+        cv.put("Assesment_Confirmed", attempted);
+        cv.put("Assesment_Skipped", skipped);
+        cv.put("Assesment_Bookmarked",bookmarked);
+        cv.put("Assesment_UnAttempted", unattempted);
+        cv.put("Assesment_Score",aScore );
+        cv.put("Assesment_Percentage",aperc );
+        cv.put("Assesment_RemainingTime",aTime );
+        cv.put("Assesment_LastQuestion",index );
+        cv.put("Assesment_LastSection",pos );
+        updateFlag = db.update("Assesment_list",cv,"Assesment_ID='"+aId+"'",null);
+        return updateFlag;
+    }
+
 
 
 
