@@ -53,19 +53,32 @@
                 android:layout_marginBottom="3dp"
                 android:orientation="vertical">
 
-                <TextView
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:textSize="14sp"
-                    android:text="Practise Tests"/>
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginRight="5dp"
+                        android:textSize="14sp"
+                        android:text="Practise Tests"/>
+
+                    <TextView
+                        android:id="@+id/tv_pattemptcount"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/green"
+                        android:textStyle="bold"
+                        android:textSize="14sp"/>
+
+                </LinearLayout>
 
                 <ProgressBar
                     android:id="@+id/practise_progress"
                     style="@android:style/Widget.ProgressBar.Horizontal"
-                    android:secondaryProgressTint="@color/green"
-                    android:progressTint="@color/green"
                     android:layout_width="200dp"
-                    android:secondaryProgress="30"
                     android:layout_height="5dp"
                     android:layout_marginRight="3dp"/>
 
@@ -161,19 +174,32 @@
                 android:layout_marginBottom="3dp"
                 android:orientation="vertical">
 
-                <TextView
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:textSize="14sp"
-                    android:text="Flash Cards"/>
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginRight="5dp"
+                        android:textSize="14sp"
+                        android:text="Flash Cards"/>
+
+                    <TextView
+                        android:id="@+id/tv_fattemptcount"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/green"
+                        android:textStyle="bold"
+                        android:textSize="14sp"/>
+
+                </LinearLayout>
 
                 <ProgressBar
                     android:id="@+id/flash_progress"
                     style="@android:style/Widget.ProgressBar.Horizontal"
-                    android:secondaryProgressTint="@color/green"
-                    android:progressTint="@color/green"
                     android:layout_width="200dp"
-                    android:secondaryProgress="60"
                     android:layout_height="5dp"
                     android:layout_marginRight="3dp"/>
 
@@ -269,16 +295,31 @@
                 android:layout_marginBottom="3dp"
                 android:orientation="vertical">
 
-                <TextView
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:textSize="14sp"
-                    android:text="Assessment Tests"/>
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginRight="5dp"
+                        android:textSize="14sp"
+                        android:text="Assessment Tests"/>
+
+                    <TextView
+                        android:id="@+id/tv_aattemptcount"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/green"
+                        android:textStyle="bold"
+                        android:textSize="14sp"/>
+
+                </LinearLayout>
 
                 <ProgressBar
                     android:id="@+id/assesment_progress"
                     style="@android:style/Widget.ProgressBar.Horizontal"
-                    android:secondaryProgress="50"
                     android:layout_width="200dp"
                     android:layout_height="5dp"
                     android:layout_marginRight="3dp"/>
