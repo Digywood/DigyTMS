@@ -136,7 +136,7 @@
                             android:textSize="16dp"/>
 
                     </LinearLayout>
-
+                  
                 </LinearLayout>
 
                 <View
@@ -243,7 +243,7 @@
                     android:layout_gravity="center_vertical|end"
                     android:background="@drawable/details1"/>
 
-            </LinearLayout>
+          </LinearLayout>
 
         </LinearLayout>
 

@@ -248,6 +248,7 @@ public class DBHelper extends SQLiteOpenHelper {
                 "   `Attempt_ID` TEXT,\n"+
                 "   `Question_ID` varchar(15),\n" +
                 "   `Question_Seq_No` varchar(15) DEFAULT NULL,\n" +
+                "   `Question_Section` varchar(15) DEFAULT NULL,\n" +
                 "   `Question_Category` varchar(15) DEFAULT NULL,\n" +
                 "   `Question_SubCategory` varchar(15) DEFAULT NULL,\n" +
                 "   `Question_Max_Marks` double(15) DEFAULT NULL,\n"+
@@ -1260,7 +1261,7 @@ public class DBHelper extends SQLiteOpenHelper {
         }
         return AdvtprefList;
     }
-    public long InsertQuestion(String testId,String attemptId,String qId,String qSeq,String cat,String subcat, double maxMarks,double negMarks,double marksObtained,double negApplied, int option,String status,String oSeq,String flag){
+    public long InsertQuestion(String testId,String attemptId,String qId,String qSeq,String qSec,String cat,String subcat, double maxMarks,double negMarks,double marksObtained,double negApplied, int option,String status,String oSeq,String flag){
 
         long insertFlag=0;
 
@@ -1269,6 +1270,7 @@ public class DBHelper extends SQLiteOpenHelper {
         cv.put("Attempt_ID", attemptId);
         cv.put("Question_ID", qId);
         cv.put("Question_Seq_No", qSeq);
+        cv.put("Question_Section", qSec);
         cv.put("Question_Category", cat);
         cv.put("Question_SubCategory", subcat);
         cv.put("Question_Max_Marks",maxMarks );
@@ -1286,7 +1288,7 @@ public class DBHelper extends SQLiteOpenHelper {
         return insertFlag;
     }
 
-    public long UpdateQuestion(String testId,String attemptId,String qId,String qSeq,String cat,String subcat, double maxMarks,double negMarks,double marksObtained,double negApplied, int option,String status,String oSeq,String flag){
+    public long UpdateQuestion(String testId,String attemptId,String qId,String qSeq,String qSec,String cat,String subcat, double maxMarks,double negMarks,double marksObtained,double negApplied, int option,String status,String oSeq,String flag){
 
         long updateFlag=0;
 
@@ -1295,6 +1297,7 @@ public class DBHelper extends SQLiteOpenHelper {
         cv.put("Attempt_ID", attemptId);
         cv.put("Question_ID", qId);
         cv.put("Question_Seq_No", qSeq);
+        cv.put("Question_Section", qSec);
         cv.put("Question_Category", cat);
         cv.put("Question_SubCategory", subcat);
         cv.put("Question_Max_Marks",maxMarks );
@@ -1317,38 +1320,44 @@ public class DBHelper extends SQLiteOpenHelper {
         return updateFlag;
     }
 
+    public Cursor getSections(){
+        String query ="SELECT DISTINCT Question_Section FROM attempt_data";
+        Cursor c=db.rawQuery(query,null);
+        return c;
+    }
+
     public Cursor getSubcategories(){
         String query ="SELECT DISTINCT Question_SubCategory FROM attempt_data";
         Cursor c=db.rawQuery(query,null);
         return c;
     }
 
-    public int getSubcatQuestions(String subct){
-        String query ="SELECT * FROM attempt_data WHERE Question_SubCategory ='"+subct+"'";
+    public int getSectionQuestions(String subct){
+        String query ="SELECT * FROM attempt_data WHERE Question_Section ='"+subct+"'";
         Cursor c=db.rawQuery(query,null);
         int count = c.getCount();
         c.close();
         return count;
     }
 
-    public int getSubcatQuesAns(String subct){
-        String query ="SELECT * FROM attempt_data WHERE Question_SubCategory ='"+subct+"' and Question_Status NOT IN ('NOT_ATTEMPTED','SKIPPED')";
+    public int getSectionQuesAns(String subct){
+        String query ="SELECT * FROM attempt_data WHERE Question_Section ='"+subct+"' and Question_Status NOT IN ('NOT_ATTEMPTED','SKIPPED')";
         Cursor c=db.rawQuery(query,null);
         int count = c.getCount();
         c.close();
         return count;
     }
 
-    public int getSubcatQuesSkip(String subct){
-        String query ="SELECT * FROM attempt_data WHERE Question_SubCategory ='"+subct+"' and Question_Status <> 'SKIPPED'";
+    public int getSectionQuesSkip(String subct){
+        String query ="SELECT * FROM attempt_data WHERE Question_Section ='"+subct+"' and Question_Status <> 'SKIPPED'";
         Cursor c=db.rawQuery(query,null);
         int count = c.getCount();
         c.close();
         return count;
     }
 
-    public int getSubcatQuesCorrect(String subct){
-        String query ="SELECT * FROM attempt_data WHERE  Option_Answer_Flag = 'YES' and Question_SubCategory ='"+subct+"' and Question_Status <> 'SKIPPED'";
+    public int getSectionQuesCorrect(String subct){
+        String query ="SELECT * FROM attempt_data WHERE  Option_Answer_Flag = 'YES' and Question_Section ='"+subct+"' and Question_Status <> 'SKIPPED'";
         Cursor c=db.rawQuery(query,null);
         int count = c.getCount();
         c.close();
@@ -1616,7 +1625,7 @@ public class DBHelper extends SQLiteOpenHelper {
 
     public int getTestAttempCount(String testId){
         int count=0;
-        String countQuery = "select Attempt_ID from attempt_list WHERE Attempt_Test_ID = '"+testId+"'";
+        String countQuery = "select Attempt_ID from attempt_list WHERE Attempt_Test_ID = '"+testId+"' and Attempt_Status != 0";
         Cursor c = db.rawQuery(countQuery, null);
         count=c.getCount();
         return count;
