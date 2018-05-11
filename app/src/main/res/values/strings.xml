@@ -4,6 +4,8 @@
     <string name="paperdashlabel">PaperWise Performance</string>
     <string name="testdashlabel">TestWise Performance</string>
     <string name="enrolllabel">Enroll Request</string>
+    <string name="courselabel">Course List</string>
+    <string name="paperlabel">Papers List</string>
 
     <string-array name="qualifications">
         <item>Select</item>

@@ -2,6 +2,7 @@ package com.digywood.tms.Fragments;
 
 import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -164,7 +165,15 @@ public class EnrollFragment extends Fragment {
     }
 
     public void getEnrollsFromLocal(){
-        enrollList=myhelper.getStudentEnrolls();
+        Cursor mycursor=myhelper.getStudentEnrolls();
+        if(mycursor.getCount()>0){
+            while (mycursor.moveToNext()) {
+                enrollList.add(new SingleEnrollment(mycursor.getString(mycursor.getColumnIndex("Enroll_ID")),mycursor.getString(mycursor.getColumnIndex("Enroll_course_ID")),"","","","","",1));
+            }
+        }else{
+            mycursor.close();
+        }
+
         if (enrollList.size() != 0) {
             Log.e("Advtlist.size()", "comes:" + enrollList.size());
             tv_emptyenroll.setVisibility(View.GONE);

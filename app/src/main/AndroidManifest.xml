@@ -29,12 +29,14 @@
             android:label="@string/reglabel"
             android:screenOrientation="landscape" />
         <activity
-            android:name=".LandingActivity"
+            android:name=".LearningActivity"
+            android:label="@string/courselabel"
             android:parentActivityName=".MainActivity"
             android:screenOrientation="landscape" />
         <activity
             android:name=".PaperActivity"
-            android:parentActivityName=".LandingActivity"
+            android:label="@string/paperlabel"
+            android:parentActivityName=".LearningActivity"
             android:screenOrientation="landscape" />
         <activity android:name=".EnrollRequestActivity"
             android:screenOrientation="landscape"

@@ -1,6 +1,7 @@
 package com.digywood.tms.Fragments;
 
 import android.content.Context;
+import android.database.Cursor;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
@@ -11,12 +12,14 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.Spinner;
 import android.widget.TextView;
-
+import android.widget.Toast;
 import com.digywood.tms.DBHelper.DBHelper;
+import com.digywood.tms.Pojo.SingleEnrollment;
 import com.digywood.tms.R;
 import com.github.mikephil.charting.charts.PieChart;
 import com.github.mikephil.charting.components.Legend;
@@ -37,21 +40,23 @@ public class AssessmentFragment extends Fragment implements OnChartValueSelected
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
 
-
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
 
-    TextView tv_atottests,tv_aattempted,tv_atestsasplan,tv_apercent,tv_amax,tv_amin,tv_aavg,tv_aRAGattempt,tv_aRAGAVGscore;
+    TextView tv_atottests,tv_aattempted,tv_atestsasplan,tv_apercent,tv_amax,tv_amin,tv_aavg,tv_aRAGattempt,tv_aRAGAVGscore,tv_coursename;
 
     DBHelper myhelper;
+
+    String enrollid="",courseid="";
 
     Button btn_adetails;
     public PieChart mChart;
 
-    ArrayList<String> courseIds=new ArrayList<>();
-    ArrayAdapter<String> courseAdp;
-    Spinner sp_coursename;
+    ArrayList<SingleEnrollment> enrollPojos=new ArrayList<>();
+    ArrayList<String> enrollIds=new ArrayList<>();
+    ArrayAdapter<String> enrollAdp;
+    Spinner sp_enrollids;
 
     private AssessmentFragment.OnFragmentInteractionListener mListener;
 
@@ -89,7 +94,7 @@ public class AssessmentFragment extends Fragment implements OnChartValueSelected
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.activity_adash, container, false);
+        View view = inflater.inflate(R.layout.activity_adash,container,false);
 
         tv_atottests=view.findViewById(R.id.tv_atottests);
         tv_aattempted=view.findViewById(R.id.tv_aattempted);
@@ -100,9 +105,12 @@ public class AssessmentFragment extends Fragment implements OnChartValueSelected
         tv_aavg=view.findViewById(R.id.tv_aavg);
         tv_aRAGattempt=view.findViewById(R.id.tv_aRAGattempt);
         tv_aRAGAVGscore=view.findViewById(R.id.tv_aRAGAVGscore);
+        tv_coursename=view.findViewById(R.id.tv_acoursename);
 
         btn_adetails = view.findViewById(R.id.btn_adetails);
-        sp_coursename=view.findViewById(R.id.sp_acourseid);
+        sp_enrollids=view.findViewById(R.id.sp_aenrollid);
+
+        myhelper=new DBHelper(getActivity());
 
         mChart=view.findViewById(R.id.chart3);
 
@@ -156,6 +164,47 @@ public class AssessmentFragment extends Fragment implements OnChartValueSelected
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
+        Cursor mycursor=myhelper.getAllEnrolls();
+        Log.e("CursorCount---",""+mycursor.getCount());
+        if(mycursor.getCount()>0){
+            while(mycursor.moveToNext()){
+                String enrollidId=mycursor.getString(mycursor.getColumnIndex("Enroll_ID"));
+                String courseId=mycursor.getString(mycursor.getColumnIndex("Enroll_course_ID"));
+                enrollIds.add(enrollidId);
+                enrollPojos.add(new SingleEnrollment(enrollidId,courseId));
+            }
+            enrollAdp= new ArrayAdapter(getActivity(),android.R.layout.simple_spinner_item,enrollIds);
+            enrollAdp.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+            sp_enrollids.setAdapter(enrollAdp);
+        }else{
+            mycursor.close();
+        }
+
+        sp_enrollids.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view,int position,long id) {
+
+                SingleEnrollment singleEnrollment=enrollPojos.get(position);
+                enrollid=singleEnrollment.getDenrollid();
+                courseid=singleEnrollment.getDcourseid();
+                String cname=myhelper.getCoursenameById(courseid);
+                tv_coursename.setText(cname);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+
+        btn_adetails.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(getActivity(),"No further action",Toast.LENGTH_SHORT).show();
+            }
+        });
+
     }
 
     // TODO: Rename method, update argument and hook method into UI event

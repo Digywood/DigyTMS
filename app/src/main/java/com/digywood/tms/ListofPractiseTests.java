@@ -232,7 +232,7 @@ public class ListofPractiseTests extends AppCompatActivity {
                                             }else{
                                                 Toast.makeText(getApplicationContext(),"All Downloaded",Toast.LENGTH_SHORT).show();
                                             }
-                                            Log.e("LandingActivity----","No Downloaded Images for test");
+                                            Log.e("LearningActivity----","No Downloaded Images for test");
                                         }
 
                                         if(finalNames.size()!=0){
@@ -807,7 +807,7 @@ public class ListofPractiseTests extends AppCompatActivity {
 
     protected void exitByBackKey() {
         finish();
-        Intent intent = new Intent(ListofPractiseTests.this, LandingActivity.class);
+        Intent intent = new Intent(ListofPractiseTests.this, LearningActivity.class);
         startActivity(intent);
 
     }

@@ -169,8 +169,8 @@ public class FlashFragment extends Fragment implements OnChartValueSelectedListe
             public void onItemSelected(AdapterView<?> parent, View view,int position,long id) {
 
                 SingleEnrollment singleEnrollment=enrollPojos.get(position);
-                enrollid=singleEnrollment.getEnrollid();
-                courseid=singleEnrollment.getEnrollcourseid();
+                enrollid=singleEnrollment.getDenrollid();
+                courseid=singleEnrollment.getDcourseid();
                 String cname=myhelper.getCoursenameById(courseid);
                 tv_courseid.setText(cname);
                 updateData(singleEnrollment.getEnrollid());

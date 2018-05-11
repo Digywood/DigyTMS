@@ -25,14 +25,19 @@ public class EnrollAdapter extends  RecyclerView.Adapter<EnrollAdapter.MyViewHol
     private ArrayList<String> chknumberList=new ArrayList<>();
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
-        public TextView tv_enrollid,tv_enrollcourseid;
-        public Button btn_start;
+        public TextView tv_enrollid,tv_batchid,tv_organisationid,tv_coursename,tv_activateddate,tv_enddate,tv_daysleft;
+        public Button btn_enrolldet;
 
         public MyViewHolder(View view) {
             super(view);
             tv_enrollid =view.findViewById(R.id.tv_enrollid);
-            tv_enrollcourseid =view.findViewById(R.id.tv_enrollcourseid);
-            btn_start=view.findViewById(R.id.btn_start);
+            tv_batchid =view.findViewById(R.id.tv_batchid);
+            tv_organisationid =view.findViewById(R.id.tv_orgnisationid);
+            tv_coursename =view.findViewById(R.id.tv_coursename);
+            tv_activateddate =view.findViewById(R.id.tv_activateddate);
+            tv_enddate =view.findViewById(R.id.tv_enddate);
+            tv_daysleft =view.findViewById(R.id.tv_daysleft);
+            btn_enrolldet =view.findViewById(R.id.btn_enrolldet);
         }
     }
 
@@ -57,18 +62,22 @@ public class EnrollAdapter extends  RecyclerView.Adapter<EnrollAdapter.MyViewHol
         final SingleEnrollment singleenroll = enrollList.get(position);
 
         holder.tv_enrollid.setText(singleenroll.getEnrollid());
-        holder.tv_enrollcourseid.setText(singleenroll.getEnrollcourseid());
+        holder.tv_batchid.setText(singleenroll.getBatchid());
+        holder.tv_organisationid.setText(singleenroll.getOrgid());
+        holder.tv_coursename.setText(singleenroll.getCoursename());
+        holder.tv_activateddate.setText(singleenroll.getActivateddate());
+        holder.tv_enddate.setText(singleenroll.getEnddate());
+        holder.tv_daysleft.setText(""+singleenroll.getDaysleft());
 
-        holder.btn_start.setOnClickListener(new View.OnClickListener() {
+        holder.btn_enrolldet.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent i=new Intent(mycontext,PaperActivity.class);
                 i.putExtra("enrollid",singleenroll.getEnrollid());
-                i.putExtra("courseid",singleenroll.getEnrollcourseid());
+                i.putExtra("courseid",singleenroll.getCourseid());
                 mycontext.startActivity(i);
             }
         });
-
 
     }
 
