@@ -1079,6 +1079,11 @@ public class DBHelper extends SQLiteOpenHelper {
         return  updateFlag;
     }
 
+    public Cursor getSingleAssessmentTests(String testId){
+        Cursor c =db.query("satu_student", new String[] {"satu_entroll_id,satu_student_ID,satu_ID,satu_paper_ID,satu_subjet_ID,satu_course_id,satu_dwnld_status"},"satu_ID='"+testId+"'", null, null, null,null);
+        return c;
+    }
+
     public long insertQuesGroup(int qbkey,String qbid,String tid,String qbmtype,String qbmfile,String qbtext,int noofques,int pickupcount,String status,String createby,String createdttm,String modby,String moddttm,String grouptype){
         long insertFlag=0;
         ContentValues cv = new ContentValues();
@@ -1799,7 +1804,10 @@ public class DBHelper extends SQLiteOpenHelper {
         return updateFlag;
     }
 
-
+    public Cursor validateAssessmentTestKey(String testId){
+        Cursor c =db.query("satu_student", new String[] {"satu_entroll_id,satu_exam_key,satu_course_id,satu_paper_ID,satu_subjet_ID"},"satu_ID='"+testId+"'", null, null, null,null);
+        return c;
+    }
 
 
 }
