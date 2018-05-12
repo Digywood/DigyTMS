@@ -168,10 +168,6 @@ public class PracticeFragment extends Fragment implements OnChartValueSelectedLi
             mycursor.close();
         }
 
-        if(enrollIds.size()>0){
-            updateData(sp_enrollids.getSelectedItem().toString());
-        }
-
         btn_pdetails.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -190,7 +186,7 @@ public class PracticeFragment extends Fragment implements OnChartValueSelectedLi
                 courseid=singleEnrollment.getDcourseid();
                 String cname=myhelper.getCoursenameById(courseid);
                 tv_courseid.setText(cname);
-                updateData(singleEnrollment.getEnrollid());
+                updateData(enrollid);
             }
 
             @Override
@@ -490,6 +486,7 @@ public class PracticeFragment extends Fragment implements OnChartValueSelectedLi
 
         attemptpercent=(Float.parseFloat(String.valueOf(attemptpcount))/totptestcount)*100;
 
+        mChart.animateXY(1400, 1400);
         setData(attemptpercent,100);
         mChart1.animateY(3000);
         setData1(3,100);

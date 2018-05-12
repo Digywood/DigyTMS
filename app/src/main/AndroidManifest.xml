@@ -38,10 +38,11 @@
             android:label="@string/paperlabel"
             android:parentActivityName=".LearningActivity"
             android:screenOrientation="landscape" />
-        <activity android:name=".EnrollRequestActivity"
-            android:screenOrientation="landscape"
+        <activity
+            android:name=".EnrollRequestActivity"
             android:label="@string/enrolllabel"
-            android:parentActivityName=".DashBoardNavActivity"/>
+            android:parentActivityName=".DashBoardNavActivity"
+            android:screenOrientation="landscape" />
         <activity
             android:name=".ListofPractiseTests"
             android:label="@string/ptestslabel"
@@ -90,16 +91,21 @@
         <activity
             android:name=".DashBoardNavActivity"
             android:screenOrientation="landscape"
-            android:theme="@style/AppTheme.NoActionBar"/>
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".PaperDashActivity"
             android:label="@string/paperdashlabel"
+            android:parentActivityName=".DashBoardNavActivity"
+            android:screenOrientation="landscape" />
+        <activity
+            android:name=".TestDashActivity"
+            android:label="@string/testdashlabel"
+            android:parentActivityName=".PaperDashActivity"
+            android:screenOrientation="landscape" />
+        <activity android:name=".RequestedEnrollsActivity"
+            android:label="Requested Enrollments"
             android:screenOrientation="landscape"
             android:parentActivityName=".DashBoardNavActivity"/>
-        <activity android:name=".TestDashActivity"
-            android:label="@string/testdashlabel"
-            android:screenOrientation="landscape"
-            android:parentActivityName=".PaperDashActivity"></activity>
     </application>
 
 </manifest>

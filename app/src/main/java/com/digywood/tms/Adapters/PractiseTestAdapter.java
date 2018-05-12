@@ -61,14 +61,15 @@ public class PractiseTestAdapter extends RecyclerView.Adapter<PractiseTestAdapte
     DBHelper myhelper;
     Boolean value = false;
     JSONParser myparser;
-    Double minscore,maxscore,avgscore;
+    int fattemptcount=0;
+    Double minscore,maxscore,avgscore,fminscore,favgscore,fmaxscore;
     public static final int RequestPermissionCode = 1;
     String filedata = "", path, jsonPath, attemptPath, photoPath, enrollid, courseid,groupdata="";
     String subjectId, paperid, testid, fullTest, attempt,json,downloadjsonpath="",tfiledwdpath="",localpath="";
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
 
-        public TextView tv_testid, tv_teststatus,tv_testAttempt,tv_attempt_min,tv_attempt_max;
+        public TextView tv_testid, tv_teststatus,tv_testAttempt,tv_attempt_min,tv_attempt_max,tv_flashAttempt,tv_flash_max,tv_flash_min;
         ImageView iv_start,iv_resume,iv_review,iv_fstart;
         ImageView iv_history,iv_download;
         PieChart test_pieChart,flash_pieChart;
@@ -88,6 +89,9 @@ public class PractiseTestAdapter extends RecyclerView.Adapter<PractiseTestAdapte
             tv_testAttempt = view.findViewById(R.id.tv_testAttempt);
             tv_attempt_max = view.findViewById(R.id.tv_attempt_max);
             tv_attempt_min = view.findViewById(R.id.tv_attempt_min);
+            tv_flashAttempt = view.findViewById(R.id.tv_flashAttempt);
+            tv_flash_max = view.findViewById(R.id.tv_flash_max);
+            tv_flash_min = view.findViewById(R.id.tv_flash_min);
 //            flash_pieChart = (PieChart) view.findViewById(R.id.flash_piechart);
 //            cb_download = view.findViewById(R.id.cb_testselection);
         }
@@ -119,6 +123,27 @@ public class PractiseTestAdapter extends RecyclerView.Adapter<PractiseTestAdapte
             }
         }
         List<PieEntry> yvalues = new ArrayList<PieEntry>();
+
+        holder.tv_testAttempt.setText(String.valueOf(myhelper.getTestAttempCount(singletest.getTestid())));
+        holder.tv_attempt_min.setText(String.format("%.1f", minscore));
+        holder.tv_attempt_max.setText(String.format("%.1f", maxscore));
+
+        Cursor mycur=myhelper.getTestFlashSummary(singletest.getTestid());
+        if(mycur.getCount()>0){
+            while (mycur.moveToNext()){
+                fattemptcount=mycur.getInt(mycur.getColumnIndex("sptuflash_attempts"));
+                fminscore=mycur.getDouble(mycur.getColumnIndex("min_flashScore"));
+                favgscore=mycur.getDouble(mycur.getColumnIndex("max_flashScore"));
+                fmaxscore=mycur.getDouble(mycur.getColumnIndex("avg_flashScore"));
+            }
+        }else{
+            mycur.close();
+        }
+
+        holder.tv_flashAttempt.setText(""+fattemptcount);
+        holder.tv_flash_max.setText(""+fmaxscore);
+        holder.tv_flash_min.setText(""+fminscore);
+
 /*        holder.tv_testAttempt.setText(String.valueOf(myhelper.getTestAttempCount(singletest.getTestid())));
         holder.tv_attempt_min.setText(String.format("%.1f", minscore));
         holder.tv_attempt_max.setText(String.format("%.1f", maxscore));

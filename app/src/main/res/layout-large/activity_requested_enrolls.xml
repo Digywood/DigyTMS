@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:orientation="vertical"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    tools:context=".RequestedEnrollsActivity">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -11,7 +12,7 @@
         android:orientation="vertical">
 
         <android.support.v7.widget.RecyclerView
-            android:id="@+id/rv_elistofenrolls"
+            android:id="@+id/rv_enrollreqlist"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:scrollbars="vertical"
@@ -19,7 +20,7 @@
         </android.support.v7.widget.RecyclerView>
 
         <TextView
-            android:id="@+id/tv_eenrollemptydata"
+            android:id="@+id/tv_emptyereqdata"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textColor="@android:color/holo_red_light"
@@ -29,5 +30,16 @@
             />
 
     </LinearLayout>
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/fab_enrollreq"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:layout_gravity="bottom|end"
+        android:layout_marginBottom="@dimen/fab_margin"
+        android:layout_marginRight="@dimen/fab_margin"
+        app:srcCompat="@android:drawable/ic_menu_add" />
 
 </RelativeLayout>

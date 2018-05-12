@@ -23,7 +23,7 @@ import com.digywood.tms.LearningActivity;
 import com.digywood.tms.R;
 import java.util.ArrayList;
 
-public class DashBoardFragment extends Fragment {
+public class HomeFragment extends Fragment {
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -50,7 +50,7 @@ public class DashBoardFragment extends Fragment {
 
     private FlashAttemptFragment.OnFragmentInteractionListener mListener;
 
-    public DashBoardFragment() {
+    public HomeFragment() {
         // Required empty public constructor
     }
 
@@ -63,8 +63,8 @@ public class DashBoardFragment extends Fragment {
      * @return A new instance of fragment FlashAttemptFragment.
      */
     // TODO: Rename and change types and number of parameters
-    public static DashBoardFragment newInstance(String param1, String param2) {
-        DashBoardFragment fragment = new DashBoardFragment();
+    public static HomeFragment newInstance(String param1, String param2) {
+        HomeFragment fragment = new HomeFragment();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
         args.putString(ARG_PARAM2, param2);
