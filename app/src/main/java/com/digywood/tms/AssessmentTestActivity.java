@@ -1056,7 +1056,7 @@ public class AssessmentTestActivity extends AppCompatActivity implements
 //                    Seq = array2.getJSONObject(j).getString("qbm_SequenceId");
                     questionobj = array2.getJSONObject(j);
                     Log.e("sequence", Id);
-                    qListObj = new SingleQuestionList(array2.getJSONObject(j).getString("qbm_ID"), notAttempted,not_confirmed);
+                    qListObj = new SingleQuestionList(array2.getJSONObject(j).getString("qbm_SequenceId"), notAttempted,not_confirmed);
                    // dataObj.InsertQuestion(attempt.getString("atu_ID"), null, Id, null,attempt.getJSONArray("Sections").getJSONObject(pos).getString("atu_section_name"),questionobj.getString("qbm_Chapter_name"),questionobj.getString("qbm_Sub_CategoryName"), 0, 0, 0, 0, -1, "NOT_ATTEMPTED", "-1", "NO");
                     questionOpList.add(qListObj);
                 }
