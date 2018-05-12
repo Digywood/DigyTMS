@@ -17,13 +17,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-
 import com.digywood.tms.Adapters.EnrollAdapter;
 import com.digywood.tms.DBHelper.DBHelper;
 import com.digywood.tms.EnrollRequestActivity;
 import com.digywood.tms.Pojo.SingleEnrollment;
 import com.digywood.tms.R;
-
+import com.digywood.tms.RequestedEnrollsActivity;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Random;
@@ -49,7 +48,7 @@ public class EnrollFragment extends Fragment {
     HashMap<String,String> hmap=new HashMap<>();
     ArrayList<SingleEnrollment> enrollList;
     LinearLayoutManager myLayoutManager;
-    FloatingActionButton fab_enrollreq;
+//    FloatingActionButton fab_reqenrollments;
     EnrollAdapter eAdp;
 
     private FlashAttemptFragment.OnFragmentInteractionListener mListener;
@@ -92,7 +91,6 @@ public class EnrollFragment extends Fragment {
         View view = inflater.inflate(R.layout.activity_enrolllist, container, false);
         rv_enroll=view.findViewById(R.id.rv_elistofenrolls);
         tv_emptyenroll=view.findViewById(R.id.tv_eenrollemptydata);
-        fab_enrollreq=view.findViewById(R.id.fab_enrollreq);
         enrollids=new ArrayList<>();
         enrollcourseids=new ArrayList<>();
         enrollList=new ArrayList<>();
@@ -113,15 +111,6 @@ public class EnrollFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
-        fab_enrollreq.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent i=new Intent(getActivity(),EnrollRequestActivity.class);
-                i.putExtra("studentid",studentid);
-                startActivity(i);
-            }
-        });
 
     }
 
@@ -168,7 +157,8 @@ public class EnrollFragment extends Fragment {
         Cursor mycursor=myhelper.getStudentEnrolls();
         if(mycursor.getCount()>0){
             while (mycursor.moveToNext()) {
-                enrollList.add(new SingleEnrollment(mycursor.getString(mycursor.getColumnIndex("Enroll_ID")),mycursor.getString(mycursor.getColumnIndex("Enroll_course_ID")),"","","","","",1));
+                String coursename=myhelper.getCoursenameById(mycursor.getString(mycursor.getColumnIndex("Enroll_course_ID")));
+                enrollList.add(new SingleEnrollment(mycursor.getString(mycursor.getColumnIndex("Enroll_ID")),mycursor.getString(mycursor.getColumnIndex("Enroll_batch_ID")),mycursor.getString(mycursor.getColumnIndex("Enroll_org_id")),mycursor.getString(mycursor.getColumnIndex("Enroll_course_ID")),coursename,"2018-05-10","2018-05-10",10));
             }
         }else{
             mycursor.close();

@@ -160,10 +160,6 @@ public class FlashFragment extends Fragment implements OnChartValueSelectedListe
             mycursor.close();
         }
 
-        if(enrollIds.size()>0){
-            updateData(sp_enrollids.getSelectedItem().toString());
-        }
-
         sp_enrollids.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view,int position,long id) {
@@ -173,7 +169,7 @@ public class FlashFragment extends Fragment implements OnChartValueSelectedListe
                 courseid=singleEnrollment.getDcourseid();
                 String cname=myhelper.getCoursenameById(courseid);
                 tv_courseid.setText(cname);
-                updateData(singleEnrollment.getEnrollid());
+                updateData(enrollid);
             }
 
             @Override
@@ -488,6 +484,7 @@ public class FlashFragment extends Fragment implements OnChartValueSelectedListe
         int i = d.intValue();
         mChart.setCenterText(generateCenterSpannableText(String.valueOf(i)));
 
+        mChart.animateXY(1400, 1400);
         setData(attemptpercent,100);
         mChart1.animateY(3000);
         setData1(3,100);

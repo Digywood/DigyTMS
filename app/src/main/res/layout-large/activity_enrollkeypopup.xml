@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="600dp"
+    android:layout_height="200sp"
+    android:background="@color/white">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:gravity="center_horizontal|center_vertical"
+        android:background="@color/green"
+        android:textStyle="bold"
+        android:textColor="@color/white"
+        android:textSize="22sp"
+        android:text="Enroll Authentication"/>
+
+    <EditText
+        android:id="@+id/et_enrollauth"
+        android:layout_width="match_parent"
+        android:gravity="center_horizontal"
+        android:layout_margin="3dp"
+        android:layout_height="60dp"
+        android:hint="Enter Key"/>
+
+    <Button
+        android:id="@+id/btn_enrollauth"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="5dp"
+        android:layout_gravity="center_horizontal"
+        android:background="@drawable/btn_details_bg"
+        android:text="Submit"/>
+
+</LinearLayout>

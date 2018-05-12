@@ -1,6 +1,5 @@
 package com.digywood.tms;
 
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
@@ -27,13 +26,15 @@ import com.digywood.tms.AsynTasks.AsyncCheckInternet;
 import com.digywood.tms.AsynTasks.BagroundTask;
 import com.digywood.tms.DBHelper.DBHelper;
 import com.digywood.tms.Fragments.CourseFragment;
-import com.digywood.tms.Fragments.DashBoardFragment;
+import com.digywood.tms.Fragments.HomeFragment;
 import com.digywood.tms.Fragments.EnrollFragment;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.util.Calendar;
 import java.util.HashMap;
+import java.util.TimeZone;
 
 public class DashBoardNavActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
@@ -54,7 +55,7 @@ public class DashBoardNavActivity extends AppCompatActivity implements Navigatio
         myhelper=new DBHelper(this);
 
         FragmentTransaction tx = getSupportFragmentManager().beginTransaction();
-        tx.replace(R.id.fl_base, new DashBoardFragment());
+        tx.replace(R.id.fl_base, new HomeFragment());
         tx.commit();
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -433,7 +434,7 @@ public class DashBoardNavActivity extends AppCompatActivity implements Navigatio
 
         if (id == R.id.nav_dashboard) {
 
-            fragmentClass = DashBoardFragment.class;
+            fragmentClass = HomeFragment.class;
             try {
                 fragment = (Fragment) fragmentClass.newInstance();
             } catch (Exception e) {
@@ -449,6 +450,12 @@ public class DashBoardNavActivity extends AppCompatActivity implements Navigatio
                 e.printStackTrace();
             }
 
+        } else if (id == R.id.nav_reqenrolls) {
+
+            Intent i=new Intent(getApplicationContext(),RequestedEnrollsActivity.class);
+            i.putExtra("studentid",studentid);
+            startActivity(i);
+
         } else if (id == R.id.nav_courses) {
 
             fragmentClass = CourseFragment.class;
@@ -462,6 +469,8 @@ public class DashBoardNavActivity extends AppCompatActivity implements Navigatio
 
         } else if (id == R.id.nav_info) {
 
+        } else if (id == R.id.nav_logout) {
+            showAlertwithTwoButtons("Would you like to exit?");
         }
 
         if(fragment!=null){
@@ -469,7 +478,7 @@ public class DashBoardNavActivity extends AppCompatActivity implements Navigatio
             fragmentManager.beginTransaction().replace(R.id.fl_base, fragment).commit();
         }
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        DrawerLayout drawer =findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
@@ -482,16 +491,6 @@ public class DashBoardNavActivity extends AppCompatActivity implements Navigatio
                     public void onClick(DialogInterface dialog, int id) {
 
                         dialog.cancel();
-//                        new AsyncCheckInternet(DashBoardNavActivity.this, new INetStatus() {
-//                            @Override
-//                            public void inetSatus(Boolean netStatus) {
-//                                if(netStatus){
-//                                    getStudentAllData();
-//                                }else{
-//                                    Toast.makeText(getApplicationContext(),"No internet,Please Check your connection",Toast.LENGTH_SHORT).show();
-//                                }
-//                            }
-//                        });
                     }
                 });
         AlertDialog alert = builder.create();
@@ -499,6 +498,36 @@ public class DashBoardNavActivity extends AppCompatActivity implements Navigatio
         alert.setTitle("Alert!");
         alert.setIcon(R.drawable.warning);
         alert.show();
+    }
+
+    public  void showAlertwithTwoButtons(String messege){
+        AlertDialog.Builder builder = new AlertDialog.Builder(DashBoardNavActivity.this,R.style.ALERT_THEME);
+        builder.setMessage(Html.fromHtml("<font color='#FFFFFF'>"+messege+"</font>"))
+                .setCancelable(false)
+                .setPositiveButton("Ok",new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+
+                        dialog.cancel();
+                        finish();
+
+                    }
+                })
+                .setNegativeButton("Cancel",new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.cancel();
+                    }
+                });
+        AlertDialog alert = builder.create();
+        //Setting the title manually
+        alert.setTitle("Alert!");
+        alert.setIcon(R.drawable.warning);
+        alert.show();
+    }
+
+    @Override
+    public void onBackPressed() {
+        showAlertwithTwoButtons("Would you like to exit?");
     }
 
 }

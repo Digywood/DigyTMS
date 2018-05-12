@@ -152,11 +152,12 @@ public class CourseFragment extends Fragment {
     }
 
     public void getEnrollsFromLocal(){
-        Cursor mycursor=myhelper.getStudentEnrolls();
 
+        Cursor mycursor=myhelper.getStudentEnrolls();
         if(mycursor.getCount()>0){
             while (mycursor.moveToNext()) {
-                enrollList.add(new SingleEnrollment(mycursor.getString(mycursor.getColumnIndex("Enroll_ID")),mycursor.getString(mycursor.getColumnIndex("Enroll_course_ID")),"","","","","",1));
+                String coursename=myhelper.getCoursenameById(mycursor.getString(mycursor.getColumnIndex("Enroll_course_ID")));
+                enrollList.add(new SingleEnrollment(mycursor.getString(mycursor.getColumnIndex("Enroll_ID")),mycursor.getString(mycursor.getColumnIndex("Enroll_batch_ID")),mycursor.getString(mycursor.getColumnIndex("Enroll_org_id")),mycursor.getString(mycursor.getColumnIndex("Enroll_course_ID")),coursename,"2018-05-10","2018-05-10",10));
             }
         }else{
             mycursor.close();
