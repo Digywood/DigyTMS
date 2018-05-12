@@ -2,13 +2,13 @@ package com.digywood.tms.Pojo;
 
 public class SingleEnrollRequest {
 
-    private String enrollId,batchId,orgId,courseName,requestDate,endDate,amount;
+    private String enrollId,batchId,orgId,courseName,requestDate,endDate,amount,status,enrollKey;
 
     public SingleEnrollRequest(){
 
     }
 
-    public SingleEnrollRequest(String enrollid,String batchid,String orgid,String coursename,String reqdate,String enddate,String amount){
+    public SingleEnrollRequest(String enrollid,String batchid,String orgid,String coursename,String reqdate,String enddate,String amount,String status,String enrollkey){
 
         this.enrollId=enrollid;
         this.batchId=batchid;
@@ -17,6 +17,8 @@ public class SingleEnrollRequest {
         this.requestDate=reqdate;
         this.endDate=enddate;
         this.amount=amount;
+        this.status=status;
+        this.enrollKey=enrollkey;
 
     }
 
@@ -74,5 +76,21 @@ public class SingleEnrollRequest {
 
     public void setAmount(String amount) {
         this.amount = amount;
+    }
+
+    public String getEnrollKey() {
+        return enrollKey;
+    }
+
+    public void setEnrollKey(String enrollKey) {
+        this.enrollKey = enrollKey;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
     }
 }

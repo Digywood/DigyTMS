@@ -1,5 +1,6 @@
 package com.digywood.tms;
 
+import android.app.Dialog;
 import android.content.Intent;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
@@ -13,6 +14,10 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
+import android.view.Window;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -34,6 +39,7 @@ public class RequestedEnrollsActivity extends AppCompatActivity {
     TextView tv_emptyenrolls;
     String studentid="";
     DBHelper myhelper;
+    Dialog mydialog;
     FloatingActionButton fab_enrollreq;
     EnrollRequestAdapter erAdp;
     LinearLayoutManager myLayoutManager;
@@ -79,6 +85,83 @@ public class RequestedEnrollsActivity extends AppCompatActivity {
             }
         });
 
+        rv_enrolls.addOnItemTouchListener(new RecyclerTouchListener(getApplicationContext(),rv_enrolls,new RecyclerTouchListener.OnItemClickListener(){
+            @Override
+            public void onClick(View view, int position) {
+                final SingleEnrollRequest singleEnrollRequest=enrollreqList.get(position);
+
+//                if(singleEnrollRequest.getStatus().equalsIgnoreCase("AUTHORISED")){
+//
+//
+//
+//                }else {
+//                    Toast.makeText(getApplicationContext(),"Not Activated Yet",Toast.LENGTH_SHORT).show();
+//                }
+
+                mydialog = new Dialog(RequestedEnrollsActivity.this);
+                mydialog.getWindow();
+                mydialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                mydialog.setContentView(R.layout.activity_enrollkeypopup);
+                mydialog.show();
+
+                final EditText et_key=mydialog.findViewById(R.id.et_enrollauth);
+                Button btn_auth=mydialog.findViewById(R.id.btn_enrollauth);
+
+                btn_auth.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+
+                        if(et_key.getText().toString().equals("")){
+                            Toast.makeText(getApplicationContext(),"Please Enter Key",Toast.LENGTH_SHORT).show();
+                        }else{
+                            if(et_key.getText().toString().equals(singleEnrollRequest.getEnrollKey())){
+                                mydialog.cancel();
+                                Toast.makeText(getApplicationContext(),"Validated",Toast.LENGTH_SHORT).show();
+                                hmap.clear();
+                                hmap.put("enrollId",singleEnrollRequest.getEnrollId());
+                                new BagroundTask(URLClass.hosturl +"getEnrollmentData.php",hmap,RequestedEnrollsActivity.this,new IBagroundListener() {
+                                    @Override
+                                    public void bagroundData(String json) {
+                                        try{
+                                            Log.e("EnrollActivity----",json);
+                                            if(json.equalsIgnoreCase("Enrollment_Not_Exist")){
+                                                Toast.makeText(getApplicationContext(),"Unable to get Enrollment",Toast.LENGTH_SHORT).show();
+                                            }else{
+                                                JSONObject myObj=null;
+                                                JSONArray ja=new JSONArray(json);
+                                                for(int i=0;i<ja.length();i++){
+                                                    myObj=ja.getJSONObject(i);
+                                                    long insertFlag=myhelper.insertEnrollment(myObj.getInt("Enroll_key"),myObj.getString("Enroll_ID"),myObj.getString("Enroll_org_id"),myObj.getString("Enroll_Student_ID"),
+                                                            myObj.getString("Enroll_batch_ID"),myObj.getString("Enroll_course_ID"),myObj.getString("Enroll_batch_start_Dt"),myObj.getString("Enroll_batch_end_Dt"),
+                                                            myObj.getString("Enroll_Device_ID"),myObj.getString("Enroll_Date"),myObj.getString("Enroll_Status"));
+                                                    if(insertFlag>0){
+                                                        Log.e("ReqEnrollActivity---","Enroll Inserted");
+                                                    }else {
+                                                        Log.e("ReqEnrollActivity---","Unable to insert Enroll");
+                                                    }
+                                                }
+                                            }
+                                        }catch (Exception e){
+                                            e.printStackTrace();
+                                            Log.e("EnrollActivity----",e.toString());
+                                        }
+                                    }
+                                }).execute();
+                            }else{
+                                Toast.makeText(getApplicationContext(),"Wrong Key",Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                    }
+                });
+
+            }
+
+            @Override
+            public void onLongClick(View view, int position) {
+
+            }
+        }));
+
         getEnrollReqsFromServer();
 
     }
@@ -99,7 +182,7 @@ public class RequestedEnrollsActivity extends AppCompatActivity {
                         for(int i=0;i<ja.length();i++){
                             myObj=ja.getJSONObject(i);
                             String coursename=myhelper.getCoursenameById(myObj.getString("Enroll_course_ID"));
-                            enrollreqList.add(new SingleEnrollRequest(myObj.getString("Enroll_ID"),myObj.getString("Enroll_batch_ID"),myObj.getString("Enroll_org_id"),coursename,myObj.getString("enroll_Request_Date"),myObj.getString("Enroll_batch_end_Dt"),myObj.getString("enroll_Total_Amount")));
+                            enrollreqList.add(new SingleEnrollRequest(myObj.getString("Enroll_ID"),myObj.getString("Enroll_batch_ID"),myObj.getString("Enroll_org_id"),coursename,myObj.getString("enroll_Request_Date"),myObj.getString("Enroll_batch_end_Dt"),myObj.getString("enroll_Total_Amount"),myObj.getString("Enroll_Status"),myObj.getString("enroll_Activation_Key")));
                         }
                     }
                     setData();
