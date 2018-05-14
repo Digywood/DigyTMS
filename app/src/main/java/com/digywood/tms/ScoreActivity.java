@@ -178,7 +178,7 @@ public class ScoreActivity extends AppCompatActivity {
                 if (testType.equalsIgnoreCase("PRACTICE")) {
                     qflag = dataObj.updateTest(testId,subjectid,courseid,dataObj.getQuestionCount(),MaxMarks,minscore,maxscore,avgscore,minscore,maxscore,avgscore);
                 } else{
-                    qflag = dataObj.updateAssesmentTest(testId,subjectid,courseid,dataObj.getQuestionCount(),MaxMarks,minscore,maxscore,avgscore,minscore,maxscore,avgscore);
+                    qflag = dataObj.updateAssessmentTestRecord(testId,subjectid,courseid,dataObj.getQuestionCount(),MaxMarks,minscore,maxscore,avgscore,minscore,maxscore,avgscore);
                 }
                 if(qflag > 0){
                     //only if the data is inserted into the table, it should be displayed on screen

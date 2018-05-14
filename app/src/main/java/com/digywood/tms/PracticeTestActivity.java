@@ -73,7 +73,7 @@ public class PracticeTestActivity extends AppCompatActivity implements
     ImageView fullscreen;
     GridView gridView;
     Spinner sections;
-    String jsonPath,imgPath, photoPath, Seq, Id, path,enrollid,courseid,subjectId,paperid,testid,groupId;
+    String jsonPath,imgPath, photoPath, Seq, Id, path,enrollid,courseid,subjectId,paperid,testid,groupId,studentId;
     final String notAttempted = "NOT_ATTEMPTED", attempted = "ATTEMPTED", skipped = "SKIPPED", bookmarked = "BOOKMARKED",not_confirmed = "NOT_CONFIRMED",confirmed = "CONFIRMED";
     EncryptDecrypt encObj;
     RecyclerView question_scroll;
@@ -85,11 +85,6 @@ public class PracticeTestActivity extends AppCompatActivity implements
     ArrayList<String> categories;
     private static final String TAG = "PracticeTestActivity";
     ArrayList<Integer> oplist = new ArrayList<>();
-    ArrayList<Integer> list = new ArrayList<>();
-    ArrayList<Integer> optionsTemp = new ArrayList<>();
-    ArrayList<SingleSections> sectionList = new ArrayList<>();
-    ArrayList<SingleQuestion> questionList = new ArrayList<>();
-    ArrayList<Integer> correctOptionList = new ArrayList<>();
     ArrayList<SingleOptions> optionsList = new ArrayList<>();
     ArrayList<SingleQuestionList> questionOpList = new ArrayList<>();
     ArrayList<ArrayList<SingleQuestionList>> listOfLists = new ArrayList<>();
@@ -103,9 +98,9 @@ public class PracticeTestActivity extends AppCompatActivity implements
     final Boolean edit = true;
     public static final int RequestPermissionCode = 1;
     static int index = 0, pos = 0, max = 1, grp = 0, size, count = 0;
-    JSONObject obj, sectionobj, groupobj, questionobj, temp;
+    JSONObject obj, questionobj, temp;
     public static JSONObject attempt;
-    JSONArray array, optionsArray, groupArray, sectionArray, attemptsectionarray, buffer;
+    JSONArray array, optionsArray, sectionArray, attemptsectionarray, buffer;
     SingleOptions option;
     SingleQuestionList qListObj;
     OptionsCheckAdapter opAdapter;
@@ -231,6 +226,7 @@ public class PracticeTestActivity extends AppCompatActivity implements
                     enrollid = cursor.getString(cursor.getColumnIndex("sptu_entroll_id"));
                     courseid = cursor.getString(cursor.getColumnIndex("sptu_course_id"));
                     subjectId = cursor.getString(cursor.getColumnIndex("sptu_subjet_ID"));
+                    studentId=cursor.getString(cursor.getColumnIndex("sptu_student_ID"));
                     paperid = cursor.getString(cursor.getColumnIndex("sptu_paper_ID"));
                 }
             }
@@ -616,7 +612,7 @@ public class PracticeTestActivity extends AppCompatActivity implements
 
     public String generateUniqueId(int i){
         String AttemptId ="";
-        AttemptId = testid.concat("_"+String.valueOf(dataObj.getTestAttempCount(testid) + i));
+        AttemptId = testid.concat("_"+studentId+"_"+String.valueOf(dataObj.getTestAttempCount(testid) + i));
         Log.e("Attempt Id", AttemptId);
         return AttemptId;
     }

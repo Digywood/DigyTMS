@@ -502,8 +502,8 @@ public class DashBoardNavActivity extends AppCompatActivity implements Navigatio
                 @Override
                 public void inetSatus(Boolean netStatus) {
                     if(netStatus){
-//                        getStudentAllData();
-                        syncFlashCardData();
+                        getStudentAllData();
+//                        syncFlashCardData();
                     }else{
                         Toast.makeText(getApplicationContext(),"No internet,Please Check your connection",Toast.LENGTH_SHORT).show();
                     }
