@@ -28,10 +28,10 @@ import com.digywood.tms.DBHelper.DBHelper;
 import com.digywood.tms.Fragments.CourseFragment;
 import com.digywood.tms.Fragments.HomeFragment;
 import com.digywood.tms.Fragments.EnrollFragment;
+import com.digywood.tms.Pojo.SingleDWDQues;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
-
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.TimeZone;
@@ -401,6 +401,52 @@ public class DashBoardNavActivity extends AppCompatActivity implements Navigatio
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
+        if (id == R.id.action_practisesync) {
+            new AsyncCheckInternet(DashBoardNavActivity.this, new INetStatus() {
+                @Override
+                public void inetSatus(Boolean netStatus) {
+                    if(netStatus){
+                        syncPractiseTestData();
+                    }else{
+                        Toast.makeText(getApplicationContext(),"No internet,Please Check your connection",Toast.LENGTH_SHORT).show();
+                    }
+                }
+            });
+            return true;
+        }
+
+        //noinspection SimplifiableIfStatement
+        if (id == R.id.action_flashsync) {
+            Toast.makeText(getApplicationContext(),"Clicked",Toast.LENGTH_SHORT).show();
+            new AsyncCheckInternet(DashBoardNavActivity.this, new INetStatus() {
+                @Override
+                public void inetSatus(Boolean netStatus) {
+                    if(netStatus){
+                        syncFlashCardData();
+                    }else{
+                        Toast.makeText(getApplicationContext(),"No internet,Please Check your connection",Toast.LENGTH_SHORT).show();
+                    }
+                }
+            });
+            return true;
+        }
+
+        //noinspection SimplifiableIfStatement
+        if (id == R.id.action_assesssync) {
+            new AsyncCheckInternet(DashBoardNavActivity.this, new INetStatus() {
+                @Override
+                public void inetSatus(Boolean netStatus) {
+                    if(netStatus){
+                        syncAssesmentTestData();
+                    }else{
+                        Toast.makeText(getApplicationContext(),"No internet,Please Check your connection",Toast.LENGTH_SHORT).show();
+                    }
+                }
+            });
+            return true;
+        }
+
+        //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
             return true;
         }
@@ -456,7 +502,8 @@ public class DashBoardNavActivity extends AppCompatActivity implements Navigatio
                 @Override
                 public void inetSatus(Boolean netStatus) {
                     if(netStatus){
-                        getStudentAllData();
+//                        getStudentAllData();
+                        syncFlashCardData();
                     }else{
                         Toast.makeText(getApplicationContext(),"No internet,Please Check your connection",Toast.LENGTH_SHORT).show();
                     }
@@ -521,6 +568,124 @@ public class DashBoardNavActivity extends AppCompatActivity implements Navigatio
         alert.setTitle("Alert!");
         alert.setIcon(R.drawable.warning);
         alert.show();
+    }
+
+    public  void syncPractiseTestData(){
+
+        JSONObject finalFlashObj=new JSONObject();
+        Cursor mycursor=myhelper.getPractiseUploadData("NotUploaded");
+        if(mycursor.getCount()>0){
+            try{
+                JSONArray FlashList = new JSONArray();
+                JSONObject FlashData;
+                while (mycursor.moveToNext()){
+                    FlashData = new JSONObject();
+                    FlashData.put("studentId",mycursor.getString(mycursor.getColumnIndex("studentId")));
+                    FlashData.put("enrollmentId",mycursor.getString(mycursor.getColumnIndex("enrollmentId")));
+                    FlashData.put("courseId",mycursor.getString(mycursor.getColumnIndex("courseId")));
+                    FlashData.put("subjectId",mycursor.getString(mycursor.getColumnIndex("subjectId")));
+                    FlashData.put("paperId",mycursor.getString(mycursor.getColumnIndex("paperId")));
+                    FlashData.put("flashcardId",mycursor.getString(mycursor.getColumnIndex("flashcardId")));
+                    FlashData.put("attemptNumber",mycursor.getInt(mycursor.getColumnIndex("attemptNumber")));
+                    FlashData.put("startDttm",mycursor.getString(mycursor.getColumnIndex("startDttm")));
+                    FlashData.put("endDttm",mycursor.getString(mycursor.getColumnIndex("endDttm")));
+                    FlashData.put("attemptQCount",mycursor.getInt(mycursor.getColumnIndex("attemptQCount")));
+                    FlashData.put("iknowCount",mycursor.getInt(mycursor.getColumnIndex("iknowCount")));
+                    FlashData.put("donknowCount",mycursor.getInt(mycursor.getColumnIndex("donknowCount")));
+                    FlashData.put("skipCount",mycursor.getInt(mycursor.getColumnIndex("skipCount")));
+                    FlashData.put("percentageObtain",mycursor.getDouble(mycursor.getColumnIndex("percentageObtain")));
+                    FlashList.put(FlashData);
+                }
+                finalFlashObj.put("FlashData",FlashList);
+
+                hmap.clear();
+                hmap.put("FlashData",finalFlashObj.toString());
+                new BagroundTask(URLClass.hosturl +"syncFlashData.php", hmap,DashBoardNavActivity.this,new IBagroundListener() {
+                    @Override
+                    public void bagroundData(String json) {
+                        try{
+                            Log.e("json"," comes :  "+json);
+                            if(json.equalsIgnoreCase("Inserted")){
+                                Toast.makeText(getApplicationContext(),"FlashData Syncronised",Toast.LENGTH_SHORT).show();
+                            }else{
+                                Toast.makeText(getApplicationContext(),"Sorry,Try Again Later",Toast.LENGTH_SHORT).show();
+                            }
+                        }catch (Exception e){
+                            e.printStackTrace();
+                            Log.e("DashBoardNavActivity","  :  "+e.toString());
+                        }
+                    }
+                }).execute();
+
+            }catch (Exception e){
+                e.printStackTrace();
+                Log.e("DashNavActivity-----",e.toString());
+            }
+        }else{
+            Toast.makeText(getApplicationContext(),"No FlashCard Data to Upload",Toast.LENGTH_SHORT).show();
+        }
+
+    }
+
+    public  void syncFlashCardData(){
+
+        JSONObject finalFlashObj=new JSONObject();
+        Cursor mycursor=myhelper.getFlashUploadData("NotUploaded");
+        if(mycursor.getCount()>0){
+            try{
+                JSONArray FlashList = new JSONArray();
+                JSONObject FlashData;
+                while (mycursor.moveToNext()){
+                    FlashData = new JSONObject();
+                    FlashData.put("studentId",mycursor.getString(mycursor.getColumnIndex("studentId")));
+                    FlashData.put("enrollmentId",mycursor.getString(mycursor.getColumnIndex("enrollmentId")));
+                    FlashData.put("courseId",mycursor.getString(mycursor.getColumnIndex("courseId")));
+                    FlashData.put("subjectId",mycursor.getString(mycursor.getColumnIndex("subjectId")));
+                    FlashData.put("paperId",mycursor.getString(mycursor.getColumnIndex("paperId")));
+                    FlashData.put("flashcardId",mycursor.getString(mycursor.getColumnIndex("flashcardId")));
+                    FlashData.put("attemptNumber",mycursor.getInt(mycursor.getColumnIndex("attemptNumber")));
+                    FlashData.put("startDttm",mycursor.getString(mycursor.getColumnIndex("startDttm")));
+                    FlashData.put("endDttm",mycursor.getString(mycursor.getColumnIndex("endDttm")));
+                    FlashData.put("attemptQCount",mycursor.getInt(mycursor.getColumnIndex("attemptQCount")));
+                    FlashData.put("iknowCount",mycursor.getInt(mycursor.getColumnIndex("iknowCount")));
+                    FlashData.put("donknowCount",mycursor.getInt(mycursor.getColumnIndex("donknowCount")));
+                    FlashData.put("skipCount",mycursor.getInt(mycursor.getColumnIndex("skipCount")));
+                    FlashData.put("percentageObtain",mycursor.getDouble(mycursor.getColumnIndex("percentageObtain")));
+                    FlashList.put(FlashData);
+                }
+                finalFlashObj.put("FlashData",FlashList);
+
+                hmap.clear();
+                hmap.put("FlashData",finalFlashObj.toString());
+                new BagroundTask(URLClass.hosturl +"syncFlashData.php", hmap,DashBoardNavActivity.this,new IBagroundListener() {
+                    @Override
+                    public void bagroundData(String json) {
+                        try{
+                            Log.e("json"," comes :  "+json);
+                            if(json.equalsIgnoreCase("Inserted")){
+                                Toast.makeText(getApplicationContext(),"FlashData Syncronised",Toast.LENGTH_SHORT).show();
+                            }else{
+                                Toast.makeText(getApplicationContext(),"Sorry,Try Again Later",Toast.LENGTH_SHORT).show();
+                            }
+                        }catch (Exception e){
+                            e.printStackTrace();
+                            Log.e("DashBoardNavActivity","  :  "+e.toString());
+                        }
+                    }
+                }).execute();
+
+            }catch (Exception e){
+                e.printStackTrace();
+                Log.e("DashNavActivity-----",e.toString());
+            }
+        }else{
+            Toast.makeText(getApplicationContext(),"No FlashCard Data to Upload",Toast.LENGTH_SHORT).show();
+        }
+
+    }
+
+    public  void syncAssesmentTestData(){
+
     }
 
     @Override
