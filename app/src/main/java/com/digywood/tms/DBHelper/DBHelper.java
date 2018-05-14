@@ -232,6 +232,7 @@ public class DBHelper extends SQLiteOpenHelper {
                 "   `Attempt_subjectId` TEXT DEFAULT NULL,\n"+
                 "   `Attempt_paperId` TEXT DEFAULT NULL,\n"+
                 "   `Attempt_Status` int(5) NOT NULL,\n"+
+                "   `Attempt_Upload_Status` TEXT NOT NULL,\n"+
                 "   `Attempt_RemainingTime` int(5) DEFAULT NULL,\n"+
                 "   `Attempt_LastQuestion` int(5) DEFAULT NULL,\n"+
                 "   `Attempt_LastSection` int(5) DEFAULT NULL,\n"+
@@ -244,7 +245,6 @@ public class DBHelper extends SQLiteOpenHelper {
         db.execSQL(AttemptList);
 
         String AssesmentTestList ="CREATE TABLE `Assesment_list` (\n"+
-                "   `Assesment_ID` TEXT,\n"+
                 "   `Assesment_Test_ID` TEXT,\n"+
                 "   `Assesment_enrollId` TEXT DEFAULT NULL,\n"+
                 "   `Assesment_studentId` TEXT DEFAULT NULL,\n"+
@@ -298,7 +298,7 @@ public class DBHelper extends SQLiteOpenHelper {
                 "   `Question_Negative_Applied` double(15) DEFAULT NULL,\n"+
                 "   `Question_Option` int(15) DEFAULT NULL,\n"+
                 "   `Question_Status` varchar(20) DEFAULT NULL,\n"+
-                "   `Question_Upload_Status` int DEFAULT NULL,\n"+
+                "   `Question_Upload_Status` TEXT DEFAULT NULL,\n"+
                 "   `Question_Option_Sequence` varchar(20) DEFAULT NULL,\n"+
                 "   `Option_Answer_Flag` varchar(15) DEFAULT NULL,\n"+
                 "   PRIMARY KEY (`Question_ID`)\n"+
@@ -518,26 +518,20 @@ public class DBHelper extends SQLiteOpenHelper {
         return insertFlag;
     }
 
-    public long updateAssesmentTest(String torgid,String tenrollid,String tstudentid,String tbatch,String tid,String tpid,String tsid,String tcid,String tstartdate,String tenddate,String tdwdstatus,int tnoofques,String testfilename,String testKey,Double ttotalmarks,Double tminmarks,Double tmaxmarks){
+    public long updateAssesmentTest(String tID,String tsid,String tcid,int tnoofques,Double ttotalmarks,Double tminmarks,Double tmaxmarks,Double avgscore,Double tminperc, Double tmaxperc, Double tavgperc){
         long updateFlag=0;
         ContentValues cv = new ContentValues();
-        cv.put("satu_org_id",torgid);
-        cv.put("satu_entroll_id",tenrollid);
-        cv.put("satu_student_id",tstudentid);
-        cv.put("satu_batch",tbatch);
-        cv.put("satu_paper_ID",tpid);
-        cv.put("satu_subjet_ID",tsid);
-        cv.put("satu_course_id",tcid);
-        cv.put("satu_start_date",tstartdate);
-        cv.put("satu_end_date",tenddate);
-        cv.put("satu_dwnld_status",tdwdstatus);
-        cv.put("satu_no_of_questions",tnoofques);
-        cv.put("satu_file",testfilename);
-        cv.put("satu_exam_key",testKey);
-        cv.put("satu_tot_marks",ttotalmarks);
-        cv.put("satu_min_marks",tminmarks);
-        cv.put("satu_max_marks",tmaxmarks);
-        updateFlag=db.update("satu_student", cv, "satu_ID='"+tid+"'",null);
+        cv.put("sptu_subjet_ID",tsid);
+        cv.put("sptu_course_id",tcid);
+        cv.put("sptu_no_of_questions",tnoofques);
+        cv.put("sptu_tot_marks",ttotalmarks);
+        cv.put("stpu_min_marks",tminmarks);
+        cv.put("sptu_min_percent",tminperc);
+        cv.put("sptu_max_marks",tmaxmarks);
+        cv.put("sptu_max_percent",tmaxperc);
+        cv.put("sptu_avg_marks",avgscore);
+        cv.put("sptu_avg_percent",tavgperc);
+        updateFlag=db.update("satu_student", cv, "satu_ID='"+tID+"'",null);
         return updateFlag;
     }
 
@@ -845,7 +839,7 @@ public class DBHelper extends SQLiteOpenHelper {
     }
 
     public long insertCourse(int ckey,String cid,String cname,String cshname,String ctype,String ccategory,String csubcategory,String cduration,String cminduration,String cmaxduration,String cstatus){
-        long insertFlag=0;
+        long insertFlag= 0;
         ContentValues cv = new ContentValues();
         cv.put("Course_Key",ckey);
         cv.put("Course_ID",cid);
@@ -1005,6 +999,47 @@ public class DBHelper extends SQLiteOpenHelper {
         cv.put("lastAttemptDttm",Dttm);
         cv.put("lastAttemptScore",lastAttemptscore);
         updateFlag=db.update("sptu_student", cv,"sptu_ID='"+testid+"'",null);
+        return  updateFlag;
+    }
+
+    public long insertAssessmentTest(int tkey,String torgid,String tenrollid,String tstudentid,String tbatch,String tid,String testname,String tpid,String tsid,String tcid,String tstartdate,String tenddate,String tdwdstatus,int tnoofques,Double ttotalmarks,Double tminmarks,Double tmaxmarks,Double tavgmarks){
+        long insertFlag=0;
+        ContentValues cv = new ContentValues();
+        cv.put("satu_key",tkey);
+        cv.put("satu_org_id",torgid);
+        cv.put("satu_entroll_id",tenrollid);
+        cv.put("satu_student_id",tstudentid);
+        cv.put("satu_batch",tbatch);
+        cv.put("satu_ID",tid);
+        cv.put("satu_paper_ID",tpid);
+        cv.put("satu_subjet_ID",tsid);
+        cv.put("satu_course_id",tcid);
+        cv.put("satu_start_date",tstartdate);
+        cv.put("satu_end_date",tenddate);
+        cv.put("satu_dwnld_status",tdwdstatus);
+        cv.put("satu_no_of_questions",tnoofques);
+        cv.put("satu_tot_marks",ttotalmarks);
+        cv.put("satu_min_marks",tminmarks);
+        cv.put("satu_max_marks",tmaxmarks);
+        cv.put("satu_avg_marks",tavgmarks);
+        insertFlag = db.insert("satu_student",null, cv);
+        return insertFlag;
+    }
+
+    public long UpdateAssessmentTest(String tID,String tsid,String tcid,int tnoofques,Double ttotalmarks,Double tminmarks,Double tmaxmarks,Double avgscore,Double tminperc, Double tmaxperc, Double tavgperc){
+        long updateFlag=0;
+        ContentValues cv = new ContentValues();
+        cv.put("satu_subjet_ID",tsid);
+        cv.put("satu_course_id",tcid);
+        cv.put("satu_no_of_questions",tnoofques);
+        cv.put("satu_tot_marks",ttotalmarks);
+        cv.put("sapu_min_marks",tminmarks);
+        cv.put("satu_min_percent",tminperc);
+        cv.put("satu_max_marks",tmaxmarks);
+        cv.put("satu_max_percent",tmaxperc);
+        cv.put("satu_avg_marks",avgscore);
+        cv.put("satu_avg_percent",tavgperc);
+        updateFlag=db.update("sptu_student", cv,"sptu_ID='"+tID+"'",null);
         return  updateFlag;
     }
 
@@ -1651,7 +1686,7 @@ public class DBHelper extends SQLiteOpenHelper {
 //        db.execSQL("TRUNCATE table " +table);
     }
 
-    public long InsertAttempt( String aId,String testID,String eid,String sid,String cid,String subid,String pid,int status, int aScore, int attempted, int skipped, int bookmarked, int unattempted, int aperc,long aTime,int index,int pos){
+    public long InsertAttempt( String aId,String testID,String eid,String sid,String cid,String subid,String pid,int status,String Upstatus, int aScore, int attempted, int skipped, int bookmarked, int unattempted, int aperc,long aTime,int index,int pos){
 
         long insertFlag=0;
 
@@ -1664,6 +1699,7 @@ public class DBHelper extends SQLiteOpenHelper {
         cv.put("Attempt_subjectId", subid);
         cv.put("Attempt_paperId", pid);
         cv.put("Attempt_Status", status);
+        cv.put("Attempt_Upload_Status", Upstatus);
         cv.put("Attempt_Confirmed", attempted);
         cv.put("Attempt_Skipped", skipped);
         cv.put("Attempt_Bookmarked",bookmarked);
@@ -1684,11 +1720,12 @@ public class DBHelper extends SQLiteOpenHelper {
         return c;
     }
 
-    public long UpdateAttempt(String aID,String testID,int status, double aScore, int attempted, int skipped, int bookmarked, int unattempted, double aperc,long aTime,int index,int pos){
+    public long UpdateAttempt(String aID,String testID,int status,String Upstatus, double aScore, int attempted, int skipped, int bookmarked, int unattempted, double aperc,long aTime,int index,int pos){
 
         long updateFlag=0;
         ContentValues cv = new ContentValues();
         cv.put("Attempt_Status", status);
+        cv.put("Attempt_Upload_Status", Upstatus);
         cv.put("Attempt_Test_ID", testID);
         cv.put("Attempt_Confirmed", attempted);
         cv.put("Attempt_Skipped", skipped);
@@ -1765,12 +1802,11 @@ public class DBHelper extends SQLiteOpenHelper {
         return c;
     }
 
-    public long InsertAssessment( String aId,String testID,String eid,String sid,String cid,String subid,String pid,int status,String dateTime, int aScore, int attempted, int skipped, int bookmarked, int unattempted, int aperc,long aTime,int index,int pos){
+    public long InsertAssessment( String testID,String eid,String sid,String cid,String subid,String pid,int status,String dateTime, double aScore, int attempted, int skipped, int bookmarked, int unattempted, double aperc,long aTime,int index,int pos){
 
         long insertFlag=0;
 
         ContentValues cv = new ContentValues();
-        cv.put("Assesment_ID", aId);
         cv.put("Assesment_Test_ID", testID);
         cv.put("Assesment_enrollId", eid);
         cv.put("Assesment_studentId", sid);
@@ -1792,7 +1828,7 @@ public class DBHelper extends SQLiteOpenHelper {
         return insertFlag;
     }
 
-    public long UpdateAssessment(String testID,String eid,String sid,String cid,String subid,String pid,int status,String dateTime, int aScore, int attempted, int skipped, int bookmarked, int unattempted, int aperc,long aTime,int index,int pos){
+    public long UpdateAssessment(String testID,String eid,String sid,String cid,String subid,String pid,int status,String dateTime, Double aScore, int attempted, int skipped, int bookmarked, int unattempted, double aperc,long aTime,int index,int pos){
 
         long updateFlag=0;
 
@@ -1822,7 +1858,7 @@ public class DBHelper extends SQLiteOpenHelper {
         return c;
     }
 
-    public long InsertAssessmentQuestion(String testId,String qId,String qSeq,String qSec,String cat,String subcat, double maxMarks,double negMarks,double marksObtained,double negApplied, int option,String status,int Upstatus,String oSeq,String flag){
+    public long InsertAssessmentQuestion(String testId,String qId,String qSeq,String qSec,String cat,String subcat, double maxMarks,double negMarks,double marksObtained,double negApplied, int option,String status,String Upstatus,String oSeq,String flag){
 
         long insertFlag=0;
 
@@ -1850,7 +1886,7 @@ public class DBHelper extends SQLiteOpenHelper {
     }
 
 
-    public long UpdateAssessmentQuestion(String testId,String qId,String qSeq,String qSec,String cat,String subcat, double maxMarks,double negMarks,double marksObtained,double negApplied, int option,String status,int Upstatus,String oSeq,String flag){
+    public long UpdateAssessmentQuestion(String testId,String qId,String qSeq,String qSec,String cat,String subcat, double maxMarks,double negMarks,double marksObtained,double negApplied, int option,String status,String Upstatus,String oSeq,String flag){
 
         long updateFlag=0;
 
@@ -1877,19 +1913,19 @@ public class DBHelper extends SQLiteOpenHelper {
     }
 
     public Cursor getAssessmentSections(){
-        String query ="SELECT DISTINCT Question_Section FROM attempt_data";
+        String query ="SELECT DISTINCT Question_Section FROM assessment_data";
         Cursor c=db.rawQuery(query,null);
         return c;
     }
 
     public Cursor getAssessmentSubcategories(){
-        String query ="SELECT DISTINCT Question_SubCategory FROM attempt_data";
+        String query ="SELECT DISTINCT Question_SubCategory FROM assessment_data";
         Cursor c=db.rawQuery(query,null);
         return c;
     }
 
     public int getAssessmentSectionQuestions(String subct){
-        String query ="SELECT * FROM attempt_data WHERE Question_Section ='"+subct+"'";
+        String query ="SELECT * FROM assessment_data WHERE Question_Section ='"+subct+"'";
         Cursor c=db.rawQuery(query,null);
         int count = c.getCount();
         c.close();
@@ -1897,7 +1933,7 @@ public class DBHelper extends SQLiteOpenHelper {
     }
 
     public int getAssessmentSectionQuesAns(String subct){
-        String query ="SELECT * FROM attempt_data WHERE Question_Section ='"+subct+"' and Question_Status NOT IN ('NOT_ATTEMPTED','SKIPPED')";
+        String query ="SELECT * FROM assessment_data WHERE Question_Section ='"+subct+"' and Question_Status NOT IN ('NOT_ATTEMPTED','SKIPPED')";
         Cursor c=db.rawQuery(query,null);
         int count = c.getCount();
         c.close();
@@ -1905,7 +1941,7 @@ public class DBHelper extends SQLiteOpenHelper {
     }
 
     public int getAssessmentSectionQuesSkip(String subct){
-        String query ="SELECT * FROM attempt_data WHERE Question_Section ='"+subct+"' and Question_Status <> 'SKIPPED'";
+        String query ="SELECT * FROM assessment_data WHERE Question_Section ='"+subct+"' and Question_Status <> 'SKIPPED'";
         Cursor c=db.rawQuery(query,null);
         int count = c.getCount();
         c.close();
@@ -1913,7 +1949,7 @@ public class DBHelper extends SQLiteOpenHelper {
     }
 
     public int getAssessmentSectionQuesCorrect(String subct){
-        String query ="SELECT * FROM attempt_data WHERE  Option_Answer_Flag = 'YES' and Question_Section ='"+subct+"' and Question_Status <> 'SKIPPED'";
+        String query ="SELECT * FROM assessment_data WHERE  Option_Answer_Flag = 'YES' and Question_Section ='"+subct+"' and Question_Status <> 'SKIPPED'";
         Cursor c=db.rawQuery(query,null);
         int count = c.getCount();
         c.close();
@@ -1921,7 +1957,7 @@ public class DBHelper extends SQLiteOpenHelper {
     }
 
     public int getAssessmentSubCatQuestions(String subct){
-        String query ="SELECT * FROM attempt_data WHERE Question_SubCategory ='"+subct+"'";
+        String query ="SELECT * FROM assessment_data WHERE Question_SubCategory ='"+subct+"'";
         Cursor c=db.rawQuery(query,null);
         int count = c.getCount();
         c.close();
@@ -1929,7 +1965,7 @@ public class DBHelper extends SQLiteOpenHelper {
     }
 
     public int getAssessmentSubCatQuesAns(String subct){
-        String query ="SELECT * FROM attempt_data WHERE Question_SubCategory ='"+subct+"' and Question_Status NOT IN ('NOT_ATTEMPTED','SKIPPED')";
+        String query ="SELECT * FROM assessment_data WHERE Question_SubCategory ='"+subct+"' and Question_Status NOT IN ('NOT_ATTEMPTED','SKIPPED')";
         Cursor c=db.rawQuery(query,null);
         int count = c.getCount();
         c.close();
@@ -1945,7 +1981,7 @@ public class DBHelper extends SQLiteOpenHelper {
     }
 
     public int getAssessmentSubCatQuesCorrect(String subct){
-        String query ="SELECT * FROM attempt_data WHERE  Option_Answer_Flag = 'YES' and Question_SubCategory ='"+subct+"' and Question_Status <> 'SKIPPED'";
+        String query ="SELECT * FROM assessment_data WHERE  Option_Answer_Flag = 'YES' and Question_SubCategory ='"+subct+"' and Question_Status <> 'SKIPPED'";
         Cursor c=db.rawQuery(query,null);
         int count = c.getCount();
         c.close();
@@ -1953,7 +1989,7 @@ public class DBHelper extends SQLiteOpenHelper {
     }
     public Boolean AssessmentCheckQuestion(String qId){
         Boolean value = false;
-        String query ="SELECT  Question_Option FROM "+" attempt_data"+" WHERE Question_ID ='"+qId+"'";
+        String query ="SELECT  Question_Option FROM "+" assessment_data"+" WHERE Question_ID ='"+qId+"'";
         db=this.getWritableDatabase();
         Cursor cursor=db.rawQuery(query,null);
         cursor.moveToFirst();
