@@ -541,12 +541,21 @@ public class DBHelper extends SQLiteOpenHelper {
         return updateFlag;
     }
 
-    public long updateATestStatus(String testid,String status){
+    public long updateAssessmentTestRecord(String tID,String tsid,String tcid,int tnoofques,Double ttotalmarks,Double tminmarks,Double tmaxmarks,Double avgscore,Double tminperc, Double tmaxperc, Double tavgperc){
         long updateFlag=0;
         ContentValues cv = new ContentValues();
-        cv.put("satu_dwnld_status", status);
-        updateFlag=db.update("satu_student", cv, "satu_ID='"+testid+"'",null);
-        return  updateFlag;
+       cv.put("sptu_subjet_ID",tsid);
+       cv.put("sptu_course_id",tcid);
+       cv.put("sptu_no_of_questions",tnoofques);
+       cv.put("sptu_tot_marks",ttotalmarks);
+       cv.put("stpu_min_marks",tminmarks);
+       cv.put("sptu_min_percent",tminperc);
+       cv.put("sptu_max_marks",tmaxmarks);
+       cv.put("sptu_max_percent",tmaxperc);
+       cv.put("sptu_avg_marks",avgscore);
+       cv.put("sptu_avg_percent",tavgperc);
+       updateFlag=db.update("satu_student", cv, "satu_ID='"+tID+"'",null);
+       return updateFlag;
     }
 
     public int getAssessmentTestsByPaper(String paperid){
@@ -1754,7 +1763,7 @@ public class DBHelper extends SQLiteOpenHelper {
     }
 
     public Cursor getTestAttemptData(String testId){
-        Cursor c =db.query("attempt_list", new String[] {"Attempt_ID,Attempt_Test_ID,Attempt_Status,Attempt_Confirmed,Attempt_Skipped,Attempt_Bookmarked,Attempt_UnAttempted,Attempt_Score,Attempt_Percentage"},"Attempt_Test_ID='"+testId+"'", null, null, null,"Attempt_ID DESC");
+        Cursor c =db.query("attempt_list", new String[] {"Attempt_ID,Attempt_Test_ID,Attempt_Status,Attempt_Upload_Status,Attempt_Confirmed,Attempt_Skipped,Attempt_Bookmarked,Attempt_UnAttempted,Attempt_Score,Attempt_Percentage"},"Attempt_Test_ID='"+testId+"'", null, null, null,"Attempt_ID DESC");
         return  c;
     }
 
