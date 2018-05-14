@@ -285,25 +285,25 @@ public class DBHelper extends SQLiteOpenHelper {
                 ")";
         db.execSQL(AttemptData);
 
-//        String AssessmentData=" CREATE TABLE `attempt_data` (\n"+
-//                "   `Test_ID` varchar(15),\n" +
-//                "   `Attempt_ID` TEXT,\n"+
-//                "   `Question_ID` varchar(15),\n" +
-//                "   `Question_Seq_No` varchar(15) DEFAULT NULL,\n" +
-//                "   `Question_Section` varchar(15) DEFAULT NULL,\n" +
-//                "   `Question_Category` varchar(15) DEFAULT NULL,\n" +
-//                "   `Question_SubCategory` varchar(15) DEFAULT NULL,\n" +
-//                "   `Question_Max_Marks` double(15) DEFAULT NULL,\n"+
-//                "   `Question_Negative_Marks` double(15) DEFAULT NULL,\n"+
-//                "   `Question_Marks_Obtained` double(15) DEFAULT NULL,\n"+
-//                "   `Question_Negative_Applied` double(15) DEFAULT NULL,\n"+
-//                "   `Question_Option` int(15) DEFAULT NULL,\n"+
-//                "   `Question_Status` varchar(20) DEFAULT NULL,\n"+
-//                "   `Question_Option_Sequence` varchar(20) DEFAULT NULL,\n"+
-//                "   `Option_Answer_Flag` varchar(15) DEFAULT NULL,\n"+
-//                "   PRIMARY KEY (`Question_ID`)\n"+
-//                ")";
-//        db.execSQL(AssessmentData);
+        String AssessmentData=" CREATE TABLE `assessment_data` (\n"+
+                "   `Test_ID` varchar(15),\n" +
+                "   `Question_ID` varchar(15),\n" +
+                "   `Question_Seq_No` varchar(15) DEFAULT NULL,\n" +
+                "   `Question_Section` varchar(15) DEFAULT NULL,\n" +
+                "   `Question_Category` varchar(15) DEFAULT NULL,\n" +
+                "   `Question_SubCategory` varchar(15) DEFAULT NULL,\n" +
+                "   `Question_Max_Marks` double(15) DEFAULT NULL,\n"+
+                "   `Question_Negative_Marks` double(15) DEFAULT NULL,\n"+
+                "   `Question_Marks_Obtained` double(15) DEFAULT NULL,\n"+
+                "   `Question_Negative_Applied` double(15) DEFAULT NULL,\n"+
+                "   `Question_Option` int(15) DEFAULT NULL,\n"+
+                "   `Question_Status` varchar(20) DEFAULT NULL,\n"+
+                "   `Question_Upload_Status` int DEFAULT NULL,\n"+
+                "   `Question_Option_Sequence` varchar(20) DEFAULT NULL,\n"+
+                "   `Option_Answer_Flag` varchar(15) DEFAULT NULL,\n"+
+                "   PRIMARY KEY (`Question_ID`)\n"+
+                ")";
+        db.execSQL(AssessmentData);
 
         String AttemptCategory="CREATE TABLE `attempt_category` (\n"+
                 "   `Attempt_ID` INTEGER,\n"+
@@ -1375,6 +1375,7 @@ public class DBHelper extends SQLiteOpenHelper {
     }
 
 
+
     public Cursor getSections(){
         String query ="SELECT DISTINCT Question_Section FROM attempt_data";
         Cursor c=db.rawQuery(query,null);
@@ -1620,7 +1621,7 @@ public class DBHelper extends SQLiteOpenHelper {
 
     }
 
-    public int getQustionBookmarked(){
+    public int getQuestionBookmarked(){
         int count=0;
         String query ="SELECT  Question_Status FROM "+" attempt_data"+" WHERE Question_Status = 'BOOKMARKED'";
         Cursor c = db.rawQuery(query, null);
@@ -1630,7 +1631,7 @@ public class DBHelper extends SQLiteOpenHelper {
 
     }
 
-    public int getQustionNotAttempted(){
+    public int getQuestionNotAttempted(){
         int count=0;
         String query ="SELECT  Question_Status FROM "+" attempt_data"+" WHERE Question_Status = 'NOT_ATTEMPTED'";
         Cursor c = db.rawQuery(query, null);
@@ -1759,7 +1760,7 @@ public class DBHelper extends SQLiteOpenHelper {
         return c;
     }
 
-    public long InsertAssesment( String aId,String testID,String eid,String sid,String cid,String subid,String pid,int status,String dateTime, int aScore, int attempted, int skipped, int bookmarked, int unattempted, int aperc,long aTime,int index,int pos){
+    public long InsertAssessment( String aId,String testID,String eid,String sid,String cid,String subid,String pid,int status,String dateTime, int aScore, int attempted, int skipped, int bookmarked, int unattempted, int aperc,long aTime,int index,int pos){
 
         long insertFlag=0;
 
@@ -1786,12 +1787,11 @@ public class DBHelper extends SQLiteOpenHelper {
         return insertFlag;
     }
 
-    public long UpdateAssesment( String aId,String testID,String eid,String sid,String cid,String subid,String pid,int status,String dateTime, int aScore, int attempted, int skipped, int bookmarked, int unattempted, int aperc,long aTime,int index,int pos){
+    public long UpdateAssessment(String testID,String eid,String sid,String cid,String subid,String pid,int status,String dateTime, int aScore, int attempted, int skipped, int bookmarked, int unattempted, int aperc,long aTime,int index,int pos){
 
         long updateFlag=0;
 
         ContentValues cv = new ContentValues();
-        cv.put("Assesment_Test_ID", testID);
         cv.put("Assesment_enrollId", eid);
         cv.put("Assesment_studentId", sid);
         cv.put("Assesment_courseId", cid);
@@ -1808,13 +1808,303 @@ public class DBHelper extends SQLiteOpenHelper {
         cv.put("Assesment_RemainingTime",aTime );
         cv.put("Assesment_LastQuestion",index );
         cv.put("Assesment_LastSection",pos );
-        updateFlag = db.update("Assesment_list",cv,"Assesment_ID='"+aId+"'",null);
+        updateFlag = db.update("Assesment_list",cv,"Assesment_Test_ID='"+testID+"'",null);
         return updateFlag;
     }
 
     public Cursor validateAssessmentTestKey(String testId){
         Cursor c =db.query("satu_student", new String[] {"satu_entroll_id,satu_exam_key,satu_course_id,satu_paper_ID,satu_subjet_ID"},"satu_ID='"+testId+"'", null, null, null,null);
         return c;
+    }
+
+    public long InsertAssessmentQuestion(String testId,String qId,String qSeq,String qSec,String cat,String subcat, double maxMarks,double negMarks,double marksObtained,double negApplied, int option,String status,int Upstatus,String oSeq,String flag){
+
+        long insertFlag=0;
+
+        ContentValues cv = new ContentValues();
+        cv.put("Test_ID", testId);
+        cv.put("Question_ID", qId);
+        cv.put("Question_Seq_No", qSeq);
+        cv.put("Question_Section", qSec);
+        cv.put("Question_Category", cat);
+        cv.put("Question_SubCategory", subcat);
+        cv.put("Question_Max_Marks",maxMarks );
+        cv.put("Question_Negative_Marks",negMarks );
+        cv.put("Question_Marks_Obtained",marksObtained );
+        cv.put("Question_Negative_Applied",negApplied );
+        cv.put("Question_Option",option );
+        cv.put("Question_Status",status );
+        cv.put("Question_Upload_Status",Upstatus );
+        cv.put("Question_Option_Sequence",oSeq );
+        cv.put("Option_Answer_Flag",flag );
+
+        Log.e("DB_Insert:",status);
+        insertFlag = db.insert("assessment_data",null, cv);
+
+        return insertFlag;
+    }
+
+
+    public long UpdateAssessmentQuestion(String testId,String qId,String qSeq,String qSec,String cat,String subcat, double maxMarks,double negMarks,double marksObtained,double negApplied, int option,String status,int Upstatus,String oSeq,String flag){
+
+        long updateFlag=0;
+
+        ContentValues cv = new ContentValues();
+        cv.put("Test_ID", testId);
+        cv.put("Question_ID", qId);
+        cv.put("Question_Seq_No", qSeq);
+        cv.put("Question_Section", qSec);
+        cv.put("Question_Category", cat);
+        cv.put("Question_SubCategory", subcat);
+        cv.put("Question_Max_Marks",maxMarks );
+        cv.put("Question_Negative_Marks",negMarks );
+        cv.put("Question_Marks_Obtained",marksObtained );
+        cv.put("Question_Negative_Applied",negApplied );
+        cv.put("Question_Option",option );
+        cv.put("Question_Status",status );
+        cv.put("Question_Upload_Status",Upstatus );
+        cv.put("Question_Option_Sequence",oSeq );
+        cv.put("Option_Answer_Flag",flag );
+        Log.e("DB_Update:",status);
+        updateFlag = db.update("assessment_data",cv,"Question_ID='"+qId+"'",null);
+
+        return updateFlag;
+    }
+
+    public Cursor getAssessmentSections(){
+        String query ="SELECT DISTINCT Question_Section FROM attempt_data";
+        Cursor c=db.rawQuery(query,null);
+        return c;
+    }
+
+    public Cursor getAssessmentSubcategories(){
+        String query ="SELECT DISTINCT Question_SubCategory FROM attempt_data";
+        Cursor c=db.rawQuery(query,null);
+        return c;
+    }
+
+    public int getAssessmentSectionQuestions(String subct){
+        String query ="SELECT * FROM attempt_data WHERE Question_Section ='"+subct+"'";
+        Cursor c=db.rawQuery(query,null);
+        int count = c.getCount();
+        c.close();
+        return count;
+    }
+
+    public int getAssessmentSectionQuesAns(String subct){
+        String query ="SELECT * FROM attempt_data WHERE Question_Section ='"+subct+"' and Question_Status NOT IN ('NOT_ATTEMPTED','SKIPPED')";
+        Cursor c=db.rawQuery(query,null);
+        int count = c.getCount();
+        c.close();
+        return count;
+    }
+
+    public int getAssessmentSectionQuesSkip(String subct){
+        String query ="SELECT * FROM attempt_data WHERE Question_Section ='"+subct+"' and Question_Status <> 'SKIPPED'";
+        Cursor c=db.rawQuery(query,null);
+        int count = c.getCount();
+        c.close();
+        return count;
+    }
+
+    public int getAssessmentSectionQuesCorrect(String subct){
+        String query ="SELECT * FROM attempt_data WHERE  Option_Answer_Flag = 'YES' and Question_Section ='"+subct+"' and Question_Status <> 'SKIPPED'";
+        Cursor c=db.rawQuery(query,null);
+        int count = c.getCount();
+        c.close();
+        return count;
+    }
+
+    public int getAssessmentSubCatQuestions(String subct){
+        String query ="SELECT * FROM attempt_data WHERE Question_SubCategory ='"+subct+"'";
+        Cursor c=db.rawQuery(query,null);
+        int count = c.getCount();
+        c.close();
+        return count;
+    }
+
+    public int getAssessmentSubCatQuesAns(String subct){
+        String query ="SELECT * FROM attempt_data WHERE Question_SubCategory ='"+subct+"' and Question_Status NOT IN ('NOT_ATTEMPTED','SKIPPED')";
+        Cursor c=db.rawQuery(query,null);
+        int count = c.getCount();
+        c.close();
+        return count;
+    }
+
+    public int getAssessmentSubCatQuesSkip(String subct){
+        String query ="SELECT * FROM attempt_data WHERE Question_SubCategory ='"+subct+"' and Question_Status <> 'SKIPPED'";
+        Cursor c=db.rawQuery(query,null);
+        int count = c.getCount();
+        c.close();
+        return count;
+    }
+
+    public int getAssessmentSubCatQuesCorrect(String subct){
+        String query ="SELECT * FROM attempt_data WHERE  Option_Answer_Flag = 'YES' and Question_SubCategory ='"+subct+"' and Question_Status <> 'SKIPPED'";
+        Cursor c=db.rawQuery(query,null);
+        int count = c.getCount();
+        c.close();
+        return count;
+    }
+    public Boolean AssessmentCheckQuestion(String qId){
+        Boolean value = false;
+        String query ="SELECT  Question_Option FROM "+" attempt_data"+" WHERE Question_ID ='"+qId+"'";
+        db=this.getWritableDatabase();
+        Cursor cursor=db.rawQuery(query,null);
+        cursor.moveToFirst();
+        if (cursor.getCount()>0)
+            value = true;
+        else
+            value = false;
+        cursor.close();
+        return value;
+    }
+
+    public ArrayList<Integer> getAssessmentOptions(){
+        ArrayList<Integer> OptionList = new ArrayList<>();
+        Cursor c =db.query("assessment_data", new String[] {"Question_ID,Question_Seq_No,Question_Max_Marks,Question_Option,Question_Status,Question_Option_Sequence,Option_Answer_Flag"},null, null, null, null,null);
+        if(c.getCount()!=0)
+        {
+            while (c.moveToNext()) {
+                OptionList.add(c.getInt(c.getColumnIndex("Question_Option")));
+            }
+        }
+        c.close();
+        return OptionList;
+    }
+
+    public ArrayList<String> getAssessmentQuestionStatus(){
+        ArrayList<String> StatusList = new ArrayList<>();
+        Cursor c =db.query("assessment_data", new String[] {"Question_ID,Question_Seq_No,Question_Max_Marks,Question_Option,Question_Status,Question_Option_Sequence,Option_Answer_Flag"},null, null, null, null,null);
+        if(c.getCount()!=0)
+        {
+            while (c.moveToNext()) {
+                StatusList.add(c.getString(c.getColumnIndex("Question_Status")));
+            }
+        }
+        c.close();
+        return StatusList;
+    }
+
+
+    public ArrayList<Integer>getAssessmentCorrectOptions(){
+        ArrayList<Integer> CorrectList = new ArrayList<>();
+        int count = 0;
+        ArrayList<Integer> OptionList = new ArrayList<>();
+        String query ="SELECT  Question_Option FROM "+" assessment_data"+" WHERE Option_Answer_Flag = 'YES'";
+        Cursor c=db.rawQuery(query,null);
+        if(c.getCount()!=0)
+        {
+            while (c.moveToNext()) {
+                CorrectList.add(c.getInt(c.getColumnIndex("Question_Option")));
+            }
+        }
+        c.close();
+        return CorrectList;
+    }
+
+    public int getAssessmentCorrectOptionsCount(){
+        int count = 0;
+        ArrayList<Integer> OptionList = new ArrayList<>();
+        String query ="SELECT  Question_Option FROM "+" assessment_data"+" WHERE Option_Answer_Flag = 'YES' and Question_Status <> 'SKIPPED'";
+        Cursor c=db.rawQuery(query,null);
+        count = c.getCount();
+        c.close();
+        return count;
+    }
+
+    public int getAssessmentCorrectSum(){
+        int sum = 0;
+        ArrayList<Integer> OptionList = new ArrayList<>();
+        String query ="SELECT  SUM(Question_Max_Marks) as SumPos FROM "+" assessment_data"+" WHERE Option_Answer_Flag = 'YES' and Question_Status <> 'SKIPPED'";
+        Cursor c=db.rawQuery(query,null);
+        sum = c.getInt(c.getColumnIndex("SumPos"));
+        c.close();
+        return sum;
+    }
+
+    public int getAssessmentWrongSum(){
+        int sum = 0;
+        ArrayList<Integer> OptionList = new ArrayList<>();
+        String query ="SELECT  SUM(Question_Max_Marks) as SumNeg FROM "+" assessment_data"+" WHERE Option_Answer_Flag = 'NO' and Question_Status <> 'SKIPPED'";
+        Cursor c=db.rawQuery(query,null);
+        sum = c.getInt(c.getColumnIndex("SumNeg"));
+        c.close();
+        return sum;
+    }
+
+    public int getAssessmentWrongOptionsCount(){
+        int count = 0;
+        ArrayList<Integer> OptionList = new ArrayList<>();
+        String query ="SELECT  Question_Option FROM "+" assessment_data"+" WHERE Option_Answer_Flag = 'NO' and Question_Status NOT IN ('NOT_ATTEMPTED','SKIPPED') ";
+        Cursor c=db.rawQuery(query,null);
+        count = c.getCount();
+        c.close();
+        return count;
+    }
+
+    public int getAssessmentPosition(String qId){
+        int value = -1;
+        try {
+            String query ="SELECT  Question_Option FROM "+" assessment_data"+" WHERE Question_ID ='"+qId+"'";
+            db=this.getWritableDatabase();
+            Cursor cursor=db.rawQuery(query,null);
+            cursor.moveToFirst();
+            value = cursor.getInt(0);
+            cursor.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return value;
+    }
+
+    public int getAssessmentQuestionCount(){
+        int count=0;
+        String countQuery = "select * from assessment_data";
+        Cursor c = db.rawQuery(countQuery, null);
+        count=c.getCount();
+        c.close();
+        return count;
+
+    }
+
+    public int getAssessmentQuestionAttempted(){
+        int count=0;
+        String query ="SELECT  Question_Status FROM "+" assessment_data"+" WHERE Question_Status = 'ATTEMPTED'";
+        Cursor c = db.rawQuery(query, null);
+        count=c.getCount();
+        c.close();
+        return count;
+
+    }
+
+    public int getAssessmentQuestionSkipped(){
+        int count=0;
+        String query ="SELECT  Question_Status FROM "+" assessment_data"+" WHERE Question_Status = 'SKIPPED'";
+        Cursor c = db.rawQuery(query, null);
+        count=c.getCount();
+        return count;
+
+    }
+
+    public int getAssessmentQuestionBookmarked(){
+        int count=0;
+        String query ="SELECT  Question_Status FROM "+" assessment_data"+" WHERE Question_Status = 'BOOKMARKED'";
+        Cursor c = db.rawQuery(query, null);
+        count=c.getCount();
+        c.close();
+        return count;
+
+    }
+
+    public int getAssessmentQuestionNotAttempted(){
+        int count=0;
+        String query ="SELECT  Question_Status FROM "+" assessment_data"+" WHERE Question_Status = 'NOT_ATTEMPTED'";
+        Cursor c = db.rawQuery(query, null);
+        count=c.getCount();
+        c.close();
+        return count;
+
     }
 
 
