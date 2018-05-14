@@ -518,20 +518,26 @@ public class DBHelper extends SQLiteOpenHelper {
         return insertFlag;
     }
 
-    public long updateAssesmentTest(String tID,String tsid,String tcid,int tnoofques,Double ttotalmarks,Double tminmarks,Double tmaxmarks,Double avgscore,Double tminperc, Double tmaxperc, Double tavgperc){
+    public long updateAssesmentTest(String torgid,String tenrollid,String tstudentid,String tbatch,String tid,String tpid,String tsid,String tcid,String tstartdate,String tenddate,String tdwdstatus,int tnoofques,String testfilename,String testKey,Double ttotalmarks,Double tminmarks,Double tmaxmarks){
         long updateFlag=0;
         ContentValues cv = new ContentValues();
-        cv.put("sptu_subjet_ID",tsid);
-        cv.put("sptu_course_id",tcid);
-        cv.put("sptu_no_of_questions",tnoofques);
-        cv.put("sptu_tot_marks",ttotalmarks);
-        cv.put("stpu_min_marks",tminmarks);
-        cv.put("sptu_min_percent",tminperc);
-        cv.put("sptu_max_marks",tmaxmarks);
-        cv.put("sptu_max_percent",tmaxperc);
-        cv.put("sptu_avg_marks",avgscore);
-        cv.put("sptu_avg_percent",tavgperc);
-        updateFlag=db.update("satu_student", cv, "satu_ID='"+tID+"'",null);
+        cv.put("satu_org_id",torgid);
+        cv.put("satu_entroll_id",tenrollid);
+        cv.put("satu_student_id",tstudentid);
+        cv.put("satu_batch",tbatch);
+        cv.put("satu_paper_ID",tpid);
+        cv.put("satu_subjet_ID",tsid);
+        cv.put("satu_course_id",tcid);
+        cv.put("satu_start_date",tstartdate);
+        cv.put("satu_end_date",tenddate);
+        cv.put("satu_dwnld_status",tdwdstatus);
+        cv.put("satu_no_of_questions",tnoofques);
+        cv.put("satu_file",testfilename);
+        cv.put("satu_exam_key",testKey);
+        cv.put("satu_tot_marks",ttotalmarks);
+        cv.put("satu_min_marks",tminmarks);
+        cv.put("satu_max_marks",tmaxmarks);
+        updateFlag=db.update("satu_student", cv, "satu_ID='"+tid+"'",null);
         return updateFlag;
     }
 
