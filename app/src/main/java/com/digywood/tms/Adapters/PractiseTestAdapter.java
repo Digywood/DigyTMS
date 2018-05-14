@@ -339,7 +339,7 @@ public class PractiseTestAdapter extends RecyclerView.Adapter<PractiseTestAdapte
 
                                 if(missingfList.size()!=0){
                                     StringBuilder sbm = new StringBuilder();
-                                    sbm.append("The following file are missing...\n");
+                                    sbm.append("The following files are missing...\n");
                                     for (int i = 0; i < missingfList.size(); i++) {
                                         sbm.append(missingfList.get(i) + " , " + "\n");
                                     }

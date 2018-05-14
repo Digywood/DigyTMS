@@ -185,7 +185,7 @@ public class FlashCardActivity extends AppCompatActivity {
                     studentid=mycursor.getString(mycursor.getColumnIndex("sptu_student_ID"));
                     enrollid=mycursor.getString(mycursor.getColumnIndex("sptu_entroll_id"));
                     courseid=mycursor.getString(mycursor.getColumnIndex("sptu_course_id"));
-//                    subjectid=mycursor.getString(mycursor.getColumnIndex("sptu_subjet_ID"));
+                    subjectid=mycursor.getString(mycursor.getColumnIndex("sptu_subjet_ID"));
                     paperid=mycursor.getString(mycursor.getColumnIndex("sptu_paper_ID"));
 
                     imgPath=URLClass.mainpath+enrollid+"/"+courseid+"/";
@@ -1004,7 +1004,7 @@ public class FlashCardActivity extends AppCompatActivity {
                         percent=round(percent,2);
 
                         endDttm= new java.text.SimpleDateFormat("yyyy-MM-dd kk:mm:ss").format(Calendar.getInstance(TimeZone.getDefault()).getTime());
-                        long iFlag=myhelper.insertFlashAttempt(studentid,enrollid,courseid,subjectid,paperid,testId,attemptnum,startDttm,endDttm,attemptcount,knowcount,donknowcount,skipcount,percent,"Completed");
+                        long iFlag=myhelper.insertFlashAttempt(studentid,enrollid,courseid,subjectid,paperid,testId,attemptnum,startDttm,endDttm,attemptcount,knowcount,donknowcount,skipcount,percent,"NotUploaded");
                         if(iFlag>0){
                             Log.e("FlashCardActivity----","Attempt Inserted");
 
@@ -1081,7 +1081,7 @@ public class FlashCardActivity extends AppCompatActivity {
                         percent=percent*100;
                         percent=round(percent,2);
                         endDttm= new java.text.SimpleDateFormat("yyyy-MM-dd kk:mm:ss").format(Calendar.getInstance(TimeZone.getDefault()).getTime());
-                        long iFlag=myhelper.insertFlashAttempt(studentid,enrollid,courseid,subjectid,paperid,testId,attemptnum,startDttm,endDttm,attemptcount,knowcount,donknowcount,skipcount,percent,"Completed");
+                        long iFlag=myhelper.insertFlashAttempt(studentid,enrollid,courseid,subjectid,paperid,testId,attemptnum,startDttm,endDttm,attemptcount,knowcount,donknowcount,skipcount,percent,"NotUploaded");
                         if(iFlag>0){
                             Log.e("FlashCardActivity----","Attempt Inserted");
 

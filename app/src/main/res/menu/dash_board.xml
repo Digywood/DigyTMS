@@ -2,6 +2,21 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
+        android:id="@+id/action_practisesync"
+        android:orderInCategory="100"
+        android:title="Practise Sync"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/action_flashsync"
+        android:orderInCategory="100"
+        android:title="Flash Sync"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/action_assesssync"
+        android:orderInCategory="100"
+        android:title="Assessment Sync"
+        app:showAsAction="never" />
+    <item
         android:id="@+id/action_settings"
         android:orderInCategory="100"
         android:title="@string/action_settings"

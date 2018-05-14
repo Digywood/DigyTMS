@@ -608,6 +608,12 @@ public class DBHelper extends SQLiteOpenHelper {
         return  c;
     }
 
+    public Cursor getFlashUploadData(String status){
+        String query ="SELECT * FROM flashcard_attempt WHERE Status='"+status+"'";
+        Cursor c=db.rawQuery(query,null);
+        return  c;
+    }
+
     public int getFlashAttemptNum(String testId){
         int count=0;
         Cursor c =db.query("flashcard_attempt", new String[] {"attemptNumber,studentId,enrollmentId,courseId,subjectId,paperId"},"flashcardId='"+testId+"'", null, null, null,null);
@@ -1708,6 +1714,14 @@ public class DBHelper extends SQLiteOpenHelper {
         Cursor c =db.query("attempt_list", new String[] {"Attempt_ID,Attempt_Test_ID,Attempt_Status,Attempt_Confirmed,Attempt_Skipped,Attempt_Bookmarked,Attempt_UnAttempted,Attempt_Score,Attempt_Percentage"},"Attempt_Test_ID='"+testId+"'", null, null, null,"Attempt_ID DESC");
         return  c;
     }
+
+    public Cursor getPractiseUploadData(String status){
+        String query ="SELECT * FROM attempt_list WHERE Attempt_Test_ID ='"+status+"'";
+//        String query ="SELECT * FROM attempt_list WHERE Attempt_Test_ID ='"+testId+"'";
+        Cursor c=db.rawQuery(query,null);
+        return  c;
+    }
+
     public int getAttempCount(){
         int count=0;
         String countQuery = "select Attempt_ID from attempt_list";
