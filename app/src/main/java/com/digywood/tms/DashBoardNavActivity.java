@@ -572,41 +572,41 @@ public class DashBoardNavActivity extends AppCompatActivity implements Navigatio
 
     public  void syncPractiseTestData(){
 
-        JSONObject finalFlashObj=new JSONObject();
+        JSONObject finalPractiseObj=new JSONObject();
         Cursor mycursor=myhelper.getPractiseUploadData("NotUploaded");
         if(mycursor.getCount()>0){
             try{
-                JSONArray FlashList = new JSONArray();
-                JSONObject FlashData;
+                JSONArray PrcatiseList = new JSONArray();
+                JSONObject PractiseTest;
                 while (mycursor.moveToNext()){
-                    FlashData = new JSONObject();
-                    FlashData.put("studentId",mycursor.getString(mycursor.getColumnIndex("studentId")));
-                    FlashData.put("enrollmentId",mycursor.getString(mycursor.getColumnIndex("enrollmentId")));
-                    FlashData.put("courseId",mycursor.getString(mycursor.getColumnIndex("courseId")));
-                    FlashData.put("subjectId",mycursor.getString(mycursor.getColumnIndex("subjectId")));
-                    FlashData.put("paperId",mycursor.getString(mycursor.getColumnIndex("paperId")));
-                    FlashData.put("flashcardId",mycursor.getString(mycursor.getColumnIndex("flashcardId")));
-                    FlashData.put("attemptNumber",mycursor.getInt(mycursor.getColumnIndex("attemptNumber")));
-                    FlashData.put("startDttm",mycursor.getString(mycursor.getColumnIndex("startDttm")));
-                    FlashData.put("endDttm",mycursor.getString(mycursor.getColumnIndex("endDttm")));
-                    FlashData.put("attemptQCount",mycursor.getInt(mycursor.getColumnIndex("attemptQCount")));
-                    FlashData.put("iknowCount",mycursor.getInt(mycursor.getColumnIndex("iknowCount")));
-                    FlashData.put("donknowCount",mycursor.getInt(mycursor.getColumnIndex("donknowCount")));
-                    FlashData.put("skipCount",mycursor.getInt(mycursor.getColumnIndex("skipCount")));
-                    FlashData.put("percentageObtain",mycursor.getDouble(mycursor.getColumnIndex("percentageObtain")));
-                    FlashList.put(FlashData);
+                    PractiseTest = new JSONObject();
+                    PractiseTest.put("studentId",mycursor.getString(mycursor.getColumnIndex("studentId")));
+                    PractiseTest.put("enrollmentId",mycursor.getString(mycursor.getColumnIndex("enrollmentId")));
+                    PractiseTest.put("courseId",mycursor.getString(mycursor.getColumnIndex("courseId")));
+                    PractiseTest.put("subjectId",mycursor.getString(mycursor.getColumnIndex("subjectId")));
+                    PractiseTest.put("paperId",mycursor.getString(mycursor.getColumnIndex("paperId")));
+                    PractiseTest.put("flashcardId",mycursor.getString(mycursor.getColumnIndex("flashcardId")));
+                    PractiseTest.put("attemptNumber",mycursor.getInt(mycursor.getColumnIndex("attemptNumber")));
+                    PractiseTest.put("startDttm",mycursor.getString(mycursor.getColumnIndex("startDttm")));
+                    PractiseTest.put("endDttm",mycursor.getString(mycursor.getColumnIndex("endDttm")));
+                    PractiseTest.put("attemptQCount",mycursor.getInt(mycursor.getColumnIndex("attemptQCount")));
+                    PractiseTest.put("iknowCount",mycursor.getInt(mycursor.getColumnIndex("iknowCount")));
+                    PractiseTest.put("donknowCount",mycursor.getInt(mycursor.getColumnIndex("donknowCount")));
+                    PractiseTest.put("skipCount",mycursor.getInt(mycursor.getColumnIndex("skipCount")));
+                    PractiseTest.put("percentageObtain",mycursor.getDouble(mycursor.getColumnIndex("percentageObtain")));
+                    PrcatiseList.put(PractiseTest);
                 }
-                finalFlashObj.put("FlashData",FlashList);
+                finalPractiseObj.put("PractiseData",PrcatiseList);
 
                 hmap.clear();
-                hmap.put("FlashData",finalFlashObj.toString());
+                hmap.put("PractiseData",finalPractiseObj.toString());
                 new BagroundTask(URLClass.hosturl +"syncFlashData.php", hmap,DashBoardNavActivity.this,new IBagroundListener() {
                     @Override
                     public void bagroundData(String json) {
                         try{
                             Log.e("json"," comes :  "+json);
                             if(json.equalsIgnoreCase("Inserted")){
-                                Toast.makeText(getApplicationContext(),"FlashData Syncronised",Toast.LENGTH_SHORT).show();
+                                Toast.makeText(getApplicationContext(),"Practise Test Info Syncronised",Toast.LENGTH_SHORT).show();
                             }else{
                                 Toast.makeText(getApplicationContext(),"Sorry,Try Again Later",Toast.LENGTH_SHORT).show();
                             }
@@ -622,7 +622,8 @@ public class DashBoardNavActivity extends AppCompatActivity implements Navigatio
                 Log.e("DashNavActivity-----",e.toString());
             }
         }else{
-            Toast.makeText(getApplicationContext(),"No FlashCard Data to Upload",Toast.LENGTH_SHORT).show();
+            mycursor.close();
+            Toast.makeText(getApplicationContext(),"No Practise Data to Upload",Toast.LENGTH_SHORT).show();
         }
 
     }
@@ -679,6 +680,7 @@ public class DashBoardNavActivity extends AppCompatActivity implements Navigatio
                 Log.e("DashNavActivity-----",e.toString());
             }
         }else{
+            mycursor.close();
             Toast.makeText(getApplicationContext(),"No FlashCard Data to Upload",Toast.LENGTH_SHORT).show();
         }
 
