@@ -290,7 +290,7 @@ public class PracticeTestActivity extends AppCompatActivity implements
                 pos = c.getInt(c.getColumnIndex("Attempt_LastSection"));
             }
             //inserting new Test record in local database
-            long ret = dataObj.InsertAttempt(generateUniqueId(1),attempt.getString("ptu_test_ID"),enrollid,"",courseid,subjectId,paperid,1, 0,dataObj.getQuestionAttempted(),dataObj.getQuestionSkipped(),dataObj.getQustionBookmarked(),dataObj.getQustionNotAttempted(), 0, millisRemaining, index, pos);
+            long ret = dataObj.InsertAttempt(generateUniqueId(1),attempt.getString("ptu_test_ID"),enrollid,"",courseid,subjectId,paperid,1, 0,dataObj.getQuestionAttempted(),dataObj.getQuestionSkipped(),dataObj.getQuestionBookmarked(),dataObj.getQuestionNotAttempted(), 0, millisRemaining, index, pos);
             Log.e("New Test Insertion",""+ret);
 
         } catch (JSONException e) {
@@ -441,10 +441,10 @@ public class PracticeTestActivity extends AppCompatActivity implements
                                             public void onClick(DialogInterface arg0, int arg1) {
 //                                            q_list.clear();
                                                 try {
-                                                    long value = dataObj.UpdateAttempt(generateUniqueId(0),attempt.getString("ptu_test_ID"),2, 0,dataObj.getQuestionAttempted(),dataObj.getQuestionSkipped(),dataObj.getQustionBookmarked(),dataObj.getQustionNotAttempted(), 0, millisRemaining, index, pos);
+                                                    long value = dataObj.UpdateAttempt(generateUniqueId(0),attempt.getString("ptu_test_ID"),2, 0,dataObj.getQuestionAttempted(),dataObj.getQuestionSkipped(),dataObj.getQuestionBookmarked(),dataObj.getQuestionNotAttempted(), 0, millisRemaining, index, pos);
                                                     if (value <= 0) {
                                                         Log.e("PaperId: ","pid  "+paperid);
-                                                        long ret = dataObj.InsertAttempt(generateUniqueId(1),attempt.getString("ptu_test_ID"),enrollid,"",courseid,subjectId,paperid,2, 0,dataObj.getQuestionAttempted(),dataObj.getQuestionSkipped(),dataObj.getQustionBookmarked(),dataObj.getQustionNotAttempted(), 0, millisRemaining, index, pos);
+                                                        long ret = dataObj.InsertAttempt(generateUniqueId(1),attempt.getString("ptu_test_ID"),enrollid,"",courseid,subjectId,paperid,2, 0,dataObj.getQuestionAttempted(),dataObj.getQuestionSkipped(),dataObj.getQuestionBookmarked(),dataObj.getQuestionNotAttempted(), 0, millisRemaining, index, pos);
                                                         Log.e("Insertion",""+ret);
                                                     }
                                                     SaveJSONdataToFile.objectToFile(URLClass.mainpath + path + "Attempt/" + testid + ".json", attempt.toString());
@@ -471,6 +471,7 @@ public class PracticeTestActivity extends AppCompatActivity implements
                                                 bundle.putString("courseid", courseid);
                                                 bundle.putString("subjectid", subjectId);
                                                 bundle.putString("paperid",paperid);
+                                                bundle.putString("Type","PRACTICE");
                                                 intent.putExtra("BUNDLE", bundle);
                                                 intent.putExtra("Xreveal", revealX);
                                                 intent.putExtra("Yreveal", revealY);
@@ -818,8 +819,8 @@ public class PracticeTestActivity extends AppCompatActivity implements
 
         tv_answered_count.setText("" + dataObj.getQuestionAttempted());
         tv_skipped_count.setText("" + dataObj.getQuestionSkipped());
-        tv_bookmarked_count.setText("" + dataObj.getQustionBookmarked());
-        tv_not_attempted_count.setText("" + dataObj.getQustionNotAttempted());
+        tv_bookmarked_count.setText("" + dataObj.getQuestionBookmarked());
+        tv_not_attempted_count.setText("" + dataObj.getQuestionNotAttempted());
         Button finish = layout.findViewById(R.id.finish_button);
         finish.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -832,10 +833,10 @@ public class PracticeTestActivity extends AppCompatActivity implements
                             public void onClick(DialogInterface arg0, int arg1) {
 //                                            q_list.clear();
                                 try {
-                                    long value = dataObj.UpdateAttempt(generateUniqueId(0),attempt.getString("ptu_test_ID"),2, 0,dataObj.getQuestionAttempted(),dataObj.getQuestionSkipped(),dataObj.getQustionBookmarked(),dataObj.getQustionNotAttempted(), 0, millisRemaining, index, pos);
+                                    long value = dataObj.UpdateAttempt(generateUniqueId(0),attempt.getString("ptu_test_ID"),2, 0,dataObj.getQuestionAttempted(),dataObj.getQuestionSkipped(),dataObj.getQuestionBookmarked(),dataObj.getQuestionNotAttempted(), 0, millisRemaining, index, pos);
                                     if (value <= 0) {
                                         Log.e("PaperId: ","pid  "+paperid);
-                                        long ret = dataObj.InsertAttempt(generateUniqueId(0),attempt.getString("ptu_test_ID"),enrollid,"",courseid,subjectId,paperid,2, 0,dataObj.getQuestionAttempted(),dataObj.getQuestionSkipped(),dataObj.getQustionBookmarked(),dataObj.getQustionNotAttempted(), 0, millisRemaining, index, pos);
+                                        long ret = dataObj.InsertAttempt(generateUniqueId(0),attempt.getString("ptu_test_ID"),enrollid,"",courseid,subjectId,paperid,2, 0,dataObj.getQuestionAttempted(),dataObj.getQuestionSkipped(),dataObj.getQuestionBookmarked(),dataObj.getQuestionNotAttempted(), 0, millisRemaining, index, pos);
                                         Log.e("Insertion",""+ret);
                                     }
                                     SaveJSONdataToFile.objectToFile(URLClass.mainpath + path + "Attempt/" + testid + ".json", attempt.toString());
@@ -851,6 +852,7 @@ public class PracticeTestActivity extends AppCompatActivity implements
                                 bundle.putString("courseid", courseid);
                                 bundle.putString("subjectid", subjectId);
                                 bundle.putString("paperid",paperid);
+                                bundle.putString("Type","PRACTICE");
                                 intent.putExtra("BUNDLE", bundle);
                                 intent.putExtra("Xreveal", revealX);
                                 intent.putExtra("Yreveal", revealY);
@@ -1160,9 +1162,9 @@ public class PracticeTestActivity extends AppCompatActivity implements
                     // do something when the button is clicked
                     public void onClick(DialogInterface arg0, int arg1) {
                         try {
-                            long value = dataObj.UpdateAttempt(generateUniqueId(0),attempt.getString("ptu_test_ID"),1, 0,dataObj.getQuestionAttempted(),dataObj.getQuestionSkipped(),dataObj.getQustionBookmarked(),dataObj.getQustionNotAttempted(), 0, millisRemaining, index, pos);
+                            long value = dataObj.UpdateAttempt(generateUniqueId(0),attempt.getString("ptu_test_ID"),1, 0,dataObj.getQuestionAttempted(),dataObj.getQuestionSkipped(),dataObj.getQuestionBookmarked(),dataObj.getQuestionNotAttempted(), 0, millisRemaining, index, pos);
 /*                            if (value <= 0) {
-                                long ret = dataObj.InsertAttempt(generateUniqueId(0),attempt.getString("ptu_test_ID"),1, 0,dataObj.getQuestionAttempted(),dataObj.getQuestionSkipped(),dataObj.getQustionBookmarked(),dataObj.getQustionNotAttempted(), 0, millisRemaining, index, pos);
+                                long ret = dataObj.InsertAttempt(generateUniqueId(0),attempt.getString("ptu_test_ID"),1, 0,dataObj.getQuestionAttempted(),dataObj.getQuestionSkipped(),dataObj.getQuestionBookmarked(),dataObj.getQuestionNotAttempted(), 0, millisRemaining, index, pos);
                                 Log.e("Insertion",""+ret);
                             }*/
                             SaveJSONdataToFile.objectToFile(URLClass.mainpath + path + "Attempt/" + testid + ".json", attempt.toString());
@@ -1303,9 +1305,9 @@ public class PracticeTestActivity extends AppCompatActivity implements
         Log.d(TAG, "onPause:");
         dataObj = new DBHelper(PracticeTestActivity.this);
         try {
-            long value = dataObj.UpdateAttempt(generateUniqueId(0),attempt.getString("ptu_test_ID"),1, 0,dataObj.getQuestionAttempted(),dataObj.getQuestionSkipped(),dataObj.getQustionBookmarked(),dataObj.getQustionNotAttempted(), 0, millisRemaining, index, pos);
+            long value = dataObj.UpdateAttempt(generateUniqueId(0),attempt.getString("ptu_test_ID"),1, 0,dataObj.getQuestionAttempted(),dataObj.getQuestionSkipped(),dataObj.getQuestionBookmarked(),dataObj.getQuestionNotAttempted(), 0, millisRemaining, index, pos);
 /*            if (value <= 0) {
-                long ret = dataObj.InsertAttempt(generateUniqueId(),attempt.getString("ptu_test_ID"),1, 0,dataObj.getQuestionAttempted(),dataObj.getQuestionSkipped(),dataObj.getQustionBookmarked(),dataObj.getQustionNotAttempted(), 0, millisRemaining, index, pos);
+                long ret = dataObj.InsertAttempt(generateUniqueId(),attempt.getString("ptu_test_ID"),1, 0,dataObj.getQuestionAttempted(),dataObj.getQuestionSkipped(),dataObj.getQuestionBookmarked(),dataObj.getQuestionNotAttempted(), 0, millisRemaining, index, pos);
                 Log.e("Insertion",""+ret);
             }*/
             SaveJSONdataToFile.objectToFile(URLClass.mainpath + path + "Attempt/" + testid + ".json", attempt.toString());
