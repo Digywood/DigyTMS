@@ -1773,6 +1773,12 @@ public class DBHelper extends SQLiteOpenHelper {
         return  c;
     }
 
+    public Cursor getAssessmentUploadData(String status){
+        String query ="SELECT * FROM assessment_data WHERE Question_Upload_Status ='"+status+"'";
+        Cursor c=db.rawQuery(query,null);
+        return  c;
+    }
+
     public int getAttempCount(){
         int count=0;
         String countQuery = "select Attempt_ID from attempt_list";

@@ -29,7 +29,6 @@ import com.digywood.tms.Fragments.CourseFragment;
 import com.digywood.tms.Fragments.HomeFragment;
 import com.digywood.tms.Fragments.EnrollFragment;
 import com.digywood.tms.Pojo.SingleDWDQues;
-
 import org.json.JSONArray;
 import org.json.JSONObject;
 import java.util.Calendar;
@@ -502,8 +501,9 @@ public class DashBoardNavActivity extends AppCompatActivity implements Navigatio
                 @Override
                 public void inetSatus(Boolean netStatus) {
                     if(netStatus){
-                        getStudentAllData();
+//                        getStudentAllData();
 //                        syncFlashCardData();
+                        syncPractiseTestData();
                     }else{
                         Toast.makeText(getApplicationContext(),"No internet,Please Check your connection",Toast.LENGTH_SHORT).show();
                     }
@@ -689,6 +689,61 @@ public class DashBoardNavActivity extends AppCompatActivity implements Navigatio
     }
 
     public  void syncAssesmentTestData(){
+
+        JSONObject finalAssessmentObj=new JSONObject();
+        Cursor mycursor=myhelper.getAssessmentUploadData("NotUploaded");
+        if(mycursor.getCount()>0){
+            try{
+                JSONArray AssessmentList = new JSONArray();
+                JSONObject AssessmentTestQues;
+                while (mycursor.moveToNext()){
+                    AssessmentTestQues = new JSONObject();
+                    AssessmentTestQues.put("Test_ID",mycursor.getString(mycursor.getColumnIndex("Test_ID")));
+                    AssessmentTestQues.put("Question_ID",mycursor.getString(mycursor.getColumnIndex("Question_ID")));
+                    AssessmentTestQues.put("Question_Seq_No",mycursor.getString(mycursor.getColumnIndex("Question_Seq_No")));
+                    AssessmentTestQues.put("Question_Section",mycursor.getString(mycursor.getColumnIndex("Question_Section")));
+                    AssessmentTestQues.put("Question_Category",mycursor.getString(mycursor.getColumnIndex("Question_Category")));
+                    AssessmentTestQues.put("Question_SubCategory",mycursor.getString(mycursor.getColumnIndex("Question_SubCategory")));
+                    AssessmentTestQues.put("Question_Max_Marks",mycursor.getInt(mycursor.getColumnIndex("Question_Max_Marks")));
+                    AssessmentTestQues.put("Question_Negative_Marks",mycursor.getString(mycursor.getColumnIndex("Question_Negative_Marks")));
+                    AssessmentTestQues.put("Question_Marks_Obtained",mycursor.getString(mycursor.getColumnIndex("Question_Marks_Obtained")));
+                    AssessmentTestQues.put("Question_Negative_Applied",mycursor.getInt(mycursor.getColumnIndex("Question_Negative_Applied")));
+                    AssessmentTestQues.put("Question_Option",mycursor.getInt(mycursor.getColumnIndex("Question_Option")));
+                    AssessmentTestQues.put("Question_Status",mycursor.getInt(mycursor.getColumnIndex("Question_Status")));
+                    AssessmentTestQues.put("Question_Upload_Status",mycursor.getInt(mycursor.getColumnIndex("Question_Upload_Status")));
+                    AssessmentTestQues.put("Question_Option_Sequence",mycursor.getDouble(mycursor.getColumnIndex("Question_Option_Sequence")));
+                    AssessmentTestQues.put("Option_Answer_Flag",mycursor.getInt(mycursor.getColumnIndex("Option_Answer_Flag")));
+                    AssessmentList.put(AssessmentTestQues);
+                }
+                finalAssessmentObj.put("AssessmentTestData",AssessmentList);
+
+                hmap.clear();
+                hmap.put("AssessmentTestData",finalAssessmentObj.toString());
+                new BagroundTask(URLClass.hosturl +"syncAssessmentTestData.php", hmap,DashBoardNavActivity.this,new IBagroundListener() {
+                    @Override
+                    public void bagroundData(String json) {
+                        try{
+                            Log.e("json"," comes :  "+json);
+                            if(json.equalsIgnoreCase("Inserted")){
+                                Toast.makeText(getApplicationContext(),"Practise Test Info Syncronised",Toast.LENGTH_SHORT).show();
+                            }else{
+                                Toast.makeText(getApplicationContext(),"Sorry,Try Again Later",Toast.LENGTH_SHORT).show();
+                            }
+                        }catch (Exception e){
+                            e.printStackTrace();
+                            Log.e("DashBoardNavActivity","  :  "+e.toString());
+                        }
+                    }
+                }).execute();
+
+            }catch (Exception e){
+                e.printStackTrace();
+                Log.e("DashNavActivity-----",e.toString());
+            }
+        }else{
+            mycursor.close();
+            Toast.makeText(getApplicationContext(),"No Practise Data to Upload",Toast.LENGTH_SHORT).show();
+        }
 
     }
 
