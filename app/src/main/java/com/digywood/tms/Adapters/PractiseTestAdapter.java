@@ -55,6 +55,7 @@ public class PractiseTestAdapter extends RecyclerView.Adapter<PractiseTestAdapte
     ArrayList<String> finalUrls=new ArrayList<>();
     ArrayList<String> finalNames=new ArrayList<>();
     ArrayList<String> localPathList=new ArrayList();
+    ArrayList<SingleDWDQues> missFileData=new ArrayList<>();
     ArrayList<SingleDWDQues> chapterFileList=new ArrayList<>();
     HashMap<String,String> hmap=new HashMap<>();
     Context mycontext;
@@ -280,6 +281,8 @@ public class PractiseTestAdapter extends RecyclerView.Adapter<PractiseTestAdapte
             @Override
             public void onClick(View v) {
 
+                missFileData.clear();
+
                 Cursor mycursor = myhelper.checkPractiseTest(singletest.getTestid());
                 if (mycursor.getCount() > 0) {
                     while (mycursor.moveToNext()) {
@@ -311,16 +314,50 @@ public class PractiseTestAdapter extends RecyclerView.Adapter<PractiseTestAdapte
                             line = br.readLine();
                         }
                         filedata = sb.toString();
-                        fimageList = readJson(filedata);
+                        parseJson(filedata);
                         br.close();
 
                         int seccount=myhelper.getPtuSecCount(singletest.getTestid());
                         if(seccount>0){
-                            myparser = new JSONParser(filedata,tPath + "/flashAttempts/", "FLASH", mycontext);
-                            Intent i = new Intent(mycontext, FlashCardActivity.class);
-                            i.putExtra("testId", testList.get(position).getTestid());
-                            i.putExtra("testPath", tPath);
-                            mycontext.startActivity(i);
+
+                            if(downloadfileList.size()!=0){
+
+                                ArrayList<String> missingfList = new ArrayList<>();
+
+                                for(int i=0;i<chapterFileList.size();i++){
+
+                                    SingleDWDQues sdq=chapterFileList.get(i);
+
+                                    File myFile1 = new File(URLClass.mainpath+enrollid+"/"+courseid+"/"+sdq.getSubjectId()+"/"+sdq.getPaperId()+"/"+sdq.getChapterId()+"/"+sdq.getFileName());
+                                    if(myFile1.exists()){
+
+                                    }else{
+                                        missingfList.add(downloadfileList.get(i));
+                                        missFileData.add(sdq);
+                                    }
+                                }
+
+                                if(missingfList.size()!=0){
+                                    StringBuilder sbm = new StringBuilder();
+                                    sbm.append("The following file are missing...\n");
+                                    for (int i = 0; i < missingfList.size(); i++) {
+                                        sbm.append(missingfList.get(i) + " , " + "\n");
+                                    }
+                                    showReportAlert(sbm.toString(),singletest.getTestid());
+                                }else{
+
+                                    myparser = new JSONParser(filedata,tPath + "/flashAttempts/", "FLASH", mycontext);
+                                    Intent i = new Intent(mycontext, FlashCardActivity.class);
+                                    i.putExtra("testId", testList.get(position).getTestid());
+                                    i.putExtra("testPath", tPath);
+                                    mycontext.startActivity(i);
+                                }
+
+                            }else{
+                                Log.e("FlashCardActivity---", "No Questions Data for Test");
+                            }
+
+
                         }else{
                             showAlert("Test Configuration is not Available for " + singletest.getTestid() + " \n Please download test data if not ");
                         }
@@ -555,7 +592,7 @@ public class PractiseTestAdapter extends RecyclerView.Adapter<PractiseTestAdapte
         AlertDialog.Builder builder = new AlertDialog.Builder(mycontext, R.style.ALERT_THEME);
         builder.setMessage(Html.fromHtml("<font color='#FFFFFF'>" + messege + "</font>"))
                 .setCancelable(false)
-                .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                .setPositiveButton("Ok",new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
 
                         dialog.cancel();
@@ -567,6 +604,76 @@ public class PractiseTestAdapter extends RecyclerView.Adapter<PractiseTestAdapte
         alert.setTitle("Alert!");
         alert.setIcon(R.drawable.warning);
         alert.show();
+    }
+
+    public void showReportAlert(String messege, final String testId) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(mycontext, R.style.ALERT_THEME);
+        builder.setMessage(Html.fromHtml("<font color='#FFFFFF'>" + messege + "</font>"))
+                .setCancelable(false)
+                .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+
+                        dialog.cancel();
+
+                    }
+                })
+                .setNegativeButton("Report", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+
+                        dialog.cancel();
+                        JSONObject finalObj=JSONEncode(testId,missFileData);
+                        hmap.clear();
+                        hmap.put("MissingFiles",finalObj.toString());
+                        try {
+                            new BagroundTask(URLClass.hosturl+"insertmissingFileInfo.php",hmap,mycontext,new IBagroundListener() {
+                                @Override
+                                public void bagroundData(String json) {
+                                    Log.d("ja", "comes:" + json);
+                                    if (json.equals("Inserted")) {
+                                        Toast.makeText(mycontext,"Report Submitted", Toast.LENGTH_SHORT).show();
+                                    } else {
+                                        Toast.makeText(mycontext,"failed report,try later", Toast.LENGTH_SHORT).show();
+                                    }
+                                }
+                            }).execute();
+
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+
+                    }
+                });
+        AlertDialog alert = builder.create();
+        //Setting the title manually
+        alert.setTitle("Alert!");
+        alert.setIcon(R.drawable.warning);
+        alert.show();
+    }
+
+    public JSONObject JSONEncode(String testId,ArrayList<SingleDWDQues> finalList){
+        JSONObject job=new JSONObject();
+        JSONArray MissingList = new JSONArray();
+        try{
+            JSONObject MissingFile;
+            for(int i=0;i<finalList.size();i++){
+
+                SingleDWDQues singleDWDQues=finalList.get(i);
+
+                MissingFile = new JSONObject();
+                MissingFile.put("testId",testId);
+                MissingFile.put("subjectId",singleDWDQues.getSubjectId());
+                MissingFile.put("paperId",singleDWDQues.getPaperId());
+                MissingFile.put("chapterId",singleDWDQues.getChapterId());
+                MissingFile.put("fileName",singleDWDQues.getFileName());
+
+                MissingList.put(MissingFile);
+            }
+            job.put("MissingFiles",MissingList);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return job;
     }
 
     public String getExternalPath(Context context, SingleTest singletest, String type) {

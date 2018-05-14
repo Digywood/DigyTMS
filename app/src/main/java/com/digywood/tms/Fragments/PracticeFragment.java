@@ -76,15 +76,6 @@ public class PracticeFragment extends Fragment implements OnChartValueSelectedLi
 
     Spinner sp_enrollids;
 
-    protected String[] mMonths = new String[] {
-            "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Okt", "Nov", "Dec"
-    };
-
-    protected String[] mParties = new String[] {
-            "Completed", "Left", "Party C", "Party D", "Party E", "Party F", "Party G", "Party H",
-            "Party I", "Party J", "Party K", "Party L", "Party M", "Party N", "Party O", "Party P"
-    };
-
     TextView tv_ptottests,tv_pattempted,tv_ptestsasplan,tv_ppercent,tv_pmax,tv_pmin,tv_pavg,tv_pRAGattempt,tv_pRAGAVGscore,tv_courseid;
 
     private PracticeFragment.OnFragmentInteractionListener mListener;
