@@ -401,21 +401,6 @@ public class DashBoardNavActivity extends AppCompatActivity implements Navigatio
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_sync) {
-            new AsyncCheckInternet(DashBoardNavActivity.this,new INetStatus() {
-                @Override
-                public void inetSatus(Boolean netStatus) {
-                    if(netStatus){
-                        getStudentAllData();
-                    }else{
-                        Toast.makeText(getApplicationContext(),"No internet,Please Check your connection",Toast.LENGTH_SHORT).show();
-                    }
-                }
-            }).execute();
-            return true;
-        }
-
-        //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
             return true;
         }
@@ -464,6 +449,19 @@ public class DashBoardNavActivity extends AppCompatActivity implements Navigatio
             } catch (Exception e) {
                 e.printStackTrace();
             }
+
+        } else if (id == R.id.nav_syncronise) {
+
+            new AsyncCheckInternet(DashBoardNavActivity.this,new INetStatus() {
+                @Override
+                public void inetSatus(Boolean netStatus) {
+                    if(netStatus){
+                        getStudentAllData();
+                    }else{
+                        Toast.makeText(getApplicationContext(),"No internet,Please Check your connection",Toast.LENGTH_SHORT).show();
+                    }
+                }
+            }).execute();
 
         } else if (id == R.id.nav_contactus) {
 

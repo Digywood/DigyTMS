@@ -20,16 +20,13 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.digywood.tms.Adapters.EnrollRequestAdapter;
 import com.digywood.tms.Adapters.TestDashAdapter;
 import com.digywood.tms.AsynTasks.BagroundTask;
 import com.digywood.tms.DBHelper.DBHelper;
 import com.digywood.tms.Pojo.SingleEnrollRequest;
-
 import org.json.JSONArray;
 import org.json.JSONObject;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -90,69 +87,102 @@ public class RequestedEnrollsActivity extends AppCompatActivity {
             public void onClick(View view, int position) {
                 final SingleEnrollRequest singleEnrollRequest=enrollreqList.get(position);
 
-//                if(singleEnrollRequest.getStatus().equalsIgnoreCase("AUTHORISED")){
-//
-//
-//
-//                }else {
-//                    Toast.makeText(getApplicationContext(),"Not Activated Yet",Toast.LENGTH_SHORT).show();
-//                }
+                if(singleEnrollRequest.getStatus().equalsIgnoreCase("AUTHORISED")){
 
-                mydialog = new Dialog(RequestedEnrollsActivity.this);
-                mydialog.getWindow();
-                mydialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-                mydialog.setContentView(R.layout.activity_enrollkeypopup);
-                mydialog.show();
+                    mydialog = new Dialog(RequestedEnrollsActivity.this);
+                    mydialog.getWindow();
+                    mydialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                    mydialog.setContentView(R.layout.activity_enrollkeypopup);
+                    mydialog.show();
 
-                final EditText et_key=mydialog.findViewById(R.id.et_enrollauth);
-                Button btn_auth=mydialog.findViewById(R.id.btn_enrollauth);
+                    final EditText et_key=mydialog.findViewById(R.id.et_enrollauth);
+                    Button btn_auth=mydialog.findViewById(R.id.btn_enrollauth);
 
-                btn_auth.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
+                    btn_auth.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
 
-                        if(et_key.getText().toString().equals("")){
-                            Toast.makeText(getApplicationContext(),"Please Enter Key",Toast.LENGTH_SHORT).show();
-                        }else{
-                            if(et_key.getText().toString().equals(singleEnrollRequest.getEnrollKey())){
-                                mydialog.cancel();
-                                Toast.makeText(getApplicationContext(),"Validated",Toast.LENGTH_SHORT).show();
-                                hmap.clear();
-                                hmap.put("enrollId",singleEnrollRequest.getEnrollId());
-                                new BagroundTask(URLClass.hosturl +"getEnrollmentData.php",hmap,RequestedEnrollsActivity.this,new IBagroundListener() {
-                                    @Override
-                                    public void bagroundData(String json) {
-                                        try{
-                                            Log.e("EnrollActivity----",json);
-                                            if(json.equalsIgnoreCase("Enrollment_Not_Exist")){
-                                                Toast.makeText(getApplicationContext(),"Unable to get Enrollment",Toast.LENGTH_SHORT).show();
-                                            }else{
-                                                JSONObject myObj=null;
-                                                JSONArray ja=new JSONArray(json);
-                                                for(int i=0;i<ja.length();i++){
-                                                    myObj=ja.getJSONObject(i);
-                                                    long insertFlag=myhelper.insertEnrollment(myObj.getInt("Enroll_key"),myObj.getString("Enroll_ID"),myObj.getString("Enroll_org_id"),myObj.getString("Enroll_Student_ID"),
-                                                            myObj.getString("Enroll_batch_ID"),myObj.getString("Enroll_course_ID"),myObj.getString("Enroll_batch_start_Dt"),myObj.getString("Enroll_batch_end_Dt"),
-                                                            myObj.getString("Enroll_Device_ID"),myObj.getString("Enroll_Date"),myObj.getString("Enroll_Status"));
-                                                    if(insertFlag>0){
-                                                        Log.e("ReqEnrollActivity---","Enroll Inserted");
-                                                    }else {
-                                                        Log.e("ReqEnrollActivity---","Unable to insert Enroll");
+                            if(singleEnrollRequest.getStatus().equalsIgnoreCase("AUTHORISED")){
+                                if(et_key.getText().toString().equals("")){
+                                    Toast.makeText(getApplicationContext(),"Please Enter Key",Toast.LENGTH_SHORT).show();
+                                }else{
+                                    if(et_key.getText().toString().equals(singleEnrollRequest.getEnrollKey())){
+                                        mydialog.cancel();
+                                        Toast.makeText(getApplicationContext(),"Validated",Toast.LENGTH_SHORT).show();
+                                        hmap.clear();
+                                        hmap.put("enrollId",singleEnrollRequest.getEnrollId());
+                                        hmap.put("status","ACTIVATED");
+                                        new BagroundTask(URLClass.hosturl +"updateStudentActiveStatus.php",hmap,RequestedEnrollsActivity.this,new IBagroundListener() {
+                                            @Override
+                                            public void bagroundData(String json) {
+                                                try{
+                                                    Log.e("EnrollActivity----",json);
+                                                    if(json.equalsIgnoreCase("Not_Updated")){
+                                                        Toast.makeText(getApplicationContext(),"Unable to update Enrollment validation",Toast.LENGTH_SHORT).show();
+                                                    }else{
+
+                                                        long updatesFlag=myhelper.updateEnrollmentStatus(singleEnrollRequest.getEnrollId(),"ACTIVATED");
+
+                                                        if(updatesFlag>0){
+                                                            Log.e("RequstedEnrollActivity","Enroll Status Updated Locally");
+                                                            if(json.equalsIgnoreCase("Enrollment_Not_Exist")){
+                                                                Toast.makeText(getApplicationContext(),"Validated,Unable to get Enroll Data",Toast.LENGTH_SHORT).show();
+                                                            }else{
+
+                                                                JSONObject myObj=null;
+                                                                JSONArray ja=new JSONArray(json);
+                                                                for(int i=0;i<ja.length();i++){
+                                                                    myObj=ja.getJSONObject(i);
+
+                                                                    long checkFlag=myhelper.checkEnrollment(myObj.getString("Enroll_ID"));
+
+                                                                    if(checkFlag>0){
+                                                                        long updateFlag=myhelper.updateEnrollment(myObj.getString("Enroll_ID"),myObj.getString("Enroll_org_id"),myObj.getString("Enroll_Student_ID"),
+                                                                                myObj.getString("Enroll_batch_ID"),myObj.getString("Enroll_course_ID"),myObj.getString("Enroll_batch_start_Dt"),myObj.getString("Enroll_batch_end_Dt"),
+                                                                                myObj.getString("Enroll_Device_ID"),myObj.getString("Enroll_Date"),myObj.getString("Enroll_Status"));
+                                                                        if(updateFlag>0){
+                                                                            Log.e("ReqEnrollActivity---","Enroll Updated");
+                                                                        }else {
+                                                                            Log.e("ReqEnrollActivity---","Unable to update Enroll");
+                                                                        }
+                                                                    }else{
+                                                                        long insertFlag=myhelper.insertEnrollment(myObj.getInt("Enroll_key"),myObj.getString("Enroll_ID"),myObj.getString("Enroll_org_id"),myObj.getString("Enroll_Student_ID"),
+                                                                                myObj.getString("Enroll_batch_ID"),myObj.getString("Enroll_course_ID"),myObj.getString("Enroll_batch_start_Dt"),myObj.getString("Enroll_batch_end_Dt"),
+                                                                                myObj.getString("Enroll_Device_ID"),myObj.getString("Enroll_Date"),myObj.getString("Enroll_Status"));
+                                                                        if(insertFlag>0){
+                                                                            Log.e("ReqEnrollActivity---","Enroll Inserted");
+                                                                        }else {
+                                                                            Log.e("ReqEnrollActivity---","Unable to insert Enroll");
+                                                                        }
+                                                                    }
+
+                                                                }
+
+                                                            }
+                                                        }else{
+                                                            Log.e("RequstedEnrollActivity","Unable to update Enroll Status Locally");
+                                                        }
+
                                                     }
+                                                }catch (Exception e){
+                                                    e.printStackTrace();
+                                                    Log.e("EnrollActivity----",e.toString());
                                                 }
                                             }
-                                        }catch (Exception e){
-                                            e.printStackTrace();
-                                            Log.e("EnrollActivity----",e.toString());
-                                        }
+                                        }).execute();
+                                    }else{
+                                        Toast.makeText(getApplicationContext(),"Wrong Key",Toast.LENGTH_SHORT).show();
                                     }
-                                }).execute();
+                                }
                             }else{
-                                Toast.makeText(getApplicationContext(),"Wrong Key",Toast.LENGTH_SHORT).show();
+                                Toast.makeText(getApplicationContext(),"Not Processed Yet",Toast.LENGTH_SHORT).show();
                             }
                         }
-                    }
-                });
+                    });
+
+                }else{
+                    Toast.makeText(getApplicationContext(),"Not Processed Yet",Toast.LENGTH_SHORT).show();
+                }
 
             }
 

@@ -285,25 +285,25 @@ public class DBHelper extends SQLiteOpenHelper {
                 ")";
         db.execSQL(AttemptData);
 
-        String AssessmentData=" CREATE TABLE `attempt_data` (\n"+
-                "   `Test_ID` varchar(15),\n" +
-                "   `Attempt_ID` TEXT,\n"+
-                "   `Question_ID` varchar(15),\n" +
-                "   `Question_Seq_No` varchar(15) DEFAULT NULL,\n" +
-                "   `Question_Section` varchar(15) DEFAULT NULL,\n" +
-                "   `Question_Category` varchar(15) DEFAULT NULL,\n" +
-                "   `Question_SubCategory` varchar(15) DEFAULT NULL,\n" +
-                "   `Question_Max_Marks` double(15) DEFAULT NULL,\n"+
-                "   `Question_Negative_Marks` double(15) DEFAULT NULL,\n"+
-                "   `Question_Marks_Obtained` double(15) DEFAULT NULL,\n"+
-                "   `Question_Negative_Applied` double(15) DEFAULT NULL,\n"+
-                "   `Question_Option` int(15) DEFAULT NULL,\n"+
-                "   `Question_Status` varchar(20) DEFAULT NULL,\n"+
-                "   `Question_Option_Sequence` varchar(20) DEFAULT NULL,\n"+
-                "   `Option_Answer_Flag` varchar(15) DEFAULT NULL,\n"+
-                "   PRIMARY KEY (`Question_ID`)\n"+
-                ")";
-        db.execSQL(AssessmentData);
+//        String AssessmentData=" CREATE TABLE `attempt_data` (\n"+
+//                "   `Test_ID` varchar(15),\n" +
+//                "   `Attempt_ID` TEXT,\n"+
+//                "   `Question_ID` varchar(15),\n" +
+//                "   `Question_Seq_No` varchar(15) DEFAULT NULL,\n" +
+//                "   `Question_Section` varchar(15) DEFAULT NULL,\n" +
+//                "   `Question_Category` varchar(15) DEFAULT NULL,\n" +
+//                "   `Question_SubCategory` varchar(15) DEFAULT NULL,\n" +
+//                "   `Question_Max_Marks` double(15) DEFAULT NULL,\n"+
+//                "   `Question_Negative_Marks` double(15) DEFAULT NULL,\n"+
+//                "   `Question_Marks_Obtained` double(15) DEFAULT NULL,\n"+
+//                "   `Question_Negative_Applied` double(15) DEFAULT NULL,\n"+
+//                "   `Question_Option` int(15) DEFAULT NULL,\n"+
+//                "   `Question_Status` varchar(20) DEFAULT NULL,\n"+
+//                "   `Question_Option_Sequence` varchar(20) DEFAULT NULL,\n"+
+//                "   `Option_Answer_Flag` varchar(15) DEFAULT NULL,\n"+
+//                "   PRIMARY KEY (`Question_ID`)\n"+
+//                ")";
+//        db.execSQL(AssessmentData);
 
         String AttemptCategory="CREATE TABLE `attempt_category` (\n"+
                 "   `Attempt_ID` INTEGER,\n"+
@@ -786,6 +786,14 @@ public class DBHelper extends SQLiteOpenHelper {
         cv.put("Enroll_batch_end_Dt",ebenddate);
         cv.put("Enroll_Device_ID",edevid);
         cv.put("Enroll_Date",edate);
+        cv.put("Enroll_Status",estatus);
+        updateFlag=db.update("enrollments", cv, "Enroll_ID='"+eid+"'",null);
+        return updateFlag;
+    }
+
+    public long updateEnrollmentStatus(String eid,String estatus){
+        long updateFlag=0;
+        ContentValues cv = new ContentValues();
         cv.put("Enroll_Status",estatus);
         updateFlag=db.update("enrollments", cv, "Enroll_ID='"+eid+"'",null);
         return updateFlag;
