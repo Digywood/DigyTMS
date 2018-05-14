@@ -564,6 +564,11 @@ public class DBHelper extends SQLiteOpenHelper {
         return c;
     }
 
+    public int getATestsCount(String enrollid){
+        Cursor c =db.query("satu_student", new String[] {"satu_entroll_id,satu_student_id,satu_batch"},"satu_entroll_id='"+enrollid+"'", null, null, null,null);
+        return c.getCount();
+    }
+
     public long deleteAllAssesmentTests(){
         long deleteFlag=0;
         deleteFlag=db.delete("satu_student", null,null);

@@ -1,6 +1,7 @@
 package com.digywood.tms.Fragments;
 
 import android.content.Context;
+import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Color;
 import android.net.Uri;
@@ -18,17 +19,30 @@ import android.widget.Button;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.digywood.tms.Charts.DayAxisValueFormatter;
+import com.digywood.tms.Charts.MyAxisValueFormatter;
+import com.digywood.tms.Charts.XYMarkerView;
 import com.digywood.tms.DBHelper.DBHelper;
+import com.digywood.tms.PaperDashActivity;
 import com.digywood.tms.Pojo.SingleEnrollment;
 import com.digywood.tms.R;
+import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.charts.PieChart;
 import com.github.mikephil.charting.components.Legend;
+import com.github.mikephil.charting.components.XAxis;
+import com.github.mikephil.charting.components.YAxis;
+import com.github.mikephil.charting.data.BarData;
+import com.github.mikephil.charting.data.BarDataSet;
+import com.github.mikephil.charting.data.BarEntry;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.PieData;
 import com.github.mikephil.charting.data.PieDataSet;
 import com.github.mikephil.charting.data.PieEntry;
+import com.github.mikephil.charting.formatter.IAxisValueFormatter;
 import com.github.mikephil.charting.formatter.PercentFormatter;
 import com.github.mikephil.charting.highlight.Highlight;
+import com.github.mikephil.charting.interfaces.datasets.IBarDataSet;
 import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
 
 import java.util.ArrayList;
@@ -52,7 +66,10 @@ public class AssessmentFragment extends Fragment implements OnChartValueSelected
 
     Button btn_adetails;
     public PieChart mChart;
-
+    public BarChart mChart1;
+    int totptestcount=0,attemptpcount=0;
+    float attemptpercent=0.0f;
+    Double min=0.0,max=0.0,avg=0.0;
     ArrayList<SingleEnrollment> enrollPojos=new ArrayList<>();
     ArrayList<String> enrollIds=new ArrayList<>();
     ArrayAdapter<String> enrollAdp;
@@ -113,6 +130,61 @@ public class AssessmentFragment extends Fragment implements OnChartValueSelected
         myhelper=new DBHelper(getActivity());
 
         mChart=view.findViewById(R.id.chart3);
+        mChart1 =view.findViewById(R.id.bchart3);
+
+        return view;
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
+        Cursor mycursor=myhelper.getAllEnrolls();
+        Log.e("CursorCount---",""+mycursor.getCount());
+        if(mycursor.getCount()>0){
+            while(mycursor.moveToNext()){
+                String enrollidId=mycursor.getString(mycursor.getColumnIndex("Enroll_ID"));
+                String courseId=mycursor.getString(mycursor.getColumnIndex("Enroll_course_ID"));
+                enrollIds.add(enrollidId);
+                enrollPojos.add(new SingleEnrollment(enrollidId,courseId));
+            }
+            enrollAdp= new ArrayAdapter(getActivity(),android.R.layout.simple_spinner_item,enrollIds);
+            enrollAdp.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+            sp_enrollids.setAdapter(enrollAdp);
+        }else{
+            mycursor.close();
+        }
+
+        sp_enrollids.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view,int position,long id) {
+
+                SingleEnrollment singleEnrollment=enrollPojos.get(position);
+                enrollid=singleEnrollment.getDenrollid();
+                courseid=singleEnrollment.getDcourseid();
+                String cname=myhelper.getCoursenameById(courseid);
+                tv_coursename.setText(cname);
+                updateData(enrollid);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+
+        btn_adetails.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i=new Intent(getActivity(), PaperDashActivity.class);
+                i.putExtra("courseid",courseid);
+                i.putExtra("testtype","ASSESSMENT");
+                startActivity(i);
+            }
+        });
+
+
+        attemptpercent=(Float.parseFloat(String.valueOf(attemptpcount))/totptestcount)*100;
 
         mChart.setUsePercentValues(true);
         mChart.getDescription().setEnabled(false);
@@ -158,52 +230,67 @@ public class AssessmentFragment extends Fragment implements OnChartValueSelected
         l.setDrawInside(false);
         l.setEnabled(false);
 
-        return view;
-    }
 
-    @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
+        mChart1.setDrawBarShadow(false);
+        mChart1.setDrawValueAboveBar(true);
 
-        Cursor mycursor=myhelper.getAllEnrolls();
-        Log.e("CursorCount---",""+mycursor.getCount());
-        if(mycursor.getCount()>0){
-            while(mycursor.moveToNext()){
-                String enrollidId=mycursor.getString(mycursor.getColumnIndex("Enroll_ID"));
-                String courseId=mycursor.getString(mycursor.getColumnIndex("Enroll_course_ID"));
-                enrollIds.add(enrollidId);
-                enrollPojos.add(new SingleEnrollment(enrollidId,courseId));
-            }
-            enrollAdp= new ArrayAdapter(getActivity(),android.R.layout.simple_spinner_item,enrollIds);
-            enrollAdp.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-            sp_enrollids.setAdapter(enrollAdp);
-        }else{
-            mycursor.close();
-        }
+        mChart1.getDescription().setEnabled(false);
 
-        sp_enrollids.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view,int position,long id) {
+        // if more than 60 entries are displayed in the chart, no values will be
+        // drawn
+        mChart1.setMaxVisibleValueCount(10);
 
-                SingleEnrollment singleEnrollment=enrollPojos.get(position);
-                enrollid=singleEnrollment.getDenrollid();
-                courseid=singleEnrollment.getDcourseid();
-                String cname=myhelper.getCoursenameById(courseid);
-                tv_coursename.setText(cname);
-            }
+        // scaling can now only be done on x- and y-axis separately
+        mChart1.setPinchZoom(false);
 
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
+        mChart1.setDrawGridBackground(false);
+        // mChart.setDrawYLabels(false);
 
-            }
-        });
+        mChart1.animateY(3000);
 
-        btn_adetails.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Toast.makeText(getActivity(),"No further action",Toast.LENGTH_SHORT).show();
-            }
-        });
+        IAxisValueFormatter xAxisFormatter = new DayAxisValueFormatter(mChart1);
+
+        XAxis xAxis = mChart1.getXAxis();
+        xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
+//        xAxis.setTypeface(mTfLight);
+        xAxis.setDrawGridLines(false);
+        xAxis.setGranularity(1f);
+        xAxis.setLabelCount(3);
+        xAxis.setValueFormatter(xAxisFormatter);
+
+        IAxisValueFormatter custom = new MyAxisValueFormatter();
+
+        YAxis leftAxis = mChart1.getAxisLeft();
+//        leftAxis.setTypeface(mTfLight);
+        leftAxis.setLabelCount(10, false);
+        leftAxis.setValueFormatter(custom);
+        leftAxis.setPosition(YAxis.YAxisLabelPosition.OUTSIDE_CHART);
+        leftAxis.setSpaceTop(15f);
+        leftAxis.setAxisMinimum(0f); // this replaces setStartAtZero(true)
+
+        YAxis rightAxis = mChart1.getAxisRight();
+        rightAxis.setDrawGridLines(false);
+//        rightAxis.setTypeface(mTfLight);
+        rightAxis.setLabelCount(10, false);
+        rightAxis.setValueFormatter(custom);
+        rightAxis.setSpaceTop(15f);
+        rightAxis.setAxisMinimum(0f); // this replaces setStartAtZero(true)
+
+        Legend leg = mChart1.getLegend();
+        leg.setVerticalAlignment(Legend.LegendVerticalAlignment.BOTTOM);
+        leg.setHorizontalAlignment(Legend.LegendHorizontalAlignment.LEFT);
+        leg.setOrientation(Legend.LegendOrientation.HORIZONTAL);
+        leg.setDrawInside(false);
+        leg.setForm(Legend.LegendForm.SQUARE);
+        leg.setFormSize(9f);
+        leg.setTextSize(11f);
+        leg.setXEntrySpace(4f);
+
+        XYMarkerView mv = new XYMarkerView(getActivity(),xAxisFormatter);
+        mv.setChartView(mChart1); // For bounds control
+        mChart1.setMarker(mv); // Set the marker to the chart
+
+        setData1(3,100);
 
     }
 
@@ -269,23 +356,6 @@ public class AssessmentFragment extends Fragment implements OnChartValueSelected
         // add a lot of colors
 
         ArrayList<Integer> colors = new ArrayList<>();
-//
-//        for (int c : ColorTemplate.VORDIPLOM_COLORS)
-//            colors.add(c);
-//
-//        for (int c : ColorTemplate.JOYFUL_COLORS)
-//            colors.add(c);
-//
-//        for (int c : ColorTemplate.COLORFUL_COLORS)
-//            colors.add(c);
-//
-//        for (int c : ColorTemplate.LIBERTY_COLORS)
-//            colors.add(c);
-//
-//        for (int c : ColorTemplate.PASTEL_COLORS)
-//            colors.add(c);
-//
-//        colors.add(ColorTemplate.getHoloBlue());
 
         colors.add(Color.rgb(100, 196, 125));
         colors.add(Color.rgb(67, 65, 64));
@@ -315,6 +385,44 @@ public class AssessmentFragment extends Fragment implements OnChartValueSelected
         mChart.invalidate();
     }
 
+    private void setData1(int count, float range) {
+
+        float start = 1f;
+
+        ArrayList<BarEntry> yVals1 = new ArrayList<BarEntry>();
+
+        Float min1=(Float.parseFloat(String.valueOf(min)));
+        Float avg1=(Float.parseFloat(String.valueOf(avg)));
+        Float max1=(Float.parseFloat(String.valueOf(max)));
+        yVals1.add(new BarEntry(1,min1));
+        yVals1.add(new BarEntry(2,avg1));
+        yVals1.add(new BarEntry(3,max1));
+
+        BarDataSet set1;
+
+        set1 = new BarDataSet(yVals1, "Min:Avg:Max");
+
+        set1.setDrawIcons(false);
+
+        int colors[]={Color.rgb(67, 65, 64),Color.rgb(204,204,0),Color.rgb(100, 196, 125)};
+
+        set1.setColors(colors);
+
+        ArrayList<IBarDataSet> dataSets = new ArrayList<>();
+        dataSets.add(set1);
+
+        BarData data = new BarData(dataSets);
+        data.setValueTextSize(10f);
+//            data.setValueTypeface(mTfLight);
+        data.setBarWidth(0.4f);
+
+        mChart1.setData(data);
+        mChart1.getData().setHighlightEnabled(!mChart1.getData().isHighlightEnabled());
+        mChart1.setPinchZoom(false);
+        mChart1.setAutoScaleMinMaxEnabled(false);
+        mChart1.invalidate();
+    }
+
     @Override
     public void onValueSelected(Entry e, Highlight h) {
 
@@ -328,6 +436,43 @@ public class AssessmentFragment extends Fragment implements OnChartValueSelected
     @Override
     public void onNothingSelected() {
         Log.i("PieChart", "nothing selected");
+    }
+
+    public void updateData(String enrollId){
+        totptestcount=myhelper.getATestsCount(enrollId);
+        tv_atottests.setText(""+totptestcount);
+
+//        Cursor mycur1=myhelper.getPractiseSummary(enrollId);
+//        if(mycur1.getCount()>0){
+//            while (mycur1.moveToNext()){
+//                attemptpcount=mycur1.getInt(mycur1.getColumnIndex("attemptpcount"));
+//                min=mycur1.getDouble(mycur1.getColumnIndex("minscore"));
+//                max=mycur1.getDouble(mycur1.getColumnIndex("maxscore"));
+//                avg=mycur1.getDouble(mycur1.getColumnIndex("avgscore"));
+//                tv_aattempted.setText(""+attemptpcount);
+//                tv_amax.setText(""+round(max,1));
+//                tv_amin.setText(""+round(min,1));
+//                tv_aavg.setText(""+round(avg,1));
+//            }
+//        }else{
+//            mycur1.close();
+//        }
+
+        attemptpercent=(Float.parseFloat(String.valueOf(attemptpcount))/totptestcount)*100;
+
+        mChart.animateXY(1400, 1400);
+        setData(attemptpercent,100);
+        mChart1.animateY(3000);
+        setData1(3,100);
+    }
+
+    public static double round(double value, int places) {
+        if (places < 0) throw new IllegalArgumentException();
+
+        long factor = (long) Math.pow(10, places);
+        value = value * factor;
+        long tmp = Math.round(value);
+        return (double) tmp / factor;
     }
 
 }
