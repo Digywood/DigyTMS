@@ -231,7 +231,7 @@ public class AssessmentTestActivity extends AppCompatActivity implements
                     enrollid=cursor.getString(cursor.getColumnIndex("satu_entroll_id"));
                     courseid=cursor.getString(cursor.getColumnIndex("satu_course_id"));
                     subjectId=cursor.getString(cursor.getColumnIndex("satu_subjet_ID"));
-                    studentId=cursor.getString(cursor.getColumnIndex("satu_student_ID"));
+                    studentId=cursor.getString(cursor.getColumnIndex("satu_student_id"));
                     paperid=cursor.getString(cursor.getColumnIndex("satu_paper_ID"));
                 }
             }

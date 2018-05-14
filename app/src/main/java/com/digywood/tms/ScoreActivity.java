@@ -221,7 +221,7 @@ public class ScoreActivity extends AppCompatActivity {
                         tv_category.setText(secList.get(i));
                         TableRow.LayoutParams params = new TableRow.LayoutParams(0, TableLayout.LayoutParams.WRAP_CONTENT, 1f);
                         tv_category.setLayoutParams(params);
-                        tv_category.setGravity(Gravity.CENTER);
+//                        tv_category.setGravity(Gravity.CENTER);
                         Log.d("sections",secList.get(i));
                         tv_category.setTextColor(Color.BLACK);
                         tr.addView(tv_category);
@@ -230,7 +230,7 @@ public class ScoreActivity extends AppCompatActivity {
                         tv_noOfQuestions.setText(sec_questions);
                         params = new TableRow.LayoutParams(0, TableLayout.LayoutParams.WRAP_CONTENT, 1f);
                         tv_noOfQuestions.setLayoutParams(params);
-                        tv_noOfQuestions.setGravity(Gravity.CENTER);
+//                        tv_noOfQuestions.setGravity(Gravity.CENTER);
                         Log.d("number",sec_questions);
                         tv_noOfQuestions.setTextColor(Color.BLACK);
                         tr.addView(tv_noOfQuestions);
@@ -239,7 +239,7 @@ public class ScoreActivity extends AppCompatActivity {
                         tv_subCatattempted.setText(sec_attempted);
                         params = new TableRow.LayoutParams(0, TableLayout.LayoutParams.WRAP_CONTENT, 1f);
                         tv_subCatattempted.setLayoutParams(params);
-                        tv_subCatattempted.setGravity(Gravity.CENTER);
+//                        tv_subCatattempted.setGravity(Gravity.CENTER);
                         Log.d("attempt",sec_attempted);
                         tv_subCatattempted.setTextColor(Color.BLACK);
                         tr.addView(tv_subCatattempted);
@@ -248,7 +248,7 @@ public class ScoreActivity extends AppCompatActivity {
                         tv_subCatskipped.setText(sec_skipped);
                         params = new TableRow.LayoutParams(0, TableLayout.LayoutParams.WRAP_CONTENT, 1f);
                         tv_subCatskipped.setLayoutParams(params);
-                        tv_subCatskipped.setGravity(Gravity.CENTER);
+//                        tv_subCatskipped.setGravity(Gravity.CENTER);
                         Log.d("skip",sec_skipped);
                         tv_subCatskipped.setTextColor(Color.BLACK);
                         tr.addView(tv_subCatskipped);
@@ -257,7 +257,7 @@ public class ScoreActivity extends AppCompatActivity {
                         tv_subCatCorrect.setText(sec_correct);
                         params = new TableRow.LayoutParams(0, TableLayout.LayoutParams.WRAP_CONTENT, 1f);
                         tv_subCatCorrect.setLayoutParams(params);
-                        tv_subCatCorrect.setGravity(Gravity.CENTER);
+//                        tv_subCatCorrect.setGravity(Gravity.CENTER);
                         Log.d("correct",sec_correct);
                         tv_subCatCorrect.setTextColor(Color.BLACK);
                         tr.addView(tv_subCatCorrect);
@@ -266,7 +266,7 @@ public class ScoreActivity extends AppCompatActivity {
                         tv_percentage.setText(sec_percentage);
                         params = new TableRow.LayoutParams(0, TableLayout.LayoutParams.WRAP_CONTENT, 1f);
                         tv_percentage.setLayoutParams(params);
-                        tv_percentage.setGravity(Gravity.CENTER);
+//                        tv_percentage.setGravity(Gravity.CENTER);
                         Log.d("%",sec_percentage);
                         tv_percentage.setTextColor(Color.BLACK);
                         tr.addView(tv_percentage);
@@ -284,11 +284,19 @@ public class ScoreActivity extends AppCompatActivity {
 
         tv_course.setText(courseid);
         tv_subject.setText(subjectid);
-        tv_attempted.setText(String.valueOf(dataObj.getQuestionAttempted()));
-        tv_skipped.setText(String.valueOf(dataObj.getQuestionSkipped()));
-        tv_bookmarked.setText(String.valueOf(dataObj.getQuestionBookmarked()));
-        tv_totalQuestions.setText(String.valueOf(dataObj.getQuestionCount()));
-        tv_totalCorrect.setText(String.valueOf(dataObj.getCorrectOptionsCount()));
+        if (testType.equalsIgnoreCase("PRACTICE")) {
+            tv_attempted.setText(String.valueOf(dataObj.getQuestionAttempted()));
+            tv_skipped.setText(String.valueOf(dataObj.getQuestionSkipped()));
+            tv_bookmarked.setText(String.valueOf(dataObj.getQuestionBookmarked()));
+            tv_totalQuestions.setText(String.valueOf(dataObj.getQuestionCount()));
+            tv_totalCorrect.setText(String.valueOf(dataObj.getCorrectOptionsCount()));
+        } else {
+            tv_attempted.setText(String.valueOf(dataObj.getAssessmentQuestionAttempted()));
+            tv_skipped.setText(String.valueOf(dataObj.getAssessmentQuestionSkipped()));
+            tv_bookmarked.setText(String.valueOf(dataObj.getAssessmentQuestionBookmarked()));
+            tv_totalQuestions.setText(String.valueOf(dataObj.getAssessmentQuestionCount()));
+            tv_totalCorrect.setText(String.valueOf(dataObj.getAssessmentCorrectOptionsCount()));
+        }
         tv_totalWrong.setText(String.valueOf(WrongCount));
         tv_totalPositive.setText(String.valueOf(TotalPositive));
         tv_totalNegative.setText(String.valueOf(TotalNegative));
