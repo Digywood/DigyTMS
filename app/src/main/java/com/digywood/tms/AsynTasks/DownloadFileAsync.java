@@ -30,6 +30,7 @@ public class DownloadFileAsync extends AsyncTask<Void,String, String> {
     Context context;
     private ProgressDialog mProgressDialog;
     ArrayList<String> file_paths,file_names,dwd_paths;
+    ArrayList<String> unknownFiles=new ArrayList();
     InputStream input;
     OutputStream output;
     HttpURLConnection con;
@@ -127,6 +128,7 @@ public class DownloadFileAsync extends AsyncTask<Void,String, String> {
             }
             catch (Exception e)
             {
+                unknownFiles.add(file_names.get(i));
                 Log.e("DownloadFileAsync", "Error in Downloading AsynTask.. " + e.toString());
             }
             finally {

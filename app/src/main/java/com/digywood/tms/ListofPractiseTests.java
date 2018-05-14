@@ -820,18 +820,6 @@ public class ListofPractiseTests extends AppCompatActivity {
 
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.action_ptsync:
-                new AsyncCheckInternet(ListofPractiseTests.this,new INetStatus() {
-                    @Override
-                    public void inetSatus(Boolean netStatus) {
-                        if(netStatus){
-                            updateTestData();
-                        }else{
-                            Toast.makeText(getApplicationContext(),"No internet,Please Check your connection",Toast.LENGTH_SHORT).show();
-                        }
-                    }
-                }).execute();
-                return  true;
             case R.id.action_exit:
                 finish();
                 return  true;

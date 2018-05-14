@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
+import android.provider.Settings;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -478,7 +479,6 @@ public class EnrollRequestActivity extends AppCompatActivity {
 
     public void insertEnrollRequest(){
 
-        Log.e("EnrollReqActivity----","StartDate: "+startdate+"  EndDate: "+enddate);
         hashMap.clear();
         hashMap.put("StudentId",studentid);
         hashMap.put("OrgId",orgid);
@@ -486,14 +486,16 @@ public class EnrollRequestActivity extends AppCompatActivity {
         hashMap.put("BranchId",branchid);
         hashMap.put("startDate",startdate);
         hashMap.put("endDate",enddate);
+        String androidid= Settings.Secure.getString(getApplicationContext().getContentResolver(), Settings.Secure.ANDROID_ID);
         String timeStamp = new java.text.SimpleDateFormat("yyyy-MM-dd").format(Calendar.getInstance(TimeZone.getDefault()).getTime());
+        hashMap.put("DeviceId",androidid);
         hashMap.put("StartDate",timeStamp);
         hashMap.put("feetype","INR");
         hashMap.put("feeamount",feeamount);
         hashMap.put("feetax",feetax);
         hashMap.put("totalfee",totalfee);
         hashMap.put("activationkey",CreateRandomString(8));
-        new BagroundTask(URLClass.hosturl+"insertEnrollRequest.php", hashMap, EnrollRequestActivity.this, new IBagroundListener() {
+        new BagroundTask(URLClass.hosturl+"insertEnrollRequest.php", hashMap, EnrollRequestActivity.this,new IBagroundListener() {
             @Override
             public void bagroundData(String json) {
                 try{

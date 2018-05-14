@@ -3,12 +3,6 @@
 xmlns:app="http://schemas.android.com/apk/res-auto">
 
 <item
-    android:id="@+id/action_sync"
-    android:orderInCategory="1"
-    android:icon="@drawable/ic_sync_24dp"
-    android:title="Syncronize"
-    app:showAsAction="never" />
-<item
     android:id="@+id/action_newenroll"
     android:orderInCategory="2"
     android:icon="@drawable/ic_sync_24dp"
