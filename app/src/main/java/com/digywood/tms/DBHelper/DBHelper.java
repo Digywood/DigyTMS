@@ -1768,8 +1768,7 @@ public class DBHelper extends SQLiteOpenHelper {
     }
 
     public Cursor getPractiseUploadData(String status){
-        String query ="SELECT * FROM attempt_list WHERE Attempt_Test_ID ='"+status+"'";
-//        String query ="SELECT * FROM attempt_list WHERE Attempt_Test_ID ='"+testId+"'";
+        String query ="SELECT * FROM attempt_list WHERE Attempt_Upload_Status ='"+status+"'";
         Cursor c=db.rawQuery(query,null);
         return  c;
     }

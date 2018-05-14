@@ -580,27 +580,29 @@ public class DashBoardNavActivity extends AppCompatActivity implements Navigatio
                 JSONObject PractiseTest;
                 while (mycursor.moveToNext()){
                     PractiseTest = new JSONObject();
-                    PractiseTest.put("studentId",mycursor.getString(mycursor.getColumnIndex("studentId")));
-                    PractiseTest.put("enrollmentId",mycursor.getString(mycursor.getColumnIndex("enrollmentId")));
-                    PractiseTest.put("courseId",mycursor.getString(mycursor.getColumnIndex("courseId")));
-                    PractiseTest.put("subjectId",mycursor.getString(mycursor.getColumnIndex("subjectId")));
-                    PractiseTest.put("paperId",mycursor.getString(mycursor.getColumnIndex("paperId")));
-                    PractiseTest.put("flashcardId",mycursor.getString(mycursor.getColumnIndex("flashcardId")));
-                    PractiseTest.put("attemptNumber",mycursor.getInt(mycursor.getColumnIndex("attemptNumber")));
-                    PractiseTest.put("startDttm",mycursor.getString(mycursor.getColumnIndex("startDttm")));
-                    PractiseTest.put("endDttm",mycursor.getString(mycursor.getColumnIndex("endDttm")));
-                    PractiseTest.put("attemptQCount",mycursor.getInt(mycursor.getColumnIndex("attemptQCount")));
-                    PractiseTest.put("iknowCount",mycursor.getInt(mycursor.getColumnIndex("iknowCount")));
-                    PractiseTest.put("donknowCount",mycursor.getInt(mycursor.getColumnIndex("donknowCount")));
-                    PractiseTest.put("skipCount",mycursor.getInt(mycursor.getColumnIndex("skipCount")));
-                    PractiseTest.put("percentageObtain",mycursor.getDouble(mycursor.getColumnIndex("percentageObtain")));
+                    PractiseTest.put("Attempt_ID",mycursor.getString(mycursor.getColumnIndex("Attempt_ID")));
+                    PractiseTest.put("Attempt_Test_ID",mycursor.getString(mycursor.getColumnIndex("Attempt_Test_ID")));
+                    PractiseTest.put("Attempt_enrollId",mycursor.getString(mycursor.getColumnIndex("Attempt_enrollId")));
+                    PractiseTest.put("Attempt_studentId",mycursor.getString(mycursor.getColumnIndex("Attempt_studentId")));
+                    PractiseTest.put("Attempt_courseId",mycursor.getString(mycursor.getColumnIndex("Attempt_courseId")));
+                    PractiseTest.put("Attempt_subjectId",mycursor.getString(mycursor.getColumnIndex("Attempt_subjectId")));
+                    PractiseTest.put("Attempt_paperId",mycursor.getInt(mycursor.getColumnIndex("Attempt_paperId")));
+                    PractiseTest.put("Attempt_Status",mycursor.getString(mycursor.getColumnIndex("Attempt_Status")));
+                    PractiseTest.put("Attempt_RemainingTime",mycursor.getString(mycursor.getColumnIndex("Attempt_RemainingTime")));
+                    PractiseTest.put("Attempt_LastQuestion",mycursor.getInt(mycursor.getColumnIndex("Attempt_LastQuestion")));
+                    PractiseTest.put("Attempt_LastSection",mycursor.getInt(mycursor.getColumnIndex("Attempt_LastSection")));
+                    PractiseTest.put("Attempt_Confirmed",mycursor.getInt(mycursor.getColumnIndex("Attempt_Confirmed")));
+                    PractiseTest.put("Attempt_Skipped",mycursor.getInt(mycursor.getColumnIndex("Attempt_Skipped")));
+                    PractiseTest.put("Attempt_Bookmarked",mycursor.getDouble(mycursor.getColumnIndex("Attempt_Bookmarked")));
+                    PractiseTest.put("Attempt_UnAttempted",mycursor.getInt(mycursor.getColumnIndex("Attempt_UnAttempted")));
+                    PractiseTest.put("Attempt_Score",mycursor.getDouble(mycursor.getColumnIndex("Attempt_Score")));
                     PrcatiseList.put(PractiseTest);
                 }
                 finalPractiseObj.put("PractiseData",PrcatiseList);
 
                 hmap.clear();
                 hmap.put("PractiseData",finalPractiseObj.toString());
-                new BagroundTask(URLClass.hosturl +"syncFlashData.php", hmap,DashBoardNavActivity.this,new IBagroundListener() {
+                new BagroundTask(URLClass.hosturl +"syncPractiseTestData.php", hmap,DashBoardNavActivity.this,new IBagroundListener() {
                     @Override
                     public void bagroundData(String json) {
                         try{
