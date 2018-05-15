@@ -124,22 +124,12 @@ public class AssesmentTestAdapter extends RecyclerView.Adapter<AssesmentTestAdap
                     @Override
                     public void onClick(View v) {
                         Cursor cursor = myhelper.validateAssessmentTestKey(singletest.getTestid());
-                        Log.e("Auth",""+cursor.getCount());
                         if(cursor.getCount()> 0){
                             while (cursor.moveToNext()){
                                 String auth = cursor.getString(cursor.getColumnIndex("satu_exam_key"));
                                 if(auth.equals(key.getText().toString())){
-                                    int count = myhelper.getAttempCount();
-                                    Cursor c = myhelper.getAttempt(myhelper.getLastTestAttempt(singletest.getTestid()));
-                                    //if cursor has values then the test is being resumed and data is retrieved from database
-                                    if (c.getCount() > 0) {
-                                        c.moveToLast();
-                                        if (c.getInt(c.getColumnIndex("Attempt_Status")) != 2) {
-                                            myhelper.DeleteAttempt(myhelper.getLastTestAttempt(singletest.getTestid()));
-                                        }
-                                    }
+                                    myhelper.Destroy("assessment_data");
                                     try {
-                                        Log.e("AuthTest",""+getExternalPath(mycontext, singletest));
                                         fullTest = new String(SaveJSONdataToFile.bytesFromFile(getExternalPath(mycontext, singletest)), "UTF-8");
                                         assessment = new String(SaveJSONdataToFile.bytesFromFile(getExternalPath(mycontext, singletest) ), "UTF-8");
                                         Intent i = new Intent(mycontext, AssessmentTestActivity.class);
@@ -149,7 +139,6 @@ public class AssesmentTestAdapter extends RecyclerView.Adapter<AssesmentTestAdap
                                         mycontext.startActivity(i);
                                     } catch (IOException | ClassNotFoundException | NullPointerException e) {
                                         e.printStackTrace();
-                                        Log.e("Error",e.toString());
                                     }
 
                                 }
