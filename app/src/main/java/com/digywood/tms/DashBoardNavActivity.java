@@ -501,8 +501,8 @@ public class DashBoardNavActivity extends AppCompatActivity implements Navigatio
                 @Override
                 public void inetSatus(Boolean netStatus) {
                     if(netStatus){
-//                        getStudentAllData();
-                        syncFlashCardData();
+                        getStudentAllData();
+//                        syncFlashCardData();
 //                        syncPractiseTestData();
 //                        syncAssesmentTestData();
                     }else{
