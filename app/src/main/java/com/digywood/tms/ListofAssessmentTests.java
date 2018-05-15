@@ -1,6 +1,5 @@
 package com.digywood.tms;
 
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
@@ -8,12 +7,9 @@ import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.ActionBar;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
@@ -24,9 +20,7 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 import com.digywood.tms.Adapters.AssesmentTestAdapter;
-import com.digywood.tms.AsynTasks.AsyncCheckInternet;
 import com.digywood.tms.AsynTasks.BagroundTask;
-import com.digywood.tms.AsynTasks.DownloadFileAsync;
 import com.digywood.tms.DBHelper.DBHelper;
 import com.digywood.tms.Pojo.SingleAssessment;
 import com.digywood.tms.Pojo.SingleDWDQues;
@@ -39,7 +33,7 @@ import java.util.HashMap;
 import static android.Manifest.permission.READ_EXTERNAL_STORAGE;
 import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
 
-public class ListofAssesmentTests extends AppCompatActivity {
+public class ListofAssessmentTests extends AppCompatActivity {
 
     HashMap<String,String> hmap=new HashMap<>();
     ArrayList<SingleAssessment> testidList;
@@ -120,7 +114,7 @@ public class ListofAssesmentTests extends AppCompatActivity {
                 }
             }else {
                 mycursor.close();
-                Toast.makeText(ListofAssesmentTests.this,"No Assesment Tests Available",Toast.LENGTH_LONG).show();
+                Toast.makeText(ListofAssessmentTests.this,"No Assesment Tests Available",Toast.LENGTH_LONG).show();
             }
         } catch (IndexOutOfBoundsException e) {
             e.printStackTrace();
@@ -132,7 +126,7 @@ public class ListofAssesmentTests extends AppCompatActivity {
         hmap.clear();
         hmap.put("courseid",courseid);
         hmap.put("paperid",paperid);
-        new BagroundTask(URLClass.hosturl+"getTestsByCourseandPaper.php", hmap, ListofAssesmentTests.this,new IBagroundListener() {
+        new BagroundTask(URLClass.hosturl+"getTestsByCourseandPaper.php", hmap, ListofAssessmentTests.this,new IBagroundListener() {
             @Override
             public void bagroundData(String json) {
                 try{
@@ -180,8 +174,8 @@ public class ListofAssesmentTests extends AppCompatActivity {
         if (testidList.size() != 0) {
             Log.e("Advtlist.size()", "comes:" + testidList.size());
             tv_emptytests.setVisibility(View.GONE);
-            tAdp = new AssesmentTestAdapter(testidList,ListofAssesmentTests.this);
-            myLayoutManager = new LinearLayoutManager(ListofAssesmentTests.this, LinearLayoutManager.VERTICAL,false);
+            tAdp = new AssesmentTestAdapter(testidList,ListofAssessmentTests.this);
+            myLayoutManager = new LinearLayoutManager(ListofAssessmentTests.this, LinearLayoutManager.VERTICAL,false);
             rv_tests.setLayoutManager(myLayoutManager);
             rv_tests.setItemAnimator(new DefaultItemAnimator());
             rv_tests.setAdapter(tAdp);
@@ -200,7 +194,7 @@ public class ListofAssesmentTests extends AppCompatActivity {
     }
 
     private void requestPermission() {
-        ActivityCompat.requestPermissions(ListofAssesmentTests.this, new
+        ActivityCompat.requestPermissions(ListofAssessmentTests.this, new
                 String[]{WRITE_EXTERNAL_STORAGE,READ_EXTERNAL_STORAGE},RequestPermissionCode);
     }
 

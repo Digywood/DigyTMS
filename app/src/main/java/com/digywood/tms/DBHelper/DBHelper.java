@@ -287,6 +287,7 @@ public class DBHelper extends SQLiteOpenHelper {
 
         String AssessmentData=" CREATE TABLE `assessment_data` (\n"+
                 "   `Test_ID` varchar(15),\n" +
+                "   `Question_Key` varchar(15),\n" +
                 "   `Question_ID` varchar(15),\n" +
                 "   `Question_Seq_No` varchar(15) DEFAULT NULL,\n" +
                 "   `Question_Section` varchar(15) DEFAULT NULL,\n" +
@@ -301,7 +302,7 @@ public class DBHelper extends SQLiteOpenHelper {
                 "   `Question_Upload_Status` TEXT DEFAULT NULL,\n"+
                 "   `Question_Option_Sequence` varchar(20) DEFAULT NULL,\n"+
                 "   `Option_Answer_Flag` varchar(15) DEFAULT NULL,\n"+
-                "   PRIMARY KEY (`Question_ID`)\n"+
+                "   PRIMARY KEY (`Question_Key`)\n"+
                 ")";
         db.execSQL(AssessmentData);
 
@@ -1894,12 +1895,13 @@ public class DBHelper extends SQLiteOpenHelper {
         return c;
     }
 
-    public long InsertAssessmentQuestion(String testId,String qId,String qSeq,String qSec,String cat,String subcat, double maxMarks,double negMarks,double marksObtained,double negApplied, int option,String status,String Upstatus,String oSeq,String flag){
+    public long InsertAssessmentQuestion(String testId,String key,String qId,String qSeq,String qSec,String cat,String subcat, double maxMarks,double negMarks,double marksObtained,double negApplied, int option,String status,String Upstatus,String oSeq,String flag){
 
         long insertFlag=0;
 
         ContentValues cv = new ContentValues();
         cv.put("Test_ID", testId);
+        cv.put("Question_Key", key);
         cv.put("Question_ID", qId);
         cv.put("Question_Seq_No", qSeq);
         cv.put("Question_Section", qSec);
@@ -1922,12 +1924,13 @@ public class DBHelper extends SQLiteOpenHelper {
     }
 
 
-    public long UpdateAssessmentQuestion(String testId,String qId,String qSeq,String qSec,String cat,String subcat, double maxMarks,double negMarks,double marksObtained,double negApplied, int option,String status,String Upstatus,String oSeq,String flag){
+    public long UpdateAssessmentQuestion(String testId,String key,String qId,String qSeq,String qSec,String cat,String subcat, double maxMarks,double negMarks,double marksObtained,double negApplied, int option,String status,String Upstatus,String oSeq,String flag){
 
         long updateFlag=0;
 
         ContentValues cv = new ContentValues();
         cv.put("Test_ID", testId);
+        cv.put("Question_Key", key);
         cv.put("Question_ID", qId);
         cv.put("Question_Seq_No", qSeq);
         cv.put("Question_Section", qSec);
@@ -2083,7 +2086,7 @@ public class DBHelper extends SQLiteOpenHelper {
     public int getAssessmentCorrectOptionsCount(){
         int count = 0;
         ArrayList<Integer> OptionList = new ArrayList<>();
-        String query ="SELECT  Question_Option FROM "+" assessment_data"+" WHERE Option_Answer_Flag = 'YES' and Question_Status <> 'SKIPPED'";
+        String query ="SELECT  Question_Option FROM "+" assessment_data "+" WHERE Option_Answer_Flag = 'YES' and Question_Status <> 'SKIPPED'";
         Cursor c=db.rawQuery(query,null);
         count = c.getCount();
         c.close();

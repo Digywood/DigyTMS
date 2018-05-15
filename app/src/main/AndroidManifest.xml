@@ -49,7 +49,7 @@
             android:parentActivityName=".PaperActivity"
             android:screenOrientation="landscape" />
         <activity
-            android:name=".ListofAssesmentTests"
+            android:name=".ListofAssessmentTests"
             android:label="@string/atestslabel"
             android:parentActivityName=".PaperActivity"
             android:screenOrientation="landscape" />

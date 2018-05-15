@@ -5,7 +5,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
-import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
@@ -20,20 +19,16 @@ import android.view.ViewAnimationUtils;
 import android.view.ViewTreeObserver;
 import android.view.animation.AccelerateInterpolator;
 import android.widget.Button;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.digywood.tms.DBHelper.DBHelper;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.IOException;
 import java.util.ArrayList;
 
 public class ScoreActivity extends AppCompatActivity {
@@ -207,7 +202,7 @@ public class ScoreActivity extends AppCompatActivity {
                             sec_percentage = String.valueOf(dataObj.getSectionQuesCorrect(secList.get(i)));
                         }
                         else{
-                            sec_questions = String.valueOf(dataObj.getAssessmentSectionQuesAns(secList.get(i)));
+                            sec_questions = String.valueOf(dataObj.getAssessmentSectionQuestions(secList.get(i)));
                             sec_attempted = String.valueOf(dataObj.getAssessmentSectionQuesAns(secList.get(i)));
                             sec_skipped = String.valueOf(dataObj.getAssessmentSectionQuesSkip(secList.get(i)));
                             sec_correct = String.valueOf(dataObj.getAssessmentSectionQuesCorrect(secList.get(i)));
@@ -292,10 +287,15 @@ public class ScoreActivity extends AppCompatActivity {
             tv_totalCorrect.setText(String.valueOf(dataObj.getCorrectOptionsCount()));
         } else {
             tv_attempted.setText(String.valueOf(dataObj.getAssessmentQuestionAttempted()));
+            Log.e("AssmntAttempted",String.valueOf(dataObj.getAssessmentQuestionAttempted()));
             tv_skipped.setText(String.valueOf(dataObj.getAssessmentQuestionSkipped()));
+            Log.e("AssmntSkippd",String.valueOf(dataObj.getAssessmentQuestionSkipped()));
             tv_bookmarked.setText(String.valueOf(dataObj.getAssessmentQuestionBookmarked()));
+            Log.e("AssmntMarked",String.valueOf(dataObj.getAssessmentQuestionBookmarked()));
             tv_totalQuestions.setText(String.valueOf(dataObj.getAssessmentQuestionCount()));
+            Log.e("AssmntnoOfQs",String.valueOf(dataObj.getAssessmentQuestionCount()));
             tv_totalCorrect.setText(String.valueOf(dataObj.getAssessmentCorrectOptionsCount()));
+            Log.e("AssmntCorrect",String.valueOf(dataObj.getAssessmentCorrectOptionsCount()));
         }
         tv_totalWrong.setText(String.valueOf(WrongCount));
         tv_totalPositive.setText(String.valueOf(TotalPositive));
@@ -307,12 +307,21 @@ public class ScoreActivity extends AppCompatActivity {
         btn_save.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(ScoreActivity.this, ListofPractiseTests.class);
-                intent.putExtra("enrollid",enrollid);
-                intent.putExtra("courseid", courseid);
-                intent.putExtra("paperid",paperid);
-                startActivity(intent);
-                finish();
+                if (testType.equalsIgnoreCase("PRACTICE")) {
+                    Intent intent = new Intent(ScoreActivity.this, ListofPractiseTests.class);
+                    intent.putExtra("enrollid", enrollid);
+                    intent.putExtra("courseid", courseid);
+                    intent.putExtra("paperid", paperid);
+                    startActivity(intent);
+                    finish();
+                }else{
+                    Intent intent = new Intent(ScoreActivity.this, ListofAssessmentTests.class);
+                    intent.putExtra("enrollid", enrollid);
+                    intent.putExtra("courseid", courseid);
+                    intent.putExtra("paperid", paperid);
+                    startActivity(intent);
+                    finish();
+                }
             }
         });
         btn_details.setOnClickListener(new View.OnClickListener() {
