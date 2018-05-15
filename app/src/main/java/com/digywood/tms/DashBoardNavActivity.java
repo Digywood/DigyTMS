@@ -1,5 +1,6 @@
 package com.digywood.tms;
 
+import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
@@ -20,6 +21,9 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.Window;
+import android.widget.LinearLayout;
+import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 import com.digywood.tms.AsynTasks.AsyncCheckInternet;
@@ -442,6 +446,19 @@ public class DashBoardNavActivity extends AppCompatActivity implements Navigatio
                     }
                 }
             });
+
+//            mydialog = new Dialog(DashBoardNavActivity.this);
+//            mydialog.getWindow();
+//            mydialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+//            mydialog.setContentView(R.layout.activity_testpopup);
+//            mydialog.show();
+//
+//            RadioGroup rg_testtype=mydialog.findViewById(R.id.ll_practise);
+//            LinearLayout ll_assesment=mydialog.findViewById(R.id.ll_assessment);
+
+
+
+
             return true;
         }
 
@@ -634,6 +651,53 @@ public class DashBoardNavActivity extends AppCompatActivity implements Navigatio
     public  void syncFlashCardData(){
 
         JSONObject finalFlashObj=new JSONObject();
+
+        Cursor mycur=myhelper.getAllPTestData();
+
+        if(mycur.getCount()>0){
+            try{
+                JSONArray TestList = new JSONArray();
+                JSONObject TestData;
+                while (mycur.moveToNext()){
+                    TestData = new JSONObject();
+                    TestData.put("sptu_student_ID",mycur.getString(mycur.getColumnIndex("sptu_student_ID")));
+                    TestData.put("sptu_ID",mycur.getString(mycur.getColumnIndex("sptu_ID")));
+                    TestData.put("sptu_start_date",mycur.getString(mycur.getColumnIndex("sptu_start_date")));
+                    TestData.put("sptu_end_date",mycur.getString(mycur.getColumnIndex("sptu_end_date")));
+                    TestData.put("sptu_dwnld_start_dttm",mycur.getString(mycur.getColumnIndex("sptu_dwnld_start_dttm")));
+                    TestData.put("sptu_dwnld_completed_dttm",mycur.getString(mycur.getColumnIndex("sptu_dwnld_completed_dttm")));
+                    TestData.put("sptu_dwnld_status",mycur.getString(mycur.getColumnIndex("sptu_dwnld_status")));
+//                    TestData.put("sptu_upld_dttm",mycur.getInt(mycur.getColumnIndex("sptu_upld_dttm")));
+                    TestData.put("sptu_no_of_questions",mycur.getInt(mycur.getColumnIndex("sptu_no_of_questions")));
+                    TestData.put("sptu_tot_marks",mycur.getDouble(mycur.getColumnIndex("sptu_tot_marks")));
+                    TestData.put("stpu_min_marks",mycur.getDouble(mycur.getColumnIndex("stpu_min_marks")));
+                    TestData.put("sptu_max_marks",mycur.getDouble(mycur.getColumnIndex("sptu_max_marks")));
+                    TestData.put("sptu_avg_marks",mycur.getDouble(mycur.getColumnIndex("sptu_avg_marks")));
+                    TestData.put("sptu_min_percent",mycur.getDouble(mycur.getColumnIndex("sptu_min_percent")));
+                    TestData.put("sptu_max_percent",mycur.getDouble(mycur.getColumnIndex("sptu_max_percent")));
+                    TestData.put("sptu_avg_percent",mycur.getDouble(mycur.getColumnIndex("sptu_avg_percent")));
+                    TestData.put("sptu_last_attempt_marks",mycur.getDouble(mycur.getColumnIndex("sptu_last_attempt_marks")));
+                    TestData.put("sptu_last_attempt_percent",mycur.getDouble(mycur.getColumnIndex("sptu_last_attempt_percent")));
+                    TestData.put("sptu_last_attempt_start_dttm",mycur.getString(mycur.getColumnIndex("sptu_last_attempt_start_dttm")));
+                    TestData.put("sptu_last_attempt_end_dttm",mycur.getString(mycur.getColumnIndex("sptu_last_attempt_end_dttm")));
+                    TestData.put("sptu_no_of_attempts",mycur.getInt(mycur.getColumnIndex("sptu_no_of_attempts")));
+                    TestData.put("sptuflash_attempts",mycur.getInt(mycur.getColumnIndex("sptuflash_attempts")));
+                    TestData.put("min_flashScore",mycur.getDouble(mycur.getColumnIndex("min_flashScore")));
+                    TestData.put("max_flashScore",mycur.getDouble(mycur.getColumnIndex("max_flashScore")));
+                    TestData.put("avg_flashScore",mycur.getDouble(mycur.getColumnIndex("avg_flashScore")));
+                    TestData.put("lastAttemptDttm",mycur.getString(mycur.getColumnIndex("lastAttemptDttm")));
+                    TestData.put("lastAttemptScore",mycur.getDouble(mycur.getColumnIndex("lastAttemptScore")));
+                    TestList.put(TestData);
+                }
+                finalFlashObj.put("TestData",TestList);
+            }catch (Exception e){
+                e.printStackTrace();
+                Log.e("DBNActivity----",e.toString());
+            }
+        }else{
+            mycur.close();
+        }
+
         Cursor mycursor=myhelper.getFlashUploadData("NotUploaded");
         if(mycursor.getCount()>0){
             try{
@@ -641,6 +705,7 @@ public class DashBoardNavActivity extends AppCompatActivity implements Navigatio
                 JSONObject FlashData;
                 while (mycursor.moveToNext()){
                     FlashData = new JSONObject();
+                    FlashData.put("flashUID",mycursor.getString(mycursor.getColumnIndex("flashUID")));
                     FlashData.put("studentId",mycursor.getString(mycursor.getColumnIndex("studentId")));
                     FlashData.put("enrollmentId",mycursor.getString(mycursor.getColumnIndex("enrollmentId")));
                     FlashData.put("courseId",mycursor.getString(mycursor.getColumnIndex("courseId")));
@@ -665,12 +730,35 @@ public class DashBoardNavActivity extends AppCompatActivity implements Navigatio
                     @Override
                     public void bagroundData(String json) {
                         try{
+                            JSONArray ja_testIds,ja_flashIds;
                             Log.e("json"," comes :  "+json);
-                            if(json.equalsIgnoreCase("Inserted")){
-                                Toast.makeText(getApplicationContext(),"FlashData Syncronised",Toast.LENGTH_SHORT).show();
-                            }else{
-                                Toast.makeText(getApplicationContext(),"Sorry,Try Again Later",Toast.LENGTH_SHORT).show();
+                            JSONObject mainObj=new JSONObject(json);
+
+                            ja_testIds=mainObj.getJSONArray("testIds");
+
+                            if(ja_testIds!=null && ja_testIds.length()>0){
+                                Log.e("DBNActivity---","updated_test_rec:--"+ja_testIds.length());
                             }
+
+                            ja_flashIds=mainObj.getJSONArray("flashIds");
+                            JSONObject flashObj=null;
+                            int p=0,q=0;
+                            if(ja_flashIds.length()>0 && ja_flashIds!=null){
+                                Log.e("DBNActivity---","updated_flash_rec:--"+ja_testIds.length());
+                                for(int i=0;i<ja_flashIds.length();i++){
+                                    flashObj=ja_flashIds.getJSONObject(i);
+                                    long updateFlag=myhelper.updateFAttemptStatus(flashObj.getString("flashUID"),"Uploaded");
+                                    if(updateFlag>0){
+                                        p++;
+                                    }else{
+                                        q++;
+                                    }
+                                }
+                                Log.e("DBNActivity---","FUpdated:--"+p);
+                            }else{
+
+                            }
+
                         }catch (Exception e){
                             e.printStackTrace();
                             Log.e("DashBoardNavActivity","  :  "+e.toString());

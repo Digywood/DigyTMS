@@ -75,7 +75,7 @@ public class EnrollRequestAdapter extends  RecyclerView.Adapter<EnrollRequestAda
         }else{
             holder.tv_indicator.setBackgroundColor(mycontext.getResources().getColor(R.color.dull_yellow));
         }
-        
+
     }
 
     public ArrayList<String> getNumberList() {

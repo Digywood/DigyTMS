@@ -329,6 +329,8 @@ public class JSONParser {
                                 cquesObj.put("qbm_Paper_name",quesObj.get("qbm_Paper_name"));
                                 cquesObj.put("qbm_ChapterID",quesObj.get("qbm_ChapterID"));
                                 cquesObj.put("qbm_Chapter_name",quesObj.get("qbm_Chapter_name"));
+                                cquesObj.put("qbm_CategoryID",quesObj.get("qbm_CategoryID"));
+                                cquesObj.put("qbm_CategoryName",quesObj.get("qbm_CategoryName"));
                                 cquesObj.put("qbm_Sub_CategoryID",quesObj.get("qbm_Sub_CategoryID"));
                                 cquesObj.put("qbm_Sub_CategoryName",quesObj.get("qbm_Sub_CategoryName"));
                                 cquesObj.put("qbm_level",quesObj.get("qbm_level"));
@@ -451,6 +453,8 @@ public class JSONParser {
                                 cquesObj.put("qbm_Paper_name",quesObj.get("qbm_Paper_name"));
                                 cquesObj.put("qbm_ChapterID",quesObj.get("qbm_ChapterID"));
                                 cquesObj.put("qbm_Chapter_name",quesObj.get("qbm_Chapter_name"));
+                                cquesObj.put("qbm_CategoryID",quesObj.get("qbm_CategoryID"));
+                                cquesObj.put("qbm_CategoryName",quesObj.get("qbm_CategoryName"));
                                 cquesObj.put("qbm_Sub_CategoryID",quesObj.get("qbm_Sub_CategoryID"));
                                 cquesObj.put("qbm_Sub_CategoryName",quesObj.get("qbm_Sub_CategoryName"));
                                 cquesObj.put("qbm_level",quesObj.get("qbm_level"));
