@@ -139,6 +139,7 @@ public class DBHelper extends SQLiteOpenHelper {
                 "  `sptu_dwnld_start_dttm` datetime DEFAULT NULL,\n" +
                 "  `sptu_dwnld_completed_dttm` datetime DEFAULT NULL,\n" +
                 "  `sptu_dwnld_status` text DEFAULT NULL,\n" +
+                "  `sptu_upld_dttm` text DEFAULT NULL,\n" +
                 "  `sptu_no_of_questions` integer(5) DEFAULT NULL,\n" +
                 "  `sptu_tot_marks` double DEFAULT NULL,\n" +
                 "  `stpu_min_marks` double DEFAULT NULL,\n" +
@@ -717,6 +718,14 @@ public class DBHelper extends SQLiteOpenHelper {
         return updateFlag;
     }
 
+    public long updateFAttemptStatus(String fuid,String status){
+        long updateFlag=0;
+        ContentValues cv = new ContentValues();
+        cv.put("Status",status);
+        updateFlag = db.update("flashcard_attempt",cv,"flashUID='"+fuid+"'",null);
+        return updateFlag;
+    }
+
     public Cursor checkPtuSection(String testId,String sectionId){
         Cursor c =db.query("ptu_sections", new String[] {"Ptu_ID,Ptu_section_ID"},"Ptu_ID='"+testId+"' and Ptu_section_ID='"+sectionId+"'", null, null, null,null);
         return c;
@@ -976,6 +985,12 @@ public class DBHelper extends SQLiteOpenHelper {
         cv.put("sptu_avg_percent",tavgperc);
         updateFlag=db.update("sptu_student", cv,"sptu_ID='"+tID+"'",null);
         return  updateFlag;
+    }
+
+    public Cursor getAllPTestData(){
+        String query ="SELECT * FROM sptu_student";
+        Cursor c=db.rawQuery(query,null);
+        return  c;
     }
 
     public long updatePractiseTestData(String torgid,String tenrollid,String tstudentid,String tbatch,String tid,String tpid,String tsid,String tcid,String tstartdate,String tenddate,String tdwdstatus,int tnoofques,Double ttotalmarks,Double tminmarks,Double tmaxmarks){
