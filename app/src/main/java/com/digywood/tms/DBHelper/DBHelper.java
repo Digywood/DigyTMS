@@ -324,6 +324,7 @@ public class DBHelper extends SQLiteOpenHelper {
 
         String FlashAttemptTable="CREATE TABLE `flashcard_attempt` (\n" +
                 "  `flashcard_attemptKey` integer PRIMARY KEY AUTOINCREMENT,\n" +
+                "  `flashUID` text DEFAULT NULL,\n" +
                 "  `studentId` text DEFAULT NULL,\n" +
                 "  `enrollmentId` text DEFAULT NULL,\n" +
                 "  `courseId` text DEFAULT NULL,\n" +
@@ -584,9 +585,10 @@ public class DBHelper extends SQLiteOpenHelper {
         return  deleteFlag;
     }
 
-    public long insertFlashAttempt(String studentId,String enrollId,String courseId,String subjectId,String paperId,String fcardId,int attemptnum,String sdttm,String edttm,int attemptQcount,int iknowcount,int donknowcount,int skipcount,Double percentage,String status){
+    public long insertFlashAttempt(String fUID,String studentId,String enrollId,String courseId,String subjectId,String paperId,String fcardId,int attemptnum,String sdttm,String edttm,int attemptQcount,int iknowcount,int donknowcount,int skipcount,Double percentage,String status){
         long insertFlag=0;
         ContentValues cv = new ContentValues();
+        cv.put("flashUID",fUID);
         cv.put("studentId",studentId);
         cv.put("enrollmentId",enrollId);
         cv.put("courseId",courseId);

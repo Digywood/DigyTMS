@@ -175,13 +175,17 @@ public class RequestedEnrollsActivity extends AppCompatActivity {
                                     }
                                 }
                             }else{
-                                Toast.makeText(getApplicationContext(),"Not Processed Yet",Toast.LENGTH_SHORT).show();
+
                             }
                         }
                     });
 
                 }else{
-                    Toast.makeText(getApplicationContext(),"Not Processed Yet",Toast.LENGTH_SHORT).show();
+                    if(singleEnrollRequest.getStatus().equalsIgnoreCase("ACTIVATED")){
+                        Toast.makeText(getApplicationContext(),"Already Activated",Toast.LENGTH_SHORT).show();
+                    }else {
+                        Toast.makeText(getApplicationContext(),"Not Processed Yet",Toast.LENGTH_SHORT).show();
+                    }
                 }
 
             }
