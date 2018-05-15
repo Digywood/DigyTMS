@@ -547,16 +547,16 @@ public class DBHelper extends SQLiteOpenHelper {
     public long updateAssessmentTestRecord(String tID,String tsid,String tcid,int tnoofques,Double ttotalmarks,Double tminmarks,Double tmaxmarks,Double avgscore,Double tminperc, Double tmaxperc, Double tavgperc){
         long updateFlag=0;
         ContentValues cv = new ContentValues();
-       cv.put("sptu_subjet_ID",tsid);
-       cv.put("sptu_course_id",tcid);
-       cv.put("sptu_no_of_questions",tnoofques);
-       cv.put("sptu_tot_marks",ttotalmarks);
-       cv.put("stpu_min_marks",tminmarks);
-       cv.put("sptu_min_percent",tminperc);
-       cv.put("sptu_max_marks",tmaxmarks);
-       cv.put("sptu_max_percent",tmaxperc);
-       cv.put("sptu_avg_marks",avgscore);
-       cv.put("sptu_avg_percent",tavgperc);
+       cv.put("satu_subjet_ID",tsid);
+       cv.put("satu_course_id",tcid);
+       cv.put("satu_no_of_questions",tnoofques);
+       cv.put("satu_tot_marks",ttotalmarks);
+       cv.put("satu_min_marks",tminmarks);
+       cv.put("satu_min_percent",tminperc);
+       cv.put("satu_max_marks",tmaxmarks);
+       cv.put("satu_max_percent",tmaxperc);
+       cv.put("satu_avg_marks",avgscore);
+       cv.put("satu_avg_percent",tavgperc);
        updateFlag=db.update("satu_student", cv, "satu_ID='"+tID+"'",null);
        return updateFlag;
     }
@@ -1910,6 +1910,13 @@ public class DBHelper extends SQLiteOpenHelper {
         return c;
     }
 
+    public Cursor getAssessmentRawData(String testId){
+        String query ="SELECT COUNT(*) as assessmentcount,MIN(Assesment_Percentage) as minscore,MAX(Assesment_Percentage) as maxscore,AVG(Assesment_Percentage) as avgscore FROM "+" Assesment_list"+" WHERE Assesment_Test_ID='"+testId+"'";
+        Cursor c=db.rawQuery(query,null);
+        return c;
+    }
+
+
     public long InsertAssessmentQuestion(String testId,String key,String qId,String qSeq,String qSec,String cat,String subcat, double maxMarks,double negMarks,double marksObtained,double negApplied, int option,String status,String Upstatus,String oSeq,String flag){
 
         long insertFlag=0;
@@ -1995,7 +2002,7 @@ public class DBHelper extends SQLiteOpenHelper {
     }
 
     public int getAssessmentSectionQuesSkip(String subct){
-        String query ="SELECT * FROM assessment_data WHERE Question_Section ='"+subct+"' and Question_Status <> 'SKIPPED'";
+        String query ="SELECT * FROM assessment_data WHERE Question_Section ='"+subct+"' and Question_Status = 'SKIPPED'";
         Cursor c=db.rawQuery(query,null);
         int count = c.getCount();
         c.close();
@@ -2003,7 +2010,7 @@ public class DBHelper extends SQLiteOpenHelper {
     }
 
     public int getAssessmentSectionQuesCorrect(String subct){
-        String query ="SELECT * FROM assessment_data WHERE  Option_Answer_Flag = 'YES' and Question_Section ='"+subct+"' and Question_Status <> 'SKIPPED'";
+        String query ="SELECT * FROM assessment_data WHERE  Option_Answer_Flag = 'YES' and Question_Section = '"+subct+"' and Question_Status <> 'SKIPPED'";
         Cursor c=db.rawQuery(query,null);
         int count = c.getCount();
         c.close();
@@ -2011,7 +2018,7 @@ public class DBHelper extends SQLiteOpenHelper {
     }
 
     public int getAssessmentSubCatQuestions(String subct){
-        String query ="SELECT * FROM assessment_data WHERE Question_SubCategory ='"+subct+"'";
+        String query ="SELECT * FROM assessment_data WHERE Question_SubCategory = '"+subct+"'";
         Cursor c=db.rawQuery(query,null);
         int count = c.getCount();
         c.close();
@@ -2019,7 +2026,7 @@ public class DBHelper extends SQLiteOpenHelper {
     }
 
     public int getAssessmentSubCatQuesAns(String subct){
-        String query ="SELECT * FROM assessment_data WHERE Question_SubCategory ='"+subct+"' and Question_Status NOT IN ('NOT_ATTEMPTED','SKIPPED')";
+        String query ="SELECT * FROM assessment_data WHERE Question_SubCategory = '"+subct+"' and Question_Status NOT IN ('NOT_ATTEMPTED','SKIPPED')";
         Cursor c=db.rawQuery(query,null);
         int count = c.getCount();
         c.close();
@@ -2027,7 +2034,7 @@ public class DBHelper extends SQLiteOpenHelper {
     }
 
     public int getAssessmentSubCatQuesSkip(String subct){
-        String query ="SELECT * FROM attempt_data WHERE Question_SubCategory ='"+subct+"' and Question_Status <> 'SKIPPED'";
+        String query ="SELECT * FROM attempt_data WHERE Question_SubCategory = '"+subct+"' and Question_Status <> 'SKIPPED'";
         Cursor c=db.rawQuery(query,null);
         int count = c.getCount();
         c.close();
@@ -2035,7 +2042,7 @@ public class DBHelper extends SQLiteOpenHelper {
     }
 
     public int getAssessmentSubCatQuesCorrect(String subct){
-        String query ="SELECT * FROM assessment_data WHERE  Option_Answer_Flag = 'YES' and Question_SubCategory ='"+subct+"' and Question_Status <> 'SKIPPED'";
+        String query ="SELECT * FROM assessment_data WHERE  Option_Answer_Flag = 'YES' and Question_SubCategory = '"+subct+"' and Question_Status <> 'SKIPPED'";
         Cursor c=db.rawQuery(query,null);
         int count = c.getCount();
         c.close();
@@ -2043,7 +2050,7 @@ public class DBHelper extends SQLiteOpenHelper {
     }
     public Boolean AssessmentCheckQuestion(String qId){
         Boolean value = false;
-        String query ="SELECT  Question_Option FROM "+" assessment_data"+" WHERE Question_ID ='"+qId+"'";
+        String query ="SELECT  Question_Option FROM "+" assessment_data"+" WHERE Question_ID = '"+qId+"'";
         db=this.getWritableDatabase();
         Cursor cursor=db.rawQuery(query,null);
         cursor.moveToFirst();
