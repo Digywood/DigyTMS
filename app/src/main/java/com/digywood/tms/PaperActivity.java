@@ -13,36 +13,23 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.GridView;
-import android.widget.ImageButton;
 import android.widget.LinearLayout;
-import android.widget.RadioGroup;
-import android.widget.RatingBar;
-import android.widget.Spinner;
-import android.widget.TextView;
 import android.widget.Toast;
-import com.digywood.tms.Adapters.EnrollAdapter;
+
 import com.digywood.tms.Adapters.PaperAdapter;
-import com.digywood.tms.Adapters.ScrollGridCardAdapter;
 import com.digywood.tms.AsynTasks.BagroundTask;
 import com.digywood.tms.DBHelper.DBHelper;
-import com.digywood.tms.Pojo.SingleDashPaper;
-import com.digywood.tms.Pojo.SingleEnrollment;
 import com.digywood.tms.Pojo.SinglePaper;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Random;
 
 import static android.Manifest.permission.READ_EXTERNAL_STORAGE;
 import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
@@ -125,7 +112,7 @@ public class PaperActivity extends AppCompatActivity {
                 ll_assesment.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        Intent i=new Intent(getApplicationContext(),ListofAssesmentTests.class);
+                        Intent i=new Intent(getApplicationContext(),ListofAssessmentTests.class);
                         i.putExtra("enrollid",enrollid);
                         i.putExtra("courseid",courseid);
                         i.putExtra("paperid",singlePaper.getPaperId());
@@ -302,7 +289,7 @@ public class PaperActivity extends AppCompatActivity {
 //                startActivity(i);
 //                finish();
 //            }else{
-//                Intent i=new Intent(getApplicationContext(),ListofAssesmentTests.class);
+//                Intent i=new Intent(getApplicationContext(),ListofAssessmentTests.class);
 //                Log.e("JSON---",courseid+paperidList.get(pos-1));
 //                i.putExtra("enrollid",enrollid);
 //                i.putExtra("courseid",courseid);

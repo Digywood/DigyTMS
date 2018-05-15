@@ -301,7 +301,8 @@ public class DBHelper extends SQLiteOpenHelper {
                 "   `Question_Status` varchar(20) DEFAULT NULL,\n"+
                 "   `Question_Upload_Status` TEXT DEFAULT NULL,\n"+
                 "   `Question_Option_Sequence` varchar(20) DEFAULT NULL,\n"+
-                "   `Option_Answer_Flag` varchar(15) DEFAULT NULL\n"+
+                "   `Option_Answer_Flag` varchar(15) DEFAULT NULL,\n"+
+                "   PRIMARY KEY (`Question_Key`)\n"+
                 ")";
         db.execSQL(AssessmentData);
 
@@ -2085,7 +2086,7 @@ public class DBHelper extends SQLiteOpenHelper {
     public int getAssessmentCorrectOptionsCount(){
         int count = 0;
         ArrayList<Integer> OptionList = new ArrayList<>();
-        String query ="SELECT  Question_Option FROM "+" assessment_data"+" WHERE Option_Answer_Flag = 'YES' and Question_Status <> 'SKIPPED'";
+        String query ="SELECT  Question_Option FROM "+" assessment_data "+" WHERE Option_Answer_Flag = 'YES' and Question_Status <> 'SKIPPED'";
         Cursor c=db.rawQuery(query,null);
         count = c.getCount();
         c.close();
