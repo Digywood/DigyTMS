@@ -28,7 +28,7 @@ public class EnrollRequestAdapter extends  RecyclerView.Adapter<EnrollRequestAda
     private ArrayList<String> chknumberList=new ArrayList<>();
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
-        public TextView tv_enrollid,tv_batchid,tv_orgid,tv_coursename,tv_reqdate,tv_enddate,tv_amount;
+        public TextView tv_enrollid,tv_batchid,tv_orgid,tv_coursename,tv_reqdate,tv_enddate,tv_amount,tv_indicator;
 
         public MyViewHolder(View view) {
             super(view);
@@ -39,6 +39,7 @@ public class EnrollRequestAdapter extends  RecyclerView.Adapter<EnrollRequestAda
             tv_reqdate =view.findViewById(R.id.tv_erreqdate);
             tv_enddate =view.findViewById(R.id.tv_erenddate);
             tv_amount =view.findViewById(R.id.tv_eramount);
+            tv_indicator=view.findViewById(R.id.tv_indicator);
         }
     }
 
@@ -69,7 +70,12 @@ public class EnrollRequestAdapter extends  RecyclerView.Adapter<EnrollRequestAda
         holder.tv_reqdate.setText(singleEnrollRequest.getRequestDate());
         holder.tv_enddate.setText(singleEnrollRequest.getEndDate());
         holder.tv_amount.setText(singleEnrollRequest.getAmount());
-
+        if(singleEnrollRequest.getStatus().equalsIgnoreCase("ACTIVATED")){
+            holder.tv_indicator.setBackgroundColor(mycontext.getResources().getColor(R.color.green));
+        }else{
+            holder.tv_indicator.setBackgroundColor(mycontext.getResources().getColor(R.color.dull_yellow));
+        }
+        
     }
 
     public ArrayList<String> getNumberList() {
