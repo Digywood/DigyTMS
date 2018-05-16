@@ -124,7 +124,7 @@ public class ScoreActivity extends AppCompatActivity {
                     TotalPositive = Double.valueOf(attempt.getString("ptu_positive_marks")) * CorrectCount;
                     TotalNegative = Double.valueOf(attempt.getString("ptu_negative_marks"))* WrongCount;
                     MaxMarks = Double.valueOf(attempt.getString("ptu_positive_marks")) * dataObj.getQuestionCount();
-                    Percentage = (  TotalPositive / MaxMarks )*100;
+                    Percentage = (  TotalScore / MaxMarks )*100;
                 }
                 testId = attempt.getString("ptu_test_ID");
                 flag = dataObj.UpdateAttempt(dataObj.getLastAttempt(), attempt.getString("ptu_test_ID"), 2,"NotUploaded",TotalScore, dataObj.getQuestionAttempted(), dataObj.getQuestionSkipped(), dataObj.getQuestionBookmarked(), dataObj.getQuestionNotAttempted(),Percentage , 0, 0, 0);
@@ -154,7 +154,7 @@ public class ScoreActivity extends AppCompatActivity {
                     TotalPositive = Double.valueOf(attempt.getString("atu_marks")) * CorrectCount;
                     TotalNegative = Double.valueOf(attempt.getString("atu_negative_mrk"))* WrongCount;
                     MaxMarks = Double.valueOf(attempt.getString("atu_marks")) * dataObj.getAssessmentQuestionCount();
-                    Percentage = (  TotalPositive / MaxMarks )*100;
+                    Percentage = (  TotalScore / MaxMarks )*100;
                 }
                 testId = attempt.getString("atu_ID");
                 flag = dataObj.UpdateAssessment( attempt.getString("atu_ID"),enrollid,"",courseid,subjectid,paperid, 2,null,TotalScore, dataObj.getAssessmentQuestionAttempted(), dataObj.getAssessmentQuestionSkipped(), dataObj.getAssessmentQuestionBookmarked(), dataObj.getQuestionNotAttempted(),Percentage , 0, 0, 0);
@@ -165,11 +165,9 @@ public class ScoreActivity extends AppCompatActivity {
                         maxscore = mycursor.getDouble(mycursor.getColumnIndex("maxscore"));
                         avgscore = mycursor.getDouble(mycursor.getColumnIndex("avgscore"));
                     }
-                    Log.e("ScoreActivity-->",""+maxscore);
                 }
                 TotalScore = TotalPositive - TotalNegative;
             }
-            Log.e("flag:",""+flag);
             long qflag = 0;
             if(flag > 0){
                 if (testType.equalsIgnoreCase("PRACTICE")) {
@@ -185,13 +183,11 @@ public class ScoreActivity extends AppCompatActivity {
                     }else{
                         cursor = dataObj.getAssessmentSections();
                     }
-                    Log.e("Subcategories Count:",""+cursor.getCount());
                     ArrayList<String> secList = new ArrayList<>();
                     if(cursor.getCount() > 0){
                         while(cursor.moveToNext()){
                             secList.add(cursor.getString(cursor.getColumnIndex("Question_Section")));
                         }
-
                     }
 
                     int count = cursor.getCount();
@@ -205,7 +201,7 @@ public class ScoreActivity extends AppCompatActivity {
                             sec_skipped = String.valueOf(dataObj.getSectionQuesSkip(secList.get(i)));
                             sec_correct = String.valueOf(dataObj.getSectionQuesCorrect(secList.get(i)));
                             percent = ( Double.valueOf(sec_correct) / Double.valueOf(sec_questions) )*100;
-                            sec_percentage = String.valueOf(percent);
+                            sec_percentage = String.format("%.2f", percent);
                         }
                         else{
                             sec_questions = String.valueOf(dataObj.getAssessmentSectionQuestions(secList.get(i)));
@@ -213,7 +209,7 @@ public class ScoreActivity extends AppCompatActivity {
                             sec_skipped = String.valueOf(dataObj.getAssessmentSectionQuesSkip(secList.get(i)));
                             sec_correct = String.valueOf(dataObj.getAssessmentSectionQuesCorrect(secList.get(i)));
                             percent = ( Double.valueOf(sec_correct) / Double.valueOf(sec_questions) )*100;
-                            sec_percentage = String.valueOf(percent);
+                            sec_percentage = String.format("%.2f", percent);
                             Log.e("sectionquestions",sec_questions);
                             Log.e("sectionattempted",sec_attempted);
                             Log.e("seccorrect",sec_correct);
@@ -229,6 +225,7 @@ public class ScoreActivity extends AppCompatActivity {
 //                        tv_category.setGravity(Gravity.CENTER);
                         Log.d("sections",secList.get(i));
                         tv_category.setTextColor(Color.BLACK);
+                        tv_category.setBackground(getResources().getDrawable(R.drawable.spin_bg));
                         tr.addView(tv_category);
                         //Number of Questions
                         TextView tv_noOfQuestions  = new TextView(this);
@@ -238,6 +235,7 @@ public class ScoreActivity extends AppCompatActivity {
 //                        tv_noOfQuestions.setGravity(Gravity.CENTER);
                         Log.d("number",sec_questions);
                         tv_noOfQuestions.setTextColor(Color.BLACK);
+                        tv_noOfQuestions.setBackground(getResources().getDrawable(R.drawable.spin_bg));
                         tr.addView(tv_noOfQuestions);
                         //Number of Questions Attempted
                         TextView tv_subCatattempted  = new TextView(this);
@@ -247,6 +245,7 @@ public class ScoreActivity extends AppCompatActivity {
 //                        tv_subCatattempted.setGravity(Gravity.CENTER);
                         Log.d("attempt",sec_attempted);
                         tv_subCatattempted.setTextColor(Color.BLACK);
+                        tv_subCatattempted.setBackground(getResources().getDrawable(R.drawable.spin_bg));
                         tr.addView(tv_subCatattempted);
                         //Number of Questions Skipped
                         TextView tv_subCatskipped  = new TextView(this);
@@ -256,6 +255,7 @@ public class ScoreActivity extends AppCompatActivity {
 //                        tv_subCatskipped.setGravity(Gravity.CENTER);
                         Log.d("skip",sec_skipped);
                         tv_subCatskipped.setTextColor(Color.BLACK);
+                        tv_subCatskipped.setBackground(getResources().getDrawable(R.drawable.spin_bg));
                         tr.addView(tv_subCatskipped);
                         //Number of Questions Correct
                         TextView tv_subCatCorrect  = new TextView(this);
@@ -265,6 +265,17 @@ public class ScoreActivity extends AppCompatActivity {
 //                        tv_subCatCorrect.setGravity(Gravity.CENTER);
                         Log.d("correct",sec_correct);
                         tv_subCatCorrect.setTextColor(Color.BLACK);
+                        tv_subCatCorrect.setBackground(getResources().getDrawable(R.drawable.spin_bg));
+                        tr.addView(tv_subCatCorrect);
+                        //Number of Questions Wrong
+                        TextView tv_subCatWrong  = new TextView(this);
+                        tv_subCatWrong.setText(sec_correct);
+                        params = new TableRow.LayoutParams(0, TableLayout.LayoutParams.WRAP_CONTENT, 1f);
+                        tv_subCatCorrect.setLayoutParams(params);
+//                        tv_subCatCorrect.setGravity(Gravity.CENTER);
+                        Log.d("correct",sec_correct);
+                        tv_subCatCorrect.setTextColor(Color.BLACK);
+                        tv_subCatCorrect.setBackground(getResources().getDrawable(R.drawable.spin_bg));
                         tr.addView(tv_subCatCorrect);
                         //Percentage Score
                         TextView tv_percentage  = new TextView(this);
@@ -274,6 +285,7 @@ public class ScoreActivity extends AppCompatActivity {
 //                        tv_percentage.setGravity(Gravity.CENTER);
                         Log.d("%",sec_percentage);
                         tv_percentage.setTextColor(Color.BLACK);
+                        tv_percentage.setBackground(getResources().getDrawable(R.drawable.spin_bg));
                         tr.addView(tv_percentage);
 
                         tbl1.addView(tr);
@@ -426,6 +438,7 @@ public class ScoreActivity extends AppCompatActivity {
             tv_category.setLayoutParams(params);
             tv_category.setGravity(Gravity.CENTER);
             tv_category.setTextColor(Color.BLACK);
+            tv_category.setBackground(getResources().getDrawable(R.drawable.spin_bg));
             tr1.addView(tv_category);
             //subcategory name
             TextView tv_subcat  = new TextView(this);
@@ -434,6 +447,7 @@ public class ScoreActivity extends AppCompatActivity {
             tv_subcat.setLayoutParams(params);
             tv_subcat.setGravity(Gravity.CENTER);
             tv_subcat.setTextColor(Color.BLACK);
+            tv_subcat.setBackground(getResources().getDrawable(R.drawable.spin_bg));
             tr1.addView(tv_subcat);
             //Number of Questions
             TextView tv_noOfQuestions  = new TextView(this);
@@ -442,6 +456,7 @@ public class ScoreActivity extends AppCompatActivity {
             tv_noOfQuestions.setLayoutParams(params);
             tv_noOfQuestions.setGravity(Gravity.CENTER);
             tv_noOfQuestions.setTextColor(Color.BLACK);
+            tv_noOfQuestions.setBackground(getResources().getDrawable(R.drawable.spin_bg));
             tr1.addView(tv_noOfQuestions);
             //Number of Questions Attempted
             TextView tv_subCatattempted  = new TextView(this);
@@ -450,6 +465,7 @@ public class ScoreActivity extends AppCompatActivity {
             tv_subCatattempted.setLayoutParams(params);
             tv_subCatattempted.setGravity(Gravity.CENTER);
             tv_subCatattempted.setTextColor(Color.BLACK);
+            tv_subCatattempted.setBackground(getResources().getDrawable(R.drawable.spin_bg));
             tr1.addView(tv_subCatattempted);
             //Number of Questions Skipped
             TextView tv_subCatskipped  = new TextView(this);
@@ -458,6 +474,7 @@ public class ScoreActivity extends AppCompatActivity {
             tv_subCatskipped.setLayoutParams(params);
             tv_subCatskipped.setGravity(Gravity.CENTER);
             tv_subCatskipped.setTextColor(Color.BLACK);
+            tv_subCatskipped.setBackground(getResources().getDrawable(R.drawable.spin_bg));
             tr1.addView(tv_subCatskipped);
             //Number of Questions Correct
             TextView tv_subCatCorrect  = new TextView(this);
@@ -466,6 +483,7 @@ public class ScoreActivity extends AppCompatActivity {
             tv_subCatCorrect.setLayoutParams(params);
             tv_subCatCorrect.setGravity(Gravity.CENTER);
             tv_subCatCorrect.setTextColor(Color.BLACK);
+            tv_subCatCorrect.setBackground(getResources().getDrawable(R.drawable.spin_bg));
             tr1.addView(tv_subCatCorrect);
             //Percentage Score
             TextView tv_percentage  = new TextView(this);
@@ -474,6 +492,7 @@ public class ScoreActivity extends AppCompatActivity {
             tv_percentage.setLayoutParams(params);
             tv_percentage.setGravity(Gravity.CENTER);
             tv_percentage.setTextColor(Color.BLACK);
+            tv_percentage.setBackground(getResources().getDrawable(R.drawable.spin_bg));
             tr1.addView(tv_percentage);
 
             tbl.addView(tr1);

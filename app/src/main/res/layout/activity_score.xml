@@ -41,169 +41,202 @@
             app:cardUseCompatPadding="true">
 
             <LinearLayout
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                android:weightSum="3">
 
-                <RelativeLayout
+                <LinearLayout
                     android:id="@+id/details"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">
 
-                    <TextView
-                        android:id="@+id/tv_course_label"
+                    <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="10dp"
-                        android:text="Course :"
-                        android:textColor="@android:color/black"
-                        android:textSize="20sp" />
+                        android:orientation="horizontal"
+                        android:layout_weight="1">
 
-                    <TextView
-                        android:id="@+id/tv_course"
+                        <TextView
+                            android:id="@+id/tv_course_label"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="10dp"
+                            android:text="Course :"
+                            android:textColor="@android:color/black"
+                            android:textSize="20sp" />
+
+                        <TextView
+                            android:id="@+id/tv_course"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="10dp"
+                            android:textColor="@android:color/black"
+                            android:textSize="20sp" />
+                    </LinearLayout
+>
+
+                    <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="10dp"
-                        android:layout_toEndOf="@id/tv_course_label"
-                        android:textColor="@android:color/black"
-                        android:textSize="20sp" />
+                        android:orientation="horizontal"
+                        android:layout_weight="1">
 
-                    <TextView
-                        android:id="@+id/tv_subject_label"
+                        <TextView
+                            android:id="@+id/tv_subject_label"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="14dp"
+                            android:text="Subject : "
+                            android:textColor="@android:color/black"
+                            android:textSize="20sp" />
+
+                        <TextView
+                            android:id="@+id/tv_subject"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="10dp"
+                            android:textColor="@android:color/black"
+                            android:textSize="20sp" />
+                    </LinearLayout
+>
+
+                    <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_alignParentTop="true"
-                        android:layout_marginStart="14dp"
-                        android:layout_toEndOf="@+id/tv_course"
-                        android:text="Subject : "
-                        android:textColor="@android:color/black"
-                        android:textSize="20sp" />
+                        android:orientation="horizontal"
+                        android:layout_weight="1">
 
-                    <TextView
-                        android:id="@+id/tv_subject"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_alignParentTop="true"
-                        android:layout_marginStart="10dp"
-                        android:layout_toEndOf="@+id/tv_subject_label"
-                        android:textColor="@android:color/black"
-                        android:textSize="20sp" />
+                        <TextView
+                            android:id="@+id/tv_test_label"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentTop="true"
+                            android:layout_marginStart="16dp"
+                            android:layout_toEndOf="@+id/tv_subject"
+                            android:text="Test : "
+                            android:textColor="@android:color/black"
+                            android:textSize="20sp" />
 
-                    <TextView
-                        android:id="@+id/tv_test_label"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_alignParentTop="true"
-                        android:layout_marginStart="16dp"
-                        android:layout_toEndOf="@+id/tv_subject"
-                        android:text="Test : "
-                        android:textColor="@android:color/black"
-                        android:textSize="20sp" />
-
-                    <TextView
-                        android:id="@+id/tv_test"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_alignParentTop="true"
-                        android:layout_marginStart="10dp"
-                        android:layout_toEndOf="@+id/tv_test_label"
-                        android:textColor="@android:color/black"
-                        android:textSize="20sp" />
-
-                </RelativeLayout>
+                        <TextView
+                            android:id="@+id/tv_test"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentTop="true"
+                            android:layout_marginStart="10dp"
+                            android:layout_toEndOf="@+id/tv_test_label"
+                            android:textColor="@android:color/black"
+                            android:textSize="20sp" />
+                    </LinearLayout
+>
 
 
-                <RelativeLayout
+                </LinearLayout>
+
+
+                <LinearLayout
                     android:id="@+id/line1"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
+                    android:layout_height="wrap_content"
+                    android:weightSum="3">
 
-                    <ImageView
-                        android:id="@+id/confirm_icon"
+                    <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        app:srcCompat="@drawable/number_confirm" />
+                        android:orientation="horizontal"
+                        android:layout_weight="1">
 
-                    <TextView
-                        android:id="@+id/tv_attempted_label"
+                        <ImageView
+                            android:id="@+id/confirm_icon"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            app:srcCompat="@drawable/number_confirm" />
+
+                        <TextView
+                            android:id="@+id/tv_attempted_label"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="10dp"
+                            android:text="Attempted: "
+                            android:textColor="@android:color/black"
+                            android:textSize="20sp" />
+
+                        <TextView
+                            android:id="@+id/tv_attempted"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="5dp"
+                            android:textColor="@android:color/black"
+                            android:textSize="20sp" />
+                    </LinearLayout>
+
+
+                    <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="10dp"
-                        android:layout_toEndOf="@id/confirm_icon"
-                        android:text="Attempted: "
-                        android:textColor="@android:color/black"
-                        android:textSize="20sp" />
+                        android:orientation="horizontal"
+                        android:layout_weight="1">
 
-                    <TextView
-                        android:id="@+id/tv_attempted"
+                        <ImageView
+                            android:id="@+id/skipped_icon"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="8dp"
+                            app:srcCompat="@drawable/number_skipped" />
+
+                        <TextView
+                            android:id="@+id/tv_skipped_label"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="7dp"
+                            android:text="Skipped: "
+                            android:textColor="@android:color/black"
+                            android:textSize="20sp" />
+
+                        <TextView
+                            android:id="@+id/tv_skipped"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="9dp"
+                            android:textColor="@android:color/black"
+                            android:textSize="20sp" />
+                    </LinearLayout
+>
+
+                    <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="5dp"
-                        android:layout_toEndOf="@id/tv_attempted_label"
-                        android:textColor="@android:color/black"
-                        android:textSize="20sp" />
+                        android:orientation="horizontal"
+                        android:layout_weight="1">
 
-                    <ImageView
-                        android:id="@+id/skipped_icon"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_alignParentTop="true"
-                        android:layout_marginStart="8dp"
-                        android:layout_toEndOf="@+id/tv_attempted"
-                        app:srcCompat="@drawable/number_skipped" />
+                        <ImageView
+                            android:id="@+id/bookmarked_icon"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="10dp"
+                            app:srcCompat="@drawable/number_bookmark" />
 
-                    <TextView
-                        android:id="@+id/tv_skipped_label"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_alignBottom="@+id/skipped_icon"
-                        android:layout_marginStart="7dp"
-                        android:layout_toEndOf="@+id/skipped_icon"
-                        android:text="Skipped: "
-                        android:textColor="@android:color/black"
-                        android:textSize="20sp" />
+                        <TextView
+                            android:id="@+id/tv_bookmarked_label"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="11dp"
+                            android:text="Bookmarked: "
+                            android:textColor="@android:color/black"
+                            android:textSize="20sp" />
 
-                    <TextView
-                        android:id="@+id/tv_skipped"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_alignParentTop="true"
-                        android:layout_marginStart="9dp"
-                        android:layout_toEndOf="@+id/tv_skipped_label"
-                        android:textColor="@android:color/black"
-                        android:textSize="20sp" />
+                        <TextView
+                            android:id="@+id/tv_bookmarked"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentTop="true"
+                            android:layout_marginStart="12dp"
+                            android:textColor="@android:color/black"
+                            android:textSize="20sp" />
+                    </LinearLayout
+>
 
-                    <ImageView
-                        android:id="@+id/bookmarked_icon"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_alignTop="@+id/tv_skipped_label"
-                        android:layout_marginStart="10dp"
-                        android:layout_toEndOf="@+id/tv_skipped"
-                        app:srcCompat="@drawable/number_bookmark" />
-
-                    <TextView
-                        android:id="@+id/tv_bookmarked_label"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_alignTop="@+id/bookmarked_icon"
-                        android:layout_marginStart="11dp"
-                        android:layout_toEndOf="@+id/bookmarked_icon"
-                        android:text="Bookmarked: "
-                        android:textColor="@android:color/black"
-                        android:textSize="20sp" />
-
-                    <TextView
-                        android:id="@+id/tv_bookmarked"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_alignParentTop="true"
-                        android:layout_marginStart="12dp"
-                        android:layout_toEndOf="@+id/tv_bookmarked_label"
-                        android:textColor="@android:color/black"
-                        android:textSize="20sp" />
-
-                </RelativeLayout>
+                </LinearLayout>
             </LinearLayout>
 
 
@@ -549,6 +582,22 @@
                                 android:gravity="center"
                                 android:textSize="20sp"
                                 android:textColor="@android:color/black"
+                                android:text="Wrong"/>
+
+                            <View
+                                android:layout_width="2dp"
+                                android:layout_height="match_parent"
+                                android:layout_marginStart="2dp"
+                                android:layout_marginEnd="2dp"
+                                android:background="#000000" />
+
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:gravity="center"
+                                android:textSize="20sp"
+                                android:textColor="@android:color/black"
                                 android:text="Percentage"/>
                         </TableRow>
                         <View
@@ -573,12 +622,18 @@
             android:id="@+id/btn_save"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:background="@drawable/custom_button"
+            android:layout_marginEnd="2dp"
+            android:textColor="@drawable/custom_text"
             android:text="OK" />
 
         <Button
             android:id="@+id/btn_details"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginStart="2dp"
+            android:background="@drawable/custom_button"
+            android:textColor="@drawable/custom_text"
             android:text="Details >>" />
 
     </LinearLayout>
