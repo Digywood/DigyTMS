@@ -1022,7 +1022,7 @@ public class PracticeTestActivity extends AppCompatActivity implements
         }
 
         try {
-            opAdapter = new OptionsCheckAdapter(optionsList, PracticeTestActivity.this, photoPath, rv_option);
+            opAdapter = new OptionsCheckAdapter(optionsList, PracticeTestActivity.this, photoPath,rv_option);
             Log.e("opSize", ""+oplist.size());
             RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
             rv_option.setLayoutManager(mLayoutManager);
