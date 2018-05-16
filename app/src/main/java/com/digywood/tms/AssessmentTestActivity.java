@@ -224,6 +224,12 @@ public class AssessmentTestActivity extends AppCompatActivity implements
         testid = getIntent().getStringExtra("test");
         rv_option = findViewById(R.id.option_view);
 
+        if(checkPermission()){
+
+        }else{
+            requestPermission();
+        }
+
         Cursor cursor = dataObj.getSingleAssessmentTests(testid);
         if (cursor.getCount() > 0) {
             while (cursor.moveToNext()) {

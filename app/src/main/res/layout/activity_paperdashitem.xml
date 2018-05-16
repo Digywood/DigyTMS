@@ -39,7 +39,7 @@
                         android:textStyle="bold"
                         android:layout_weight="1"
                         android:textColor="@color/green"
-                        android:textSize="20sp"/>
+                        android:textSize="18sp"/>
 
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -310,7 +310,7 @@
                 <Button
                     android:id="@+id/fpdash_det"
                     android:layout_width="50dp"
-                    android:layout_height="70dp"
+                    android:layout_height="50dp"
                     android:layout_gravity="center_vertical|end"
                     android:background="@drawable/details1"/>
 
