@@ -2,19 +2,9 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
-        android:id="@+id/action_practisesync"
+        android:id="@+id/action_sync"
         android:orderInCategory="100"
-        android:title="Practise Sync"
-        app:showAsAction="never" />
-    <item
-        android:id="@+id/action_flashsync"
-        android:orderInCategory="100"
-        android:title="Flash Sync"
-        app:showAsAction="never" />
-    <item
-        android:id="@+id/action_assesssync"
-        android:orderInCategory="100"
-        android:title="Assessment Sync"
+        android:title="Sync To Server"
         app:showAsAction="never" />
     <item
         android:id="@+id/action_settings"

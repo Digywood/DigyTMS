@@ -22,6 +22,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.Window;
+import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.RadioGroup;
 import android.widget.TextView;
@@ -42,6 +43,8 @@ import java.util.TimeZone;
 public class DashBoardNavActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
     View header;
+    Dialog mydialog;
+    String testType="";
     TextView tv_name,tv_email,tv_studentid;
     String studentid,spersonname,email;
     HashMap<String,String> hmap=new HashMap<>();
@@ -404,60 +407,59 @@ public class DashBoardNavActivity extends AppCompatActivity implements Navigatio
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_practisesync) {
-            new AsyncCheckInternet(DashBoardNavActivity.this, new INetStatus() {
-                @Override
-                public void inetSatus(Boolean netStatus) {
-                    if(netStatus){
-                        syncPractiseTestData();
-                    }else{
-                        Toast.makeText(getApplicationContext(),"No internet,Please Check your connection",Toast.LENGTH_SHORT).show();
-                    }
-                }
-            });
-            return true;
-        }
+        if (id == R.id.action_sync) {
 
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_flashsync) {
-            Toast.makeText(getApplicationContext(),"Clicked",Toast.LENGTH_SHORT).show();
-            new AsyncCheckInternet(DashBoardNavActivity.this, new INetStatus() {
-                @Override
-                public void inetSatus(Boolean netStatus) {
-                    if(netStatus){
-                        syncFlashCardData();
-                    }else{
-                        Toast.makeText(getApplicationContext(),"No internet,Please Check your connection",Toast.LENGTH_SHORT).show();
-                    }
-                }
-            });
-            return true;
-        }
+            testType="";
 
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_assesssync) {
-            new AsyncCheckInternet(DashBoardNavActivity.this, new INetStatus() {
+            mydialog = new Dialog(DashBoardNavActivity.this);
+            mydialog.getWindow();
+            mydialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+            mydialog.setContentView(R.layout.activity_syncpopup);
+            mydialog.show();
+
+            RadioGroup rg_testtype=mydialog.findViewById(R.id.rg_stesttype);
+            Button btn_sync=mydialog.findViewById(R.id.btn_popupsync);
+
+            rg_testtype.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener()
+            {
                 @Override
-                public void inetSatus(Boolean netStatus) {
-                    if(netStatus){
-                        syncAssesmentTestData();
-                    }else{
-                        Toast.makeText(getApplicationContext(),"No internet,Please Check your connection",Toast.LENGTH_SHORT).show();
+                public void onCheckedChanged(RadioGroup group, int checkedId)
+                {
+                    switch(checkedId)
+                    {
+                        case R.id.rb_ptsync:
+                            testType="Practise";
+                            break;
+                        case R.id.rb_ftsync:
+                            testType="Flash";
+                            break;
+                        case R.id.rb_atsync:
+                            testType="Assessment";
+                            break;
                     }
                 }
             });
 
-//            mydialog = new Dialog(DashBoardNavActivity.this);
-//            mydialog.getWindow();
-//            mydialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-//            mydialog.setContentView(R.layout.activity_testpopup);
-//            mydialog.show();
-//
-//            RadioGroup rg_testtype=mydialog.findViewById(R.id.ll_practise);
-//            LinearLayout ll_assesment=mydialog.findViewById(R.id.ll_assessment);
+            btn_sync.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if(testType.equalsIgnoreCase("")){
+                        Toast.makeText(getApplicationContext(),"Please Choose Test",Toast.LENGTH_SHORT).show();
+                    }else{
+                        mydialog.cancel();
+                        if(testType.equalsIgnoreCase("Practise")){
+                            syncPractiseTestData();
+                        }else if(testType.equalsIgnoreCase("Flash")){
+                            syncFlashCardData();
+                        }else if(testType.equalsIgnoreCase("Assessment")){
+                            syncAssesmentTestData();
+                        }else{
 
+                        }
+                    }
+                }
+            });
 
-            return true;
         }
 
         //noinspection SimplifiableIfStatement
@@ -516,10 +518,7 @@ public class DashBoardNavActivity extends AppCompatActivity implements Navigatio
                 @Override
                 public void inetSatus(Boolean netStatus) {
                     if(netStatus){
-//                        getStudentAllData();
-                        syncFlashCardData();
-//                        syncPractiseTestData();
-//                        syncAssesmentTestData();
+                        getStudentAllData();
                     }else{
                         Toast.makeText(getApplicationContext(),"No internet,Please Check your connection",Toast.LENGTH_SHORT).show();
                     }
@@ -616,6 +615,50 @@ public class DashBoardNavActivity extends AppCompatActivity implements Navigatio
                 }
                 finalPractiseObj.put("PractiseData",PrcatiseList);
 
+                Cursor mycur=myhelper.getAllPTestData("NotUploaded");
+
+                if(mycur.getCount()>0){
+                    try{
+                        JSONArray TestList = new JSONArray();
+                        JSONObject TestData;
+                        while (mycur.moveToNext()){
+                            TestData = new JSONObject();
+                            TestData.put("sptu_student_ID",mycur.getString(mycur.getColumnIndex("sptu_student_ID")));
+                            TestData.put("sptu_ID",mycur.getString(mycur.getColumnIndex("sptu_ID")));
+                            TestData.put("sptu_dwnld_start_dttm",mycur.getString(mycur.getColumnIndex("sptu_dwnld_start_dttm")));
+                            TestData.put("sptu_dwnld_completed_dttm",mycur.getString(mycur.getColumnIndex("sptu_dwnld_completed_dttm")));
+                            TestData.put("sptu_dwnld_status",mycur.getString(mycur.getColumnIndex("sptu_dwnld_status")));
+                            TestData.put("sptu_no_of_questions",mycur.getInt(mycur.getColumnIndex("sptu_no_of_questions")));
+                            TestData.put("sptu_tot_marks",mycur.getDouble(mycur.getColumnIndex("sptu_tot_marks")));
+                            TestData.put("stpu_min_marks",mycur.getDouble(mycur.getColumnIndex("stpu_min_marks")));
+                            TestData.put("sptu_max_marks",mycur.getDouble(mycur.getColumnIndex("sptu_max_marks")));
+                            TestData.put("sptu_avg_marks",mycur.getDouble(mycur.getColumnIndex("sptu_avg_marks")));
+                            TestData.put("sptu_min_percent",mycur.getDouble(mycur.getColumnIndex("sptu_min_percent")));
+                            TestData.put("sptu_max_percent",mycur.getDouble(mycur.getColumnIndex("sptu_max_percent")));
+                            TestData.put("sptu_avg_percent",mycur.getDouble(mycur.getColumnIndex("sptu_avg_percent")));
+                            TestData.put("sptu_last_attempt_marks",mycur.getDouble(mycur.getColumnIndex("sptu_last_attempt_marks")));
+                            TestData.put("sptu_last_attempt_percent",mycur.getDouble(mycur.getColumnIndex("sptu_last_attempt_percent")));
+                            TestData.put("sptu_last_attempt_start_dttm",mycur.getString(mycur.getColumnIndex("sptu_last_attempt_start_dttm")));
+                            TestData.put("sptu_last_attempt_end_dttm",mycur.getString(mycur.getColumnIndex("sptu_last_attempt_end_dttm")));
+                            TestData.put("sptu_no_of_attempts",mycur.getInt(mycur.getColumnIndex("sptu_no_of_attempts")));
+                            TestData.put("sptuflash_attempts",mycur.getInt(mycur.getColumnIndex("sptuflash_attempts")));
+                            TestData.put("min_flashScore",mycur.getDouble(mycur.getColumnIndex("min_flashScore")));
+                            TestData.put("max_flashScore",mycur.getDouble(mycur.getColumnIndex("max_flashScore")));
+                            TestData.put("avg_flashScore",mycur.getDouble(mycur.getColumnIndex("avg_flashScore")));
+                            TestData.put("lastAttemptDttm",mycur.getString(mycur.getColumnIndex("lastAttemptDttm")));
+                            TestData.put("lastAttemptScore",mycur.getDouble(mycur.getColumnIndex("lastAttemptScore")));
+                            TestList.put(TestData);
+                        }
+                        Log.e("TestListSize:--",""+TestList.length());
+                        finalPractiseObj.put("TestData",TestList);
+                    }catch (Exception e){
+                        e.printStackTrace();
+                        Log.e("DBNActivity----",e.toString());
+                    }
+                }else{
+                    mycur.close();
+                }
+
                 hmap.clear();
                 hmap.put("jsonstr",finalPractiseObj.toString());
                 new BagroundTask(URLClass.hosturl +"syncPractiseTestData.php", hmap,DashBoardNavActivity.this,new IBagroundListener() {
@@ -650,50 +693,6 @@ public class DashBoardNavActivity extends AppCompatActivity implements Navigatio
 
         JSONObject finalFlashObj=new JSONObject();
 
-        Cursor mycur=myhelper.getAllPTestData("NotUploaded");
-
-        if(mycur.getCount()>0){
-            try{
-                JSONArray TestList = new JSONArray();
-                JSONObject TestData;
-                while (mycur.moveToNext()){
-                    TestData = new JSONObject();
-                    TestData.put("sptu_student_ID",mycur.getString(mycur.getColumnIndex("sptu_student_ID")));
-                    TestData.put("sptu_ID",mycur.getString(mycur.getColumnIndex("sptu_ID")));
-                    TestData.put("sptu_dwnld_start_dttm",mycur.getString(mycur.getColumnIndex("sptu_dwnld_start_dttm")));
-                    TestData.put("sptu_dwnld_completed_dttm",mycur.getString(mycur.getColumnIndex("sptu_dwnld_completed_dttm")));
-                    TestData.put("sptu_dwnld_status",mycur.getString(mycur.getColumnIndex("sptu_dwnld_status")));
-                    TestData.put("sptu_no_of_questions",mycur.getInt(mycur.getColumnIndex("sptu_no_of_questions")));
-                    TestData.put("sptu_tot_marks",mycur.getDouble(mycur.getColumnIndex("sptu_tot_marks")));
-                    TestData.put("stpu_min_marks",mycur.getDouble(mycur.getColumnIndex("stpu_min_marks")));
-                    TestData.put("sptu_max_marks",mycur.getDouble(mycur.getColumnIndex("sptu_max_marks")));
-                    TestData.put("sptu_avg_marks",mycur.getDouble(mycur.getColumnIndex("sptu_avg_marks")));
-                    TestData.put("sptu_min_percent",mycur.getDouble(mycur.getColumnIndex("sptu_min_percent")));
-                    TestData.put("sptu_max_percent",mycur.getDouble(mycur.getColumnIndex("sptu_max_percent")));
-                    TestData.put("sptu_avg_percent",mycur.getDouble(mycur.getColumnIndex("sptu_avg_percent")));
-                    TestData.put("sptu_last_attempt_marks",mycur.getDouble(mycur.getColumnIndex("sptu_last_attempt_marks")));
-                    TestData.put("sptu_last_attempt_percent",mycur.getDouble(mycur.getColumnIndex("sptu_last_attempt_percent")));
-                    TestData.put("sptu_last_attempt_start_dttm",mycur.getString(mycur.getColumnIndex("sptu_last_attempt_start_dttm")));
-                    TestData.put("sptu_last_attempt_end_dttm",mycur.getString(mycur.getColumnIndex("sptu_last_attempt_end_dttm")));
-                    TestData.put("sptu_no_of_attempts",mycur.getInt(mycur.getColumnIndex("sptu_no_of_attempts")));
-                    TestData.put("sptuflash_attempts",mycur.getInt(mycur.getColumnIndex("sptuflash_attempts")));
-                    TestData.put("min_flashScore",mycur.getDouble(mycur.getColumnIndex("min_flashScore")));
-                    TestData.put("max_flashScore",mycur.getDouble(mycur.getColumnIndex("max_flashScore")));
-                    TestData.put("avg_flashScore",mycur.getDouble(mycur.getColumnIndex("avg_flashScore")));
-                    TestData.put("lastAttemptDttm",mycur.getString(mycur.getColumnIndex("lastAttemptDttm")));
-                    TestData.put("lastAttemptScore",mycur.getDouble(mycur.getColumnIndex("lastAttemptScore")));
-                    TestList.put(TestData);
-                }
-                Log.e("TestListSize:--",""+TestList.length());
-                finalFlashObj.put("TestData",TestList);
-            }catch (Exception e){
-                e.printStackTrace();
-                Log.e("DBNActivity----",e.toString());
-            }
-        }else{
-            mycur.close();
-        }
-
         Cursor mycursor=myhelper.getFlashUploadData("NotUploaded");
         if(mycursor.getCount()>0){
             try{
@@ -718,7 +717,52 @@ public class DashBoardNavActivity extends AppCompatActivity implements Navigatio
                     FlashData.put("percentageObtain",mycursor.getDouble(mycursor.getColumnIndex("percentageObtain")));
                     FlashList.put(FlashData);
                 }
+
                 finalFlashObj.put("FlashData",FlashList);
+
+                Cursor mycur=myhelper.getAllPTestData("NotUploaded");
+
+                if(mycur.getCount()>0){
+                    try{
+                        JSONArray TestList = new JSONArray();
+                        JSONObject TestData;
+                        while (mycur.moveToNext()){
+                            TestData = new JSONObject();
+                            TestData.put("sptu_student_ID",mycur.getString(mycur.getColumnIndex("sptu_student_ID")));
+                            TestData.put("sptu_ID",mycur.getString(mycur.getColumnIndex("sptu_ID")));
+                            TestData.put("sptu_dwnld_start_dttm",mycur.getString(mycur.getColumnIndex("sptu_dwnld_start_dttm")));
+                            TestData.put("sptu_dwnld_completed_dttm",mycur.getString(mycur.getColumnIndex("sptu_dwnld_completed_dttm")));
+                            TestData.put("sptu_dwnld_status",mycur.getString(mycur.getColumnIndex("sptu_dwnld_status")));
+                            TestData.put("sptu_no_of_questions",mycur.getInt(mycur.getColumnIndex("sptu_no_of_questions")));
+                            TestData.put("sptu_tot_marks",mycur.getDouble(mycur.getColumnIndex("sptu_tot_marks")));
+                            TestData.put("stpu_min_marks",mycur.getDouble(mycur.getColumnIndex("stpu_min_marks")));
+                            TestData.put("sptu_max_marks",mycur.getDouble(mycur.getColumnIndex("sptu_max_marks")));
+                            TestData.put("sptu_avg_marks",mycur.getDouble(mycur.getColumnIndex("sptu_avg_marks")));
+                            TestData.put("sptu_min_percent",mycur.getDouble(mycur.getColumnIndex("sptu_min_percent")));
+                            TestData.put("sptu_max_percent",mycur.getDouble(mycur.getColumnIndex("sptu_max_percent")));
+                            TestData.put("sptu_avg_percent",mycur.getDouble(mycur.getColumnIndex("sptu_avg_percent")));
+                            TestData.put("sptu_last_attempt_marks",mycur.getDouble(mycur.getColumnIndex("sptu_last_attempt_marks")));
+                            TestData.put("sptu_last_attempt_percent",mycur.getDouble(mycur.getColumnIndex("sptu_last_attempt_percent")));
+                            TestData.put("sptu_last_attempt_start_dttm",mycur.getString(mycur.getColumnIndex("sptu_last_attempt_start_dttm")));
+                            TestData.put("sptu_last_attempt_end_dttm",mycur.getString(mycur.getColumnIndex("sptu_last_attempt_end_dttm")));
+                            TestData.put("sptu_no_of_attempts",mycur.getInt(mycur.getColumnIndex("sptu_no_of_attempts")));
+                            TestData.put("sptuflash_attempts",mycur.getInt(mycur.getColumnIndex("sptuflash_attempts")));
+                            TestData.put("min_flashScore",mycur.getDouble(mycur.getColumnIndex("min_flashScore")));
+                            TestData.put("max_flashScore",mycur.getDouble(mycur.getColumnIndex("max_flashScore")));
+                            TestData.put("avg_flashScore",mycur.getDouble(mycur.getColumnIndex("avg_flashScore")));
+                            TestData.put("lastAttemptDttm",mycur.getString(mycur.getColumnIndex("lastAttemptDttm")));
+                            TestData.put("lastAttemptScore",mycur.getDouble(mycur.getColumnIndex("lastAttemptScore")));
+                            TestList.put(TestData);
+                        }
+                        Log.e("TestListSize:--",""+TestList.length());
+                        finalFlashObj.put("TestData",TestList);
+                    }catch (Exception e){
+                        e.printStackTrace();
+                        Log.e("DBNActivity----",e.toString());
+                    }
+                }else{
+                    mycur.close();
+                }
 
                 hmap.clear();
 //                Log.e("GNGJSON:--",finalFlashObj.toString());
