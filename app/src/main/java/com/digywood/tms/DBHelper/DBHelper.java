@@ -139,6 +139,7 @@ public class DBHelper extends SQLiteOpenHelper {
                 "  `sptu_dwnld_start_dttm` datetime DEFAULT NULL,\n" +
                 "  `sptu_dwnld_completed_dttm` datetime DEFAULT NULL,\n" +
                 "  `sptu_dwnld_status` text DEFAULT NULL,\n" +
+                "  `sptu_upld_status` text DEFAULT NULL,\n" +
                 "  `sptu_upld_dttm` text DEFAULT NULL,\n" +
                 "  `sptu_no_of_questions` integer(5) DEFAULT NULL,\n" +
                 "  `sptu_tot_marks` double DEFAULT NULL,\n" +
@@ -971,7 +972,7 @@ public class DBHelper extends SQLiteOpenHelper {
         return insertFlag;
     }
 
-    public long updateTest(String tID,String tsid,String tcid,int tnoofques,Double ttotalmarks,Double tminmarks,Double tmaxmarks,Double avgscore,Double tminperc, Double tmaxperc, Double tavgperc){
+    public long updateTest(String tID,String tsid,String tcid,int tnoofques,Double ttotalmarks,Double tminmarks,Double tmaxmarks,Double avgscore,Double tminperc, Double tmaxperc, Double tavgperc,String upldstatus){
         long updateFlag=0;
         ContentValues cv = new ContentValues();
         cv.put("sptu_subjet_ID",tsid);
@@ -984,12 +985,13 @@ public class DBHelper extends SQLiteOpenHelper {
         cv.put("sptu_max_percent",tmaxperc);
         cv.put("sptu_avg_marks",avgscore);
         cv.put("sptu_avg_percent",tavgperc);
+        cv.put("sptu_upld_status",upldstatus);
         updateFlag=db.update("sptu_student", cv,"sptu_ID='"+tID+"'",null);
         return  updateFlag;
     }
 
-    public Cursor getAllPTestData(){
-        String query ="SELECT * FROM sptu_student";
+    public Cursor getAllPTestData(String upldstatus){
+        String query ="SELECT * FROM sptu_student where sptu_upld_status='"+upldstatus+"'";
         Cursor c=db.rawQuery(query,null);
         return  c;
     }
@@ -1015,7 +1017,7 @@ public class DBHelper extends SQLiteOpenHelper {
         return updateFlag;
     }
 
-    public long updateTestFlashData(String testid,int attemptcount,Double minscore,Double maxscore,Double avgscore,String Dttm,Double lastAttemptscore){
+    public long updateTestFlashData(String testid,int attemptcount,Double minscore,Double maxscore,Double avgscore,String Dttm,Double lastAttemptscore,String upldstatus){
         long updateFlag=0;
         ContentValues cv = new ContentValues();
         cv.put("sptuflash_attempts",attemptcount);
@@ -1024,6 +1026,7 @@ public class DBHelper extends SQLiteOpenHelper {
         cv.put("avg_flashScore",avgscore);
         cv.put("lastAttemptDttm",Dttm);
         cv.put("lastAttemptScore",lastAttemptscore);
+        cv.put("sptu_upld_status",upldstatus);
         updateFlag=db.update("sptu_student", cv,"sptu_ID='"+testid+"'",null);
         return  updateFlag;
     }
@@ -1163,6 +1166,14 @@ public class DBHelper extends SQLiteOpenHelper {
         ContentValues cv = new ContentValues();
         cv.put("sptu_dwnld_status", status);
         updateFlag=db.update("sptu_student", cv, "sptu_ID='"+testid+"'",null);
+        return  updateFlag;
+    }
+
+    public long updatePTestUPLDStatus(String testid,String status){
+        long updateFlag=0;
+        ContentValues cv = new ContentValues();
+        cv.put("sptu_upld_status",status);
+        updateFlag=db.update("sptu_student",cv,"sptu_ID='"+testid+"'",null);
         return  updateFlag;
     }
 

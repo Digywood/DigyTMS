@@ -173,7 +173,7 @@ public class ScoreActivity extends AppCompatActivity {
             long qflag = 0;
             if(flag > 0){
                 if (testType.equalsIgnoreCase("PRACTICE")) {
-                    qflag = dataObj.updateTest(testId,subjectid,courseid,dataObj.getQuestionCount(),MaxMarks,minscore,maxscore,avgscore,minscore,maxscore,avgscore);
+                    qflag = dataObj.updateTest(testId,subjectid,courseid,dataObj.getQuestionCount(),MaxMarks,minscore,maxscore,avgscore,minscore,maxscore,avgscore,"NotUploaded");
                 } else{
                     qflag = dataObj.updateAssessmentTestRecord(testId,subjectid,courseid,dataObj.getQuestionCount(),MaxMarks,minscore,maxscore,avgscore,minscore,maxscore,avgscore);
 

@@ -42,7 +42,7 @@ public class JSONParser {
     int seqno=0;
     DBHelper myhelper;
     Context mycontext;
-    int count=0,maxcount=0,quescount=0,totalsubcatCount=22,testqcount=0;
+    int count=0,maxcount=0,quescount=0,testqcount=0;
     JSONObject cmainObj,csecObj,cquesObj,coptionObj,cadditionsObj;
     String section="",sectionid="",testid="",dwdpath="",testType="",tfiledwdpath="";
 

@@ -518,8 +518,8 @@ public class DashBoardNavActivity extends AppCompatActivity implements Navigatio
                 @Override
                 public void inetSatus(Boolean netStatus) {
                     if(netStatus){
-                        getStudentAllData();
-//                        syncFlashCardData();
+//                        getStudentAllData();
+                        syncFlashCardData();
 //                        syncPractiseTestData();
 //                        syncAssesmentTestData();
                     }else{
@@ -619,7 +619,7 @@ public class DashBoardNavActivity extends AppCompatActivity implements Navigatio
                 finalPractiseObj.put("PractiseData",PrcatiseList);
 
                 hmap.clear();
-                hmap.put("PractiseData",finalPractiseObj.toString());
+                hmap.put("jsonstr",finalPractiseObj.toString());
                 new BagroundTask(URLClass.hosturl +"syncPractiseTestData.php", hmap,DashBoardNavActivity.this,new IBagroundListener() {
                     @Override
                     public void bagroundData(String json) {
@@ -652,7 +652,7 @@ public class DashBoardNavActivity extends AppCompatActivity implements Navigatio
 
         JSONObject finalFlashObj=new JSONObject();
 
-        Cursor mycur=myhelper.getAllPTestData();
+        Cursor mycur=myhelper.getAllPTestData("NotUploaded");
 
         if(mycur.getCount()>0){
             try{
@@ -662,12 +662,9 @@ public class DashBoardNavActivity extends AppCompatActivity implements Navigatio
                     TestData = new JSONObject();
                     TestData.put("sptu_student_ID",mycur.getString(mycur.getColumnIndex("sptu_student_ID")));
                     TestData.put("sptu_ID",mycur.getString(mycur.getColumnIndex("sptu_ID")));
-                    TestData.put("sptu_start_date",mycur.getString(mycur.getColumnIndex("sptu_start_date")));
-                    TestData.put("sptu_end_date",mycur.getString(mycur.getColumnIndex("sptu_end_date")));
                     TestData.put("sptu_dwnld_start_dttm",mycur.getString(mycur.getColumnIndex("sptu_dwnld_start_dttm")));
                     TestData.put("sptu_dwnld_completed_dttm",mycur.getString(mycur.getColumnIndex("sptu_dwnld_completed_dttm")));
                     TestData.put("sptu_dwnld_status",mycur.getString(mycur.getColumnIndex("sptu_dwnld_status")));
-//                    TestData.put("sptu_upld_dttm",mycur.getInt(mycur.getColumnIndex("sptu_upld_dttm")));
                     TestData.put("sptu_no_of_questions",mycur.getInt(mycur.getColumnIndex("sptu_no_of_questions")));
                     TestData.put("sptu_tot_marks",mycur.getDouble(mycur.getColumnIndex("sptu_tot_marks")));
                     TestData.put("stpu_min_marks",mycur.getDouble(mycur.getColumnIndex("stpu_min_marks")));
@@ -689,6 +686,7 @@ public class DashBoardNavActivity extends AppCompatActivity implements Navigatio
                     TestData.put("lastAttemptScore",mycur.getDouble(mycur.getColumnIndex("lastAttemptScore")));
                     TestList.put(TestData);
                 }
+                Log.e("TestListSize:--",""+TestList.length());
                 finalFlashObj.put("TestData",TestList);
             }catch (Exception e){
                 e.printStackTrace();
@@ -725,43 +723,75 @@ public class DashBoardNavActivity extends AppCompatActivity implements Navigatio
                 finalFlashObj.put("FlashData",FlashList);
 
                 hmap.clear();
-                hmap.put("FlashData",finalFlashObj.toString());
+                Log.e("GNGJSON:--",finalFlashObj.toString());
+                hmap.put("jsonstr",finalFlashObj.toString());
                 new BagroundTask(URLClass.hosturl +"syncFlashData.php", hmap,DashBoardNavActivity.this,new IBagroundListener() {
                     @Override
                     public void bagroundData(String json) {
                         try{
                             JSONArray ja_testIds,ja_flashIds;
+                            JSONObject testObj=null,flashObj=null;
                             Log.e("json"," comes :  "+json);
                             JSONObject mainObj=new JSONObject(json);
 
-                            ja_testIds=mainObj.getJSONArray("testIds");
 
-                            if(ja_testIds!=null && ja_testIds.length()>0){
-                                Log.e("DBNActivity---","updated_test_rec:--"+ja_testIds.length());
+                            Object obj1=mainObj.get("testIds");
+
+                            if (obj1 instanceof JSONArray)
+                            {
+                                ja_testIds=mainObj.getJSONArray("testIds");
+                                if(ja_testIds!=null && ja_testIds.length()>0){
+                                    int p=0,q=0;
+                                    Log.e("DBNActivity---","updated_test_rec:--"+ja_testIds.length());
+                                    for(int i=0;i<ja_testIds.length();i++){
+                                        testObj=ja_testIds.getJSONObject(i);
+                                        long updateFlag=myhelper.updatePTestUPLDStatus(testObj.getString("testId"),"Uploaded");
+                                        if(updateFlag>0){
+                                            p++;
+                                        }else{
+                                            q++;
+                                        }
+                                    }
+                                    Log.e("DBNActivity---","TUpdated:--"+p);
+                                }else{
+                                    Log.e("TestUPLDData--","Null Tests Json Array: ");
+                                }
+
+                            }
+                            else {
+                                Log.e("TestUPLDData--","No Tests Uploaded: ");
                             }
 
-                            ja_flashIds=mainObj.getJSONArray("flashIds");
-                            JSONObject flashObj=null;
-                            int p=0,q=0;
-                            if(ja_flashIds.length()>0 && ja_flashIds!=null){
-                                Log.e("DBNActivity---","updated_flash_rec:--"+ja_testIds.length());
-                                for(int i=0;i<ja_flashIds.length();i++){
-                                    flashObj=ja_flashIds.getJSONObject(i);
-                                    long updateFlag=myhelper.updateFAttemptStatus(flashObj.getString("flashUID"),"Uploaded");
-                                    if(updateFlag>0){
-                                        p++;
-                                    }else{
-                                        q++;
-                                    }
-                                }
-                                Log.e("DBNActivity---","FUpdated:--"+p);
-                            }else{
+                            Object obj2=mainObj.get("flashIds");
 
+                            if (obj2 instanceof JSONArray)
+                            {
+                                ja_flashIds=mainObj.getJSONArray("flashIds");
+                                if(ja_flashIds.length()>0 && ja_flashIds!=null){
+                                    int p=0,q=0;
+                                    Log.e("DBNActivity---","updated_flash_rec:--"+ja_flashIds.length());
+                                    for(int i=0;i<ja_flashIds.length();i++){
+                                        flashObj=ja_flashIds.getJSONObject(i);
+                                        long updateFlag=myhelper.updateFAttemptStatus(flashObj.getString("flashUID"),"Uploaded");
+                                        if(updateFlag>0){
+                                            p++;
+                                        }else{
+                                            q++;
+                                        }
+                                    }
+                                    Log.e("DBNActivity---","FUpdated:--"+p);
+                                }else{
+                                    Log.e("FlashUPLDData--","Null Flash Tests Json Array: ");
+                                }
+
+                            }
+                            else {
+                                Log.e("FlashUPLDData--","No Flash Tests Uploaded: ");
                             }
 
                         }catch (Exception e){
                             e.printStackTrace();
-                            Log.e("DashBoardNavActivity","  :  "+e.toString());
+                            Log.e("DashBoardNavActivity","  :  "+e.toString()+"lineno:--"+e.getStackTrace()[0].getLineNumber());
                         }
                     }
                 }).execute();
@@ -807,7 +837,7 @@ public class DashBoardNavActivity extends AppCompatActivity implements Navigatio
                 finalAssessmentObj.put("AssessmentTestData",AssessmentList);
 
                 hmap.clear();
-                hmap.put("AssessmentTestData",finalAssessmentObj.toString());
+                hmap.put("jsonstr",finalAssessmentObj.toString());
                 new BagroundTask(URLClass.hosturl +"syncAssessmentTestData.php", hmap,DashBoardNavActivity.this,new IBagroundListener() {
                     @Override
                     public void bagroundData(String json) {
