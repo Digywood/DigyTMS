@@ -1094,50 +1094,6 @@ public class AssessmentTestActivity extends AppCompatActivity implements
         }
     }
 
- /*   //method to check if the section contains any gorup questions or not and return the appropriate JSON Array
-    public JSONArray generateArray(JSONObject Section) {
-        JSONArray array = new JSONArray();
-        JSONArray array1 = new JSONArray();
-        JSONArray array2 = new JSONArray();
-        int length = 0;
-        grp = 0;
-        ArrayList<JSONArray> jaList = new ArrayList<>();
-        try {
-            if (Section.has("groups")) {
-                groupArray = Section.getJSONArray("groups");
-                for (int i = 0; i < groupArray.length(); i++) {
-                    array1 = groupArray.getJSONObject(i).getJSONArray("Group_question");
-                    jaList.add(array1);
-                }
-                for (int i = 0; i < Section.getJSONArray("questions").length(); i++) {
-                    array2.put(grp, Section.getJSONArray("questions").get(i));
-                    grp++;
-                }
-                jaList.add(array2);
-                array = getMergeJsonArrays(jaList);
-            } else {
-                array = Section.getJSONArray("questions");
-            }
-
-
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-        return array;
-    }
-
-    //method to merge 2 JSON Arrays and return the result
-    public JSONArray getMergeJsonArrays(ArrayList<JSONArray> jsonArrays) throws JSONException {
-        JSONArray MergedJsonArrays = new JSONArray();
-        for (JSONArray tmpArray : jsonArrays) {
-            for (int i = 0; i < tmpArray.length(); i++) {
-                MergedJsonArrays.put(tmpArray.get(i));
-            }
-        }
-        return MergedJsonArrays;
-    }
-*/
-
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (keyCode == KeyEvent.KEYCODE_BACK) {
@@ -1168,7 +1124,7 @@ public class AssessmentTestActivity extends AppCompatActivity implements
                         } catch (JSONException|IOException e) {
                             e.printStackTrace();
                         }
-                        Intent intent = new Intent(AssessmentTestActivity.this, ListofPractiseTests.class);
+                        Intent intent = new Intent(AssessmentTestActivity.this, ListofAssessmentTests.class);
                         intent.putExtra("enrollid",enrollid);
                         intent.putExtra("courseid", courseid);
                         intent.putExtra("paperid",paperid);
