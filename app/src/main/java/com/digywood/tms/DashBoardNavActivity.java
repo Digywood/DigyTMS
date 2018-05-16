@@ -457,8 +457,6 @@ public class DashBoardNavActivity extends AppCompatActivity implements Navigatio
 //            LinearLayout ll_assesment=mydialog.findViewById(R.id.ll_assessment);
 
 
-
-
             return true;
         }
 
@@ -518,8 +516,8 @@ public class DashBoardNavActivity extends AppCompatActivity implements Navigatio
                 @Override
                 public void inetSatus(Boolean netStatus) {
                     if(netStatus){
-//                        getStudentAllData();
-                        syncFlashCardData();
+                        getStudentAllData();
+//                        syncFlashCardData();
 //                        syncPractiseTestData();
 //                        syncAssesmentTestData();
                     }else{

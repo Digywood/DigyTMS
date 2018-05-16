@@ -13,9 +13,6 @@ import android.widget.GridView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import com.digywood.tms.DBHelper.DBHelper;
-import com.digywood.tms.ListofPractiseTests;
-import com.digywood.tms.Pojo.SingleFlashQuestion;
 import com.digywood.tms.Pojo.SinglePaper;
 import com.digywood.tms.R;
 import java.util.ArrayList;
@@ -126,17 +123,6 @@ public class PaperAdapter extends BaseAdapter {
             tv_paperamin.setText(""+round(singlePaper.getAmin(),1));
             tv_paperaavg.setText(""+round(singlePaper.getAavg(),1));
             tv_paperamax.setText(""+round(singlePaper.getAmax(),1));
-
-//            ll_click.setOnClickListener(new View.OnClickListener() {
-//                @Override
-//                public void onClick(View v) {
-//                    Intent i=new Intent(mContext,ListofPractiseTests.class);
-//                    i.putExtra("enrollid",enrollId);
-//                    i.putExtra("courseid",courseId);
-//                    i.putExtra("paperid",singlePaper.getPaperId());
-//                    mContext.startActivity(i);
-//                }
-//            });
 
         } else {
             grid =convertView;

@@ -20,15 +20,15 @@
                 android:id="@+id/paper_grid"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_margin="5dp"
+                android:layout_margin="2dp"
                 android:gravity="center"
                 android:layout_gravity="center"
                 android:numColumns="auto_fit"
-                android:horizontalSpacing="8dp"
-                android:verticalSpacing="24dp"
+                android:horizontalSpacing="4dp"
+                android:verticalSpacing="12dp"
                 android:scrollbars="vertical"
                 android:stretchMode="spacingWidthUniform"
-                android:columnWidth="500dp">
+                android:columnWidth="300dp">
             </GridView>
 
         </LinearLayout>
