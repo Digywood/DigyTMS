@@ -139,6 +139,7 @@ public class DBHelper extends SQLiteOpenHelper {
                 "  `sptu_dwnld_start_dttm` datetime DEFAULT NULL,\n" +
                 "  `sptu_dwnld_completed_dttm` datetime DEFAULT NULL,\n" +
                 "  `sptu_dwnld_status` text DEFAULT NULL,\n" +
+                "  `sptu_status` text DEFAULT NULL,\n" +
                 "  `sptu_upld_status` text DEFAULT NULL,\n" +
                 "  `sptu_upld_dttm` text DEFAULT NULL,\n" +
                 "  `sptu_no_of_questions` integer(5) DEFAULT NULL,\n" +
@@ -948,7 +949,7 @@ public class DBHelper extends SQLiteOpenHelper {
         return  deleteFlag;
     }
 
-    public long insertPractiseTest(int tkey,String torgid,String tenrollid,String tstudentid,String tbatch,String tid,String testname,String tpid,String tsid,String tcid,String tstartdate,String tenddate,String tdwdstatus,int tnoofques,Double ttotalmarks,Double tminmarks,Double tmaxmarks){
+    public long insertPractiseTest(int tkey,String torgid,String tenrollid,String tstudentid,String tbatch,String tid,String testname,String tpid,String tsid,String tcid,String tstartdate,String tenddate,String tdwdstatus,String tstatus,int tnoofques,Double ttotalmarks,Double tminmarks,Double tmaxmarks){
         long insertFlag=0;
         ContentValues cv = new ContentValues();
         cv.put("sptu_key",tkey);
@@ -964,6 +965,7 @@ public class DBHelper extends SQLiteOpenHelper {
         cv.put("sptu_start_date",tstartdate);
         cv.put("sptu_end_date",tenddate);
         cv.put("sptu_dwnld_status",tdwdstatus);
+        cv.put("sptu_status",tstatus);
         cv.put("sptu_no_of_questions",tnoofques);
         cv.put("sptu_tot_marks",ttotalmarks);
         cv.put("stpu_min_marks",tminmarks);
@@ -1117,8 +1119,8 @@ public class DBHelper extends SQLiteOpenHelper {
         return c;
     }
 
-    public Cursor getStudentTests(String enrollId,String courseId,String paperId){
-        Cursor c =db.query("sptu_student", new String[] {"sptu_entroll_id,sptu_student_ID,sptu_ID,sptu_paper_ID,sptu_subjet_ID,sptu_course_id,sptu_dwnld_status"},"sptu_entroll_id='"+enrollId+"' and sptu_course_id='"+courseId+"' and sptu_paper_ID='"+paperId+"'", null, null, null,null);
+    public Cursor getStudentTests(String enrollId,String courseId,String paperId,String status){
+        Cursor c =db.query("sptu_student", new String[] {"sptu_entroll_id,sptu_student_ID,sptu_ID,sptu_paper_ID,sptu_subjet_ID,sptu_course_id,sptu_dwnld_status"},"sptu_entroll_id='"+enrollId+"' and sptu_course_id='"+courseId+"' and sptu_paper_ID='"+paperId+"' and sptu_status='"+status+"'", null, null, null,null);
         return c;
     }
 

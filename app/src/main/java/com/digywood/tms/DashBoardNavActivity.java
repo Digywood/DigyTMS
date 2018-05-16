@@ -244,7 +244,7 @@ public class DashBoardNavActivity extends AppCompatActivity implements Navigatio
                                 }else{
                                     long insertFlag=myhelper.insertPractiseTest(testObj.getInt("sptu_key"),testObj.getString("sptu_org_id"),testObj.getString("sptu_entroll_id"),testObj.getString("sptu_student_ID"),
                                             testObj.getString("sptu_batch"),testObj.getString("sptu_ID"),testObj.getString("sptu_name"),testObj.getString("sptu_paper_ID"),testObj.getString("sptu_subjet_ID"),
-                                            testObj.getString("sptu_course_id"),testObj.getString("sptu_start_date"),testObj.getString("sptu_end_date"),testObj.getString("sptu_dwnld_status"),
+                                            testObj.getString("sptu_course_id"),testObj.getString("sptu_start_date"),testObj.getString("sptu_end_date"),testObj.getString("sptu_dwnld_status"),testObj.getString("sptu_status"),
                                             testObj.getInt("sptu_no_of_questions"),testObj.getDouble("sptu_tot_marks"),testObj.getDouble("stpu_min_marks"),testObj.getDouble("sptu_max_marks"));
                                     if(insertFlag>0){
                                         p++;
@@ -516,8 +516,8 @@ public class DashBoardNavActivity extends AppCompatActivity implements Navigatio
                 @Override
                 public void inetSatus(Boolean netStatus) {
                     if(netStatus){
-                        getStudentAllData();
-//                        syncFlashCardData();
+//                        getStudentAllData();
+                        syncFlashCardData();
 //                        syncPractiseTestData();
 //                        syncAssesmentTestData();
                     }else{
@@ -721,7 +721,7 @@ public class DashBoardNavActivity extends AppCompatActivity implements Navigatio
                 finalFlashObj.put("FlashData",FlashList);
 
                 hmap.clear();
-                Log.e("GNGJSON:--",finalFlashObj.toString());
+//                Log.e("GNGJSON:--",finalFlashObj.toString());
                 hmap.put("jsonstr",finalFlashObj.toString());
                 new BagroundTask(URLClass.hosturl +"syncFlashData.php", hmap,DashBoardNavActivity.this,new IBagroundListener() {
                     @Override
