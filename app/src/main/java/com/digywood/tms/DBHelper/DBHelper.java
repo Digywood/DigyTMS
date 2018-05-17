@@ -245,7 +245,9 @@ public class DBHelper extends SQLiteOpenHelper {
                 "   `Attempt_Bookmarked` int(5) DEFAULT NULL,\n"+
                 "   `Attempt_UnAttempted` int(5) DEFAULT NULL,\n"+
                 "   `Attempt_Score` double DEFAULT NULL,\n"+
-                "   `Attempt_Percentage` double DEFAULT NULL)";
+                "   `Attempt_Percentage` double DEFAULT NULL,\n"+
+                "   PRIMARY KEY (`Attempt_ID`)\n"+
+                ")";
         db.execSQL(AttemptList);
 
         String AssesmentTestList ="CREATE TABLE `Assesment_list` (\n"+
@@ -1618,9 +1620,9 @@ public class DBHelper extends SQLiteOpenHelper {
         return OptionList;
     }
 
-    public ArrayList<String> getQuestionStatus(){
+    public ArrayList<String> getQuestionStatus(String testId){
         ArrayList<String> StatusList = new ArrayList<>();
-        Cursor c =db.query("attempt_data", new String[] {"Question_ID,Question_Seq_No,Question_Max_Marks,Question_Option,Question_Status,Question_Option_Sequence,Option_Answer_Flag"},null, null, null, null,null);
+        Cursor c =db.query("attempt_data", new String[] {"Question_ID,Question_Seq_No,Question_Max_Marks,Question_Option,Question_Status,Question_Option_Sequence,Option_Answer_Flag"},"Test_ID = '"+testId+"'", null, null, null,null);
         if(c.getCount()!=0)
         {
             while (c.moveToNext()) {
@@ -1745,6 +1747,55 @@ public class DBHelper extends SQLiteOpenHelper {
     public int getQuestionNotAttempted(){
         int count=0;
         String query ="SELECT  Question_Status FROM "+" attempt_data"+" WHERE Question_Status = 'NOT_ATTEMPTED'";
+        Cursor c = db.rawQuery(query, null);
+        count=c.getCount();
+        c.close();
+        return count;
+
+    }
+
+    public int getTestQuestionCount(String testId){
+        int count=0;
+        String countQuery = "select * from attempt_data WHERE Test_ID ='"+testId+"'";
+        Cursor c = db.rawQuery(countQuery, null);
+        count=c.getCount();
+        c.close();
+        return count;
+
+    }
+
+    public int getTestQuestionAttempted(String testId){
+        int count=0;
+        String query ="SELECT  Question_Status FROM "+" attempt_data"+" WHERE Question_Status = 'ATTEMPTED' and Test_ID ='"+testId+"'";
+        Cursor c = db.rawQuery(query, null);
+        count=c.getCount();
+        c.close();
+        return count;
+
+    }
+
+    public int getTestQuestionSkipped(String testId){
+        int count=0;
+        String query ="SELECT  Question_Status FROM "+" attempt_data"+" WHERE Question_Status = 'SKIPPED' and Test_ID ='"+testId+"'";
+        Cursor c = db.rawQuery(query, null);
+        count=c.getCount();
+        return count;
+
+    }
+
+    public int getTestQuestionBookmarked(String testId){
+        int count=0;
+        String query ="SELECT  Question_Status FROM "+" attempt_data"+" WHERE Question_Status = 'BOOKMARKED' and Test_ID ='"+testId+"'";
+        Cursor c = db.rawQuery(query, null);
+        count=c.getCount();
+        c.close();
+        return count;
+
+    }
+
+    public int getTestQuestionNotAttempted(String testId){
+        int count=0;
+        String query ="SELECT  Question_Status FROM "+" attempt_data"+" WHERE Question_Status = 'NOT_ATTEMPTED' and Test_ID ='"+testId+"'";
         Cursor c = db.rawQuery(query, null);
         count=c.getCount();
         c.close();

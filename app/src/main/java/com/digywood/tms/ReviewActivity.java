@@ -272,9 +272,9 @@ public class ReviewActivity extends AppCompatActivity implements
                         parseJson(attempt);
                         buffer = generateArray(attempt.getJSONArray("Sections").getJSONObject(pos));
                         Log.e("Resume-cursor",""+attempt.toString());
-                        restoreSections(dataObj.getQuestionStatus(),attempt);
+                        restoreSections(dataObj.getQuestionStatus(testid),attempt);
                         CorrectOptions = dataObj.getCorrectOptions();
-                        statusList = dataObj.getQuestionStatus();
+                        statusList = dataObj.getQuestionStatus(testid);
                         setScrollbar(pos);
                         setQuestion(pos,index,edit);
                         scrollAdapter = new ScrollGridAdapter(ReviewActivity.this, attempt.getJSONArray("Sections").getJSONObject(pos).getJSONArray("Questions"),listOfLists.get(pos),getScreenSize());
@@ -1162,7 +1162,7 @@ public class ReviewActivity extends AppCompatActivity implements
             mHideRunnable.run();
             pos = position;
             CorrectOptions = dataObj.getCorrectOptions();
-            statusList = dataObj.getQuestionStatus();
+            statusList = dataObj.getQuestionStatus(testid);
             Log.e("Size",""+listOfLists.size());
             scrollAdapter = new ScrollGridAdapter(ReviewActivity.this, attempt.getJSONArray("Sections").getJSONObject(pos).getJSONArray("Questions"),listOfLists.get(pos),getScreenSize());
             setScrollbar(pos);

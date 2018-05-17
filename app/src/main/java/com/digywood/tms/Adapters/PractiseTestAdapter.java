@@ -167,7 +167,6 @@ public class PractiseTestAdapter extends RecyclerView.Adapter<PractiseTestAdapte
 
                             try {
                                 ((ListofPractiseTests)mycontext).finish();
-                                Log.e("Exec","Resume,");
                                 attempt = new String(SaveJSONdataToFile.bytesFromFile(getExternalPath(mycontext, singletest, "ATTEMPT") + testid + ".json"), "UTF-8");
                                 Intent i = new Intent(mycontext, PracticeTestActivity.class);
                                 i.putExtra("json", attempt);
@@ -298,8 +297,8 @@ public class PractiseTestAdapter extends RecyclerView.Adapter<PractiseTestAdapte
                                     }
                                     showReportAlert(sbm.toString(),singletest.getTestid());
                                 }else{*/
-//                                    dataObj.DestroyPracticeRecord("attempt_data",singletest.getTestid());
-                                    dataObj.Destroy("attempt_data");
+                                    dataObj.DestroyPracticeRecord("attempt_data",singletest.getTestid());
+//                                    dataObj.Destroy("attempt_data");
                                     int count = dataObj.getTestAttempCount(singletest.getTestid());
                                     Log.e("Attempt Count",""+count);
                                     Cursor c = dataObj.getAttempt(dataObj.getLastTestAttempt(singletest.getTestid()));

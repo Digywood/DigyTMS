@@ -285,13 +285,13 @@ public class AssessmentTestActivity extends AppCompatActivity implements
                 newTest();
             }
             else {
-                c = dataObj.getAttempt(dataObj.getLastAttempt());
+                c = dataObj.getAttempt(dataObj.getLastTestAttempt(testid));
 //                Log.e("TestingJson", ""+c.getInt(c.getColumnIndex("Attempt_Status"))+" "+c.getCount());
                 millisStart = c.getLong(c.getColumnIndex("Assessment_RemainingTime"));
                 assessment = new JSONObject(getIntent().getStringExtra("json"));
                 attemptsectionarray = new JSONArray();
                 attemptsectionarray = assessment.getJSONArray("Sections");
-                restoreSections(dataObj.getQuestionStatus(), assessment);
+                restoreSections(dataObj.getQuestionStatus(testid), assessment);
 //                buffer = generateArray(assessment.getJSONArray("Sections").getJSONObject(pos));
                 index = c.getInt(c.getColumnIndex("Assessment_LastQuestion"));
                 pos = c.getInt(c.getColumnIndex("Assessment_LastSection"));
