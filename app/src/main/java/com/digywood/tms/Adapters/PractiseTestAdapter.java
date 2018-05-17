@@ -158,7 +158,6 @@ public class PractiseTestAdapter extends RecyclerView.Adapter<PractiseTestAdapte
         final Cursor c = dataObj.getAttempt(dataObj.getLastTestAttempt(singletest.getTestid()));
         //if cursor has values then the test is being resumed and data is retrieved from database
         if (c.getCount() > 0) {
-            Log.e("Resume Cursor",""+c.getCount());
             c.moveToLast();
             if (c.getInt(c.getColumnIndex("Attempt_Status")) == 1) {
                 if(c.getString(c.getColumnIndex("Attempt_Test_ID")).equalsIgnoreCase(singletest.getTestid())) {
@@ -168,7 +167,6 @@ public class PractiseTestAdapter extends RecyclerView.Adapter<PractiseTestAdapte
 
                             try {
                                 ((ListofPractiseTests)mycontext).finish();
-                                Log.e("Exec","Resume,");
                                 attempt = new String(SaveJSONdataToFile.bytesFromFile(getExternalPath(mycontext, singletest, "ATTEMPT") + testid + ".json"), "UTF-8");
                                 Intent i = new Intent(mycontext, PracticeTestActivity.class);
                                 i.putExtra("json", attempt);
