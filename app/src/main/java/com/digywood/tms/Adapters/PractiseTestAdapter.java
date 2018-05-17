@@ -124,6 +124,7 @@ public class PractiseTestAdapter extends RecyclerView.Adapter<PractiseTestAdapte
                 avgscore = mycursor.getDouble(mycursor.getColumnIndex("avgscore"));
             }
         }
+
         List<PieEntry> yvalues = new ArrayList<PieEntry>();
 
         holder.tv_testAttempt.setText(String.valueOf(myhelper.getTestAttempCount(singletest.getTestid())));
