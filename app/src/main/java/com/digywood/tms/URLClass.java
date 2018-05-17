@@ -12,7 +12,7 @@ public class URLClass {
 
 
 
-    public static final String loc_hosturl="http://192.168.1.175/digywoodads/tms_php/";
+    public static final String loc_hosturl="http://192.168.1.18/digywoodads/tms_php/";
 
 //    public static final String hosturl="http://www.digywoodads.com/digytms/php_test/";
 
