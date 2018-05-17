@@ -141,7 +141,7 @@ public class JSONParser {
                 finalgroupList.clear();
                 if(groupcompList.size()>0){
 
-                    int finalcompgroupcount=myhelper.getCompGroupCount(testid,sectionid,"Comprehention");
+                    int finalcompgroupcount=myhelper.getCompGroupCount(testid,sectionid,"COMPREHENTION");
 
                     finalgroupList=getFinalGroups(groupcompList,finalcompgroupcount);
                     if(finalgroupList.size()>0){
@@ -187,7 +187,7 @@ public class JSONParser {
 
                 finalgroupList.clear();
                 if(groupcloseList.size()>0){
-                    int finalclosegroupcount=myhelper.getCloseGroupCount(testid,sectionid,"Closure");
+                    int finalclosegroupcount=myhelper.getCloseGroupCount(testid,sectionid,"CLOSURE");
                     finalgroupList=getFinalGroups(groupcloseList,finalclosegroupcount);
                     if(finalgroupList.size()>0){
                         for(int d=0;d<finalgroupList.size();d++){

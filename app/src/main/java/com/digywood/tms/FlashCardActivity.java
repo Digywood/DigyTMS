@@ -894,26 +894,6 @@ public class FlashCardActivity extends AppCompatActivity {
         }else{
 
             if(status.equalsIgnoreCase("")){
-//                        questionList.get(pos).setQstatus("SKIPPED");
-//
-//                        if(skipList.contains(questionList.get(pos).getQnum())){
-//
-//                        }else{
-//                            skipcount++;
-//                            skipList.add(questionList.get(pos).getQnum());
-//                            String count=String.format("%03d",skipcount);
-//                            tv_skipped.setText(count);
-//
-//                            if(knownList.contains(questionList.get(pos).getQnum())){
-//                                knowcount--;
-//                                knownList.remove(questionList.get(pos).getQnum());
-//                                tv_iknow.setText(String.format("%03d",knowcount));
-//                            }else{
-//                                donknowcount--;
-//                                donknowList.remove(questionList.get(pos).getQnum());
-//                                tv_idonknow.setText(String.format("%03d",donknowcount));
-//                            }
-//                        }
 
             }else{
                 if(status.equalsIgnoreCase("IKNOW")){
