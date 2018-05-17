@@ -215,19 +215,19 @@ public class AssesmentTestAdapter extends RecyclerView.Adapter<AssesmentTestAdap
                 hmap.clear();
                 hmap.put("testid",singletest.getTestid());
                 hmap.put("status","STARTED");
-                new BagroundTask(URLClass.hosturl +"updatePractiseTestStatus.php",hmap,mycontext,new IBagroundListener() {
+                new BagroundTask(URLClass.hosturl +"updateAssesmentTestStatus.php",hmap,mycontext,new IBagroundListener() {
                     @Override
                     public void bagroundData(String json) {
                         try{
                             Log.e("UploadStatus---",json);
                             if(json.equalsIgnoreCase("Updated")){
 
-//                                long updateFlag=myhelper.updatePTestStatus(singletest.getTestid(),"STARTED");
-//                                if(updateFlag>0){
-//                                    Log.e("LocalStatusUpdate---","Updated Locally");
-//                                }else{
-//
-//                                }
+                                long updateFlag=myhelper.updateATestStatus(singletest.getTestid(),"STARTED");
+                                if(updateFlag>0){
+                                    Log.e("LocalStatusUpdate---","Updated Locally");
+                                }else{
+                                    Log.e("LocalStatusUpdate---","Unable to Update Locally");
+                                }
 
                                 Cursor mycursor=myhelper.checkAssessmentTest(singletest.getTestid());
                                 if(mycursor.getCount()>0){
@@ -327,19 +327,19 @@ public class AssesmentTestAdapter extends RecyclerView.Adapter<AssesmentTestAdap
                                                                     hmap.clear();
                                                                     hmap.put("testid",singletest.getTestid());
                                                                     hmap.put("status","Downloaded");
-                                                                    new BagroundTask(URLClass.hosturl +"updatePractiseTestStatus.php",hmap, mycontext, new IBagroundListener() {
+                                                                    new BagroundTask(URLClass.hosturl +"updateAssesmentTestStatus.php",hmap, mycontext, new IBagroundListener() {
                                                                         @Override
                                                                         public void bagroundData(String json) {
                                                                             try {
 
                                                                                 Log.e("UploadStatus---",json);
                                                                                 if(json.equalsIgnoreCase("Updated")){
-//                                                                                    long updateFlag=myhelper.updatePTestStatus(singletest.getTestid(),"DOWNLOADED");
-//                                                                                    if(updateFlag>0){
-//                                                                                        Log.e("LocalStatusUpdate---","Updated Locally");
-//                                                                                    }else{
-//
-//                                                                                    }
+                                                                                    long updateFlag=myhelper.updateATestStatus(singletest.getTestid(),"DOWNLOADED");
+                                                                                    if(updateFlag>0){
+                                                                                        Log.e("LocalStatusUpdate---","Updated Locally");
+                                                                                    }else{
+                                                                                        Log.e("LocalStatusUpdate---","Unable to Update Locally");
+                                                                                    }
 
                                                                                     Toast.makeText(mycontext,"All Downloaded",Toast.LENGTH_SHORT).show();
                                                                                 }else{
