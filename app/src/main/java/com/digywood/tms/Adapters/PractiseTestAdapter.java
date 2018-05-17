@@ -145,7 +145,9 @@ public class PractiseTestAdapter extends RecyclerView.Adapter<PractiseTestAdapte
         holder.tv_flashAttempt.setText(""+fattemptcount);
         holder.tv_flash_max.setText(""+fmaxscore);
         holder.tv_flash_min.setText(""+fminscore);
+
         holder.tv_testid.setText(singletest.getTestName()+" ("+singletest.getTestid()+")");
+
         holder.tv_teststatus.setText(singletest.getStatus());
         final DBHelper dataObj = new DBHelper(mycontext);
         if (dataObj.getQuestionCount() == 0) {
@@ -563,8 +565,8 @@ public class PractiseTestAdapter extends RecyclerView.Adapter<PractiseTestAdapte
                                                                 if(status.equalsIgnoreCase("Completed")){
                                                                     hmap.clear();
                                                                     hmap.put("testid",singletest.getTestid());
-                                                                    hmap.put("status","Downloaded");
-                                                                    new BagroundTask(URLClass.hosturl +"updatePractiseTestStatus.php",hmap, mycontext, new IBagroundListener() {
+                                                                    hmap.put("status","DOWNLOADED");
+                                                                    new BagroundTask(URLClass.hosturl +"updatePractiseTestStatus.php",hmap, mycontext,new IBagroundListener() {
                                                                         @Override
                                                                         public void bagroundData(String json) {
                                                                             try {
