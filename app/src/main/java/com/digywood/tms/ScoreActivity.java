@@ -37,7 +37,7 @@ public class ScoreActivity extends AppCompatActivity {
     AlertDialog alertDialog;
     RelativeLayout rootLayout;
     String enrollid,subjectid,courseid,paperid,testId,testType;
-    String sec_questions,sec_attempted,sec_skipped,sec_correct,sec_percentage,subcat_questions,subcat_attempted,subcat_skipped,subcat_correct,subcat_percentage;
+    String sec_questions,sec_attempted,sec_skipped,sec_correct,sec_wrong,sec_percentage,subcat_questions,subcat_attempted,subcat_skipped,subcat_correct,subcat_percentage;
     TextView tv_test,tv_course,tv_subject,tv_attempted,tv_skipped,tv_bookmarked,tv_totalQuestions,tv_totalCorrect,tv_totalWrong,tv_totalNegative,tv_totalPositive,tv_totalScore,tv_totalPercentage;
     Button btn_save,btn_details;
     TableLayout tbl1;
@@ -193,14 +193,16 @@ public class ScoreActivity extends AppCompatActivity {
                     int count = cursor.getCount();
                     TableRow tr = null;
                     for(int i=0;i< count; i++){
-                        Double percent = 0.0;
+                        Double percent = 0.0,score = 0.0;
                         //new row
                         if (testType.equalsIgnoreCase("PRACTICE")) {
                             sec_questions = String.valueOf(dataObj.getSectionQuestions(secList.get(i)));
                             sec_attempted = String.valueOf(dataObj.getSectionQuesAns(secList.get(i)));
                             sec_skipped = String.valueOf(dataObj.getSectionQuesSkip(secList.get(i)));
                             sec_correct = String.valueOf(dataObj.getSectionQuesCorrect(secList.get(i)));
-                            percent = ( Double.valueOf(sec_correct) / Double.valueOf(sec_questions) )*100;
+                            sec_wrong = String.valueOf(dataObj.getSectionQuesWrong(secList.get(i)));
+                            score = (Double.valueOf(sec_correct)*Double.valueOf(attempt.getString("sptu_marks")) - Double.valueOf(sec_wrong)*Double.valueOf(attempt.getString("sptu_negative_mrk")));
+                            percent = ( Double.valueOf(score) / Double.valueOf(sec_questions) )*100;
                             sec_percentage = String.format("%.2f", percent);
                         }
                         else{
@@ -208,7 +210,9 @@ public class ScoreActivity extends AppCompatActivity {
                             sec_attempted = String.valueOf(dataObj.getAssessmentSectionQuesAns(secList.get(i)));
                             sec_skipped = String.valueOf(dataObj.getAssessmentSectionQuesSkip(secList.get(i)));
                             sec_correct = String.valueOf(dataObj.getAssessmentSectionQuesCorrect(secList.get(i)));
-                            percent = ( Double.valueOf(sec_correct) / Double.valueOf(sec_questions) )*100;
+                            sec_wrong = String.valueOf(dataObj.getAssessmentSectionQuesWrong(secList.get(i)));
+                            score = (Double.valueOf(sec_correct)*Double.valueOf(attempt.getString("atu_marks")) - Double.valueOf(sec_wrong)*Double.valueOf(attempt.getString("atu_negative_mrk")));
+                            percent = ( Double.valueOf(score) / Double.valueOf(sec_questions) )*100;
                             sec_percentage = String.format("%.2f", percent);
                             Log.e("sectionquestions",sec_questions);
                             Log.e("sectionattempted",sec_attempted);
@@ -269,14 +273,14 @@ public class ScoreActivity extends AppCompatActivity {
                         tr.addView(tv_subCatCorrect);
                         //Number of Questions Wrong
                         TextView tv_subCatWrong  = new TextView(this);
-                        tv_subCatWrong.setText(sec_correct);
+                        tv_subCatWrong.setText(sec_wrong);
                         params = new TableRow.LayoutParams(0, TableLayout.LayoutParams.WRAP_CONTENT, 1f);
-                        tv_subCatCorrect.setLayoutParams(params);
+                        tv_subCatWrong.setLayoutParams(params);
 //                        tv_subCatCorrect.setGravity(Gravity.CENTER);
                         Log.d("correct",sec_correct);
-                        tv_subCatCorrect.setTextColor(Color.BLACK);
-                        tv_subCatCorrect.setBackground(getResources().getDrawable(R.drawable.spin_bg));
-                        tr.addView(tv_subCatCorrect);
+                        tv_subCatWrong.setTextColor(Color.BLACK);
+                        tv_subCatWrong.setBackground(getResources().getDrawable(R.drawable.spin_bg));
+                        tr.addView(tv_subCatWrong);
                         //Percentage Score
                         TextView tv_percentage  = new TextView(this);
                         tv_percentage.setText(sec_percentage);

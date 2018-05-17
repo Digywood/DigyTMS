@@ -280,14 +280,22 @@ public class PracticeTestActivity extends AppCompatActivity implements
                 newTest();
             }
             else {
-                c = dataObj.getAttempt(dataObj.getLastAttempt());
+                c = dataObj.getAttempt(dataObj.getLastTestAttempt(testid));
 //                Log.e("TestingJson", ""+c.getInt(c.getColumnIndex("Attempt_Status"))+" "+c.getCount());
+                c.moveToFirst();
+
                 millisStart = c.getLong(c.getColumnIndex("Attempt_RemainingTime"));
                 attempt = new JSONObject(getIntent().getStringExtra("json"));
                 attemptsectionarray = new JSONArray();
                 attemptsectionarray = attempt.getJSONArray("Sections");
                 restoreSections(dataObj.getQuestionStatus(), attempt);
 //                buffer = generateArray(attempt.getJSONArray("Sections").getJSONObject(pos));
+                if (c.getCount() > 0) {
+                    c.moveToLast();
+                    if (c.getInt(c.getColumnIndex("Attempt_Status")) != 2) {
+                        dataObj.DeleteAttempt(dataObj.getLastTestAttempt(testid));
+                    }
+                }
                 index = c.getInt(c.getColumnIndex("Attempt_LastQuestion"));
                 pos = c.getInt(c.getColumnIndex("Attempt_LastSection"));
             }
@@ -1173,6 +1181,7 @@ public class PracticeTestActivity extends AppCompatActivity implements
                         } catch (JSONException|IOException e) {
                             e.printStackTrace();
                         }
+                        finish();
                         Intent intent = new Intent(PracticeTestActivity.this, ListofPractiseTests.class);
                         intent.putExtra("enrollid",enrollid);
                         intent.putExtra("courseid", courseid);

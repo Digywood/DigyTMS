@@ -65,7 +65,7 @@ public class TestAttemptAdapter extends RecyclerView.Adapter<TestAttemptAdapter.
         holder.tv_attemptTestMarkcount.setText(String.valueOf(singletattempt.getMarkcount()));
         holder.tv_attemptTestNotAnscount.setText(String.valueOf(singletattempt.getNotattemptcount()));
         holder.tv_attemptTestScore.setText(String.valueOf(singletattempt.getScore()));
-        holder.tv_tpercentage.setText(String.valueOf(singletattempt.getPercent()));
+        holder.tv_tpercentage.setText(String.format("%.2f",singletattempt.getPercent()));
         Double d = new Double(singletattempt.getPercent());
         int progress = d.intValue();
         Resources res=mycontext.getResources();
