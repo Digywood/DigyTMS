@@ -174,6 +174,7 @@ public class DBHelper extends SQLiteOpenHelper {
                 "  `satu_student_id` text DEFAULT NULL,\n" +
                 "  `satu_batch` text DEFAULT NULL,\n" +
                 "  `satu_ID` text DEFAULT NULL,\n" +
+                "  `satu_name` text DEFAULT NULL,\n" +
                 "  `satu_paper_ID` text DEFAULT NULL,\n" +
                 "  `satu_subjet_ID` text DEFAULT NULL,\n" +
                 "  `satu_course_id` text DEFAULT NULL,\n" +
@@ -498,7 +499,7 @@ public class DBHelper extends SQLiteOpenHelper {
         return  deleteFlag;
     }
 
-    public long insertAssesmentTest(int tkey,String torgid,String tenrollid,String tstudentid,String tbatch,String tid,String tpid,String tsid,String tcid,String tstartdate,String tenddate,String tdwdstatus,int tnoofques,String testfilename,String testKey,Double ttotalmarks,Double tminmarks,Double tmaxmarks){
+    public long insertAssesmentTest(int tkey,String torgid,String tenrollid,String tstudentid,String tbatch,String tid,String tname,String tpid,String tsid,String tcid,String tstartdate,String tenddate,String tdwdstatus,int tnoofques,String testfilename,String testKey,Double ttotalmarks,Double tminmarks,Double tmaxmarks){
         long insertFlag=0;
         ContentValues cv = new ContentValues();
         cv.put("satu_key",tkey);
@@ -507,6 +508,7 @@ public class DBHelper extends SQLiteOpenHelper {
         cv.put("satu_student_id",tstudentid);
         cv.put("satu_batch",tbatch);
         cv.put("satu_ID",tid);
+        cv.put("satu_name",tname);
         cv.put("satu_paper_ID",tpid);
         cv.put("satu_subjet_ID",tsid);
         cv.put("satu_course_id",tcid);
@@ -523,13 +525,14 @@ public class DBHelper extends SQLiteOpenHelper {
         return insertFlag;
     }
 
-    public long updateAssesmentTest(String torgid,String tenrollid,String tstudentid,String tbatch,String tid,String tpid,String tsid,String tcid,String tstartdate,String tenddate,String tdwdstatus,int tnoofques,String testfilename,String testKey,Double ttotalmarks,Double tminmarks,Double tmaxmarks){
+    public long updateAssesmentTest(String torgid,String tenrollid,String tstudentid,String tbatch,String tid,String tname,String tpid,String tsid,String tcid,String tstartdate,String tenddate,String tdwdstatus,int tnoofques,String testfilename,String testKey,Double ttotalmarks,Double tminmarks,Double tmaxmarks){
         long updateFlag=0;
         ContentValues cv = new ContentValues();
         cv.put("satu_org_id",torgid);
         cv.put("satu_entroll_id",tenrollid);
         cv.put("satu_student_id",tstudentid);
         cv.put("satu_batch",tbatch);
+        cv.put("satu_name",tname);
         cv.put("satu_paper_ID",tpid);
         cv.put("satu_subjet_ID",tsid);
         cv.put("satu_course_id",tcid);
@@ -574,7 +577,7 @@ public class DBHelper extends SQLiteOpenHelper {
     }
 
     public Cursor getAssesmentTestsByEnroll(String enrollId){
-        Cursor c =db.query("satu_student", new String[] {"satu_entroll_id,satu_student_id,satu_batch,satu_ID,satu_paper_ID,satu_subjet_ID,satu_course_id,satu_start_date,satu_end_date,satu_dwnld_status"},"satu_entroll_id='"+enrollId+"'", null, null, null,null);
+        Cursor c =db.query("satu_student", new String[] {"satu_entroll_id,satu_student_id,satu_batch,satu_ID,satu_name,satu_paper_ID,satu_subjet_ID,satu_course_id,satu_start_date,satu_end_date,satu_dwnld_status"},"satu_entroll_id='"+enrollId+"'", null, null, null,null);
         return c;
     }
 
@@ -1120,7 +1123,7 @@ public class DBHelper extends SQLiteOpenHelper {
     }
 
     public Cursor getStudentTests(String enrollId,String courseId,String paperId,String status){
-        Cursor c =db.query("sptu_student", new String[] {"sptu_entroll_id,sptu_student_ID,sptu_ID,sptu_paper_ID,sptu_subjet_ID,sptu_course_id,sptu_dwnld_status"},"sptu_entroll_id='"+enrollId+"' and sptu_course_id='"+courseId+"' and sptu_paper_ID='"+paperId+"' and sptu_status='"+status+"'", null, null, null,null);
+        Cursor c =db.query("sptu_student", new String[] {"sptu_entroll_id,sptu_student_ID,sptu_ID,sptu_name,sptu_paper_ID,sptu_subjet_ID,sptu_course_id,sptu_dwnld_status"},"sptu_entroll_id='"+enrollId+"' and sptu_course_id='"+courseId+"' and sptu_paper_ID='"+paperId+"' and sptu_status='"+status+"'", null, null, null,null);
         return c;
     }
 

@@ -134,8 +134,8 @@ public class PractiseTestAdapter extends RecyclerView.Adapter<PractiseTestAdapte
             while (mycur.moveToNext()){
                 fattemptcount=mycur.getInt(mycur.getColumnIndex("sptuflash_attempts"));
                 fminscore=mycur.getDouble(mycur.getColumnIndex("min_flashScore"));
-                favgscore=mycur.getDouble(mycur.getColumnIndex("max_flashScore"));
-                fmaxscore=mycur.getDouble(mycur.getColumnIndex("avg_flashScore"));
+                fmaxscore=mycur.getDouble(mycur.getColumnIndex("max_flashScore"));
+                favgscore=mycur.getDouble(mycur.getColumnIndex("avg_flashScore"));
             }
         }else{
             mycur.close();
@@ -196,7 +196,7 @@ public class PractiseTestAdapter extends RecyclerView.Adapter<PractiseTestAdapte
         holder.flash_pieChart.setData(data);
         holder.flash_pieChart.getLegend().setEnabled(false);*/
 
-        holder.tv_testid.setText(singletest.getTestid());
+        holder.tv_testid.setText(singletest.getTestName()+" ("+singletest.getTestid()+")");
         holder.tv_teststatus.setText(singletest.getStatus());
         final DBHelper dataObj = new DBHelper(mycontext);
         if (dataObj.getQuestionCount() == 0) {
