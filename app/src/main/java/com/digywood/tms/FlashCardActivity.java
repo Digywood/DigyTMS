@@ -66,7 +66,7 @@ public class FlashCardActivity extends AppCompatActivity {
     RecyclerView question_scroll;
     ImageView iv_quesimg,iv_fullscreen;
     String filedata,status="",testId="",testPath="",studentid="",enrollid="",courseid="",imgPath="";
-    String subjectid="",paperid="",rfilename="",startDttm="",endDttm="",tempString="";
+    String subjectid="",paperid="",rfilename="",startDttm="",endDttm="",tempString="",navclick="";
     int d=0,pos=0,secpos=0,z=0;
     GridView gridView;
     private PopupWindow pw;
@@ -304,14 +304,19 @@ public class FlashCardActivity extends AppCompatActivity {
                     skipList.clear();
                     secpos=position;
 
-                    d=0;
-                    pos=d;
-
                     JSONObject secObj=gja_sections.getJSONObject(position);
 
                     gja_questions=secObj.getJSONArray("Questions");
 
                     JSONObject qObj=gja_questions.getJSONObject(position);
+
+                    if(navclick.equalsIgnoreCase("PREVIOUS")){
+                        d=gja_questions.length()-1;
+                        pos=d;
+                    }else{
+                        d=0;
+                        pos=d;
+                    }
 
                     String gFlag=qObj.getString("qbm_group_flag");
                     if(gFlag.equalsIgnoreCase("YES")){
@@ -338,6 +343,8 @@ public class FlashCardActivity extends AppCompatActivity {
                     questionList = (ArrayList<SingleFlashQuestion>)tempList.clone();
 
                     cAdp.updateList(questionList);
+
+                    cAdp.setPoiner(d);
 
                 }catch (Exception e){
                     e.printStackTrace();
@@ -568,38 +575,42 @@ public class FlashCardActivity extends AppCompatActivity {
                 }else{
                     secpos--;
                     if(secpos>=0){
+                        navclick="PREVIOUS";
                         sp_sections.setSelection(secpos);
-                        d=0;
-                        pos=d;
-                        try {
-                            String filename=gja_questions.getJSONObject(d).getString("qbm_flash_image");
-                            Log.e("Image Path :--",filename);
-                            String sid=gja_questions.getJSONObject(d).getString("qbm_SubjectID");
-                            String pid=gja_questions.getJSONObject(d).getString("qbm_Paper_ID");
-                            String cid=gja_questions.getJSONObject(d).getString("qbm_ChapterID");
-                            Bitmap bmp = BitmapFactory.decodeFile(imgPath+sid+"/"+pid+"/"+cid+"/"+filename);
-                            iv_quesimg.setImageBitmap(bmp);
-                            tv_Qid.setText(gja_questions.getJSONObject(d).getString("qbm_ID"));
-
-                            Animation rotateimage = AnimationUtils.loadAnimation(FlashCardActivity.this, R.anim.fade_in);
-                            iv_quesimg.startAnimation(rotateimage);
-
-                            String gFlag=gja_questions.getJSONObject(d).getString("qbm_group_flag");
-                            if(gFlag.equalsIgnoreCase("YES")){
-                                btn_gQues.setVisibility(View.VISIBLE);
-                            }else{
-                                btn_gQues.setVisibility(View.GONE);
-                            }
-
-                            cAdp.setPoiner(d);
-                        }catch (Exception e){
-                            e.printStackTrace();
-                            Log.e("ViewLotInfo---",e.toString());
-                        }
+//                        d=0;
+//                        pos=d;
+//                        try {
+//                            String filename=gja_questions.getJSONObject(d).getString("qbm_flash_image");
+//                            Log.e("Image Path :--",filename);
+//                            String sid=gja_questions.getJSONObject(d).getString("qbm_SubjectID");
+//                            String pid=gja_questions.getJSONObject(d).getString("qbm_Paper_ID");
+//                            String cid=gja_questions.getJSONObject(d).getString("qbm_ChapterID");
+//                            Bitmap bmp = BitmapFactory.decodeFile(imgPath+sid+"/"+pid+"/"+cid+"/"+filename);
+//                            iv_quesimg.setImageBitmap(bmp);
+//                            tv_Qid.setText(gja_questions.getJSONObject(d).getString("qbm_ID"));
+//
+//                            Animation rotateimage = AnimationUtils.loadAnimation(FlashCardActivity.this, R.anim.fade_in);
+//                            iv_quesimg.startAnimation(rotateimage);
+//
+//                            String gFlag=gja_questions.getJSONObject(d).getString("qbm_group_flag");
+//                            if(gFlag.equalsIgnoreCase("YES")){
+//                                btn_gQues.setVisibility(View.VISIBLE);
+//                            }else{
+//                                btn_gQues.setVisibility(View.GONE);
+//                            }
+//
+//                            cAdp.setPoiner(d);
+//                        }catch (Exception e){
+//                            e.printStackTrace();
+//                            Log.e("ViewLotInfo---",e.toString());
+//                        }
                     }else{
                         Toast.makeText(getApplicationContext(),"Your are at Starting",Toast.LENGTH_SHORT).show();
                     }
                 }
+
+                Log.e("POSITION:--",""+d);
+
             }
         });
 
@@ -616,6 +627,7 @@ public class FlashCardActivity extends AppCompatActivity {
 
                     if(secpos<gja_sections.length()-1){
                         secpos=secpos+1;
+                        navclick="NEXT";
                         sp_sections.setSelection(secpos);
                         d=0;
                         pos=d;
