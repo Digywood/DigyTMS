@@ -1174,6 +1174,14 @@ public class DBHelper extends SQLiteOpenHelper {
         return  updateFlag;
     }
 
+    public long updateATestStatus(String testid,String status){
+        long updateFlag=0;
+        ContentValues cv = new ContentValues();
+        cv.put("satu_dwnld_status", status);
+        updateFlag=db.update("satu_student",cv,"satu_ID='"+testid+"'",null);
+        return  updateFlag;
+    }
+
     public long updatePTestUPLDStatus(String testid,String status){
         long updateFlag=0;
         ContentValues cv = new ContentValues();
