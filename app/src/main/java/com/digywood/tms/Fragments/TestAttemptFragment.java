@@ -118,10 +118,10 @@ public class TestAttemptFragment extends Fragment {
             cur.close();
         }
 
-        tv_minscore.setText(String.valueOf(minscore)+" %");
-        tv_maxscore.setText(String.valueOf(maxscore)+" %");
+        tv_minscore.setText(String.format("%.2f",minscore)+" %");
+        tv_maxscore.setText(String.format("%.2f",maxscore)+" %");
         Double avgpercent=round(avgscore,2);
-        tv_avgscore.setText(String.valueOf(avgpercent)+" %");
+        tv_avgscore.setText(String.format("%.2f",avgpercent)+" %");
         Cursor mycursor=dataObj.getTestAttemptData(testId);
         Log.e("tadapter", ""+ mycursor.getCount());
 

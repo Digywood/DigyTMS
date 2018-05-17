@@ -281,8 +281,8 @@ public class DBHelper extends SQLiteOpenHelper {
                 "   `Question_Option` int(15) DEFAULT NULL,\n"+
                 "   `Question_Status` varchar(20) DEFAULT NULL,\n"+
                 "   `Question_Option_Sequence` varchar(20) DEFAULT NULL,\n"+
-                "   `Option_Answer_Flag` varchar(15) DEFAULT NULL,\n"+
-                "   PRIMARY KEY (`Question_ID`)\n"+
+                "   `Option_Answer_Flag` varchar(15) DEFAULT NULL\n"+
+
                 ")";
         db.execSQL(AttemptData);
 
@@ -1499,6 +1499,14 @@ public class DBHelper extends SQLiteOpenHelper {
         return count;
     }
 
+    public int getSectionQuesWrong(String subct){
+        String query ="SELECT * FROM attempt_data WHERE  Option_Answer_Flag <> 'YES' and Question_Section ='"+subct+"' and Question_Status <> 'SKIPPED'";
+        Cursor c=db.rawQuery(query,null);
+        int count = c.getCount();
+        c.close();
+        return count;
+    }
+
     public int getSubCatQuestions(String subct){
         String query ="SELECT * FROM attempt_data WHERE Question_SubCategory ='"+subct+"'";
         Cursor c=db.rawQuery(query,null);
@@ -1725,6 +1733,11 @@ public class DBHelper extends SQLiteOpenHelper {
 //        db.execSQL("TRUNCATE table " +table);
     }
 
+    public void DestroyPracticeRecord(String table,String testId){
+        db.execSQL("DELETE FROM "+table+" WHERE Test_ID = '"+testId+"'");
+//        db.execSQL("TRUNCATE table " +table);
+    }
+
     public long InsertAttempt( String aId,String testID,String eid,String sid,String cid,String subid,String pid,int status,String Upstatus, int aScore, int attempted, int skipped, int bookmarked, int unattempted, int aperc,long aTime,int index,int pos){
 
         long insertFlag=0;
@@ -1807,7 +1820,7 @@ public class DBHelper extends SQLiteOpenHelper {
 
     public int getTestAttempCount(String testId){
         int count=0;
-        String countQuery = "select Attempt_ID from attempt_list WHERE Attempt_Test_ID = '"+testId+"' and Attempt_Status != 0";
+        String countQuery = "select Attempt_ID from attempt_list WHERE Attempt_Test_ID = '"+testId+"' and Attempt_Status <> 1";
         Cursor c = db.rawQuery(countQuery, null);
         count=c.getCount();
         return count;
@@ -2011,6 +2024,14 @@ public class DBHelper extends SQLiteOpenHelper {
 
     public int getAssessmentSectionQuesCorrect(String subct){
         String query ="SELECT * FROM assessment_data WHERE  Option_Answer_Flag = 'YES' and Question_Section = '"+subct+"' and Question_Status <> 'SKIPPED'";
+        Cursor c=db.rawQuery(query,null);
+        int count = c.getCount();
+        c.close();
+        return count;
+    }
+
+    public int getAssessmentSectionQuesWrong(String subct){
+        String query ="SELECT * FROM assessment_data WHERE  Option_Answer_Flag <> 'YES' and Question_Section = '"+subct+"' and Question_Status <> 'SKIPPED'";
         Cursor c=db.rawQuery(query,null);
         int count = c.getCount();
         c.close();
