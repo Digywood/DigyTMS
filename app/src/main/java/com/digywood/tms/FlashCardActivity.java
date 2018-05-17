@@ -622,6 +622,8 @@ public class FlashCardActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
+                Log.e("NPOSITION---",""+pos);
+
                 btn_know.setBackgroundResource(R.drawable.test_button_normal);
                 btn_idonknow.setBackgroundResource(R.drawable.test_button_normal);
 
@@ -695,7 +697,7 @@ public class FlashCardActivity extends AppCompatActivity {
                     }
                 }
 
-                Log.e("POSITION:--",""+d);
+//                Log.e("POSITION:--",""+d);
 
             }
         });
