@@ -346,6 +346,8 @@ public class FlashCardActivity extends AppCompatActivity {
 
                     cAdp.setPoiner(d);
 
+                    Log.e("POSITION:--",""+d);
+
                 }catch (Exception e){
                     e.printStackTrace();
                     Log.e("FlashCardActivity----",e.toString());
@@ -605,6 +607,8 @@ public class FlashCardActivity extends AppCompatActivity {
 //                            Log.e("ViewLotInfo---",e.toString());
 //                        }
                     }else{
+                        d=0;
+                        pos=d;
                         Toast.makeText(getApplicationContext(),"Your are at Starting",Toast.LENGTH_SHORT).show();
                     }
                 }
@@ -691,7 +695,7 @@ public class FlashCardActivity extends AppCompatActivity {
                     }
                 }
 
-                Log.e("POS:  ",""+d);
+                Log.e("POSITION:--",""+d);
 
             }
         });
