@@ -127,16 +127,16 @@ public class PractiseTestAdapter extends RecyclerView.Adapter<PractiseTestAdapte
         List<PieEntry> yvalues = new ArrayList<PieEntry>();
 
         holder.tv_testAttempt.setText(String.valueOf(myhelper.getTestAttempCount(singletest.getTestid())));
-        holder.tv_attempt_min.setText(String.format("%.1f", minscore));
-        holder.tv_attempt_max.setText(String.format("%.1f", maxscore));
+        holder.tv_attempt_min.setText(""+round(minscore,1));
+        holder.tv_attempt_max.setText(""+round(maxscore,1));
 
         Cursor mycur=myhelper.getTestFlashSummary(singletest.getTestid());
         if(mycur.getCount()>0){
             while (mycur.moveToNext()){
                 fattemptcount=mycur.getInt(mycur.getColumnIndex("sptuflash_attempts"));
                 fminscore=mycur.getDouble(mycur.getColumnIndex("min_flashScore"));
-                favgscore=mycur.getDouble(mycur.getColumnIndex("max_flashScore"));
-                fmaxscore=mycur.getDouble(mycur.getColumnIndex("avg_flashScore"));
+                fmaxscore=mycur.getDouble(mycur.getColumnIndex("max_flashScore"));
+                favgscore=mycur.getDouble(mycur.getColumnIndex("avg_flashScore"));
             }
         }else{
             mycur.close();
@@ -145,7 +145,7 @@ public class PractiseTestAdapter extends RecyclerView.Adapter<PractiseTestAdapte
         holder.tv_flashAttempt.setText(""+fattemptcount);
         holder.tv_flash_max.setText(""+fmaxscore);
         holder.tv_flash_min.setText(""+fminscore);
-        holder.tv_testid.setText(singletest.getTestid());
+        holder.tv_testid.setText(singletest.getTestName()+" ("+singletest.getTestid()+")
         holder.tv_teststatus.setText(singletest.getStatus());
         final DBHelper dataObj = new DBHelper(mycontext);
         if (dataObj.getQuestionCount() == 0) {
@@ -1186,5 +1186,14 @@ public class PractiseTestAdapter extends RecyclerView.Adapter<PractiseTestAdapte
             Log.e("JSONPARSE---", e.toString() + " : " + e.getStackTrace()[0].getLineNumber());
         }
         return flashimageList;
+    }
+
+    public static double round(double value, int places) {
+        if (places < 0) throw new IllegalArgumentException();
+
+        long factor = (long) Math.pow(10, places);
+        value = value * factor;
+        long tmp = Math.round(value);
+        return (double) tmp / factor;
     }
 }

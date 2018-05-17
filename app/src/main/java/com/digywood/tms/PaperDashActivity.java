@@ -14,8 +14,6 @@ import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
-import android.widget.Toast;
-
 import com.digywood.tms.Adapters.PaperDashAdapter;
 import com.digywood.tms.DBHelper.DBHelper;
 import com.digywood.tms.Pojo.SingleDashPaper;

@@ -95,7 +95,7 @@ public class AssesmentTestAdapter extends RecyclerView.Adapter<AssesmentTestAdap
     @Override
     public void onBindViewHolder(final MyViewHolder holder, final int position) {
         final SingleAssessment singletest = testList.get(position);
-        holder.tv_testid.setText(singletest.getTestid());
+        holder.tv_testid.setText(singletest.getTestName()+" ("+singletest.getTestid()+")");
         holder.tv_teststatus.setText(singletest.getStatus());
 
         holder.iv_start.setOnClickListener(new View.OnClickListener() {

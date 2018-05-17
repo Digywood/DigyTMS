@@ -49,6 +49,8 @@ import com.digywood.tms.Pojo.SingleFlashQuestion;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -310,6 +312,14 @@ public class FlashCardActivity extends AppCompatActivity {
                     gja_questions=secObj.getJSONArray("Questions");
 
                     JSONObject qObj=gja_questions.getJSONObject(position);
+
+                    String gFlag=qObj.getString("qbm_group_flag");
+                    if(gFlag.equalsIgnoreCase("YES")){
+                        btn_gQues.setVisibility(View.VISIBLE);
+                    }else{
+                        btn_gQues.setVisibility(View.GONE);
+                    }
+
                     String imagefile=qObj.getString("qbm_flash_image");
                     Log.e("Image Path :--",imagefile);
                     String sid=qObj.getString("qbm_SubjectID");
@@ -321,13 +331,6 @@ public class FlashCardActivity extends AppCompatActivity {
                     Animation rotateimage = AnimationUtils.loadAnimation(FlashCardActivity.this, R.anim.fade_in);
                     iv_quesimg.startAnimation(rotateimage);
 
-                    String gFlag=qObj.getString("qbm_group_flag");
-                    if(gFlag.equalsIgnoreCase("YES")){
-                        btn_gQues.setVisibility(View.VISIBLE);
-                    }else{
-                        btn_gQues.setVisibility(View.GONE);
-                    }
-
                     ArrayList<SingleFlashQuestion> tempList;
 
                     tempList=baseQList.get(position);
@@ -335,6 +338,7 @@ public class FlashCardActivity extends AppCompatActivity {
                     questionList = (ArrayList<SingleFlashQuestion>)tempList.clone();
 
                     cAdp.updateList(questionList);
+
                 }catch (Exception e){
                     e.printStackTrace();
                     Log.e("FlashCardActivity----",e.toString());
@@ -359,6 +363,24 @@ public class FlashCardActivity extends AppCompatActivity {
         btn_gQues.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+                Log.e("FlashCardActivity---","pos:  "+d);
+
+
+                try{
+                    File file = new File(URLClass.mainpath + testId + "_temp.json");
+                    if (!file.exists()) {
+                        file.createNewFile();
+                    }
+                    byte[] bytes = gja_questions.toString().getBytes("UTF-8");
+                    FileOutputStream out = new FileOutputStream(URLClass.mainpath + testId + "_temp.json");
+                    out.write(bytes);
+                    out.close();
+                }catch (Exception e){
+                    e.printStackTrace();
+                    Log.e("FCardActivity---",e.toString());
+                }
+
 
                 mydialog = new Dialog(FlashCardActivity.this);
                 mydialog.getWindow();
@@ -656,6 +678,8 @@ public class FlashCardActivity extends AppCompatActivity {
                         Log.e("ViewLotInfo---",e.toString());
                     }
                 }
+
+                Log.e("POS:  ",""+d);
 
             }
         });
@@ -1018,7 +1042,7 @@ public class FlashCardActivity extends AppCompatActivity {
                                     avgscore=mycursor.getDouble(mycursor.getColumnIndex("avgscore"));
                                 }
                                 Log.e("Scores:---","min:--"+minscore+"  max--"+maxscore+"  avg----"+avgscore);
-                                long uFlag=myhelper.updateTestFlashData(testId,attemptnum,minscore,maxscore,avgscore,endDttm,percent);
+                                long uFlag=myhelper.updateTestFlashData(testId,attemptnum,minscore,maxscore,avgscore,endDttm,percent,"NotUploaded");
                                 if(uFlag>0){
                                     Log.e("FlashCardActivity----","Test Updated");
                                 }else{
@@ -1102,7 +1126,7 @@ public class FlashCardActivity extends AppCompatActivity {
                                     avgscore=mycursor.getDouble(mycursor.getColumnIndex("avgscore"));
                                 }
                                 Log.e("Scores:---","min:--"+minscore+"  max--"+maxscore+"  avg----"+avgscore);
-                                long uFlag=myhelper.updateTestFlashData(testId,attemptnum,minscore,maxscore,avgscore,endDttm,percent);
+                                long uFlag=myhelper.updateTestFlashData(testId,attemptnum,minscore,maxscore,avgscore,endDttm,percent,"NotUploaded");
                                 if(uFlag>0){
                                     Log.e("FlashCardActivity----","Test Updated");
                                 }else{

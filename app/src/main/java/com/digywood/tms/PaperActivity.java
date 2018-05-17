@@ -42,6 +42,7 @@ public class PaperActivity extends AppCompatActivity {
     GridView papergridView;
     SinglePaper singlePaper;
     Dialog mydialog;
+    int clickpos=0;
     public static final int RequestPermissionCode = 1;
     String courseid="",enrollid="";
     HashMap<String,String> hmap=new HashMap<>();
@@ -86,40 +87,13 @@ public class PaperActivity extends AppCompatActivity {
         papergridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             public void onItemClick(AdapterView<?> parent,View v,int position, long id) {
 
-                singlePaper=paperList.get(position);
+                clickpos=position;
 
-                mydialog = new Dialog(PaperActivity.this);
-                mydialog.getWindow();
-                mydialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-                mydialog.setContentView(R.layout.activity_testpopup);
-                mydialog.show();
-
-                LinearLayout ll_pratise=mydialog.findViewById(R.id.ll_practise);
-                LinearLayout ll_assesment=mydialog.findViewById(R.id.ll_assessment);
-
-                ll_pratise.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        Intent i=new Intent(getApplicationContext(),ListofPractiseTests.class);
-                        i.putExtra("enrollid",enrollid);
-                        i.putExtra("courseid",courseid);
-                        i.putExtra("paperid",singlePaper.getPaperId());
-                        startActivity(i);
-                        mydialog.cancel();
-                    }
-                });
-
-                ll_assesment.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        Intent i=new Intent(getApplicationContext(),ListofAssessmentTests.class);
-                        i.putExtra("enrollid",enrollid);
-                        i.putExtra("courseid",courseid);
-                        i.putExtra("paperid",singlePaper.getPaperId());
-                        startActivity(i);
-                        mydialog.cancel();
-                    }
-                });
+                if(checkPermission()){
+                    showPopUp();
+                }else{
+                    requestPermission();
+                }
             }
         });
 
@@ -228,6 +202,45 @@ public class PaperActivity extends AppCompatActivity {
 
     }
 
+    public void showPopUp(){
+
+        singlePaper=paperList.get(clickpos);
+
+        mydialog = new Dialog(PaperActivity.this);
+        mydialog.getWindow();
+        mydialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        mydialog.setContentView(R.layout.activity_testpopup);
+        mydialog.show();
+
+        LinearLayout ll_pratise=mydialog.findViewById(R.id.ll_practise);
+        LinearLayout ll_assesment=mydialog.findViewById(R.id.ll_assessment);
+
+        ll_pratise.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i=new Intent(getApplicationContext(),ListofPractiseTests.class);
+                i.putExtra("enrollid",enrollid);
+                i.putExtra("courseid",courseid);
+                i.putExtra("paperid",singlePaper.getPaperId());
+                startActivity(i);
+                mydialog.cancel();
+            }
+        });
+
+        ll_assesment.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i=new Intent(getApplicationContext(),ListofAssessmentTests.class);
+                i.putExtra("enrollid",enrollid);
+                i.putExtra("courseid",courseid);
+                i.putExtra("paperid",singlePaper.getPaperId());
+                startActivity(i);
+                mydialog.cancel();
+            }
+        });
+
+    }
+
     public void getPapersData(){
         hmap.clear();
         hmap.put("courseid",courseid);
@@ -276,29 +289,6 @@ public class PaperActivity extends AppCompatActivity {
         }).execute();
     }
 
-//    public void navigateTestActivity(){
-//        if(pos==0){
-//            Toast.makeText(getApplicationContext(),"Please Choose Valid Paper",Toast.LENGTH_SHORT).show();
-//        }else{
-//            if(testtype.equalsIgnoreCase("practise")){
-//                Intent i=new Intent(getApplicationContext(),ListofPractiseTests.class);
-//                Log.e("JSON---",courseid+paperidList.get(pos-1));
-//                i.putExtra("enrollid",enrollid);
-//                i.putExtra("courseid",courseid);
-//                i.putExtra("paperid",paperidList.get(pos-1));
-//                startActivity(i);
-//                finish();
-//            }else{
-//                Intent i=new Intent(getApplicationContext(),ListofAssessmentTests.class);
-//                Log.e("JSON---",courseid+paperidList.get(pos-1));
-//                i.putExtra("enrollid",enrollid);
-//                i.putExtra("courseid",courseid);
-//                i.putExtra("paperid",paperidList.get(pos-1));
-//                startActivity(i);
-//                finish();
-//            }
-//        }
-//    }
 
     public void setData(){
 //        if (paperList.size() != 0) {
@@ -345,7 +335,7 @@ public class PaperActivity extends AppCompatActivity {
 
         if(requestCode == RequestPermissionCode){
             if(grantResults.length >0 && grantResults[0] == PackageManager.PERMISSION_GRANTED && grantResults[1] == PackageManager.PERMISSION_GRANTED){
-//                navigateTestActivity();
+                showPopUp();
             }
             else {
                 Toast.makeText(PaperActivity.this, "This permission required to use full functionality of application!", Toast.LENGTH_SHORT).show();

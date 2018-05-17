@@ -327,10 +327,10 @@ public class ListofPractiseTests extends AppCompatActivity {
     public void getTestIdsFromLocal(){
         testidList.clear();
         try {
-            Cursor mycursor=myhelper.getStudentTests(enrollid,courseid,paperid);
+            Cursor mycursor=myhelper.getStudentTests(enrollid,courseid,paperid,"A");
             if(mycursor.getCount()>0){
                 while (mycursor.moveToNext()) {
-                    testidList.add(new SingleTest(mycursor.getString(mycursor.getColumnIndex("sptu_ID")),mycursor.getString(mycursor.getColumnIndex("sptu_subjet_ID")),mycursor.getString(mycursor.getColumnIndex("sptu_dwnld_status"))));
+                    testidList.add(new SingleTest(mycursor.getString(mycursor.getColumnIndex("sptu_ID")),mycursor.getString(mycursor.getColumnIndex("sptu_name")),mycursor.getString(mycursor.getColumnIndex("sptu_subjet_ID")),mycursor.getString(mycursor.getColumnIndex("sptu_dwnld_status"))));
                     subjectIds.add(mycursor.getString(mycursor.getColumnIndex("sptu_subjet_ID")));
                 }
             }else {
@@ -524,7 +524,7 @@ public class ListofPractiseTests extends AppCompatActivity {
                             String testid=myObj.getString("sptu_ID");
                             subjectid=myObj.getString("sptu_subjet_ID");
                             String status=myObj.getString("sptu_dwnld_status");
-                            testidList.add(new SingleTest(testid,subjectid,status));
+                            testidList.add(new SingleTest(testid,"sample",subjectid,status));
 
                             long checkFlag=myhelper.checkTest(myObj.getInt("sptu_key"));
                             if(checkFlag>0){

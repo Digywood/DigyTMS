@@ -219,6 +219,12 @@ public class PracticeTestActivity extends AppCompatActivity implements
         testid = getIntent().getStringExtra("test");
         rv_option = findViewById(R.id.option_view);
 
+        if(checkPermission()){
+
+        }else{
+            requestPermission();
+        }
+
         Cursor cursor = dataObj.getSingleStudentTests(testid);
         if (cursor.getCount() > 0) {
             while (cursor.moveToNext()) {
@@ -642,7 +648,7 @@ public class PracticeTestActivity extends AppCompatActivity implements
     //method to dynamically request permissions
     private void requestPermission() {
         ActivityCompat.requestPermissions(PracticeTestActivity.this, new
-                String[]{WRITE_EXTERNAL_STORAGE, READ_EXTERNAL_STORAGE}, RequestPermissionCode);
+                String[]{WRITE_EXTERNAL_STORAGE, READ_EXTERNAL_STORAGE},RequestPermissionCode);
     }
 
     //method to get the deivce screen size
@@ -1024,7 +1030,7 @@ public class PracticeTestActivity extends AppCompatActivity implements
         }
 
         try {
-            opAdapter = new OptionsCheckAdapter(optionsList, PracticeTestActivity.this, photoPath, rv_option);
+            opAdapter = new OptionsCheckAdapter(optionsList, PracticeTestActivity.this, photoPath,rv_option);
             Log.e("opSize", ""+oplist.size());
             RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
             rv_option.setLayoutManager(mLayoutManager);

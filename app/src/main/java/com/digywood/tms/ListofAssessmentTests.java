@@ -110,7 +110,7 @@ public class ListofAssessmentTests extends AppCompatActivity {
             Cursor mycursor=myhelper.getAssesmentTestsByEnroll(enrollid);
             if(mycursor.getCount()>0){
                 while (mycursor.moveToNext()) {
-                    testidList.add(new SingleAssessment(mycursor.getString(mycursor.getColumnIndex("satu_ID")),mycursor.getString(mycursor.getColumnIndex("satu_subjet_ID")),mycursor.getString(mycursor.getColumnIndex("satu_dwnld_status"))));
+                    testidList.add(new SingleAssessment(mycursor.getString(mycursor.getColumnIndex("satu_ID")),mycursor.getString(mycursor.getColumnIndex("satu_name")),mycursor.getString(mycursor.getColumnIndex("satu_subjet_ID")),mycursor.getString(mycursor.getColumnIndex("satu_dwnld_status"))));
                 }
             }else {
                 mycursor.close();
@@ -142,7 +142,7 @@ public class ListofAssessmentTests extends AppCompatActivity {
                             String testid=myObj.getString("atu_ID");
                             subjectid=myObj.getString("atu_subjet_ID");
                             String status=myObj.getString("atu_dwnld_status");
-                            testidList.add(new SingleAssessment(testid,subjectid,status));
+                            testidList.add(new SingleAssessment(testid,"",subjectid,status));
 
                             long checkFlag=myhelper.checkTest(myObj.getInt("atu_key"));
                             if(checkFlag>0){
