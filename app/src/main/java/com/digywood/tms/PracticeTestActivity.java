@@ -280,22 +280,15 @@ public class PracticeTestActivity extends AppCompatActivity implements
                 newTest();
             }
             else {
-                c = dataObj.getAttempt(dataObj.getLastTestAttempt(testid));
+                c = dataObj.getAttempt(dataObj.getLastTestAttempt(attempt.getString("ptu_test_ID")));
 //                Log.e("TestingJson", ""+c.getInt(c.getColumnIndex("Attempt_Status"))+" "+c.getCount());
                 c.moveToFirst();
-
                 millisStart = c.getLong(c.getColumnIndex("Attempt_RemainingTime"));
                 attempt = new JSONObject(getIntent().getStringExtra("json"));
                 attemptsectionarray = new JSONArray();
                 attemptsectionarray = attempt.getJSONArray("Sections");
                 restoreSections(dataObj.getQuestionStatus(), attempt);
 //                buffer = generateArray(attempt.getJSONArray("Sections").getJSONObject(pos));
-                if (c.getCount() > 0) {
-                    c.moveToLast();
-                    if (c.getInt(c.getColumnIndex("Attempt_Status")) != 2) {
-                        dataObj.DeleteAttempt(dataObj.getLastTestAttempt(testid));
-                    }
-                }
                 index = c.getInt(c.getColumnIndex("Attempt_LastQuestion"));
                 pos = c.getInt(c.getColumnIndex("Attempt_LastSection"));
             }
@@ -662,8 +655,8 @@ public class PracticeTestActivity extends AppCompatActivity implements
     public void setQBackground(int pos, int index) {
 
         if (opAdapter.getSelectedItem() == -1) {
-                listOfLists.get(pos).get(index).setQ_status(skipped);
-                listOfLists.get(pos).get(index).setQ_check(not_confirmed);
+            listOfLists.get(pos).get(index).setQ_status(skipped);
+            listOfLists.get(pos).get(index).setQ_check(not_confirmed);
 
         } else {
             if(!listOfLists.get(pos).get(index).getQ_status().equalsIgnoreCase(bookmarked)) {
@@ -851,23 +844,23 @@ public class PracticeTestActivity extends AppCompatActivity implements
                                     }
                                     SaveJSONdataToFile.objectToFile(URLClass.mainpath + path + "Attempt/" + testid + ".json", attempt.toString());
 
-                                ActivityOptionsCompat options = ActivityOptionsCompat.
-                                        makeSceneTransitionAnimation(PracticeTestActivity.this, finish_view, "transition");
-                                int revealX = (int) (finish_view.getX() + finish_view.getWidth() / 2);
-                                int revealY = (int) (finish_view.getY() + finish_view.getHeight() / 2);
-                                Intent intent = new Intent(PracticeTestActivity.this, ScoreActivity.class);
-                                bundle = new Bundle();
-                                bundle.putString("JSON", attempt.toString());
-                                bundle.putString("enrollid",enrollid);
-                                bundle.putString("courseid", courseid);
-                                bundle.putString("subjectid", subjectId);
-                                bundle.putString("paperid",paperid);
-                                bundle.putString("Type","PRACTICE");
-                                intent.putExtra("BUNDLE", bundle);
-                                intent.putExtra("Xreveal", revealX);
-                                intent.putExtra("Yreveal", revealY);
-                                finish();
-                                ActivityCompat.startActivity(PracticeTestActivity.this, intent, options.toBundle());
+                                    ActivityOptionsCompat options = ActivityOptionsCompat.
+                                            makeSceneTransitionAnimation(PracticeTestActivity.this, finish_view, "transition");
+                                    int revealX = (int) (finish_view.getX() + finish_view.getWidth() / 2);
+                                    int revealY = (int) (finish_view.getY() + finish_view.getHeight() / 2);
+                                    Intent intent = new Intent(PracticeTestActivity.this, ScoreActivity.class);
+                                    bundle = new Bundle();
+                                    bundle.putString("JSON", attempt.toString());
+                                    bundle.putString("enrollid",enrollid);
+                                    bundle.putString("courseid", courseid);
+                                    bundle.putString("subjectid", subjectId);
+                                    bundle.putString("paperid",paperid);
+                                    bundle.putString("Type","PRACTICE");
+                                    intent.putExtra("BUNDLE", bundle);
+                                    intent.putExtra("Xreveal", revealX);
+                                    intent.putExtra("Yreveal", revealY);
+                                    finish();
+                                    ActivityCompat.startActivity(PracticeTestActivity.this, intent, options.toBundle());
                                 } catch (JSONException|IOException|IllegalArgumentException e) {
                                     e.printStackTrace();
                                 }
@@ -990,7 +983,6 @@ public class PracticeTestActivity extends AppCompatActivity implements
             btn_qadditional.setEnabled(false);
             btn_qadditional.setClickable(false);
             btn_qadditional.setBackgroundColor(0);
-
         }*/
         if(listOfLists.get(pos).get(index).getQ_status().equalsIgnoreCase("ATTEMPTED")){
             btn_confirm.setBackgroundColor(Color.GREEN);
@@ -1131,14 +1123,11 @@ public class PracticeTestActivity extends AppCompatActivity implements
             } else {
                 array = Section.getJSONArray("questions");
             }
-
-
         } catch (JSONException e) {
             e.printStackTrace();
         }
         return array;
     }
-
     //method to merge 2 JSON Arrays and return the result
     public JSONArray getMergeJsonArrays(ArrayList<JSONArray> jsonArrays) throws JSONException {
         JSONArray MergedJsonArrays = new JSONArray();
@@ -1345,4 +1334,3 @@ public class PracticeTestActivity extends AppCompatActivity implements
 
 
 }
-
