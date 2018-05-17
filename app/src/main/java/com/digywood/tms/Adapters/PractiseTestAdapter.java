@@ -145,7 +145,7 @@ public class PractiseTestAdapter extends RecyclerView.Adapter<PractiseTestAdapte
         holder.tv_flashAttempt.setText(""+fattemptcount);
         holder.tv_flash_max.setText(""+fmaxscore);
         holder.tv_flash_min.setText(""+fminscore);
-        holder.tv_testid.setText(singletest.getTestid());
+        holder.tv_testid.setText(singletest.getTestName()+" ("+singletest.getTestid()+")");
         holder.tv_teststatus.setText(singletest.getStatus());
         final DBHelper dataObj = new DBHelper(mycontext);
         if (dataObj.getQuestionCount() == 0) {
@@ -155,6 +155,7 @@ public class PractiseTestAdapter extends RecyclerView.Adapter<PractiseTestAdapte
         final Cursor c = dataObj.getAttempt(dataObj.getLastTestAttempt(singletest.getTestid()));
         //if cursor has values then the test is being resumed and data is retrieved from database
         if (c.getCount() > 0) {
+            Log.e("Resume Cursor",""+c.getCount());
             c.moveToLast();
             if (c.getInt(c.getColumnIndex("Attempt_Status")) == 1) {
                 if(c.getString(c.getColumnIndex("Attempt_Test_ID")).equalsIgnoreCase(singletest.getTestid())) {
@@ -295,8 +296,8 @@ public class PractiseTestAdapter extends RecyclerView.Adapter<PractiseTestAdapte
                                     }
                                     showReportAlert(sbm.toString(),singletest.getTestid());
                                 }else{*/
-//                                    dataObj.DestroyPracticeRecord("attempt_data",singletest.getTestid());
-                                    dataObj.Destroy("attempt_data");
+                                    dataObj.DestroyPracticeRecord("attempt_data",singletest.getTestid());
+//                                    dataObj.Destroy("attempt_data");
                                     int count = dataObj.getTestAttempCount(singletest.getTestid());
                                     Log.e("Attempt Count",""+count);
                                     Cursor c = dataObj.getAttempt(dataObj.getLastTestAttempt(singletest.getTestid()));
@@ -462,7 +463,7 @@ public class PractiseTestAdapter extends RecyclerView.Adapter<PractiseTestAdapte
                                 if(updateFlag>0){
                                     Log.e("LocalStatusUpdate---","Updated Locally");
                                 }else{
-
+                                    Log.e("LocalStatusUpdate---","Unable to Update Locally");
                                 }
 
                                 Cursor mycursor=myhelper.checkPractiseTest(singletest.getTestid());
@@ -574,7 +575,7 @@ public class PractiseTestAdapter extends RecyclerView.Adapter<PractiseTestAdapte
                                                                                     if(updateFlag>0){
                                                                                         Log.e("LocalStatusUpdate---","Updated Locally");
                                                                                     }else{
-
+                                                                                        Log.e("LocalStatusUpdate---","Unable to Update Locally");
                                                                                     }
 
                                                                                     Toast.makeText(mycontext,"All Downloaded",Toast.LENGTH_SHORT).show();
