@@ -308,8 +308,6 @@ public class FlashCardActivity extends AppCompatActivity {
 
                     gja_questions=secObj.getJSONArray("Questions");
 
-                    JSONObject qObj=gja_questions.getJSONObject(position);
-
                     if(navclick.equalsIgnoreCase("PREVIOUS")){
                         d=gja_questions.length()-1;
                         pos=d;
@@ -317,6 +315,8 @@ public class FlashCardActivity extends AppCompatActivity {
                         d=0;
                         pos=d;
                     }
+
+                    JSONObject qObj=gja_questions.getJSONObject(d);
 
                     String gFlag=qObj.getString("qbm_group_flag");
                     if(gFlag.equalsIgnoreCase("YES")){
@@ -609,6 +609,7 @@ public class FlashCardActivity extends AppCompatActivity {
                     }else{
                         d=0;
                         pos=d;
+                        secpos=0;
                         Toast.makeText(getApplicationContext(),"Your are at Starting",Toast.LENGTH_SHORT).show();
                     }
                 }
@@ -621,8 +622,6 @@ public class FlashCardActivity extends AppCompatActivity {
         btn_next.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-                Log.e("NPOSITION---",""+pos);
 
                 btn_know.setBackgroundResource(R.drawable.test_button_normal);
                 btn_idonknow.setBackgroundResource(R.drawable.test_button_normal);
@@ -697,7 +696,7 @@ public class FlashCardActivity extends AppCompatActivity {
                     }
                 }
 
-//                Log.e("POSITION:--",""+d);
+                Log.e("POSITION:--",""+d);
 
             }
         });
@@ -1057,6 +1056,12 @@ public class FlashCardActivity extends AppCompatActivity {
 
                         finish();
 
+                        Intent intent = new Intent(FlashCardActivity.this, ListofPractiseTests.class);
+                        intent.putExtra("enrollid",enrollid);
+                        intent.putExtra("courseid", courseid);
+                        intent.putExtra("paperid",paperid);
+                        startActivity(intent);
+
                     }
                 })
                 .setNegativeButton("Cancel",new DialogInterface.OnClickListener() {
@@ -1140,6 +1145,11 @@ public class FlashCardActivity extends AppCompatActivity {
                         dialog.cancel();
 
                         finish();
+                        Intent intent = new Intent(FlashCardActivity.this, ListofPractiseTests.class);
+                        intent.putExtra("enrollid",enrollid);
+                        intent.putExtra("courseid", courseid);
+                        intent.putExtra("paperid",paperid);
+                        startActivity(intent);
 
                     }
                 })

@@ -4,6 +4,7 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.os.AsyncTask;
+import android.os.NetworkOnMainThreadException;
 import android.util.Log;
 import com.digywood.tms.DBHelper.DBHelper;
 import com.digywood.tms.IDownloadStatus;
@@ -166,7 +167,7 @@ public class DownloadFileAsync extends AsyncTask<Void,String, String> {
                         output.close();
                     if (input != null)
                         input.close();
-                } catch (IOException ignored) {
+                } catch (IOException|NetworkOnMainThreadException ignored) {
                     Log.e("DownloadFile----",ignored.toString());
                 }
                 try {
