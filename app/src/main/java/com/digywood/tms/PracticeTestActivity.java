@@ -1311,10 +1311,9 @@ public class PracticeTestActivity extends AppCompatActivity implements
         dataObj = new DBHelper(PracticeTestActivity.this);
         try {
             long value = dataObj.UpdateAttempt(generateUniqueId(0),attempt.getString("ptu_test_ID"),1,"NotUploaded", 0,dataObj.getTestQuestionAttempted(testid),dataObj.getTestQuestionSkipped(testid),dataObj.getTestQuestionBookmarked(testid),dataObj.getTestQuestionNotAttempted(testid), 0, millisRemaining, index, pos);
-/*            if (value <= 0) {
-                long ret = dataObj.InsertAttempt(generateUniqueId(),attempt.getString("ptu_test_ID"),1, 0,dataObj.getQuestionAttempted(),dataObj.getQuestionSkipped(),dataObj.getQuestionBookmarked(),dataObj.getQuestionNotAttempted(), 0, millisRemaining, index, pos);
-                Log.e("Insertion",""+ret);
-            }*/
+            if(alertbox!=null){
+                alertbox.dismiss();
+            }
             SaveJSONdataToFile.objectToFile(URLClass.mainpath + path + "Attempt/" + testid + ".json", attempt.toString());
             Log.e("Attempt-Json", attempt.toString());
         } catch (JSONException|IOException e) {

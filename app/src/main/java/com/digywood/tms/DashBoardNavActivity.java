@@ -3,6 +3,7 @@ package com.digywood.tms;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -524,6 +525,12 @@ public class DashBoardNavActivity extends AppCompatActivity implements Navigatio
                     }
                 }
             }).execute();
+
+        } else if (id == R.id.nav_configserver) {
+
+            Intent i=new Intent(getApplicationContext(),ListofServers.class);
+            i.putExtra("studentid",studentid);
+            startActivity(i);
 
         } else if (id == R.id.nav_contactus) {
 

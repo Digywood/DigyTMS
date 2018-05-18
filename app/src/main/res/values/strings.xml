@@ -8,6 +8,7 @@
     <string name="atestslabel">Assessment Tests</string>
     <string name="courselabel">Course List</string>
     <string name="paperlabel">Papers List</string>
+    <string name="serverlabel">Choose Server</string>
 
     <string-array name="qualifications">
         <item>Select</item>

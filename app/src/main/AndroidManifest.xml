@@ -27,6 +27,7 @@
         <activity
             android:name=".RegistrationActivity"
             android:label="@string/reglabel"
+            android:parentActivityName=".MainActivity"
             android:screenOrientation="landscape" />
         <activity
             android:name=".LearningActivity"
@@ -102,10 +103,15 @@
             android:label="@string/testdashlabel"
             android:parentActivityName=".PaperDashActivity"
             android:screenOrientation="landscape" />
-        <activity android:name=".RequestedEnrollsActivity"
+        <activity
+            android:name=".RequestedEnrollsActivity"
             android:label="Requested Enrollments"
+            android:parentActivityName=".DashBoardNavActivity"
+            android:screenOrientation="landscape" />
+        <activity android:name=".ListofServers"
             android:screenOrientation="landscape"
-            android:parentActivityName=".DashBoardNavActivity"/>
+            android:label="@string/serverlabel"
+            android:parentActivityName=".DashBoardNavActivity"></activity>
     </application>
 
 </manifest>
