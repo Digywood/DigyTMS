@@ -936,7 +936,7 @@ public class DashBoardNavActivity extends AppCompatActivity implements Navigatio
             }
         }else{
             mycursor.close();
-            Toast.makeText(getApplicationContext(),"No Practise Data to Upload",Toast.LENGTH_SHORT).show();
+            Toast.makeText(getApplicationContext(),"No Assessment Ques Data to Upload",Toast.LENGTH_SHORT).show();
         }
 
     }
