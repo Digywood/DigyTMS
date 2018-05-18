@@ -64,7 +64,7 @@ public class DashBoardNavActivity extends AppCompatActivity implements Navigatio
         tx.replace(R.id.fl_base, new HomeFragment());
         tx.commit();
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        DrawerLayout drawer =findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open,R.string.navigation_drawer_close);
         drawer.addDrawerListener(toggle);
@@ -78,7 +78,7 @@ public class DashBoardNavActivity extends AppCompatActivity implements Navigatio
             tv_studentid.setText(studentid);
         }
 
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        NavigationView navigationView =findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
         header=navigationView.getHeaderView(0);
         tv_name=header.findViewById(R.id.tv_hsname);
@@ -885,12 +885,44 @@ public class DashBoardNavActivity extends AppCompatActivity implements Navigatio
                     @Override
                     public void bagroundData(String json) {
                         try{
+                            JSONArray ja_assessmentKeys;
+                            JSONObject assessmentObj;
                             Log.e("json"," comes :  "+json);
-                            if(json.equalsIgnoreCase("Inserted")){
-                                Toast.makeText(getApplicationContext(),"Practise Test Info Syncronised",Toast.LENGTH_SHORT).show();
-                            }else{
-                                Toast.makeText(getApplicationContext(),"Sorry,Try Again Later",Toast.LENGTH_SHORT).show();
+//                            if(json.equalsIgnoreCase("Inserted")){
+//                                Toast.makeText(getApplicationContext(),"Practise Test Info Syncronised",Toast.LENGTH_SHORT).show();
+//                            }else{
+//                                Toast.makeText(getApplicationContext(),"Sorry,Try Again Later",Toast.LENGTH_SHORT).show();
+//                            }
+
+                            JSONObject mainObj=new JSONObject(json);
+
+                            Object obj1=mainObj.get("assessmentIds");
+
+                            if (obj1 instanceof JSONArray)
+                            {
+                                ja_assessmentKeys=mainObj.getJSONArray("assessmentIds");
+                                if(ja_assessmentKeys!=null && ja_assessmentKeys.length()>0){
+                                    int p=0,q=0;
+                                    Log.e("DBNActivity---","updated_assesstestQ_rec:--"+ja_assessmentKeys.length());
+                                    for(int i=0;i<ja_assessmentKeys.length();i++){
+                                        assessmentObj=ja_assessmentKeys.getJSONObject(i);
+                                        long updateFlag=myhelper.updateAssessmentQStatus(assessmentObj.getString("assessmentKey"),"Uploaded");
+                                        if(updateFlag>0){
+                                            p++;
+                                        }else{
+                                            q++;
+                                        }
+                                    }
+                                    Log.e("DBNActivity---","AQUpdated:--"+p);
+                                }else{
+                                    Log.e("ATESTQUPLDData--","Null Assessment Ques Json Array: ");
+                                }
+
                             }
+                            else {
+                                Log.e("ATESTQUPLDData--","No Assessment Ques Uploaded: ");
+                            }
+
                         }catch (Exception e){
                             e.printStackTrace();
                             Log.e("DashBoardNavActivity","  :  "+e.toString());
@@ -904,7 +936,7 @@ public class DashBoardNavActivity extends AppCompatActivity implements Navigatio
             }
         }else{
             mycursor.close();
-            Toast.makeText(getApplicationContext(),"No Practise Data to Upload",Toast.LENGTH_SHORT).show();
+            Toast.makeText(getApplicationContext(),"No Assessment Ques Data to Upload",Toast.LENGTH_SHORT).show();
         }
 
     }

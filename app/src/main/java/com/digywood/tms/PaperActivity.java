@@ -291,19 +291,7 @@ public class PaperActivity extends AppCompatActivity {
 
 
     public void setData(){
-//        if (paperList.size() != 0) {
-//            Log.e("Paperlist.size()", "comes:" + paperList.size());
-//            tv_emptypapers.setVisibility(View.GONE);
-//            pAdp = new PaperAdapter(paperList,PaperActivity.this,enrollid,courseid);
-//            myLayoutManager = new LinearLayoutManager(PaperActivity.this, LinearLayoutManager.VERTICAL,false);
-//            rv_papers.setLayoutManager(myLayoutManager);
-//            rv_papers.setItemAnimator(new DefaultItemAnimator());
-//            rv_papers.setAdapter(pAdp);
-//        } else {
-//            rv_papers.setAdapter(null);
-//            tv_emptypapers.setText("No Papers for course");
-//            tv_emptypapers.setVisibility(View.VISIBLE);
-//        }
+
     }
 
     @Override
