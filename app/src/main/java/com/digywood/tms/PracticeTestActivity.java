@@ -107,7 +107,6 @@ public class PracticeTestActivity extends AppCompatActivity implements
     OptionsCheckAdapter opAdapter;
     SaveJSONdataToFile save;
     DBHelper dataObj;
-    AlertDialog alertbox;
     long millisStart = 0, millisRemaining = 0;
     GestureDetector gd;
 
@@ -296,7 +295,7 @@ public class PracticeTestActivity extends AppCompatActivity implements
             //inserting new Test record in local database
             long value = dataObj.UpdateAttempt(generateUniqueId(0),attempt.getString("ptu_test_ID"),2,"NotUploaded", 0,dataObj.getTestQuestionAttempted(testid),dataObj.getTestQuestionSkipped(testid),dataObj.getTestQuestionBookmarked(testid),dataObj.getTestQuestionNotAttempted(testid), 0, millisRemaining, index, pos);
             if (value <= 0) {
-                long ret = dataObj.InsertAttempt(generateUniqueId(1), attempt.getString("ptu_test_ID"), enrollid, studentId, courseid, subjectId, paperid, 1, "NotUploaded", 0, dataObj.getTestQuestionAttempted(testid), dataObj.getTestQuestionSkipped(testid), dataObj.getTestQuestionBookmarked(testid), dataObj.getTestQuestionNotAttempted(testid), 0, millisRemaining, index, pos);
+                long ret = dataObj.InsertAttempt(generateUniqueId(0), attempt.getString("ptu_test_ID"), enrollid, studentId, courseid, subjectId, paperid, 1, "NotUploaded", 0, dataObj.getTestQuestionAttempted(testid), dataObj.getTestQuestionSkipped(testid), dataObj.getTestQuestionBookmarked(testid), dataObj.getTestQuestionNotAttempted(testid), 0, millisRemaining, index, pos);
                 Log.e("New Test Insertion", "" + ret);
             }
 
@@ -766,7 +765,7 @@ public class PracticeTestActivity extends AppCompatActivity implements
             Seq = buffer.getJSONObject(index).getString("qbm_SequenceId");
             questionobj = buffer.getJSONObject(index);
             scrollAdapter.updateList(listOfLists.get(pos));
-            if (dataObj.CheckQuestion(Id)) {
+            if (dataObj.CheckQuestion(Id,testid)) {
                 Log.e("Option_Status", listOfLists.get(pos).get(index).getQ_status());
                 if (indx > -1) {
                     result = dataObj.UpdateQuestion(attempt.getString("ptu_test_ID"), null, Id, Seq,attempt.getJSONArray("Sections").getJSONObject(pos).getString("ptu_section_name"),questionobj.getString("qbm_Chapter_name"),questionobj.getString("qbm_Sub_CategoryName"), Integer.valueOf(questionobj.getString("qbm_marks")), Double.valueOf(questionobj.getString("qbm_negative_mrk")), 0, 0, indx, listOfLists.get(pos).get(index).getQ_status(), opAdapter.getSelectedSequence(), opAdapter.getFlag());
@@ -834,8 +833,7 @@ public class PracticeTestActivity extends AppCompatActivity implements
         finish.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                finish_view = v;
-                alertbox = new AlertDialog.Builder(PracticeTestActivity.this)
+                AlertDialog alertbox = new AlertDialog.Builder(PracticeTestActivity.this)
                         .setMessage("Do you want to finish Test?" + " " + dataObj.getQuestionCount())
                         .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
 
@@ -1313,7 +1311,10 @@ public class PracticeTestActivity extends AppCompatActivity implements
         dataObj = new DBHelper(PracticeTestActivity.this);
         try {
             long value = dataObj.UpdateAttempt(generateUniqueId(0),attempt.getString("ptu_test_ID"),1,"NotUploaded", 0,dataObj.getTestQuestionAttempted(testid),dataObj.getTestQuestionSkipped(testid),dataObj.getTestQuestionBookmarked(testid),dataObj.getTestQuestionNotAttempted(testid), 0, millisRemaining, index, pos);
-            alertbox.dismiss();
+/*            if (value <= 0) {
+                long ret = dataObj.InsertAttempt(generateUniqueId(),attempt.getString("ptu_test_ID"),1, 0,dataObj.getQuestionAttempted(),dataObj.getQuestionSkipped(),dataObj.getQuestionBookmarked(),dataObj.getQuestionNotAttempted(), 0, millisRemaining, index, pos);
+                Log.e("Insertion",""+ret);
+            }*/
             SaveJSONdataToFile.objectToFile(URLClass.mainpath + path + "Attempt/" + testid + ".json", attempt.toString());
             Log.e("Attempt-Json", attempt.toString());
         } catch (JSONException|IOException e) {
