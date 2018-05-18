@@ -170,8 +170,6 @@ public class LearningActivity extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         finish();
-        Intent i=new Intent(getApplicationContext(),DashBoardNavActivity.class);
-        startActivity(i);
         super.onBackPressed();
     }
 }
