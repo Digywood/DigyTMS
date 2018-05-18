@@ -92,6 +92,7 @@ public class PracticeTestActivity extends AppCompatActivity implements
     Bundle bundle;
     Button btn_group_info, btn_qadditional, btn_review, btn_prev, btn_next, btn_clear_option, btn_mark,btn_confirm;
     Cursor c;
+    public static PracticeTestActivity pactivity;
     AlertDialog alertDialog;
     Bitmap b, op, bitmap;
     Boolean flag = false;
@@ -106,6 +107,7 @@ public class PracticeTestActivity extends AppCompatActivity implements
     OptionsCheckAdapter opAdapter;
     SaveJSONdataToFile save;
     DBHelper dataObj;
+    AlertDialog alertbox;
     long millisStart = 0, millisRemaining = 0;
     GestureDetector gd;
 
@@ -181,8 +183,7 @@ public class PracticeTestActivity extends AppCompatActivity implements
         setContentView(R.layout.activity_test);
 
         dataObj = new DBHelper(this);
-//        dataObj.Destroy("attempt_data");
-
+        pactivity = this;
         question_scroll = findViewById(R.id.question_scroll);
         question_img = findViewById(R.id.question_img);
         btn_prev = findViewById(R.id.prev_btn);
@@ -440,30 +441,33 @@ public class PracticeTestActivity extends AppCompatActivity implements
                                 btn_next.setText("Finish");
                                 writeOption(opAdapter.getSelectedItem());
                                 AlertDialog alertbox = new AlertDialog.Builder(PracticeTestActivity.this)
-                                        .setMessage("Do you want to finish Test?" + " " + dataObj.getQuestionCount())
+                                        .setMessage("Do you want to finish Test?" + " " + dataObj.getTestQuestionCount(testid))
                                         .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
 
                                             // do something when the button is clicked
                                             public void onClick(DialogInterface arg0, int arg1) {
 //                                            q_list.clear();
+
+                                                int revealX = 0,revealY = 0;
+                                                ActivityOptionsCompat options = ActivityOptionsCompat.
+                                                        makeSceneTransitionAnimation(PracticeTestActivity.this, finish_view, "transition");
+                                                revealX = (int) (finish_view.getX() + finish_view.getWidth() / 2);
+                                                revealY = (int) (finish_view.getY() + finish_view.getHeight() / 2);
+                                                Log.e("Reveal X",""+revealX);
                                                 try {
-                                                    long value = dataObj.UpdateAttempt(generateUniqueId(0),attempt.getString("ptu_test_ID"),2,"NotUploaded", 0,dataObj.getTestQuestionAttempted(testid),dataObj.getTestQuestionSkipped(testid),dataObj.getTestQuestionBookmarked(testid),dataObj.getTestQuestionNotAttempted(testid), 0, millisRemaining, index, pos);
+                                                    long value = dataObj.UpdateAttempt(generateUniqueId(0),attempt.getString("ptu_test_ID"),2,"NotUploaded", 0,dataObj.getTestQuestionAttempted(testid),dataObj.getTestQuestionSkipped(testid),dataObj.getTestQuestionBookmarked(testid),dataObj.getTestQuestionNotAttempted(testid),0, millisRemaining, index, pos);
                                                     if (value <= 0) {
                                                         Log.e("PaperId: ","pid  "+paperid);
-                                                        long ret = dataObj.InsertAttempt(generateUniqueId(1),attempt.getString("ptu_test_ID"),enrollid,"",courseid,subjectId,paperid,2,"NotUploaded", 0,dataObj.getTestQuestionAttempted(testid),dataObj.getTestQuestionSkipped(testid),dataObj.getTestQuestionBookmarked(testid),dataObj.getTestQuestionNotAttempted(testid), 0, millisRemaining, index, pos);
-                                                        Log.e("Insertion",""+ret);
+                                                        long ret = dataObj.InsertAttempt(generateUniqueId(0),attempt.getString("ptu_test_ID"),enrollid,studentId,courseid,subjectId,paperid,2,"NotUploaded", 0,dataObj.getTestQuestionAttempted(testid),dataObj.getTestQuestionSkipped(testid),dataObj.getTestQuestionBookmarked(testid),dataObj.getTestQuestionNotAttempted(testid), 0, millisRemaining, index, pos);
                                                     }
                                                     SaveJSONdataToFile.objectToFile(URLClass.mainpath + path + "Attempt/" + testid + ".json", attempt.toString());
                                                 } catch (JSONException|IOException e) {
                                                     e.printStackTrace();
                                                 }
 
-                                                ActivityOptionsCompat options = ActivityOptionsCompat.
-                                                        makeSceneTransitionAnimation(PracticeTestActivity.this, finish_view, "transition");
-                                                int revealX = (int) (finish_view.getX() + finish_view.getWidth() / 2);
-                                                int revealY = (int) (finish_view.getY() + finish_view.getHeight() / 2);
-                                                finish();
+
                                                 count = dataObj.getAttempCount();
+
 
 /*                                                c = dataObj.getAttempt(count);
                                                 c.moveToFirst();*/
@@ -482,7 +486,6 @@ public class PracticeTestActivity extends AppCompatActivity implements
                                                 intent.putExtra("Xreveal", revealX);
                                                 intent.putExtra("Yreveal", revealY);
                                                 ActivityCompat.startActivity(PracticeTestActivity.this, intent, options.toBundle());
-
                                             }
                                         })
                                         .setNegativeButton("No", new DialogInterface.OnClickListener() {
@@ -823,26 +826,26 @@ public class PracticeTestActivity extends AppCompatActivity implements
         tv_bookmarked_count_label.setTypeface(font);
         tv_not_attempted_count_label.setTypeface(font);
 
-        tv_answered_count.setText("" + dataObj.getQuestionAttempted());
-        tv_skipped_count.setText("" + dataObj.getQuestionSkipped());
-        tv_bookmarked_count.setText("" + dataObj.getQuestionBookmarked());
-        tv_not_attempted_count.setText("" + dataObj.getQuestionNotAttempted());
+        tv_answered_count.setText("" + dataObj.getTestQuestionAttempted(testid));
+        tv_skipped_count.setText("" + dataObj.getTestQuestionSkipped(testid));
+        tv_bookmarked_count.setText("" + dataObj.getTestQuestionBookmarked(testid));
+        tv_not_attempted_count.setText("" + dataObj.getTestQuestionNotAttempted(testid));
         Button finish = layout.findViewById(R.id.finish_button);
         finish.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                AlertDialog alertbox = new AlertDialog.Builder(PracticeTestActivity.this)
+                finish_view = v;
+                alertbox = new AlertDialog.Builder(PracticeTestActivity.this)
                         .setMessage("Do you want to finish Test?" + " " + dataObj.getQuestionCount())
                         .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
 
                             // do something when the button is clicked
                             public void onClick(DialogInterface arg0, int arg1) {
-//                                            q_list.clear();
                                 try {
                                     long value = dataObj.UpdateAttempt(generateUniqueId(0),attempt.getString("ptu_test_ID"),2,"NotUploaded", 0,dataObj.getTestQuestionAttempted(testid),dataObj.getTestQuestionSkipped(testid),dataObj.getTestQuestionBookmarked(testid),dataObj.getTestQuestionNotAttempted(testid),0, millisRemaining, index, pos);
                                     if (value <= 0) {
                                         Log.e("PaperId: ","pid  "+paperid);
-                                        long ret = dataObj.InsertAttempt(generateUniqueId(0),attempt.getString("ptu_test_ID"),enrollid,"",courseid,subjectId,paperid,2,"NotUploaded", 0,dataObj.getTestQuestionAttempted(testid),dataObj.getTestQuestionSkipped(testid),dataObj.getTestQuestionBookmarked(testid),dataObj.getTestQuestionNotAttempted(testid), 0, millisRemaining, index, pos);
+                                        long ret = dataObj.InsertAttempt(generateUniqueId(0),attempt.getString("ptu_test_ID"),enrollid,studentId,courseid,subjectId,paperid,2,"NotUploaded", 0,dataObj.getTestQuestionAttempted(testid),dataObj.getTestQuestionSkipped(testid),dataObj.getTestQuestionBookmarked(testid),dataObj.getTestQuestionNotAttempted(testid), 0, millisRemaining, index, pos);
                                         Log.e("Insertion",""+ret);
                                     }
                                     SaveJSONdataToFile.objectToFile(URLClass.mainpath + path + "Attempt/" + testid + ".json", attempt.toString());
@@ -862,11 +865,11 @@ public class PracticeTestActivity extends AppCompatActivity implements
                                     intent.putExtra("BUNDLE", bundle);
                                     intent.putExtra("Xreveal", revealX);
                                     intent.putExtra("Yreveal", revealY);
-                                    finish();
                                     ActivityCompat.startActivity(PracticeTestActivity.this, intent, options.toBundle());
                                 } catch (JSONException|IOException|IllegalArgumentException e) {
                                     e.printStackTrace();
                                 }
+
                             }
                         })
                         .setNegativeButton("No", new DialogInterface.OnClickListener() {
@@ -1310,10 +1313,7 @@ public class PracticeTestActivity extends AppCompatActivity implements
         dataObj = new DBHelper(PracticeTestActivity.this);
         try {
             long value = dataObj.UpdateAttempt(generateUniqueId(0),attempt.getString("ptu_test_ID"),1,"NotUploaded", 0,dataObj.getTestQuestionAttempted(testid),dataObj.getTestQuestionSkipped(testid),dataObj.getTestQuestionBookmarked(testid),dataObj.getTestQuestionNotAttempted(testid), 0, millisRemaining, index, pos);
-/*            if (value <= 0) {
-                long ret = dataObj.InsertAttempt(generateUniqueId(),attempt.getString("ptu_test_ID"),1, 0,dataObj.getQuestionAttempted(),dataObj.getQuestionSkipped(),dataObj.getQuestionBookmarked(),dataObj.getQuestionNotAttempted(), 0, millisRemaining, index, pos);
-                Log.e("Insertion",""+ret);
-            }*/
+            alertbox.dismiss();
             SaveJSONdataToFile.objectToFile(URLClass.mainpath + path + "Attempt/" + testid + ".json", attempt.toString());
             Log.e("Attempt-Json", attempt.toString());
         } catch (JSONException|IOException e) {

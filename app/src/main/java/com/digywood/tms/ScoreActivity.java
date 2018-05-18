@@ -56,6 +56,7 @@ public class ScoreActivity extends AppCompatActivity {
         setContentView(R.layout.activity_score);
         bundle = new Bundle();
         bundle = getIntent().getBundleExtra("BUNDLE");
+        PracticeTestActivity.pactivity.finish();
         try {
             attempt = new JSONObject(bundle.getString("JSON"));
         } catch (JSONException e) {
@@ -124,10 +125,12 @@ public class ScoreActivity extends AppCompatActivity {
                     TotalPositive = Double.valueOf(attempt.getString("ptu_positive_marks")) * CorrectCount;
                     TotalNegative = Double.valueOf(attempt.getString("ptu_negative_marks"))* WrongCount;
                     MaxMarks = Double.valueOf(attempt.getString("ptu_positive_marks")) * dataObj.getQuestionCount();
-                    Percentage = (  TotalScore / MaxMarks )*100;
+                    TotalScore = TotalPositive - TotalNegative;
+                    Percentage = (  Double.valueOf(TotalScore) / MaxMarks )*100;
+                    Log.e("Percentage Test:",""+TotalScore);
                 }
                 testId = attempt.getString("ptu_test_ID");
-                flag = dataObj.UpdateAttempt(dataObj.getLastAttempt(), attempt.getString("ptu_test_ID"), 2,"NotUploaded",TotalScore, dataObj.getQuestionAttempted(), dataObj.getQuestionSkipped(), dataObj.getQuestionBookmarked(), dataObj.getQuestionNotAttempted(),Percentage , 0, 0, 0);
+                flag = dataObj.UpdateAttempt(dataObj.getLastTestAttempt(testId), attempt.getString("ptu_test_ID"), 2,"NotUploaded",TotalScore,dataObj.getTestQuestionAttempted(testId),dataObj.getTestQuestionSkipped(testId),dataObj.getTestQuestionBookmarked(testId),dataObj.getTestQuestionNotAttempted(testId),Percentage , 0, 0, 0);
                 Cursor mycursor=dataObj.getTestRawData(testId);
                 if(mycursor.getCount()>0) {
                     while (mycursor.moveToNext()) {
@@ -137,7 +140,7 @@ public class ScoreActivity extends AppCompatActivity {
                     }
                     Log.e("ScoreActivity-->",""+maxscore);
                 }
-                TotalScore = TotalPositive - TotalNegative;
+
             }
             else {
 
@@ -154,6 +157,7 @@ public class ScoreActivity extends AppCompatActivity {
                     TotalPositive = Double.valueOf(attempt.getString("atu_marks")) * CorrectCount;
                     TotalNegative = Double.valueOf(attempt.getString("atu_negative_mrk"))* WrongCount;
                     MaxMarks = Double.valueOf(attempt.getString("atu_marks")) * dataObj.getAssessmentQuestionCount();
+                    TotalScore = TotalPositive - TotalNegative;
                     Percentage = (  TotalScore / MaxMarks )*100;
                 }
                 testId = attempt.getString("atu_ID");
@@ -166,7 +170,6 @@ public class ScoreActivity extends AppCompatActivity {
                         avgscore = mycursor.getDouble(mycursor.getColumnIndex("avgscore"));
                     }
                 }
-                TotalScore = TotalPositive - TotalNegative;
             }
             long qflag = 0;
             if(flag > 0){
@@ -306,11 +309,11 @@ public class ScoreActivity extends AppCompatActivity {
         tv_course.setText(courseid);
         tv_subject.setText(subjectid);
         if (testType.equalsIgnoreCase("PRACTICE")) {
-            tv_attempted.setText(String.valueOf(dataObj.getQuestionAttempted()));
-            tv_skipped.setText(String.valueOf(dataObj.getQuestionSkipped()));
-            tv_bookmarked.setText(String.valueOf(dataObj.getQuestionBookmarked()));
-            tv_totalQuestions.setText(String.valueOf(dataObj.getQuestionCount()));
-            tv_totalCorrect.setText(String.valueOf(dataObj.getCorrectOptionsCount()));
+            tv_attempted.setText(String.valueOf(dataObj.getTestQuestionAttempted(testId)));
+            tv_skipped.setText(String.valueOf(dataObj.getTestQuestionSkipped(testId)));
+            tv_bookmarked.setText(String.valueOf(dataObj.getTestQuestionBookmarked(testId)));
+            tv_totalQuestions.setText(String.valueOf(dataObj.getTestQuestionCount(testId)));
+            tv_totalCorrect.setText(String.valueOf(dataObj.getTestCorrectOptionsCount(testId)));
         } else {
             tv_attempted.setText(String.valueOf(dataObj.getAssessmentQuestionAttempted()));
             Log.e("AssmntAttempted",String.valueOf(dataObj.getAssessmentQuestionAttempted()));
@@ -420,7 +423,7 @@ public class ScoreActivity extends AppCompatActivity {
                 subcat_skipped = String.valueOf(dataObj.getSubCatQuesSkip(catList.get(i)));
                 subcat_correct = String.valueOf(dataObj.getSubCatQuesCorrect(catList.get(i)));
                 percent = ( Double.valueOf(subcat_correct) / Double.valueOf(subcat_questions) )*100;
-                subcat_percentage = String.valueOf(percent);
+                subcat_percentage = String.format("%.1f",percent);
             }
             else{
 
@@ -429,7 +432,7 @@ public class ScoreActivity extends AppCompatActivity {
                 subcat_skipped = String.valueOf(dataObj.getAssessmentSubCatQuesSkip(catList.get(i)));
                 subcat_correct = String.valueOf(dataObj.getAssessmentSubCatQuesCorrect(catList.get(i)));
                 percent = ( Double.valueOf(subcat_correct) / Double.valueOf(subcat_questions) )*100;
-                subcat_percentage = String.valueOf(percent);
+                subcat_percentage = String.format("%.1f",percent);
 
             }
             tr1 = new TableRow(this);
