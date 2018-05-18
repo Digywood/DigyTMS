@@ -138,17 +138,17 @@ public class PractiseTestAdapter extends RecyclerView.Adapter<PractiseTestAdapte
             while (mycur.moveToNext()){
                 fattemptcount=mycur.getInt(mycur.getColumnIndex("sptuflash_attempts"));
                 fminscore=mycur.getDouble(mycur.getColumnIndex("min_flashScore"));
-                favgscore=mycur.getDouble(mycur.getColumnIndex("max_flashScore"));
-                fmaxscore=mycur.getDouble(mycur.getColumnIndex("avg_flashScore"));
+                fmaxscore=mycur.getDouble(mycur.getColumnIndex("max_flashScore"));
+                favgscore=mycur.getDouble(mycur.getColumnIndex("avg_flashScore"));
             }
         }else{
             mycur.close();
         }
 
         holder.tv_flashAttempt.setText(""+fattemptcount);
-        holder.tv_flash_max.setText(""+fmaxscore);
-        holder.tv_flash_min.setText(""+fminscore);
-        holder.tv_flash_avg.setText(""+favgscore);
+        holder.tv_flash_max.setText(""+round(fmaxscore,1));
+        holder.tv_flash_min.setText(""+round(fminscore,1));
+        holder.tv_flash_avg.setText(""+round(favgscore,1));
 
         holder.tv_testid.setText(singletest.getTestName()+" ("+singletest.getTestid()+")");
 
@@ -313,9 +313,11 @@ public class PractiseTestAdapter extends RecyclerView.Adapter<PractiseTestAdapte
                                         }
                                     }
                                     try {
-
                                         fullTest = new String(SaveJSONdataToFile.bytesFromFile(getExternalPath(mycontext, singletest, "BASE") + testid + ".json"), "UTF-8");
+                                        myparser = new JSONParser(fullTest,getExternalPath(mycontext, singletest, "ATTEMPT"),"PRACTICE", mycontext);
                                         attempt = new String(SaveJSONdataToFile.bytesFromFile(getExternalPath(mycontext, singletest, "ATTEMPT") + testid + ".json"), "UTF-8");
+                                        Log.e("FULLTEST:---","sample:--"+fullTest);
+                                        Log.e("attempt:---","sample:--"+attempt);
                                         Intent i = new Intent(mycontext, PracticeTestActivity.class);
                                         i.putExtra("json", attempt);
                                         i.putExtra("test", testid);
@@ -418,6 +420,7 @@ public class PractiseTestAdapter extends RecyclerView.Adapter<PractiseTestAdapte
                                     i.putExtra("testId", testList.get(position).getTestid());
                                     i.putExtra("testPath", tPath);
                                     mycontext.startActivity(i);
+                                    ((ListofPractiseTests)mycontext).finish();
                                 }
 
                             }else{
@@ -456,8 +459,7 @@ public class PractiseTestAdapter extends RecyclerView.Adapter<PractiseTestAdapte
                 hmap.clear();
                 hmap.put("testid",singletest.getTestid());
                 hmap.put("status","STARTED");
-                Log.e("LOCALURL:---",URLClass.loc_hosturl +"updatePractiseTestStatus.php");
-                new BagroundTask(URLClass.loc_hosturl +"updatePractiseTestStatus.php",hmap,mycontext,new IBagroundListener() {
+                new BagroundTask(URLClass.hosturl +"updatePractiseTestStatus.php",hmap,mycontext,new IBagroundListener() {
                     @Override
                     public void bagroundData(String json) {
                         try{
@@ -487,9 +489,9 @@ public class PractiseTestAdapter extends RecyclerView.Adapter<PractiseTestAdapte
 
                                 path=courseid+"/"+subjectId+"/"+paperid+"/"+singletest.getTestid()+"/";
 
-                                downloadjsonpath=URLClass.loc_downloadjson+"courses/"+path+singletest.getTestid()+".json";
+                                downloadjsonpath=URLClass.downloadjson+"courses/"+path+singletest.getTestid()+".json";
 
-                                tfiledwdpath=URLClass.loc_downloadjson+"courses/"+path;
+                                tfiledwdpath=URLClass.downloadjson+"courses/"+path;
 
                                 localpath=enrollid+"/"+courseid+"/"+subjectId+"/"+paperid+"/"+singletest.getTestid()+"/";
 
@@ -547,7 +549,7 @@ public class PractiseTestAdapter extends RecyclerView.Adapter<PractiseTestAdapte
 
                                                         }else{
 
-                                                            String tPath=URLClass.loc_downloadjson+"courses/"+courseid+"/"+sdq.getSubjectId()+"/"+sdq.getPaperId()+"/";
+                                                            String tPath=URLClass.downloadjson+"courses/"+courseid+"/"+sdq.getSubjectId()+"/"+sdq.getPaperId()+"/";
                                                             finalUrls.add(tPath+sdq.getChapterId()+"/"+sdq.getFileName());
                                                             finalNames.add(sdq.getFileName());
                                                             localPathList.add(URLClass.mainpath+enrollid+"/"+courseid+"/"+sdq.getSubjectId()+"/"+sdq.getPaperId()+"/"+sdq.getChapterId()+"/");
@@ -569,7 +571,7 @@ public class PractiseTestAdapter extends RecyclerView.Adapter<PractiseTestAdapte
                                                                     hmap.clear();
                                                                     hmap.put("testid",singletest.getTestid());
                                                                     hmap.put("status","DOWNLOADED");
-                                                                    new BagroundTask(URLClass.loc_hosturl +"updatePractiseTestStatus.php",hmap, mycontext,new IBagroundListener() {
+                                                                    new BagroundTask(URLClass.hosturl +"updatePractiseTestStatus.php",hmap, mycontext,new IBagroundListener() {
                                                                         @Override
                                                                         public void bagroundData(String json) {
                                                                             try {
@@ -694,7 +696,7 @@ public class PractiseTestAdapter extends RecyclerView.Adapter<PractiseTestAdapte
                         hmap.clear();
                         hmap.put("MissingFiles",finalObj.toString());
                         try {
-                            new BagroundTask(URLClass.loc_hosturl+"insertmissingFileInfo.php",hmap,mycontext,new IBagroundListener() {
+                            new BagroundTask(URLClass.hosturl+"insertmissingFileInfo.php",hmap,mycontext,new IBagroundListener() {
                                 @Override
                                 public void bagroundData(String json) {
                                     Log.d("ja", "comes:" + json);
@@ -891,7 +893,7 @@ public class PractiseTestAdapter extends RecyclerView.Adapter<PractiseTestAdapte
         hmap.clear();
         hmap.put("testId",testid);
         hmap.put("groupiddata",groupidData);
-        new BagroundTask(URLClass.loc_hosturl +"getTestConfig.php",hmap,mycontext,new IBagroundListener() {
+        new BagroundTask(URLClass.hosturl +"getTestConfig.php",hmap,mycontext,new IBagroundListener() {
             @Override
             public void bagroundData(String json) {
 
@@ -1191,5 +1193,14 @@ public class PractiseTestAdapter extends RecyclerView.Adapter<PractiseTestAdapte
             Log.e("JSONPARSE---", e.toString() + " : " + e.getStackTrace()[0].getLineNumber());
         }
         return flashimageList;
+    }
+
+    public static double round(double value, int places) {
+        if (places < 0) throw new IllegalArgumentException();
+
+        long factor = (long) Math.pow(10, places);
+        value = value * factor;
+        long tmp = Math.round(value);
+        return (double) tmp / factor;
     }
 }

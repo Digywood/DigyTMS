@@ -767,7 +767,7 @@ public class DashBoardNavActivity extends AppCompatActivity implements Navigatio
                 hmap.clear();
 //                Log.e("GNGJSON:--",finalFlashObj.toString());
                 hmap.put("jsonstr",finalFlashObj.toString());
-                new BagroundTask(URLClass.loc_hosturl +"syncFlashData.php", hmap,DashBoardNavActivity.this,new IBagroundListener() {
+                new BagroundTask(URLClass.hosturl +"syncFlashData.php", hmap,DashBoardNavActivity.this,new IBagroundListener() {
                     @Override
                     public void bagroundData(String json) {
                         try{
