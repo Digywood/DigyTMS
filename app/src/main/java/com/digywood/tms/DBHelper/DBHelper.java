@@ -410,6 +410,20 @@ public class DBHelper extends SQLiteOpenHelper {
                 "  `atu_section_status` text DEFAULT NULL,\n" +
                 "  `atu_section_name` text DEFAULT NULL)";
         db.execSQL(tblatusections);
+
+        String tbl_localservers="CREATE TABLE `local_servers` (\n" +
+                "  `serverKey` integer PRIMARY KEY,\n" +
+                "  `orgId` text DEFAULT NULL,\n" +
+                "  `branchId` text DEFAULT NULL,\n" +
+                "  `serverName` text DEFAULT NULL,\n" +
+                "  `serverId` text DEFAULT NULL,\n" +
+                "  `status` text NOT NULL,\n" +
+                "  `createdBy` text DEFAULT NULL,\n" +
+                "  `createdDttm` text DEFAULT NULL,\n" +
+                "  `modifiedBy` text DEFAULT NULL,\n" +
+                "  `modifiedDttm` text DEFAULT NULL)";
+        db.execSQL(tbl_localservers);
+
     }
 
     @Override
@@ -499,6 +513,51 @@ public class DBHelper extends SQLiteOpenHelper {
         long deleteFlag=0;
         deleteFlag=db.delete("test_main", null,null);
         return  deleteFlag;
+    }
+
+    public long insertServerRecord(int skey,String orgid,String branchid,String servername,String serverid,String status,String createby,String createdttm,String modifiedby,String modifieddttm){
+        long insertFlag=0;
+        ContentValues cv = new ContentValues();
+        cv.put("serverKey",skey);
+        cv.put("orgId",orgid);
+        cv.put("branchId",branchid);
+        cv.put("serverName",servername);
+        cv.put("serverId",serverid);
+        cv.put("status",status);
+        cv.put("createdBy",createby);
+        cv.put("createdDttm",createdttm);
+        cv.put("modifiedBy",modifiedby);
+        cv.put("modifiedDttm",modifieddttm);
+        insertFlag = db.insert("local_servers",null, cv);
+        return insertFlag;
+    }
+
+    public long updateServerRecord(int skey,String orgid,String branchid,String servername,String serverid,String status,String createby,String createdttm,String modifiedby,String modifieddttm){
+        long updateFlag=0;
+        ContentValues cv = new ContentValues();
+        cv.put("orgId",orgid);
+        cv.put("branchId",branchid);
+        cv.put("serverName",servername);
+        cv.put("serverId",serverid);
+        cv.put("status",status);
+        cv.put("createdBy",createby);
+        cv.put("createdDttm",createdttm);
+        cv.put("modifiedBy",modifiedby);
+        cv.put("modifiedDttm",modifieddttm);
+        updateFlag=db.update("local_servers", cv, "serverKey='"+skey+"'",null);
+        return updateFlag;
+    }
+
+    public Cursor getAvailLocalServers(){
+        String query ="SELECT * FROM local_servers";
+        Cursor c=db.rawQuery(query,null);
+        return c;
+    }
+
+    public Cursor checkLocServerRecord(int serverKey){
+        String query ="SELECT * FROM local_servers WHERE serverKey='"+serverKey+"'";
+        Cursor c=db.rawQuery(query,null);
+        return c;
     }
 
     public long insertAssesmentTest(int tkey,String torgid,String tenrollid,String tstudentid,String tbatch,String tid,String tname,String tpid,String tsid,String tcid,String tstartdate,String tenddate,String tdwdstatus,int tnoofques,String testfilename,String testKey,Double ttotalmarks,Double tminmarks,Double tmaxmarks){

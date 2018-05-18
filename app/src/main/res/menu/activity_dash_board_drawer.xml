@@ -23,7 +23,11 @@
         <item
             android:id="@+id/nav_syncronise"
             android:icon="@drawable/ic_sync_24dp"
-            android:title="Sync" />
+            android:title="Sync From Server" />
+        <item
+            android:id="@+id/nav_configserver"
+            android:icon="@drawable/ic_settings_black_24dp"
+            android:title="Server Configuration" />
     </group>
 
     <item android:title="Communicate">
