@@ -12,6 +12,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 import com.digywood.tms.AsynTasks.BagroundTask;
@@ -73,7 +74,7 @@ public class PractiseTestAdapter extends RecyclerView.Adapter<PractiseTestAdapte
         public  TextView tv_flash_avg,tv_flash_max,tv_flash_min;
         ImageView iv_start,iv_resume,iv_review,iv_fstart;
         ImageView iv_history,iv_download;
-        PieChart test_pieChart,flash_pieChart;
+        LinearLayout ll_start, ll_resume, ll_review, ll_fstart;
 //        public CheckBox cb_download;
 
         public MyViewHolder(View view) {
@@ -86,6 +87,10 @@ public class PractiseTestAdapter extends RecyclerView.Adapter<PractiseTestAdapte
             iv_fstart = view.findViewById(R.id.iv_fstart);
             iv_history = view.findViewById(R.id.iv_history);
             iv_download = view.findViewById(R.id.iv_download);
+            ll_start = view.findViewById(R.id.ll_start);
+            ll_resume = view.findViewById(R.id.ll_resume);
+            ll_review = view.findViewById(R.id.ll_review);
+            ll_fstart = view.findViewById(R.id.ll_fstart);
 //            test_pieChart = (PieChart) view.findViewById(R.id.test_piechart);
             tv_testAttempt = view.findViewById(R.id.tv_testAttempt);
             tv_attempt_max = view.findViewById(R.id.tv_attempt_max);
@@ -164,7 +169,7 @@ public class PractiseTestAdapter extends RecyclerView.Adapter<PractiseTestAdapte
             c.moveToLast();
             if (c.getInt(c.getColumnIndex("Attempt_Status")) == 1) {
                 if(c.getString(c.getColumnIndex("Attempt_Test_ID")).equalsIgnoreCase(singletest.getTestid())) {
-                    holder.iv_resume.setOnClickListener(new View.OnClickListener() {
+                    holder.ll_resume.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
 
@@ -184,7 +189,7 @@ public class PractiseTestAdapter extends RecyclerView.Adapter<PractiseTestAdapte
                 }
             } else {
                 testid = singletest.getTestid();
-                holder.iv_review.setOnClickListener(new View.OnClickListener() {
+                holder.ll_review.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
 
@@ -204,7 +209,7 @@ public class PractiseTestAdapter extends RecyclerView.Adapter<PractiseTestAdapte
             }
         }
 
-        holder.iv_start.setOnClickListener(new View.OnClickListener() {
+        holder.ll_start.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 /*                dataObj.Destroy("attempt_data");
@@ -346,7 +351,7 @@ public class PractiseTestAdapter extends RecyclerView.Adapter<PractiseTestAdapte
             }
         });
 
-        holder.iv_fstart.setOnClickListener(new View.OnClickListener() {
+        holder.ll_fstart.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 

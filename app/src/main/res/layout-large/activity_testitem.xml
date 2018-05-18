@@ -200,6 +200,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
                             android:layout_weight="1"
+                            android:id="@+id/ll_start"
                             android:orientation="horizontal">
 
                             <ImageView
@@ -222,6 +223,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
                             android:layout_weight="1"
+                            android:id="@+id/ll_resume"
                             android:orientation="horizontal">
 
                             <ImageView
@@ -244,6 +246,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
                             android:layout_weight="1"
+                            android:id="@+id/ll_review"
                             android:orientation="horizontal">
 
                             <ImageView
@@ -396,6 +399,7 @@
                         android:layout_height="match_parent"
                         android:layout_weight="1"
                         android:gravity="center"
+                        android:id="@+id/ll_fstart"
                         android:orientation="horizontal">
 
                         <ImageView

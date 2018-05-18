@@ -13,6 +13,7 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
@@ -261,7 +262,7 @@ public class ReviewActivity extends AppCompatActivity implements
 
         try {
             count = dataObj.getAttempCount()-1 ;
-            Cursor c = dataObj.getAttempt(dataObj.getLastAttempt());
+            Cursor c = dataObj.getAttempt(dataObj.getLastTestAttempt(testid));
             //if cursor has values then the test is being resumed and data is retrieved from database
             if(c.getCount()> 0) {
                 c.moveToLast();
@@ -273,7 +274,7 @@ public class ReviewActivity extends AppCompatActivity implements
                         buffer = generateArray(attempt.getJSONArray("Sections").getJSONObject(pos));
                         Log.e("Resume-cursor",""+attempt.toString());
                         restoreSections(dataObj.getQuestionStatus(testid),attempt);
-                        CorrectOptions = dataObj.getCorrectOptions();
+                        CorrectOptions = dataObj.getCorrectOptions(testid);
                         statusList = dataObj.getQuestionStatus(testid);
                         setScrollbar(pos);
                         setQuestion(pos,index,edit);
@@ -652,13 +653,33 @@ public class ReviewActivity extends AppCompatActivity implements
         });
 
         Button cancelButton = layout.findViewById(R.id.close_button);
+        cancelButton.setText("ScoreCard");
         final AlertDialog alertDialog = dialogBuilder.create();
         alertDialog.show();
         cancelButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+                ActivityOptionsCompat options = ActivityOptionsCompat.
+                        makeSceneTransitionAnimation(ReviewActivity.this, v, "transition");
+                int revealX = (int) (v.getX() + v.getWidth() / 2);
+                int revealY = (int) (v.getY() + v.getHeight() / 2);
                 alertDialog.cancel();
                 mHideRunnable.run();
+                Bundle bundle;
+                Intent intent = new Intent(ReviewActivity.this, ScoreActivity.class);
+                bundle = new Bundle();
+                bundle.putString("JSON", attempt.toString());
+                bundle.putString("enrollid",enrollid);
+                bundle.putString("courseid", courseid);
+                bundle.putString("subjectid", subjectId);
+                bundle.putString("paperid",paperid);
+                bundle.putString("Type","PRACTICE");
+                intent.putExtra("BUNDLE", bundle);
+                intent.putExtra("Xreveal", revealX);
+                intent.putExtra("Yreveal", revealY);
+                ActivityCompat.startActivity(ReviewActivity.this, intent, options.toBundle());
+
             }
         });
     }
@@ -1081,7 +1102,6 @@ public class ReviewActivity extends AppCompatActivity implements
                         intent.putExtra("subjectid", subjectId);
                         intent.putExtra("paperid",paperid);
                         startActivity(intent);
-
                     }
                 })
                 .setNegativeButton("No", new DialogInterface.OnClickListener() {
@@ -1161,7 +1181,7 @@ public class ReviewActivity extends AppCompatActivity implements
         try {
             mHideRunnable.run();
             pos = position;
-            CorrectOptions = dataObj.getCorrectOptions();
+            CorrectOptions = dataObj.getCorrectOptions(testid);
             statusList = dataObj.getQuestionStatus(testid);
             Log.e("Size",""+listOfLists.size());
             scrollAdapter = new ScrollGridAdapter(ReviewActivity.this, attempt.getJSONArray("Sections").getJSONObject(pos).getJSONArray("Questions"),listOfLists.get(pos),getScreenSize());

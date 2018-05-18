@@ -117,7 +117,7 @@ public class TestAttemptFragment extends Fragment {
         }else{
             cur.close();
         }
-
+        Log.e("TestAdapter--->",""+minscore+" "+avgscore);
         tv_minscore.setText(String.format("%.2f",minscore)+" %");
         tv_maxscore.setText(String.format("%.2f",maxscore)+" %");
         Double avgpercent=round(avgscore,2);

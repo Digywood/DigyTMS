@@ -1634,11 +1634,11 @@ public class DBHelper extends SQLiteOpenHelper {
     }
 
 
-    public ArrayList<Integer> getCorrectOptions(){
+    public ArrayList<Integer> getCorrectOptions(String testId){
         ArrayList<Integer> CorrectList = new ArrayList<>();
         int count = 0;
         ArrayList<Integer> OptionList = new ArrayList<>();
-        String query ="SELECT  Question_Option FROM "+" attempt_data"+" WHERE Option_Answer_Flag = 'YES'";
+        String query ="SELECT  Question_Option FROM "+" attempt_data"+" WHERE Option_Answer_Flag = 'YES' and Test_ID = '"+testId+"'";
         Cursor c=db.rawQuery(query,null);
         if(c.getCount()!=0)
         {
@@ -1756,7 +1756,7 @@ public class DBHelper extends SQLiteOpenHelper {
 
     public int getTestQuestionCount(String testId){
         int count=0;
-        String countQuery = "select * from attempt_data WHERE Test_ID ='"+testId+"'";
+        String countQuery = "select * from attempt_data WHERE Test_ID = '"+testId+"'";
         Cursor c = db.rawQuery(countQuery, null);
         count=c.getCount();
         c.close();
@@ -1766,7 +1766,7 @@ public class DBHelper extends SQLiteOpenHelper {
 
     public int getTestQuestionAttempted(String testId){
         int count=0;
-        String query ="SELECT  Question_Status FROM "+" attempt_data"+" WHERE Question_Status = 'ATTEMPTED' and Test_ID ='"+testId+"'";
+        String query ="SELECT  Question_Status FROM "+" attempt_data"+" WHERE Question_Status = 'ATTEMPTED' and Test_ID = '"+testId+"'";
         Cursor c = db.rawQuery(query, null);
         count=c.getCount();
         c.close();
@@ -1785,12 +1785,32 @@ public class DBHelper extends SQLiteOpenHelper {
 
     public int getTestQuestionBookmarked(String testId){
         int count=0;
-        String query ="SELECT  Question_Status FROM "+" attempt_data"+" WHERE Question_Status = 'BOOKMARKED' and Test_ID ='"+testId+"'";
+        String query ="SELECT  Question_Status FROM "+" attempt_data"+" WHERE Question_Status = 'BOOKMARKED' and Test_ID = '"+testId+"'";
         Cursor c = db.rawQuery(query, null);
         count=c.getCount();
         c.close();
         return count;
 
+    }
+
+    public int getTestCorrectOptionsCount(String testId){
+        int count = 0;
+        ArrayList<Integer> OptionList = new ArrayList<>();
+        String query ="SELECT  Question_Option FROM "+" attempt_data"+" WHERE Option_Answer_Flag = 'YES' and Question_Status <> 'SKIPPED' and Test_ID = '"+testId+"'";
+        Cursor c=db.rawQuery(query,null);
+        count = c.getCount();
+        c.close();
+        return count;
+    }
+
+    public int getTestWrongOptionsCount(String testId){
+        int count = 0;
+        ArrayList<Integer> OptionList = new ArrayList<>();
+        String query ="SELECT  Question_Option FROM "+" attempt_data"+" WHERE Option_Answer_Flag = 'NO' and Question_Status NOT IN ('NOT_ATTEMPTED','SKIPPED') and Test_ID ='"+testId+"'";
+        Cursor c=db.rawQuery(query,null);
+        count = c.getCount();
+        c.close();
+        return count;
     }
 
     public int getTestQuestionNotAttempted(String testId){
@@ -1842,7 +1862,7 @@ public class DBHelper extends SQLiteOpenHelper {
 
 
     public Cursor getTestRawData(String testId){
-        String query ="SELECT COUNT(*) as attemptcount,MIN(Attempt_Percentage) as minscore,MAX(Attempt_Percentage) as maxscore,AVG(Attempt_Percentage) as avgscore FROM "+" attempt_list"+" WHERE Attempt_Test_ID ='"+testId+"'";
+        String query ="SELECT COUNT(*) as attemptcount,MIN(Attempt_Percentage) as minscore,MAX(Attempt_Percentage) as maxscore,AVG(Attempt_Percentage) as avgscore FROM "+" attempt_list"+" WHERE Attempt_Test_ID ='"+testId+"' and Attempt_Status <> 1";
         Cursor c=db.rawQuery(query,null);
         return c;
     }
@@ -1895,7 +1915,7 @@ public class DBHelper extends SQLiteOpenHelper {
 
     public int getTestAttempCount(String testId){
         int count=0;
-        String countQuery = "select Attempt_ID from attempt_list WHERE Attempt_Test_ID = '"+testId+"' and Attempt_Status <> 1";
+        String countQuery = "SELECT Attempt_ID FROM attempt_list WHERE Attempt_Test_ID = '"+testId+"' and Attempt_Status <> 1";
         Cursor c = db.rawQuery(countQuery, null);
         count=c.getCount();
         return count;
