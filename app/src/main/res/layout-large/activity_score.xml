@@ -501,7 +501,7 @@
                                 android:gravity="center"
                                 android:textSize="20sp"
                                 android:textColor="@android:color/black"
-                                android:text="Sections"/>
+                                android:text="Section"/>
 
                             <View
                                 android:layout_width="2dp"
@@ -518,7 +518,7 @@
                                 android:gravity="center"
                                 android:textSize="20sp"
                                 android:textColor="@android:color/black"
-                                android:text="No.of Qs."/>
+                                android:text="No.of Q"/>
 
                             <View
                                 android:layout_width="2dp"
@@ -582,7 +582,7 @@
                                 android:gravity="center"
                                 android:textSize="20sp"
                                 android:textColor="@android:color/black"
-                                android:text="Wrong"/>
+                                android:text="WrongAns"/>
 
                             <View
                                 android:layout_width="2dp"
@@ -598,7 +598,7 @@
                                 android:gravity="center"
                                 android:textSize="20sp"
                                 android:textColor="@android:color/black"
-                                android:text="Percentage"/>
+                                android:text="Percent"/>
                         </TableRow>
                         <View
                             android:layout_width="match_parent"
