@@ -2061,6 +2061,15 @@ public class DBHelper extends SQLiteOpenHelper {
         return updateFlag;
     }
 
+    public long updateAssessmentQStatus(String testQUID,String status){
+
+        long updateFlag=0;
+        ContentValues cv = new ContentValues();
+        cv.put("Question_Status",status );
+        updateFlag = db.update("assessment_data",cv,"Question_Key='"+testQUID+"'",null);
+        return updateFlag;
+    }
+
     public Cursor getAssessmentSections(){
         String query ="SELECT DISTINCT Question_Section FROM assessment_data";
         Cursor c=db.rawQuery(query,null);
