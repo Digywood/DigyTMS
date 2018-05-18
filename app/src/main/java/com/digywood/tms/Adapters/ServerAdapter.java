@@ -24,6 +24,8 @@ public class ServerAdapter extends RecyclerView.Adapter<ServerAdapter.MyViewHold
     private List<SingleServer> serverList;
     Context mycontext;
     String testtype="";
+    int lastcheck = -1;
+    String serverName="No_Selection";
     private ArrayList<String> chknumberList=new ArrayList<>();
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
@@ -61,11 +63,26 @@ public class ServerAdapter extends RecyclerView.Adapter<ServerAdapter.MyViewHold
 
         holder.tv_servername.setText(""+singleServer.getServerName());
 
+        if(lastcheck==position){
+            holder.cb_selection.setChecked(true);
+        }else{
+            holder.cb_selection.setChecked(false);
+        }
+
         holder.cb_selection.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
-                Toast.makeText(mycontext,"Clicked:--"+singleServer.getServerName(),Toast.LENGTH_SHORT).show();
+                serverName=singleServer.getServerName();
+                if(holder.cb_selection.isChecked())
+                {
+                    lastcheck =  position;
+                }
+                else{
+                    lastcheck = -1;
+                }
+
+                notifyDataSetChanged();
 
             }
         });
@@ -76,6 +93,10 @@ public class ServerAdapter extends RecyclerView.Adapter<ServerAdapter.MyViewHold
         notifyDataSetChanged();
         return chknumberList;
 
+    }
+
+    public String getSelectedServerName(){
+        return serverName;
     }
 
     public int getItemCount() {
