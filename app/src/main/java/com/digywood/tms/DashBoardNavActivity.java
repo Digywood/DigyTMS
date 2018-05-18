@@ -45,7 +45,8 @@ public class DashBoardNavActivity extends AppCompatActivity implements Navigatio
 
     View header;
     Dialog mydialog;
-    String testType="";
+    String testType="",restoredsname="main";
+    SharedPreferences restoredprefs;
     TextView tv_name,tv_email,tv_studentid;
     String studentid,spersonname,email;
     HashMap<String,String> hmap=new HashMap<>();
@@ -60,6 +61,9 @@ public class DashBoardNavActivity extends AppCompatActivity implements Navigatio
         setSupportActionBar(toolbar);
 
         myhelper=new DBHelper(this);
+
+        restoredprefs = getSharedPreferences("SERVERPREF", MODE_PRIVATE);
+        restoredsname = restoredprefs.getString("servername", null);
 
         FragmentTransaction tx = getSupportFragmentManager().beginTransaction();
         tx.replace(R.id.fl_base, new HomeFragment());
@@ -528,6 +532,7 @@ public class DashBoardNavActivity extends AppCompatActivity implements Navigatio
 
         } else if (id == R.id.nav_configserver) {
 
+            Toast.makeText(getApplicationContext(),"restoredsname:--"+restoredsname,Toast.LENGTH_SHORT).show();
             Intent i=new Intent(getApplicationContext(),ListofServers.class);
             i.putExtra("studentid",studentid);
             startActivity(i);
