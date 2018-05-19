@@ -113,11 +113,11 @@ public class ScoreActivity extends AppCompatActivity {
         try {
             long flag = 0;
             if (testType.equalsIgnoreCase("PRACTICE")) {
-                CorrectCount = dataObj.getCorrectOptionsCount();
-                TotalCount = dataObj.getQuestionAttempted()+dataObj.getQuestionBookmarked();
                 testId = attempt.getString("ptu_test_ID");
-                WrongCount = dataObj.getWrongOptionsCount();
-                if(dataObj.getQuestionAttempted() == 0){
+                CorrectCount = dataObj.getCorrectOptionsCount(testId);
+                TotalCount = dataObj.getQuestionAttempted(testId)+dataObj.getQuestionBookmarked(testId);
+                WrongCount = dataObj.getWrongOptionsCount(testId);
+                if(dataObj.getQuestionAttempted(testId) == 0){
                     TotalPositive = 0.0;
                     TotalNegative = 0.0;
                 }
@@ -160,7 +160,7 @@ public class ScoreActivity extends AppCompatActivity {
                     Percentage = (  TotalScore / MaxMarks )*100;
                 }
 
-                flag = dataObj.UpdateAssessment( attempt.getString("atu_ID"),enrollid,"",courseid,subjectid,paperid, 2,null,TotalScore, dataObj.getAssessmentQuestionAttempted(), dataObj.getAssessmentQuestionSkipped(), dataObj.getAssessmentQuestionBookmarked(), dataObj.getQuestionNotAttempted(),Percentage , 0, 0, 0);
+                flag = dataObj.UpdateAssessment( attempt.getString("atu_ID"),enrollid,"",courseid,subjectid,paperid, 2,null,TotalScore, dataObj.getAssessmentQuestionAttempted(), dataObj.getAssessmentQuestionSkipped(), dataObj.getAssessmentQuestionBookmarked(), dataObj.getAssessmentQuestionNotAttempted(),Percentage , 0, 0, 0);
                 Cursor mycursor=dataObj.getAssessmentRawData(testId);
                 if(mycursor.getCount()>0) {
                     while (mycursor.moveToNext()) {
@@ -173,15 +173,15 @@ public class ScoreActivity extends AppCompatActivity {
             long qflag = 0;
             if(flag > 0){
                 if (testType.equalsIgnoreCase("PRACTICE")) {
-                    qflag = dataObj.updateTest(testId,subjectid,courseid,dataObj.getQuestionCount(),MaxMarks,minscore,maxscore,avgscore,minscore,maxscore,avgscore,"NotUploaded");
+                    qflag = dataObj.updateTest(testId,subjectid,courseid,dataObj.getQuestionCount(testId),MaxMarks,minscore,maxscore,avgscore,minscore,maxscore,avgscore,"NotUploaded");
                 } else{
-                    qflag = dataObj.updateAssessmentTestRecord(testId,subjectid,courseid,dataObj.getQuestionCount(),MaxMarks,minscore,maxscore,avgscore,minscore,maxscore,avgscore);
+                    qflag = dataObj.updateAssessmentTestRecord(testId,subjectid,courseid,dataObj.getQuestionCount(testId),MaxMarks,minscore,maxscore,avgscore,minscore,maxscore,avgscore);
 
                 }
                 if(qflag > 0){
                     //only if the data is inserted into the table, it should be displayed on screen
                     if (testType.equalsIgnoreCase("PRACTICE")) {
-                        cursor = dataObj.getSections();
+                        cursor = dataObj.getSections(testId);
                     }else{
                         cursor = dataObj.getAssessmentSections();
                     }
