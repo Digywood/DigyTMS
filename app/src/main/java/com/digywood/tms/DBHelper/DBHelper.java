@@ -1552,6 +1552,12 @@ public class DBHelper extends SQLiteOpenHelper {
         return c;
     }
 
+    public Cursor getTestSubcategories(String testId){
+        String query ="SELECT DISTINCT Question_SubCategory FROM attempt_data WHERE Test_ID = '"+testId+"'";
+        Cursor c=db.rawQuery(query,null);
+        return c;
+    }
+
     public int getSectionQuestions(String subct,String testId){
         String query ="SELECT * FROM attempt_data WHERE Question_Section = '"+subct+"' and Test_ID = '"+testId+"'";
         Cursor c=db.rawQuery(query,null);

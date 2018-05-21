@@ -274,6 +274,12 @@
                     android:textColor="@android:color/black"
                     android:textSize="20sp" />
 
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="2dp"
+                    android:layout_above="@id/division"
+                    android:background="@color/black_overlay"/>
+
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -297,7 +303,7 @@
                                 android:id="@+id/tv_totalCorrect_label"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:layout_marginStart="10dp"
+                                android:layout_marginStart="12dp"
                                 android:text="Total no. of Correct Answers : "
                                 android:textColor="@android:color/black"
                                 android:textSize="20sp" />
@@ -307,10 +313,10 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginStart="10dp"
-                                android:layout_toEndOf="@id/tv_totalCorrect_label"
                                 android:textColor="@android:color/black"
                                 android:textSize="20sp" />
                         </LinearLayout>
+
 
                         <LinearLayout
                             android:layout_width="match_parent"
@@ -331,12 +337,15 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginStart="10dp"
-                            android:layout_toEndOf="@id/tv_totalPositive_label"
                             android:textColor="@android:color/black"
                             android:textSize="20sp" />
                         </LinearLayout>
                     </LinearLayout>
 
+                    <View
+                        android:layout_width="2dp"
+                        android:layout_height="match_parent"
+                        android:background="@color/black_overlay"/>
 
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -352,7 +361,6 @@
                                 android:id="@+id/tv_totalWrong_label"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:layout_below="@id/tv_totalCorrect_label"
                                 android:layout_marginStart="10dp"
                                 android:text="Total no. of Wrong Answers : "
                                 android:textColor="@android:color/black"
@@ -362,7 +370,6 @@
                                 android:id="@+id/tv_totalWrong"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:layout_below="@+id/tv_totalCorrect_label"
                                 android:layout_marginStart="10dp"
                                 android:layout_toEndOf="@id/tv_totalWrong_label"
                                 android:textColor="@android:color/black"
@@ -378,7 +385,6 @@
                             android:id="@+id/tv_totalNegative_label"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_below="@id/tv_totalPositive_label"
                             android:layout_marginStart="10dp"
                             android:text="Total Negative marks : "
                             android:textColor="@android:color/black"
@@ -388,7 +394,6 @@
                             android:id="@+id/tv_totalNegative"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_below="@+id/tv_totalPositive_label"
                             android:layout_marginStart="10dp"
                             android:layout_toEndOf="@id/tv_totalNegative_label"
                             android:textColor="@android:color/black"
@@ -444,7 +449,6 @@
                         android:id="@+id/tv_totalPercentage_label"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_below="@id/tv_totalScore_label"
                         android:layout_marginStart="10dp"
                         android:layout_marginTop="5dp"
                         android:text="Total Percentage : "
@@ -457,10 +461,8 @@
                         android:id="@+id/tv_totalPercentage"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_below="@id/tv_totalScore_label"
                         android:layout_marginStart="10dp"
                         android:layout_marginTop="5dp"
-                        android:layout_toEndOf="@id/tv_totalPercentage_label"
                         android:textColor="@android:color/black"
                         android:textSize="20sp" />
                 </LinearLayout>

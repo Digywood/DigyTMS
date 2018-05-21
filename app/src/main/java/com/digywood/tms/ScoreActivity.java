@@ -375,7 +375,7 @@ public class ScoreActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Cursor cursor;
                 if (testType.equalsIgnoreCase("PRACTICE")) {
-                    cursor= dataObj.getSubcategories();
+                    cursor= dataObj.getTestSubcategories(testId);
                 }else{
                     cursor = dataObj.getAssessmentSubcategories();
                 }
