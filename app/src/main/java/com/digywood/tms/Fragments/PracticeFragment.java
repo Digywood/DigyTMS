@@ -471,7 +471,7 @@ public class PracticeFragment extends Fragment implements OnChartValueSelectedLi
         totptestcount=myhelper.getPTestsCount(studentid,enrollId);
         tv_ptottests.setText(""+totptestcount);
 
-        Cursor mycur1=myhelper.getPractiseSummary(enrollId);
+        Cursor mycur1=myhelper.getPractiseSummary(studentid,enrollId);
         if(mycur1.getCount()>0){
             while (mycur1.moveToNext()){
                 attemptpcount=mycur1.getInt(mycur1.getColumnIndex("attemptpcount"));

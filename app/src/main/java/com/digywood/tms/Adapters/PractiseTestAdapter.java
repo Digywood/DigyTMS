@@ -423,7 +423,7 @@ public class PractiseTestAdapter extends RecyclerView.Adapter<PractiseTestAdapte
 
                                     myparser = new JSONParser(filedata,tPath + "/flashAttempts/", "FLASH", mycontext);
                                     Intent i = new Intent(mycontext, FlashCardActivity.class);
-                                    i.putExtra("studentId",studentid);
+                                    i.putExtra("studentid",studentid);
                                     i.putExtra("testId", testList.get(position).getTestid());
                                     i.putExtra("testPath", tPath);
                                     mycontext.startActivity(i);
