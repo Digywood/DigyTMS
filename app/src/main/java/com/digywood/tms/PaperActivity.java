@@ -44,7 +44,7 @@ public class PaperActivity extends AppCompatActivity {
     Dialog mydialog;
     int clickpos=0;
     public static final int RequestPermissionCode = 1;
-    String courseid="",enrollid="";
+    String courseid="",enrollid="",studentid="";
     HashMap<String,String> hmap=new HashMap<>();
     DBHelper myhelper;
     LinearLayoutManager myLayoutManager;
@@ -80,6 +80,7 @@ public class PaperActivity extends AppCompatActivity {
 
         final Intent cmgintent=getIntent();
         if(cmgintent!=null){
+            studentid=cmgintent.getStringExtra("studentid");
             enrollid=cmgintent.getStringExtra("enrollid");
             courseid=cmgintent.getStringExtra("courseid");
         }
@@ -126,7 +127,7 @@ public class PaperActivity extends AppCompatActivity {
 
             for(int i=0;i<paperidList.size();i++){
 
-                ptestcount=myhelper.getTestsByPaper(paperidList.get(i));
+                ptestcount=myhelper.getTestsByPaper(studentid,paperidList.get(i));
 
                 Cursor mycur=myhelper.getPractiseSummaryByPaper(paperidList.get(i));
                 if(mycur.getCount()>0){
@@ -168,7 +169,7 @@ public class PaperActivity extends AppCompatActivity {
                     fprogress=0;
                 }
 
-                atestcount=myhelper.getAssessmentTestsByPaper(paperidList.get(i));
+                atestcount=myhelper.getAssessmentTestsByPaper(studentid,paperidList.get(i));
 
 //                Cursor mycur2=myhelper.getPractiseSummaryByPaper(paperidList.get(i));
 //                if(mycur2.getCount()>0){
@@ -219,6 +220,7 @@ public class PaperActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent i=new Intent(getApplicationContext(),ListofPractiseTests.class);
+                i.putExtra("studentid",studentid);
                 i.putExtra("enrollid",enrollid);
                 i.putExtra("courseid",courseid);
                 i.putExtra("paperid",singlePaper.getPaperId());
@@ -231,6 +233,7 @@ public class PaperActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent i=new Intent(getApplicationContext(),ListofAssessmentTests.class);
+                i.putExtra("studentid",studentid);
                 i.putExtra("enrollid",enrollid);
                 i.putExtra("courseid",courseid);
                 i.putExtra("paperid",singlePaper.getPaperId());

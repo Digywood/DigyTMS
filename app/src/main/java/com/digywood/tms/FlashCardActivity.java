@@ -175,16 +175,16 @@ public class FlashCardActivity extends AppCompatActivity {
 
         Intent cmgintent=getIntent();
         if(cmgintent!=null){
+            studentid=cmgintent.getStringExtra("studentid");
             testId=cmgintent.getStringExtra("testId");
             testPath=cmgintent.getStringExtra("testPath");
         }
 
         if(testId!=null){
-            Cursor mycursor=myhelper.checkPractiseTest(testId);
+            Cursor mycursor=myhelper.checkPractiseTest(studentid,testId);
             if(mycursor.getCount()>0){
                 while(mycursor.moveToNext()){
 
-                    studentid=mycursor.getString(mycursor.getColumnIndex("sptu_student_ID"));
                     enrollid=mycursor.getString(mycursor.getColumnIndex("sptu_entroll_id"));
                     courseid=mycursor.getString(mycursor.getColumnIndex("sptu_course_id"));
                     subjectid=mycursor.getString(mycursor.getColumnIndex("sptu_subjet_ID"));

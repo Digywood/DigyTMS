@@ -64,7 +64,7 @@ public class FlashFragment extends Fragment implements OnChartValueSelectedListe
     public BarChart mChart1;
     float attemptpercent=0.0f;
     Double min=0.0,max=0.0,avg=0.0;
-    String enrollid="",courseid="";
+    String enrollid="",courseid="",studentid="",studentname="";
 
     ArrayList<SingleEnrollment> enrollPojos=new ArrayList<>();
     ArrayList<String> enrollIds=new ArrayList<>();
@@ -133,8 +133,18 @@ public class FlashFragment extends Fragment implements OnChartValueSelectedListe
 
         myhelper=new DBHelper(getActivity());
 
-        mChart=view.findViewById(R.id.chart2);
+        try{
+            Intent cmgintent=getActivity().getIntent();
+            if(cmgintent!=null){
+                studentid=cmgintent.getStringExtra("studentid");
+                studentname=cmgintent.getStringExtra("sname");
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+            Log.e("FlashFragment---",""+e.toString());
+        }
 
+        mChart=view.findViewById(R.id.chart2);
         mChart1 =view.findViewById(R.id.bchart2);
 
         return view;
@@ -144,7 +154,7 @@ public class FlashFragment extends Fragment implements OnChartValueSelectedListe
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        Cursor mycursor=myhelper.getAllEnrolls();
+        Cursor mycursor=myhelper.getAllEnrolls(studentid);
         Log.e("CursorCount---",""+mycursor.getCount());
         if(mycursor.getCount()>0){
             while(mycursor.moveToNext()){
@@ -183,6 +193,7 @@ public class FlashFragment extends Fragment implements OnChartValueSelectedListe
             public void onClick(View v) {
 
                 Intent i=new Intent(getActivity(), PaperDashActivity.class);
+                i.putExtra("studentid",studentid);
                 i.putExtra("courseid",courseid);
                 i.putExtra("testtype","FLASH");
                 startActivity(i);
@@ -460,7 +471,7 @@ public class FlashFragment extends Fragment implements OnChartValueSelectedListe
     }
 
     public void updateData(String enrollId){
-        totptestcount=myhelper.getPTestsCount(enrollId);
+        totptestcount=myhelper.getPTestsCount(studentid,enrollId);
         tv_ftottests.setText(""+totptestcount);
         Cursor mycur=myhelper.getFlashSummary(enrollId);
         if(mycur.getCount()>0){

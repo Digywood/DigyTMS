@@ -153,7 +153,7 @@ public class CourseFragment extends Fragment {
 
     public void getEnrollsFromLocal(){
 
-        Cursor mycursor=myhelper.getStudentEnrolls();
+        Cursor mycursor=myhelper.getStudentEnrolls(studentid);
         if(mycursor.getCount()>0){
             while (mycursor.moveToNext()) {
                 String coursename=myhelper.getCoursenameById(mycursor.getString(mycursor.getColumnIndex("Enroll_course_ID")));

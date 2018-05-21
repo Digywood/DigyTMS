@@ -66,7 +66,7 @@ public class PractiseTestAdapter extends RecyclerView.Adapter<PractiseTestAdapte
     Double minscore,maxscore,avgscore,fminscore,favgscore,fmaxscore;
     public static final int RequestPermissionCode = 1;
     String filedata = "", path, jsonPath, attemptPath, photoPath, enrollid, courseid,groupdata="";
-    String subjectId, paperid, testid, fullTest, attempt,json,downloadjsonpath="",tfiledwdpath="",localpath="";
+    String studentid="",subjectId, paperid, testid, fullTest, attempt,json,downloadjsonpath="",tfiledwdpath="",localpath="";
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
 
@@ -105,9 +105,10 @@ public class PractiseTestAdapter extends RecyclerView.Adapter<PractiseTestAdapte
         }
     }
 
-    public PractiseTestAdapter(ArrayList<SingleTest> testList, Context c) {
+    public PractiseTestAdapter(ArrayList<SingleTest> testList,Context c,String studentId) {
         this.testList = testList;
         this.mycontext = c;
+        this.studentid=studentId;
         myhelper = new DBHelper(c);
     }
 
@@ -138,7 +139,7 @@ public class PractiseTestAdapter extends RecyclerView.Adapter<PractiseTestAdapte
         holder.tv_attempt_max.setText(String.format("%.1f", maxscore));
         holder.tv_attempt_avg.setText(String.format("%.1f", avgscore));
 
-        Cursor mycur=myhelper.getTestFlashSummary(singletest.getTestid());
+        Cursor mycur=myhelper.getTestFlashSummary(singletest.getTestid(),studentid);
         if(mycur.getCount()>0){
             while (mycur.moveToNext()){
                 fattemptcount=mycur.getInt(mycur.getColumnIndex("sptuflash_attempts"));
@@ -243,7 +244,7 @@ public class PractiseTestAdapter extends RecyclerView.Adapter<PractiseTestAdapte
                 holder.ll_start.setBackground(mycontext.getResources().getDrawable(R.drawable.layout_press_custom));
                 missFileData.clear();
 
-                Cursor mycursor = myhelper.checkPractiseTest(singletest.getTestid());
+                Cursor mycursor = myhelper.checkPractiseTest(studentid,singletest.getTestid());
                 if (mycursor.getCount() > 0) {
                     while (mycursor.moveToNext()) {
 //                        studentid=mycursor.getString(mycursor.getColumnIndex("sptu_student_ID"));
@@ -357,7 +358,7 @@ public class PractiseTestAdapter extends RecyclerView.Adapter<PractiseTestAdapte
 
                 missFileData.clear();
                 holder.ll_fstart.setBackground(mycontext.getResources().getDrawable(R.drawable.layout_press_custom));
-                Cursor mycursor = myhelper.checkPractiseTest(singletest.getTestid());
+                Cursor mycursor = myhelper.checkPractiseTest(studentid,singletest.getTestid());
                 if (mycursor.getCount() > 0) {
                     while (mycursor.moveToNext()) {
 //                        studentid=mycursor.getString(mycursor.getColumnIndex("sptu_student_ID"));
@@ -422,6 +423,7 @@ public class PractiseTestAdapter extends RecyclerView.Adapter<PractiseTestAdapte
 
                                     myparser = new JSONParser(filedata,tPath + "/flashAttempts/", "FLASH", mycontext);
                                     Intent i = new Intent(mycontext, FlashCardActivity.class);
+                                    i.putExtra("studentId",studentid);
                                     i.putExtra("testId", testList.get(position).getTestid());
                                     i.putExtra("testPath", tPath);
                                     mycontext.startActivity(i);
@@ -471,14 +473,14 @@ public class PractiseTestAdapter extends RecyclerView.Adapter<PractiseTestAdapte
                             Log.e("UploadStatus---",json);
                             if(json.equalsIgnoreCase("Updated")){
 
-                                long updateFlag=myhelper.updatePTestStatus(singletest.getTestid(),"STARTED");
+                                long updateFlag=myhelper.updatePTestStatus(studentid,singletest.getTestid(),"STARTED");
                                 if(updateFlag>0){
                                     Log.e("LocalStatusUpdate---","Updated Locally");
                                 }else{
                                     Log.e("LocalStatusUpdate---","Unable to Update Locally");
                                 }
 
-                                Cursor mycursor=myhelper.checkPractiseTest(singletest.getTestid());
+                                Cursor mycursor=myhelper.checkPractiseTest(studentid,singletest.getTestid());
                                 if(mycursor.getCount()>0){
                                     while(mycursor.moveToNext()){
 
@@ -583,7 +585,7 @@ public class PractiseTestAdapter extends RecyclerView.Adapter<PractiseTestAdapte
 
                                                                                 Log.e("UploadStatus---",json);
                                                                                 if(json.equalsIgnoreCase("Updated")){
-                                                                                    long updateFlag=myhelper.updatePTestStatus(singletest.getTestid(),"DOWNLOADED");
+                                                                                    long updateFlag=myhelper.updatePTestStatus(studentid,singletest.getTestid(),"DOWNLOADED");
                                                                                     if(updateFlag>0){
                                                                                         Log.e("LocalStatusUpdate---","Updated Locally");
                                                                                     }else{
@@ -754,7 +756,7 @@ public class PractiseTestAdapter extends RecyclerView.Adapter<PractiseTestAdapte
     private String getExternalPath(Context context, SingleTest singletest, String type) {
         DBHelper dataObj = new DBHelper(context);
         testid = singletest.getTestid();
-        Cursor cursor = dataObj.getSingleStudentTests(testid);
+        Cursor cursor = dataObj.getSingleStudentTests(studentid,testid);
 
         if (cursor.getCount() > 0) {
             while (cursor.moveToNext()) {

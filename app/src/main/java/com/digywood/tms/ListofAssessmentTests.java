@@ -54,7 +54,7 @@ public class ListofAssessmentTests extends AppCompatActivity {
     ArrayList<String> alreadydwdList;
     ArrayList<SingleTest> dwdupdateList;
     LinearLayoutManager myLayoutManager;
-    String enrollid="",courseid="",paperid="",subjectid="";
+    String studentid="",enrollid="",courseid="",paperid="",subjectid="";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -95,6 +95,7 @@ public class ListofAssessmentTests extends AppCompatActivity {
 
         Intent cmgintent=getIntent();
         if(cmgintent!=null){
+            studentid=cmgintent.getStringExtra("studentid");
             enrollid=cmgintent.getStringExtra("enrollid");
             courseid=cmgintent.getStringExtra("courseid");
             paperid=cmgintent.getStringExtra("paperid");
@@ -107,7 +108,7 @@ public class ListofAssessmentTests extends AppCompatActivity {
     public void getTestIdsFromLocal(){
         testidList.clear();
         try {
-            Cursor mycursor=myhelper.getAssesmentTestsByEnroll(enrollid);
+            Cursor mycursor=myhelper.getAssesmentTestsByEnroll(studentid,enrollid);
             if(mycursor.getCount()>0){
                 while (mycursor.moveToNext()) {
                     testidList.add(new SingleAssessment(mycursor.getString(mycursor.getColumnIndex("satu_ID")),mycursor.getString(mycursor.getColumnIndex("satu_name")),mycursor.getString(mycursor.getColumnIndex("satu_subjet_ID")),mycursor.getString(mycursor.getColumnIndex("satu_dwnld_status"))));

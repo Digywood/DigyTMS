@@ -641,8 +641,8 @@ public class DBHelper extends SQLiteOpenHelper {
        return updateFlag;
     }
 
-    public int getAssessmentTestsByPaper(String paperid){
-        Cursor c =db.query("satu_student", new String[] {"satu_entroll_id,satu_ID,satu_course_id"},"satu_paper_ID='"+paperid+"'", null, null, null,null);
+    public int getAssessmentTestsByPaper(String studentId,String paperid){
+        Cursor c =db.query("satu_student", new String[] {"satu_entroll_id,satu_ID,satu_course_id"},"satu_student_id='"+studentId+"' and satu_paper_ID='"+paperid+"'", null, null, null,null);
         return c.getCount();
     }
 
@@ -651,13 +651,13 @@ public class DBHelper extends SQLiteOpenHelper {
         return c;
     }
 
-    public Cursor getAssesmentTestsByEnroll(String enrollId){
+    public Cursor getAssesmentTestsByEnroll(String studentId,String enrollId){
         Cursor c =db.query("satu_student", new String[] {"satu_entroll_id,satu_student_id,satu_batch,satu_ID,satu_name,satu_paper_ID,satu_subjet_ID,satu_course_id,satu_start_date,satu_end_date,satu_dwnld_status"},"satu_entroll_id='"+enrollId+"'", null, null, null,null);
         return c;
     }
 
-    public int getATestsCount(String enrollid){
-        Cursor c =db.query("satu_student", new String[] {"satu_entroll_id,satu_student_id,satu_batch"},"satu_entroll_id='"+enrollid+"'", null, null, null,null);
+    public int getATestsCount(String studentId,String enrollid){
+        Cursor c =db.query("satu_student", new String[] {"satu_entroll_id,satu_student_id,satu_batch"},"satu_student_id='"+studentId+"' and satu_entroll_id='"+enrollid+"'", null, null, null,null);
         return c.getCount();
     }
 
@@ -732,14 +732,14 @@ public class DBHelper extends SQLiteOpenHelper {
         return c;
     }
 
-    public Cursor getTestFlashSummary(String testId){
-        String query ="SELECT sptuflash_attempts,max_flashScore,min_flashScore,avg_flashScore,lastAttemptDttm,lastAttemptScore FROM "+" sptu_student"+" WHERE sptu_ID='"+testId+"'";
+    public Cursor getTestFlashSummary(String testId,String studentId){
+        String query ="SELECT sptuflash_attempts,max_flashScore,min_flashScore,avg_flashScore,lastAttemptDttm,lastAttemptScore FROM "+" sptu_student"+" WHERE sptu_ID='"+testId+"' and sptu_student_ID='"+studentId+"'";
         Cursor c=db.rawQuery(query,null);
         return c;
     }
 
-    public Cursor getTestPractiseSummary(String testId){
-        String query ="SELECT sptu_no_of_attempts,sptu_last_attempt_percent,sptu_min_percent,sptu_max_percent,sptu_avg_percent,sptu_last_attempt_start_dttm FROM "+" sptu_student"+" WHERE sptu_ID='"+testId+"'";
+    public Cursor getTestPractiseSummary(String testId,String studentId){
+        String query ="SELECT sptu_no_of_attempts,sptu_last_attempt_percent,sptu_min_percent,sptu_max_percent,sptu_avg_percent,sptu_last_attempt_start_dttm FROM "+" sptu_student"+" WHERE sptu_ID='"+testId+"' and sptu_student_ID='"+studentId+"'";
         Cursor c=db.rawQuery(query,null);
         return c;
     }
@@ -918,9 +918,9 @@ public class DBHelper extends SQLiteOpenHelper {
         return returnrows;
     }
 
-    public Cursor getStudentEnrolls(){
+    public Cursor getStudentEnrolls(String studentId){
         ArrayList<SingleEnrollment> enrollList=new ArrayList<>();
-        Cursor c =db.query("enrollments", new String[] {"Enroll_ID,Enroll_org_id,Enroll_Student_ID,Enroll_batch_ID,Enroll_course_ID"},null, null, null, null,null);
+        Cursor c =db.query("enrollments", new String[] {"Enroll_ID,Enroll_org_id,Enroll_Student_ID,Enroll_batch_ID,Enroll_course_ID"},"Enroll_Student_ID='"+studentId+"'", null, null, null,null);
         return c;
     }
 
@@ -1070,8 +1070,8 @@ public class DBHelper extends SQLiteOpenHelper {
         return  updateFlag;
     }
 
-    public Cursor getAllPTestData(String upldstatus){
-        String query ="SELECT * FROM sptu_student where sptu_upld_status='"+upldstatus+"'";
+    public Cursor getAllPTestData(String studentId,String upldstatus){
+        String query ="SELECT * FROM sptu_student where sptu_student_ID='"+studentId+"' and sptu_upld_status='"+upldstatus+"'";
         Cursor c=db.rawQuery(query,null);
         return  c;
     }
@@ -1172,43 +1172,43 @@ public class DBHelper extends SQLiteOpenHelper {
         return returnrows;
     }
 
-    public Cursor getSingleStudentTests(String testId){
-        Cursor c =db.query("sptu_student", new String[] {"sptu_entroll_id,sptu_student_ID,sptu_ID,sptu_paper_ID,sptu_subjet_ID,sptu_course_id,sptu_dwnld_status"},"sptu_ID='"+testId+"'", null, null, null,null);
+    public Cursor getSingleStudentTests(String studentId,String testId){
+        Cursor c =db.query("sptu_student", new String[] {"sptu_entroll_id,sptu_student_ID,sptu_ID,sptu_paper_ID,sptu_subjet_ID,sptu_course_id,sptu_dwnld_status"},"sptu_student_ID='"+studentId+"' and sptu_ID='"+testId+"'", null, null, null,null);
         return c;
     }
 
-    public int getPTestsCount(String enrollid){
-        Cursor c =db.query("sptu_student", new String[] {"sptu_entroll_id,sptu_student_ID,sptu_ID"},"sptu_entroll_id='"+enrollid+"'", null, null, null,null);
+    public int getPTestsCount(String studentId,String enrollid){
+        Cursor c =db.query("sptu_student", new String[] {"sptu_entroll_id,sptu_student_ID,sptu_ID"},"sptu_student_ID='"+studentId+"' and sptu_entroll_id='"+enrollid+"'", null, null, null,null);
         return c.getCount();
     }
 
-    public int getTestsByPaper(String paperid){
-        Cursor c =db.query("sptu_student", new String[] {"sptu_entroll_id,sptu_student_ID,sptu_ID"},"sptu_paper_ID='"+paperid+"'", null, null, null,null);
+    public int getTestsByPaper(String studentId,String paperid){
+        Cursor c =db.query("sptu_student", new String[] {"sptu_entroll_id,sptu_student_ID,sptu_ID"},"sptu_student_ID='"+studentId+"' and sptu_paper_ID='"+paperid+"'", null, null, null,null);
         return c.getCount();
     }
 
-    public Cursor getTestDataByPaper(String paperid){
-        Cursor c =db.query("sptu_student", new String[] {"sptu_entroll_id,sptu_student_ID,sptu_ID,sptu_name"},"sptu_paper_ID='"+paperid+"'", null, null, null,null);
+    public Cursor getTestDataByPaper(String studentId,String paperid){
+        Cursor c =db.query("sptu_student", new String[] {"sptu_entroll_id,sptu_student_ID,sptu_ID,sptu_name"},"sptu_student_ID='"+studentId+"' and sptu_paper_ID='"+paperid+"'", null, null, null,null);
         return c;
     }
 
-    public Cursor getStudentTests(){
-        Cursor c =db.query("sptu_student", new String[] {"sptu_entroll_id,sptu_student_ID,sptu_ID,sptu_paper_ID,sptu_subjet_ID,sptu_course_id,sptu_dwnld_status"},null, null, null, null,null);
+    public Cursor getStudentTests(String studentId){
+        Cursor c =db.query("sptu_student", new String[] {"sptu_entroll_id,sptu_student_ID,sptu_ID,sptu_paper_ID,sptu_subjet_ID,sptu_course_id,sptu_dwnld_status"},"sptu_student_ID='"+studentId+"'", null, null, null,null);
         return c;
     }
 
-    public Cursor getStudentTests(String enrollId,String courseId,String paperId,String status){
-        Cursor c =db.query("sptu_student", new String[] {"sptu_entroll_id,sptu_student_ID,sptu_ID,sptu_name,sptu_paper_ID,sptu_subjet_ID,sptu_course_id,sptu_dwnld_status"},"sptu_entroll_id='"+enrollId+"' and sptu_course_id='"+courseId+"' and sptu_paper_ID='"+paperId+"' and sptu_status='"+status+"'", null, null, null,null);
+    public Cursor getStudentTests(String studentId,String enrollId,String courseId,String paperId,String status){
+        Cursor c =db.query("sptu_student", new String[] {"sptu_entroll_id,sptu_student_ID,sptu_ID,sptu_name,sptu_paper_ID,sptu_subjet_ID,sptu_course_id,sptu_dwnld_status"},"sptu_student_ID='"+studentId+"' and sptu_entroll_id='"+enrollId+"' and sptu_course_id='"+courseId+"' and sptu_paper_ID='"+paperId+"' and sptu_status='"+status+"'", null, null, null,null);
         return c;
     }
 
-    public Cursor checkPractiseTest(String testId){
-        Cursor c =db.query("sptu_student", new String[] {"sptu_entroll_id,sptu_student_ID,sptu_ID,sptu_paper_ID,sptu_subjet_ID,sptu_course_id,sptu_dwnld_status"},"sptu_ID='"+testId+"'", null, null, null,null);
+    public Cursor checkPractiseTest(String studentId,String testId){
+        Cursor c =db.query("sptu_student", new String[] {"sptu_entroll_id,sptu_student_ID,sptu_ID,sptu_paper_ID,sptu_subjet_ID,sptu_course_id,sptu_dwnld_status"},"sptu_student_ID='"+studentId+"' and sptu_ID='"+testId+"'", null, null, null,null);
         return c;
     }
 
-    public Cursor checkAssessmentTest(String testId){
-        Cursor c =db.query("satu_student", new String[] {"satu_entroll_id,satu_student_id,satu_course_id,satu_paper_ID,satu_subjet_ID"},"satu_ID='"+testId+"'", null, null, null,null);
+    public Cursor checkAssessmentTest(String studentId,String testId){
+        Cursor c =db.query("satu_student", new String[] {"satu_entroll_id,satu_student_id,satu_course_id,satu_paper_ID,satu_subjet_ID"},"satu_student_id='"+studentId+"' and satu_ID='"+testId+"'", null, null, null,null);
         return c;
     }
 
@@ -1223,14 +1223,14 @@ public class DBHelper extends SQLiteOpenHelper {
         return c;
     }
 
-    public Cursor getAllEnrolls(){
-        String query ="SELECT DISTINCT * FROM enrollments";
+    public Cursor getAllEnrolls(String studentId){
+        String query ="SELECT DISTINCT * FROM enrollments WHERE Enroll_Student_ID='"+studentId+"'";
         Cursor c=db.rawQuery(query,null);
         return c;
     }
 
-    public Cursor getCourseEnrollments(String courseid){
-        String query ="SELECT sptu_entroll_id FROM sptu_student where sptu_course_id='"+courseid+"'";
+    public Cursor getCourseEnrollments(String courseid,String studentId){
+        String query ="SELECT sptu_entroll_id FROM sptu_student where Enroll_Student_ID='"+studentId+"' and sptu_course_id='"+courseid+"'";
         Cursor c=db.rawQuery(query,null);
         return c;
     }
@@ -1241,32 +1241,32 @@ public class DBHelper extends SQLiteOpenHelper {
         return  deleteFlag;
     }
 
-    public long updatePTestStatus(String testid,String status){
+    public long updatePTestStatus(String studentId,String testid,String status){
         long updateFlag=0;
         ContentValues cv = new ContentValues();
         cv.put("sptu_dwnld_status", status);
-        updateFlag=db.update("sptu_student", cv, "sptu_ID='"+testid+"'",null);
+        updateFlag=db.update("sptu_student", cv, "sptu_student_ID='"+studentId+"' and sptu_ID='"+testid+"'",null);
         return  updateFlag;
     }
 
-    public long updateATestStatus(String testid,String status){
+    public long updateATestStatus(String studentId,String testid,String status){
         long updateFlag=0;
         ContentValues cv = new ContentValues();
         cv.put("satu_dwnld_status", status);
-        updateFlag=db.update("satu_student",cv,"satu_ID='"+testid+"'",null);
+        updateFlag=db.update("satu_student",cv,"satu_student_id='"+studentId+"' and satu_ID='"+testid+"'",null);
         return  updateFlag;
     }
 
-    public long updatePTestUPLDStatus(String testid,String status){
+    public long updatePTestUPLDStatus(String studentId,String testid,String status){
         long updateFlag=0;
         ContentValues cv = new ContentValues();
         cv.put("sptu_upld_status",status);
-        updateFlag=db.update("sptu_student",cv,"sptu_ID='"+testid+"'",null);
+        updateFlag=db.update("sptu_student",cv,"sptu_student_ID='"+studentId+"' and sptu_ID='"+testid+"'",null);
         return  updateFlag;
     }
 
-    public Cursor getSingleAssessmentTests(String testId){
-        Cursor c =db.query("satu_student", new String[] {"satu_entroll_id,satu_student_ID,satu_ID,satu_paper_ID,satu_subjet_ID,satu_course_id,satu_dwnld_status"},"satu_ID='"+testId+"'", null, null, null,null);
+    public Cursor getSingleAssessmentTests(String studentId,String testId){
+        Cursor c =db.query("satu_student", new String[] {"satu_entroll_id,satu_student_ID,satu_ID,satu_paper_ID,satu_subjet_ID,satu_course_id,satu_dwnld_status"},"satu_student_id="+studentId+"' and satu_ID='"+testId+"'", null, null, null,null);
         return c;
     }
 
@@ -2092,8 +2092,8 @@ public class DBHelper extends SQLiteOpenHelper {
         return updateFlag;
     }
 
-    public Cursor validateAssessmentTestKey(String testId){
-        Cursor c =db.query("satu_student", new String[] {"satu_entroll_id,satu_exam_key,satu_course_id,satu_paper_ID,satu_subjet_ID"},"satu_ID='"+testId+"'", null, null, null,null);
+    public Cursor validateAssessmentTestKey(String studentId,String testId){
+        Cursor c =db.query("satu_student", new String[] {"satu_entroll_id,satu_exam_key,satu_course_id,satu_paper_ID,satu_subjet_ID"},"satu_student_id='"+studentId+"' and satu_ID='"+testId+"'", null, null, null,null);
         return c;
     }
 

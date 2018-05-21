@@ -71,7 +71,7 @@ public class ReviewActivity extends AppCompatActivity implements
     private PopupWindow pw;
     GridView gridView;
     Spinner sections;
-    String jsonPath,imgPath, photoPath, Seq, Id, path, enrollid, courseid, subjectId, paperid, testid, groupId;
+    String jsonPath,imgPath, photoPath, Seq, Id, path, enrollid, courseid, subjectId, paperid, testid, groupId,studentId="";
     final String notAttempted = "NOT_ATTEMPTED", attempted = "ATTEMPTED", skipped = "SKIPPED", bookmarked = "BOOKMARKED",not_confirmed = "NOT_CONFIRMED",confirmed = "CONFIRMED";
     RecyclerView question_scroll;
     ScrollGridAdapter scrollAdapter;
@@ -212,7 +212,7 @@ public class ReviewActivity extends AppCompatActivity implements
         testid = getIntent().getStringExtra("test");
         rv_option = findViewById(R.id.option_view);
 
-        Cursor cursor = dataObj.getStudentTests();
+        Cursor cursor = dataObj.getStudentTests(studentId);
         if (cursor.getCount() > 0) {
             while (cursor.moveToNext()) {
                 if (cursor.getString(cursor.getColumnIndex("sptu_ID")).equals(testid)) {

@@ -26,7 +26,6 @@ public class EnrollAdapter extends  RecyclerView.Adapter<EnrollAdapter.MyViewHol
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
         public TextView tv_enrollid,tv_batchid,tv_organisationid,tv_coursename,tv_activateddate,tv_enddate,tv_daysleft;
-        public Button btn_enrolldet;
 
         public MyViewHolder(View view) {
             super(view);
@@ -37,7 +36,6 @@ public class EnrollAdapter extends  RecyclerView.Adapter<EnrollAdapter.MyViewHol
             tv_activateddate =view.findViewById(R.id.tv_activateddate);
             tv_enddate =view.findViewById(R.id.tv_enddate);
             tv_daysleft =view.findViewById(R.id.tv_daysleft);
-            btn_enrolldet =view.findViewById(R.id.btn_enrolldet);
         }
     }
 
@@ -69,15 +67,15 @@ public class EnrollAdapter extends  RecyclerView.Adapter<EnrollAdapter.MyViewHol
         holder.tv_enddate.setText(singleenroll.getEnddate());
         holder.tv_daysleft.setText(""+singleenroll.getDaysleft());
 
-        holder.btn_enrolldet.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent i=new Intent(mycontext,PaperActivity.class);
-                i.putExtra("enrollid",singleenroll.getEnrollid());
-                i.putExtra("courseid",singleenroll.getCourseid());
-                mycontext.startActivity(i);
-            }
-        });
+//        holder.btn_enrolldet.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                Intent i=new Intent(mycontext,PaperActivity.class);
+//                i.putExtra("enrollid",singleenroll.getEnrollid());
+//                i.putExtra("courseid",singleenroll.getCourseid());
+//                mycontext.startActivity(i);
+//            }
+//        });
 
     }
 

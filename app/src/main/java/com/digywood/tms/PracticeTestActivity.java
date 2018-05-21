@@ -226,7 +226,7 @@ public class PracticeTestActivity extends AppCompatActivity implements
             requestPermission();
         }
 
-        Cursor cursor = dataObj.getSingleStudentTests(testid);
+        Cursor cursor = dataObj.getSingleStudentTests(studentId,testid);
         if (cursor.getCount() > 0) {
             while (cursor.moveToNext()) {
                 if (cursor.getString(cursor.getColumnIndex("sptu_ID")).equals(testid)) {
