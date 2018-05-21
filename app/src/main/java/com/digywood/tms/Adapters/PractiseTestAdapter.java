@@ -200,6 +200,7 @@ public class PractiseTestAdapter extends RecyclerView.Adapter<PractiseTestAdapte
                             attempt = new String(SaveJSONdataToFile.bytesFromFile(getExternalPath(mycontext, singletest, "ATTEMPT") + testid + ".json"), "UTF-8");
                             Intent i = new Intent(mycontext, ReviewActivity.class);
                             i.putExtra("test", testid);
+                            i.putExtra("studentid", studentid);
                             i.putExtra("json", attempt);
                             mycontext.startActivity(i);
                         } catch (IOException | ClassNotFoundException e) {
