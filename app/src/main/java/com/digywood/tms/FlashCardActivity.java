@@ -1058,6 +1058,7 @@ public class FlashCardActivity extends AppCompatActivity {
                         finish();
 
                         Intent intent = new Intent(FlashCardActivity.this, ListofPractiseTests.class);
+                        intent.putExtra("studentid",studentid);
                         intent.putExtra("enrollid",enrollid);
                         intent.putExtra("courseid", courseid);
                         intent.putExtra("paperid",paperid);
@@ -1147,6 +1148,7 @@ public class FlashCardActivity extends AppCompatActivity {
 
                         finish();
                         Intent intent = new Intent(FlashCardActivity.this, ListofPractiseTests.class);
+                        intent.putExtra("studentid",studentid);
                         intent.putExtra("enrollid",enrollid);
                         intent.putExtra("courseid", courseid);
                         intent.putExtra("paperid",paperid);

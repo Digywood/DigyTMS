@@ -282,7 +282,7 @@ public class EnrollRequestActivity extends AppCompatActivity {
         orgids.clear();
         orgnames.clear();
         hashMap.clear();
-     new BagroundTask(URLClass.hosturl +"getAllOrgainsations.php", hashMap, EnrollRequestActivity.this,new IBagroundListener() {
+        new BagroundTask(URLClass.hosturl +"getAllOrgainsations.php", hashMap, EnrollRequestActivity.this,new IBagroundListener() {
          @Override
          public void bagroundData(String json) {
              try{
