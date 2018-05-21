@@ -1972,8 +1972,8 @@ public class DBHelper extends SQLiteOpenHelper {
         return  c;
     }
 
-    public Cursor getPractiseUploadData(String status){
-        String query ="SELECT * FROM attempt_list WHERE Attempt_Upload_Status ='"+status+"'";
+    public Cursor getPractiseUploadData(String studentId,String status){
+        String query ="SELECT * FROM attempt_list WHERE Attempt_studentId='"+studentId+"' and Attempt_Upload_Status ='"+status+"'";
         Cursor c=db.rawQuery(query,null);
         return  c;
     }

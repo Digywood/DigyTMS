@@ -610,7 +610,7 @@ public class DashBoardNavActivity extends AppCompatActivity implements Navigatio
     public  void syncPractiseTestData(){
 
         JSONObject finalPractiseObj=new JSONObject();
-        Cursor mycursor=myhelper.getPractiseUploadData("NotUploaded");
+        Cursor mycursor=myhelper.getPractiseUploadData(studentid,"NotUploaded");
         if(mycursor.getCount()>0){
             try{
                 JSONArray PrcatiseList = new JSONArray();

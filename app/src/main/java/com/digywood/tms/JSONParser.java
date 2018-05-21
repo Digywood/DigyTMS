@@ -310,6 +310,12 @@ public class JSONParser {
                 //Ques Object Creation
                 Log.e("QCOUNT-----",""+testQuesList.size());
 
+                if(testType.equalsIgnoreCase("FLASH")){
+
+                }else {
+                    Collections.shuffle(testQuesList);
+                }
+
                 for(int k=0;k<testQuesList.size();k++)
                 {
                     for(int q=0;q<ja_questions.length();q++){
