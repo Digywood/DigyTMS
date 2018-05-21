@@ -497,12 +497,24 @@ public class ListofPractiseTests extends AppCompatActivity {
     @Override
     public boolean onSupportNavigateUp() {
         finish();
+        Intent i=new Intent(getApplicationContext(),PaperActivity.class);
+        i.putExtra("studentid",studentid);
+        i.putExtra("enrollid",enrollid);
+        i.putExtra("courseid",courseid);
+        i.putExtra("paperid",paperid);
+        startActivity(i);
         return true;
     }
 
     @Override
     public void onBackPressed() {
         finish();
+        Intent i=new Intent(getApplicationContext(),PaperActivity.class);
+        i.putExtra("studentid",studentid);
+        i.putExtra("enrollid",enrollid);
+        i.putExtra("courseid",courseid);
+        i.putExtra("paperid",paperid);
+        startActivity(i);
     }
 
     public void getTestIds(){
