@@ -378,6 +378,7 @@ public class ReviewActivity extends AppCompatActivity implements
                             setQBackground(pos,index);
                             index++;
                             setQuestion(pos, index, edit);
+
                             checkRadio();
                         } else if (index == buffer.length() - 1) {
                             //Change button once last question of test is reached
@@ -393,6 +394,7 @@ public class ReviewActivity extends AppCompatActivity implements
 //                                            q_list.clear();
                                                 finish();
                                                 Intent intent = new Intent(ReviewActivity.this, ListofPractiseTests.class);
+                                                intent.putExtra("studentid",studentId);
                                                 intent.putExtra("enrollid",enrollid);
                                                 intent.putExtra("courseid", courseid);
                                                 intent.putExtra("subjectid", subjectId);

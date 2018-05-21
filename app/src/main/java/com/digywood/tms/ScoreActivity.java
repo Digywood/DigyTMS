@@ -63,13 +63,14 @@ public class ScoreActivity extends AppCompatActivity {
         } catch (JSONException|NullPointerException e) {
             e.printStackTrace();
         }
-        studentId = bundle.getString("studentid");
         enrollid = bundle.getString("enrollid");
         subjectid = bundle.getString("subjectid");
         courseid = bundle.getString("courseid");
         paperid = bundle.getString("paperid");
         testType = bundle.getString("Type");
         Intent intent = getIntent();
+        studentId = intent.getStringExtra("studentid");
+        Log.e("stutest-->",studentId);
         rootLayout = findViewById(R.id.rootLayout);
 
         if (savedInstanceState == null && Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP &&
