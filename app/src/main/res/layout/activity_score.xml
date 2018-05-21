@@ -502,16 +502,9 @@
                                 android:layout_weight="1"
                                 android:gravity="center"
                                 android:textSize="20sp"
+                                android:background="@drawable/spin_bg"
                                 android:textColor="@android:color/black"
-                                android:text="Sections"/>
-
-                            <View
-                                android:layout_width="2dp"
-                                android:layout_height="match_parent"
-                                android:layout_marginStart="2dp"
-                                android:layout_marginEnd="2dp"
-                                android:textColor="@android:color/black"
-                                android:background="#000000" />
+                                android:text="Section"/>
 
                             <TextView
                                 android:layout_width="match_parent"
@@ -519,15 +512,10 @@
                                 android:layout_weight="1"
                                 android:gravity="center"
                                 android:textSize="20sp"
+                                android:background="@drawable/spin_bg"
                                 android:textColor="@android:color/black"
-                                android:text="No.of Qs."/>
+                                android:text="No.of Q"/>
 
-                            <View
-                                android:layout_width="2dp"
-                                android:layout_height="match_parent"
-                                android:layout_marginStart="2dp"
-                                android:layout_marginEnd="2dp"
-                                android:background="#000000" />
 
                             <TextView
                                 android:layout_width="match_parent"
@@ -535,15 +523,10 @@
                                 android:layout_weight="1"
                                 android:gravity="center"
                                 android:textSize="20sp"
+                                android:background="@drawable/spin_bg"
                                 android:textColor="@android:color/black"
                                 android:text="Attempt"/>
 
-                            <View
-                                android:layout_width="2dp"
-                                android:layout_height="match_parent"
-                                android:layout_marginStart="2dp"
-                                android:layout_marginEnd="2dp"
-                                android:background="#000000" />
 
                             <TextView
                                 android:layout_width="match_parent"
@@ -551,15 +534,10 @@
                                 android:layout_weight="1"
                                 android:gravity="center"
                                 android:textSize="20sp"
+                                android:background="@drawable/spin_bg"
                                 android:textColor="@android:color/black"
                                 android:text="Skipped"/>
 
-                            <View
-                                android:layout_width="2dp"
-                                android:layout_height="match_parent"
-                                android:layout_marginStart="2dp"
-                                android:layout_marginEnd="2dp"
-                                android:background="#000000" />
 
                             <TextView
                                 android:layout_width="match_parent"
@@ -567,15 +545,10 @@
                                 android:layout_weight="1"
                                 android:gravity="center"
                                 android:textSize="20sp"
+                                android:background="@drawable/spin_bg"
                                 android:textColor="@android:color/black"
                                 android:text="Correct"/>
 
-                            <View
-                                android:layout_width="2dp"
-                                android:layout_height="match_parent"
-                                android:layout_marginStart="2dp"
-                                android:layout_marginEnd="2dp"
-                                android:background="#000000" />
 
                             <TextView
                                 android:layout_width="match_parent"
@@ -583,15 +556,9 @@
                                 android:layout_weight="1"
                                 android:gravity="center"
                                 android:textSize="20sp"
+                                android:background="@drawable/spin_bg"
                                 android:textColor="@android:color/black"
-                                android:text="Wrong"/>
-
-                            <View
-                                android:layout_width="2dp"
-                                android:layout_height="match_parent"
-                                android:layout_marginStart="2dp"
-                                android:layout_marginEnd="2dp"
-                                android:background="#000000" />
+                                android:text="WrongAns"/>
 
                             <TextView
                                 android:layout_width="match_parent"
@@ -599,8 +566,9 @@
                                 android:layout_weight="1"
                                 android:gravity="center"
                                 android:textSize="20sp"
+                                android:background="@drawable/spin_bg"
                                 android:textColor="@android:color/black"
-                                android:text="Percentage"/>
+                                android:text="Percent"/>
                         </TableRow>
                         <View
                             android:layout_width="match_parent"

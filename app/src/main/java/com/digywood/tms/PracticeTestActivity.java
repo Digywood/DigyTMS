@@ -625,7 +625,7 @@ public class PracticeTestActivity extends AppCompatActivity implements
 
     public String generateUniqueId(int i){
         String AttemptId ="";
-        AttemptId = testid.concat("_"+studentId+"_"+String.valueOf(dataObj.getTestAttempCount(testid) + i));
+        AttemptId = testid.concat("_"+studentId+"_"+String.format("%03d",dataObj.getTestAttempCount(testid) + 1));
         Log.e("Attempt Id", AttemptId);
         return AttemptId;
     }
