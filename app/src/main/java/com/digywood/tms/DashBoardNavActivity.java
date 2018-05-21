@@ -45,7 +45,7 @@ public class DashBoardNavActivity extends AppCompatActivity implements Navigatio
 
     View header;
     Dialog mydialog;
-    String testType="",restoredsname="main";
+    String testType="",restoredsname="",finalUrl="",serverId="";
     SharedPreferences restoredprefs;
     TextView tv_name,tv_email,tv_studentid;
     String studentid,spersonname,email;
@@ -63,7 +63,7 @@ public class DashBoardNavActivity extends AppCompatActivity implements Navigatio
         myhelper=new DBHelper(this);
 
         restoredprefs = getSharedPreferences("SERVERPREF", MODE_PRIVATE);
-        restoredsname = restoredprefs.getString("servername", null);
+        restoredsname = restoredprefs.getString("servername","main");
 
         FragmentTransaction tx = getSupportFragmentManager().beginTransaction();
         tx.replace(R.id.fl_base, new HomeFragment());
@@ -99,6 +99,16 @@ public class DashBoardNavActivity extends AppCompatActivity implements Navigatio
             mycursor.close();
             showAlert("No Existing Enrollments Found \n Please Sync from Server");
         }
+
+        if(restoredsname.equalsIgnoreCase("main")){
+            finalUrl=URLClass.hosturl;
+        }else{
+            serverId=myhelper.getServerId(restoredsname);
+            finalUrl="http://"+serverId+URLClass.loc_hosturl;
+        }
+
+        Log.e("FINALURL:--",finalUrl);
+
     }
 
     public void getStudentAllData(){
@@ -779,7 +789,7 @@ public class DashBoardNavActivity extends AppCompatActivity implements Navigatio
                 hmap.clear();
 //                Log.e("GNGJSON:--",finalFlashObj.toString());
                 hmap.put("jsonstr",finalFlashObj.toString());
-                new BagroundTask(URLClass.hosturl +"syncFlashData.php", hmap,DashBoardNavActivity.this,new IBagroundListener() {
+                new BagroundTask(finalUrl+"syncFlashData.php", hmap,DashBoardNavActivity.this,new IBagroundListener() {
                     @Override
                     public void bagroundData(String json) {
                         try{

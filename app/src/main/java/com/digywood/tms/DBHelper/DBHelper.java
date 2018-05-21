@@ -560,6 +560,20 @@ public class DBHelper extends SQLiteOpenHelper {
         return c;
     }
 
+    public String getServerId(String serverName){
+        String serverid="";
+        String query ="SELECT * FROM local_servers WHERE serverName='"+serverName+"'";
+        Cursor c=db.rawQuery(query,null);
+        if(c.getCount()>0){
+            while (c.moveToNext()){
+                serverid=c.getString(c.getColumnIndex("serverId"));
+            }
+        }else{
+            c.close();
+        }
+        return serverid;
+    }
+
     public long insertAssesmentTest(int tkey,String torgid,String tenrollid,String tstudentid,String tbatch,String tid,String tname,String tpid,String tsid,String tcid,String tstartdate,String tenddate,String tdwdstatus,int tnoofques,String testfilename,String testKey,Double ttotalmarks,Double tminmarks,Double tmaxmarks){
         long insertFlag=0;
         ContentValues cv = new ContentValues();
