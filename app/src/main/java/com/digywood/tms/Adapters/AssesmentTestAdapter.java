@@ -81,9 +81,10 @@ public class AssesmentTestAdapter extends RecyclerView.Adapter<AssesmentTestAdap
         }
     }
 
-    public AssesmentTestAdapter(ArrayList<SingleAssessment> testList, Context c) {
+    public AssesmentTestAdapter(ArrayList<SingleAssessment> testList, Context c,String studentId) {
         this.testList = testList;
         this.mycontext = c;
+        this.studentid=studentId;
         myhelper=new DBHelper(c);
     }
 

@@ -222,6 +222,7 @@ public class AssessmentTestActivity extends AppCompatActivity implements
         question_scroll.setItemAnimator(new DefaultItemAnimator());
         question_scroll.setAdapter(qAdapter);
         testid = getIntent().getStringExtra("test");
+        studentId = getIntent().getStringExtra("studentid");
         rv_option = findViewById(R.id.option_view);
 
         if(checkPermission()){
@@ -237,11 +238,11 @@ public class AssessmentTestActivity extends AppCompatActivity implements
                     enrollid=cursor.getString(cursor.getColumnIndex("satu_entroll_id"));
                     courseid=cursor.getString(cursor.getColumnIndex("satu_course_id"));
                     subjectId=cursor.getString(cursor.getColumnIndex("satu_subjet_ID"));
-                    studentId=cursor.getString(cursor.getColumnIndex("satu_student_id"));
                     paperid=cursor.getString(cursor.getColumnIndex("satu_paper_ID"));
                 }
             }
         }
+
         save = new SaveJSONdataToFile();
         path = enrollid + "/" + courseid + "/" + subjectId + "/" + paperid + "/" + testid + "/";
         photoPath = URLClass.mainpath + path;
