@@ -225,24 +225,35 @@ public class PracticeTestActivity extends AppCompatActivity implements
         }else{
             requestPermission();
         }
+        photoPath = URLClass.mainpath + path;
+        jsonPath = URLClass.mainpath + path + "Attempt/" + testid + ".json";
 
-        Cursor cursor = dataObj.getSingleStudentTests(studentId,testid);
+        Intent cmgintent=getIntent();
+        if(cmgintent!=null) {
+            studentId = cmgintent.getStringExtra("studentid");
+        }
+
+        Cursor cursor = dataObj.checkPractiseTest(studentId,testid);
         if (cursor.getCount() > 0) {
             while (cursor.moveToNext()) {
                 if (cursor.getString(cursor.getColumnIndex("sptu_ID")).equals(testid)) {
                     enrollid = cursor.getString(cursor.getColumnIndex("sptu_entroll_id"));
                     courseid = cursor.getString(cursor.getColumnIndex("sptu_course_id"));
                     subjectId = cursor.getString(cursor.getColumnIndex("sptu_subjet_ID"));
-                    studentId=cursor.getString(cursor.getColumnIndex("sptu_student_ID"));
                     paperid = cursor.getString(cursor.getColumnIndex("sptu_paper_ID"));
+
+
                 }
             }
         }
+
+
         save = new SaveJSONdataToFile();
         path = enrollid + "/" + courseid + "/" + subjectId + "/" + paperid + "/" + testid + "/";
-        photoPath = URLClass.mainpath + path;
-        jsonPath = URLClass.mainpath + path + "Attempt/" + testid + ".json";
         imgPath=URLClass.mainpath+enrollid+"/"+courseid+"/";
+
+
+//        imgPath=URLClass.mainpath+enrollid+"/"+courseid+"/";
 
         temp = new JSONObject();
         sectionArray = new JSONArray();
@@ -281,7 +292,7 @@ public class PracticeTestActivity extends AppCompatActivity implements
                 newTest();
             }
             else {
-                c = dataObj.getAttempt(dataObj.getLastTestAttempt(testid));
+                c = dataObj.getAttempt(dataObj.getLastTestAttempt(testid,studentId));
 //                Log.e("TestingJson", ""+c.getInt(c.getColumnIndex("Attempt_Status"))+" "+c.getCount());
                 c.moveToFirst();
                 millisStart = c.getLong(c.getColumnIndex("Attempt_RemainingTime"));
@@ -466,7 +477,7 @@ public class PracticeTestActivity extends AppCompatActivity implements
                                                 }
 
 
-                                                count = dataObj.getAttempCount();
+                                                count = dataObj.getAttempCount(studentId);
 
 
 /*                                                c = dataObj.getAttempt(count);
@@ -625,7 +636,7 @@ public class PracticeTestActivity extends AppCompatActivity implements
 
     public String generateUniqueId(int i){
         String AttemptId ="";
-        AttemptId = testid.concat("_"+studentId+"_"+String.valueOf(dataObj.getTestAttempCount(testid) + i));
+        AttemptId = testid.concat("_"+studentId+"_"+String.format("%03d",dataObj.getTestAttempCount(testid,studentId) + 1));
         Log.e("Attempt Id", AttemptId);
         return AttemptId;
     }
@@ -792,7 +803,7 @@ public class PracticeTestActivity extends AppCompatActivity implements
             Id = buffer.getJSONObject(index).getString("qbm_ID");
             Seq = buffer.getJSONObject(index).getString("qbm_SequenceId");
             questionobj = buffer.getJSONObject(index);
-            long value = dataObj.UpdateQuestion(attempt.getString("ptu_test_ID"), dataObj.getLastAttempt(), Id, Seq,attempt.getJSONArray("Sections").getJSONObject(pos).getString("ptu_section_name"),questionobj.getString("qbm_Chapter_name"),questionobj.getString("qbm_Sub_CategoryName"), Integer.valueOf(questionobj.getString("qbm_marks")), Double.valueOf(questionobj.getString("qbm_negative_mrk")), dataObj.getCorrectSum(testid), dataObj.getWrongSum(testid), -1, listOfLists.get(pos).get(index).getQ_status(), opAdapter.getSelectedSequence(), opAdapter.getFlag());
+            long value = dataObj.UpdateQuestion(attempt.getString("ptu_test_ID"), dataObj.getLastAttempt(studentId), Id, Seq,attempt.getJSONArray("Sections").getJSONObject(pos).getString("ptu_section_name"),questionobj.getString("qbm_Chapter_name"),questionobj.getString("qbm_Sub_CategoryName"), Integer.valueOf(questionobj.getString("qbm_marks")), Double.valueOf(questionobj.getString("qbm_negative_mrk")), dataObj.getCorrectSum(testid), dataObj.getWrongSum(testid), -1, listOfLists.get(pos).get(index).getQ_status(), opAdapter.getSelectedSequence(), opAdapter.getFlag());
             if(value > 0){
                 listOfLists.get(pos).get(index).setQ_status(notAttempted);
                 listOfLists.get(pos).get(index).setQ_check(not_confirmed);
@@ -856,6 +867,7 @@ public class PracticeTestActivity extends AppCompatActivity implements
                                     Intent intent = new Intent(PracticeTestActivity.this, ScoreActivity.class);
                                     bundle = new Bundle();
                                     bundle.putString("JSON", attempt.toString());
+                                    bundle.putString("studentid",studentId);
                                     bundle.putString("enrollid",enrollid);
                                     bundle.putString("courseid", courseid);
                                     bundle.putString("subjectid", subjectId);

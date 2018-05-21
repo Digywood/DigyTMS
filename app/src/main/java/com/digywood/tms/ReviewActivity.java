@@ -209,10 +209,11 @@ public class ReviewActivity extends AppCompatActivity implements
         question_scroll.setLayoutManager(myLayoutManager);
         question_scroll.setItemAnimator(new DefaultItemAnimator());
         question_scroll.setAdapter(qAdapter);
-        testid = getIntent().getStringExtra("test");
         rv_option = findViewById(R.id.option_view);
 
-        Cursor cursor = dataObj.getStudentTests(studentId);
+        testid = getIntent().getStringExtra("test");
+        studentId = getIntent().getStringExtra("studentid");
+        Cursor cursor = dataObj.checkPractiseTest(studentId,testid);
         if (cursor.getCount() > 0) {
             while (cursor.moveToNext()) {
                 if (cursor.getString(cursor.getColumnIndex("sptu_ID")).equals(testid)) {
@@ -261,8 +262,8 @@ public class ReviewActivity extends AppCompatActivity implements
         });
 
         try {
-            count = dataObj.getAttempCount()-1 ;
-            Cursor c = dataObj.getAttempt(dataObj.getLastTestAttempt(testid));
+            count = dataObj.getAttempCount(studentId)-1 ;
+            Cursor c = dataObj.getAttempt(dataObj.getLastTestAttempt(testid,studentId));
             //if cursor has values then the test is being resumed and data is retrieved from database
             if(c.getCount()> 0) {
                 c.moveToLast();
@@ -675,6 +676,7 @@ public class ReviewActivity extends AppCompatActivity implements
                 bundle.putString("subjectid", subjectId);
                 bundle.putString("paperid",paperid);
                 bundle.putString("Type","PRACTICE");
+                intent.putExtra("studentid", studentId);
                 intent.putExtra("BUNDLE", bundle);
                 intent.putExtra("Xreveal", revealX);
                 intent.putExtra("Yreveal", revealY);
@@ -1097,6 +1099,7 @@ public class ReviewActivity extends AppCompatActivity implements
                     public void onClick(DialogInterface arg0, int arg1) {
 
                         Intent intent = new Intent(ReviewActivity.this, ListofPractiseTests.class);
+                        intent.putExtra("studentid", studentId);
                         intent.putExtra("enrollid",enrollid);
                         intent.putExtra("courseid", courseid);
                         intent.putExtra("subjectid", subjectId);

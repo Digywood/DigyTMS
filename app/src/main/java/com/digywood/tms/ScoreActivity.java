@@ -36,7 +36,7 @@ public class ScoreActivity extends AppCompatActivity {
     DBHelper dataObj;
     AlertDialog alertDialog;
     RelativeLayout rootLayout;
-    String enrollid,subjectid,courseid,paperid,testId,testType;
+    String studentId,enrollid,subjectid,courseid,paperid,testId,testType;
     String sec_questions,sec_attempted,sec_skipped,sec_correct,sec_wrong,sec_percentage,subcat_questions,subcat_attempted,subcat_skipped,subcat_correct,subcat_percentage;
     TextView tv_test,tv_course,tv_subject,tv_attempted,tv_skipped,tv_bookmarked,tv_totalQuestions,tv_totalCorrect,tv_totalWrong,tv_totalNegative,tv_totalPositive,tv_totalScore,tv_totalPercentage;
     Button btn_save,btn_details;
@@ -63,6 +63,7 @@ public class ScoreActivity extends AppCompatActivity {
         } catch (JSONException|NullPointerException e) {
             e.printStackTrace();
         }
+        studentId = bundle.getString("studentid");
         enrollid = bundle.getString("enrollid");
         subjectid = bundle.getString("subjectid");
         courseid = bundle.getString("courseid");
@@ -114,24 +115,22 @@ public class ScoreActivity extends AppCompatActivity {
             long flag = 0;
             if (testType.equalsIgnoreCase("PRACTICE")) {
                 testId = attempt.getString("ptu_test_ID");
+
                 CorrectCount = dataObj.getCorrectOptionsCount(testId);
                 TotalCount = dataObj.getQuestionAttempted(testId)+dataObj.getQuestionBookmarked(testId);
                 WrongCount = dataObj.getWrongOptionsCount(testId);
-                if(dataObj.getQuestionAttempted(testId) == 0){
-                    TotalPositive = 0.0;
-                    TotalNegative = 0.0;
-                }
-                else
-                {
-                    TotalPositive = Double.valueOf(attempt.getString("ptu_positive_marks")) * CorrectCount;
-                    TotalNegative = Double.valueOf(attempt.getString("ptu_negative_marks"))* WrongCount;
-                    MaxMarks = Double.valueOf(attempt.getString("ptu_positive_marks")) * dataObj.getTestQuestionCount(testId);
-                    TotalScore = TotalPositive - TotalNegative;
-                    Percentage = (  Double.valueOf(TotalScore) / MaxMarks )*100;
-                }
 
-                flag = dataObj.UpdateAttempt(dataObj.getLastTestAttempt(testId), attempt.getString("ptu_test_ID"), 2,"NotUploaded",TotalScore,dataObj.getTestQuestionAttempted(testId),dataObj.getTestQuestionSkipped(testId),dataObj.getTestQuestionBookmarked(testId),dataObj.getTestQuestionNotAttempted(testId),Percentage , 0, 0, 0);
-                Cursor mycursor=dataObj.getTestRawData(testId);
+                TotalPositive = Double.valueOf(attempt.getString("ptu_positive_marks")) * CorrectCount;
+
+                TotalNegative = Double.valueOf(attempt.getString("ptu_negative_marks"))* WrongCount;
+                Log.e("negative_score",attempt.getString("ptu_negative_marks"));
+                MaxMarks = Double.valueOf(attempt.getString("ptu_positive_marks")) * dataObj.getTestQuestionCount(testId);
+                TotalScore = TotalPositive - TotalNegative;
+                Percentage = (  Double.valueOf(TotalScore) / MaxMarks )*100;
+
+
+                flag = dataObj.UpdateAttempt(dataObj.getLastTestAttempt(testId,studentId), attempt.getString("ptu_test_ID"), 2,"NotUploaded",TotalScore,dataObj.getTestQuestionAttempted(testId),dataObj.getTestQuestionSkipped(testId),dataObj.getTestQuestionBookmarked(testId),dataObj.getTestQuestionNotAttempted(testId),Percentage , 0, 0, 0);
+                Cursor mycursor=dataObj.getTestRawData(testId,studentId);
                 if(mycursor.getCount()>0) {
                     while (mycursor.moveToNext()) {
                         minscore = mycursor.getDouble(mycursor.getColumnIndex("minscore"));
@@ -355,6 +354,7 @@ public class ScoreActivity extends AppCompatActivity {
             public void onClick(View v) {
                 if (testType.equalsIgnoreCase("PRACTICE")) {
                     Intent intent = new Intent(ScoreActivity.this, ListofPractiseTests.class);
+                    intent.putExtra("studentid", studentId);
                     intent.putExtra("enrollid", enrollid);
                     intent.putExtra("courseid", courseid);
                     intent.putExtra("paperid", paperid);
@@ -362,6 +362,7 @@ public class ScoreActivity extends AppCompatActivity {
                     finish();
                 }else{
                     Intent intent = new Intent(ScoreActivity.this, ListofAssessmentTests.class);
+                    intent.putExtra("studentid", studentId);
                     intent.putExtra("enrollid", enrollid);
                     intent.putExtra("courseid", courseid);
                     intent.putExtra("paperid", paperid);

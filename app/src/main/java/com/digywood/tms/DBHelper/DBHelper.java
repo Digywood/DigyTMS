@@ -1212,8 +1212,8 @@ public class DBHelper extends SQLiteOpenHelper {
         return c;
     }
 
-    public Cursor getTestFlashData(String testId){
-        Cursor c =db.query("sptu_student", new String[] {"min_flashScore,max_flashScore,avg_flashScore"},"sptu_ID='"+testId+"'", null, null, null,null);
+    public Cursor getTestFlashData(String testId,String studentId){
+        Cursor c =db.query("sptu_student", new String[] {"min_flashScore,max_flashScore,avg_flashScore"},"sptu_ID='"+testId+"' and sptu_student_ID ='"+studentId+"'", null, null, null,null);
         return c;
     }
 
@@ -1940,8 +1940,8 @@ public class DBHelper extends SQLiteOpenHelper {
     }
 
 
-    public Cursor getTestRawData(String testId){
-        String query ="SELECT COUNT(*) as attemptcount,MIN(Attempt_Percentage) as minscore,MAX(Attempt_Percentage) as maxscore,AVG(Attempt_Percentage) as avgscore FROM "+" attempt_list"+" WHERE Attempt_Test_ID ='"+testId+"' and Attempt_Status <> 1";
+    public Cursor getTestRawData(String testId,String studentId){
+        String query ="SELECT COUNT(*) as attemptcount,MIN(Attempt_Percentage) as minscore,MAX(Attempt_Percentage) as maxscore,AVG(Attempt_Percentage) as avgscore FROM "+" attempt_list"+" WHERE Attempt_Test_ID ='"+testId+"' and Attempt_Status <> 1 and Attempt_studentId='"+studentId+"'";
         Cursor c=db.rawQuery(query,null);
         return c;
     }
@@ -1967,8 +1967,8 @@ public class DBHelper extends SQLiteOpenHelper {
         return updateFlag;
     }
 
-    public Cursor getTestAttemptData(String testId){
-        Cursor c =db.query("attempt_list", new String[] {"Attempt_ID,Attempt_Test_ID,Attempt_Status,Attempt_Upload_Status,Attempt_Confirmed,Attempt_Skipped,Attempt_Bookmarked,Attempt_UnAttempted,Attempt_Score,Attempt_Percentage"},"Attempt_Test_ID='"+testId+"'", null, null, null,"Attempt_ID DESC");
+    public Cursor getTestAttemptData(String testId,String studentId){
+        Cursor c =db.query("attempt_list", new String[] {"Attempt_ID,Attempt_Test_ID,Attempt_Status,Attempt_Upload_Status,Attempt_Confirmed,Attempt_Skipped,Attempt_Bookmarked,Attempt_UnAttempted,Attempt_Score,Attempt_Percentage"},"Attempt_Test_ID='"+testId+"' and Attempt_studentId='"+studentId+"'", null, null, null,"Attempt_ID DESC");
         return  c;
     }
 
@@ -1984,17 +1984,17 @@ public class DBHelper extends SQLiteOpenHelper {
         return  c;
     }
 
-    public int getAttempCount(){
+    public int getAttempCount(String studentId){
         int count=0;
-        String countQuery = "select Attempt_ID from attempt_list";
+        String countQuery = "select Attempt_ID from attempt_list WHERE Attempt_studentId='"+studentId+"'";
         Cursor c = db.rawQuery(countQuery, null);
         count=c.getCount();
         return count;
     }
 
-    public int getTestAttempCount(String testId){
+    public int getTestAttempCount(String testId,String studentId){
         int count=0;
-        String countQuery = "SELECT Attempt_ID FROM attempt_list WHERE Attempt_Test_ID = '"+testId+"' and Attempt_Status <> 1";
+        String countQuery = "SELECT Attempt_ID FROM attempt_list WHERE Attempt_Test_ID = '"+testId+"' and Attempt_Status <> 1 and Attempt_studentId='"+studentId+"'";
         Cursor c = db.rawQuery(countQuery, null);
         count=c.getCount();
         return count;
@@ -2008,9 +2008,9 @@ public class DBHelper extends SQLiteOpenHelper {
         return count;
     }
 
-    public String getLastAttempt(){
+    public String getLastAttempt(String studentId){
         String attempt_id = null;
-        String query = "select Attempt_ID from attempt_list";
+        String query = "select Attempt_ID from attempt_list WHERE Attempt_studentId='"+studentId+"'";
         Cursor c = db.rawQuery(query,null);
         c.moveToLast();
         if (c.getCount() >0) {
@@ -2021,9 +2021,9 @@ public class DBHelper extends SQLiteOpenHelper {
         return attempt_id;
     }
 
-    public String getLastTestAttempt(String testId){
+    public String getLastTestAttempt(String testId,String studentId){
         String attempt_id = null;
-        String query = "select Attempt_ID from attempt_list WHERE Attempt_Test_ID = '"+testId+"'";
+        String query = "select Attempt_ID from attempt_list WHERE Attempt_Test_ID = '"+testId+"' and Attempt_studentId='"+studentId+"'";
         Cursor c = db.rawQuery(query,null);
         c.moveToLast();
         if (c.getCount() >0) {

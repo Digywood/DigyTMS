@@ -17,6 +17,7 @@
                 android:layout_width="fill_parent"
                 android:layout_height="fill_parent"
                 android:id="@+id/row_header"
+                android:background="@color/transp_green"
                 android:weightSum="7">
 
                 <TextView
@@ -43,7 +44,7 @@
                     android:gravity="center"
                     android:textSize="20sp"
                     android:textColor="@android:color/black"
-                    android:text="Subcat"/>
+                    android:text=" Subcat "/>
 
                 <View
                     android:layout_width="2dp"
@@ -60,7 +61,7 @@
                     android:gravity="center"
                     android:textSize="20sp"
                     android:textColor="@android:color/black"
-                    android:text="No.of Qs."/>
+                    android:text="No.of Qs"/>
 
                 <View
                     android:layout_width="2dp"
@@ -76,7 +77,7 @@
                     android:gravity="center"
                     android:textSize="20sp"
                     android:textColor="@android:color/black"
-                    android:text="Attempt"/>
+                    android:text="Attempt "/>
 
                 <View
                     android:layout_width="2dp"
@@ -92,7 +93,7 @@
                     android:gravity="center"
                     android:textSize="20sp"
                     android:textColor="@android:color/black"
-                    android:text="Skipped"/>
+                    android:text="Skipped "/>
 
                 <View
                     android:layout_width="2dp"
@@ -108,7 +109,7 @@
                     android:gravity="center"
                     android:textSize="20sp"
                     android:textColor="@android:color/black"
-                    android:text="Correct"/>
+                    android:text="Correct "/>
 
                 <View
                     android:layout_width="2dp"
@@ -124,7 +125,7 @@
                     android:gravity="center"
                     android:textSize="20sp"
                     android:textColor="@android:color/black"
-                    android:text="Percentage"/>
+                    android:text="Percent "/>
             </TableRow>
             <View
                 android:layout_width="match_parent"
