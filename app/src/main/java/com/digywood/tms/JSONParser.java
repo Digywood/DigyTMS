@@ -316,6 +316,7 @@ public class JSONParser {
                         if(testQuesList.get(k).equals(ja_questions.getJSONObject(q).get("qbm_ID")))
                         {
                             seqno++;
+                            quesObj=ja_questions.getJSONObject(q);
                             cquesObj=new JSONObject();
                                 cquesObj.put("qbm_ID",quesObj.get("qbm_ID"));
                                 cquesObj.put("qbm_SequenceId",seqno);
