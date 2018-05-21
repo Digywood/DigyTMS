@@ -225,6 +225,7 @@ public class PaperActivity extends AppCompatActivity {
                 i.putExtra("courseid",courseid);
                 i.putExtra("paperid",singlePaper.getPaperId());
                 startActivity(i);
+                finish();
                 mydialog.cancel();
             }
         });
@@ -238,6 +239,7 @@ public class PaperActivity extends AppCompatActivity {
                 i.putExtra("courseid",courseid);
                 i.putExtra("paperid",singlePaper.getPaperId());
                 startActivity(i);
+                finish();
                 mydialog.cancel();
             }
         });

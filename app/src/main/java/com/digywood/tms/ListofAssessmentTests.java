@@ -109,7 +109,6 @@ public class ListofAssessmentTests extends AppCompatActivity {
         testidList.clear();
         try {
             Cursor mycursor=myhelper.getAssesmentTestsByEnroll(studentid,enrollid);
-            Log.e("CURCOUNT",""+mycursor.getCount());
             if(mycursor.getCount()>0){
                 while (mycursor.moveToNext()) {
                     testidList.add(new SingleAssessment(mycursor.getString(mycursor.getColumnIndex("satu_ID")),mycursor.getString(mycursor.getColumnIndex("satu_name")),mycursor.getString(mycursor.getColumnIndex("satu_subjet_ID")),mycursor.getString(mycursor.getColumnIndex("satu_dwnld_status"))));
@@ -203,12 +202,24 @@ public class ListofAssessmentTests extends AppCompatActivity {
     @Override
     public boolean onSupportNavigateUp() {
         finish();
+        Intent i=new Intent(getApplicationContext(),PaperActivity.class);
+        i.putExtra("studentid",studentid);
+        i.putExtra("enrollid",enrollid);
+        i.putExtra("courseid",courseid);
+        i.putExtra("paperid",paperid);
+        startActivity(i);
         return true;
     }
 
     @Override
     public void onBackPressed() {
         finish();
+        Intent i=new Intent(getApplicationContext(),PaperActivity.class);
+        i.putExtra("studentid",studentid);
+        i.putExtra("enrollid",enrollid);
+        i.putExtra("courseid",courseid);
+        i.putExtra("paperid",paperid);
+        startActivity(i);
     }
 
     @Override
