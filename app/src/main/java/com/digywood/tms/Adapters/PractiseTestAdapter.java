@@ -324,7 +324,7 @@ public class PractiseTestAdapter extends RecyclerView.Adapter<PractiseTestAdapte
                                         myparser = new JSONParser(fullTest,getExternalPath(mycontext, singletest, "ATTEMPT"),"PRACTICE", mycontext);
                                         attempt = new String(SaveJSONdataToFile.bytesFromFile(getExternalPath(mycontext, singletest, "ATTEMPT") + testid + ".json"), "UTF-8");
                                         Log.e("FULLTEST:---","sample:--"+fullTest);
-                                        Log.e("attempt:---","sample:--"+attempt);
+                                        Log.e("attempt:---","sample:--"+studentid);
                                         Intent i = new Intent(mycontext, PracticeTestActivity.class);
                                         i.putExtra("studentid",studentid);
                                         i.putExtra("json", attempt);

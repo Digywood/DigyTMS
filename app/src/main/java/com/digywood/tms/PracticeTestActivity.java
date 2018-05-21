@@ -218,6 +218,8 @@ public class PracticeTestActivity extends AppCompatActivity implements
         question_scroll.setItemAnimator(new DefaultItemAnimator());
         question_scroll.setAdapter(qAdapter);
         testid = getIntent().getStringExtra("test");
+        studentId = getIntent().getStringExtra("studentid");
+        Log.e("stuid-->",studentId);
         rv_option = findViewById(R.id.option_view);
 
         if(checkPermission()){
@@ -227,11 +229,6 @@ public class PracticeTestActivity extends AppCompatActivity implements
         }
         photoPath = URLClass.mainpath + path;
         jsonPath = URLClass.mainpath + path + "Attempt/" + testid + ".json";
-
-        Intent cmgintent=getIntent();
-        if(cmgintent!=null) {
-            studentId = cmgintent.getStringExtra("studentid");
-        }
 
         Cursor cursor = dataObj.checkPractiseTest(studentId,testid);
         if (cursor.getCount() > 0) {
@@ -493,6 +490,7 @@ public class PracticeTestActivity extends AppCompatActivity implements
                                                 bundle.putString("subjectid", subjectId);
                                                 bundle.putString("paperid",paperid);
                                                 bundle.putString("Type","PRACTICE");
+                                                intent.putExtra("studentid",studentId);
                                                 intent.putExtra("BUNDLE", bundle);
                                                 intent.putExtra("Xreveal", revealX);
                                                 intent.putExtra("Yreveal", revealY);
@@ -867,12 +865,12 @@ public class PracticeTestActivity extends AppCompatActivity implements
                                     Intent intent = new Intent(PracticeTestActivity.this, ScoreActivity.class);
                                     bundle = new Bundle();
                                     bundle.putString("JSON", attempt.toString());
-                                    bundle.putString("studentid",studentId);
                                     bundle.putString("enrollid",enrollid);
                                     bundle.putString("courseid", courseid);
                                     bundle.putString("subjectid", subjectId);
                                     bundle.putString("paperid",paperid);
                                     bundle.putString("Type","PRACTICE");
+                                    intent.putExtra("studentid",studentId);
                                     intent.putExtra("BUNDLE", bundle);
                                     intent.putExtra("Xreveal", revealX);
                                     intent.putExtra("Yreveal", revealY);
@@ -1190,6 +1188,7 @@ public class PracticeTestActivity extends AppCompatActivity implements
                         }
                         finish();
                         Intent intent = new Intent(PracticeTestActivity.this, ListofPractiseTests.class);
+                        intent.putExtra("studentid",studentId);
                         intent.putExtra("enrollid",enrollid);
                         intent.putExtra("courseid", courseid);
                         intent.putExtra("paperid",paperid);

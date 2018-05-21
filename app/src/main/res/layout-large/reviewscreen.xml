@@ -8,9 +8,11 @@
         android:id="@+id/layout_img"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_alignParentStart="true"
+        android:layout_alignEnd="@+id/img_right_arrow"
         android:layout_alignParentTop="true"
         android:scaleType="fitXY" />
+
+
 
     <ImageButton
         android:id="@+id/img_left_arrow"
@@ -26,17 +28,18 @@
         android:layout_width="50sp"
         android:layout_height="100sp"
         android:layout_alignParentEnd="true"
-        android:layout_below="@+id/iv_close"
-        android:layout_marginTop="154dp"
+        android:layout_marginBottom="140dp"
         android:background="@drawable/right_navigate"
-        app:srcCompat="@drawable/ic_arrow_forward_black_24dp" />
+        app:srcCompat="@drawable/ic_arrow_forward_black_24dp"
+        android:layout_above="@+id/iv_close"/>
+
 
     <ImageView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:srcCompat="@drawable/ic_close_black_24dp"
-        android:layout_marginTop="10dp"
-        android:layout_marginEnd="10dp"
+        android:id="@+id/iv_close"
+        android:src="@drawable/ic_close"
         android:layout_alignParentEnd="true"
-        android:id="@+id/iv_close"/>
+        android:layout_alignParentBottom="true"/>
+
 </RelativeLayout>
