@@ -285,7 +285,7 @@ public class AssessmentTestActivity extends AppCompatActivity implements
                 newTest();
             }
             else {
-                c = dataObj.getAttempt(dataObj.getLastTestAttempt(testid));
+                c = dataObj.getAttempt(dataObj.getLastTestAttempt(testid,studentId));
 //                Log.e("TestingJson", ""+c.getInt(c.getColumnIndex("Attempt_Status"))+" "+c.getCount());
                 millisStart = c.getLong(c.getColumnIndex("Assessment_RemainingTime"));
                 assessment = new JSONObject(getIntent().getStringExtra("json"));
@@ -464,7 +464,7 @@ public class AssessmentTestActivity extends AppCompatActivity implements
                                                 int revealX = (int) (finish_view.getX() + finish_view.getWidth() / 2);
                                                 int revealY = (int) (finish_view.getY() + finish_view.getHeight() / 2);
                                                 finish();
-                                                count = dataObj.getAttempCount();
+                                                count = dataObj.getAttempCount(studentId);
                                                 Intent intent = new Intent(AssessmentTestActivity.this, ScoreActivity.class);
                                                 bundle = new Bundle();
                                                 bundle.putString("JSON", assessment.toString());

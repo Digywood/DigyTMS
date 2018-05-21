@@ -99,48 +99,48 @@ public class AttemptDataActivity extends AppCompatActivity {
     }
 
 
-    public void getFlashAttemptData(String testId){
-
-        Double minscore=0.0,maxscore=0.0,avgscore=0.0;
-        Cursor cur=myhelper.getTestFlashData(testId);
-        if(cur.getCount()>0){
-            while (cur.moveToNext()){
-                minscore=cur.getDouble(cur.getColumnIndex("min_flashScore"));
-                maxscore=cur.getDouble(cur.getColumnIndex("max_flashScore"));
-                avgscore=cur.getDouble(cur.getColumnIndex("avg_flashScore"));
-            }
-        }else{
-            cur.close();
-        }
-
-        tv_minscore.setText(String.valueOf(minscore)+" %");
-        tv_maxscore.setText(String.valueOf(maxscore)+" %");
-        Double avgpercent=round(avgscore,2);
-        tv_avgscore.setText(String.valueOf(avgpercent)+" %");
-
-        Cursor mycursor=myhelper.getFlashTestData(testId);
-        if(mycursor.getCount()>0){
-            while(mycursor.moveToNext()){
-                fattemptList.add(new SingleFlashAttempt(mycursor.getString(mycursor.getColumnIndex("startDttm")),mycursor.getInt(mycursor.getColumnIndex("attemptQCount")),mycursor.getInt(mycursor.getColumnIndex("iknowCount")),mycursor.getInt(mycursor.getColumnIndex("donknowCount")),mycursor.getInt(mycursor.getColumnIndex("skipCount")),mycursor.getDouble(mycursor.getColumnIndex("percentageObtain"))));
-            }
-        }else{
-            mycursor.close();
-        }
-
-        if (fattemptList.size() != 0) {
-            Log.e("Advtlist.size()", "comes:" + fattemptList.size());
-            tv_emptyflashdata.setVisibility(View.GONE);
-            fAdp = new FlashAttemptAdapter(fattemptList,AttemptDataActivity.this);
-            myLayoutManager = new LinearLayoutManager(AttemptDataActivity.this, LinearLayoutManager.VERTICAL,false);
-            rv_fattemptdata.setLayoutManager(myLayoutManager);
-            rv_fattemptdata.setItemAnimator(new DefaultItemAnimator());
-            rv_fattemptdata.setAdapter(fAdp);
-        } else {
-            rv_fattemptdata.setAdapter(null);
-            tv_emptyflashdata.setText("No Flash Attempt History");
-            tv_emptyflashdata.setVisibility(View.VISIBLE);
-        }
-    }
+//    public void getFlashAttemptData(String testId){
+//
+//        Double minscore=0.0,maxscore=0.0,avgscore=0.0;
+//        Cursor cur=myhelper.getTestFlashData(testId,);
+//        if(cur.getCount()>0){
+//            while (cur.moveToNext()){
+//                minscore=cur.getDouble(cur.getColumnIndex("min_flashScore"));
+//                maxscore=cur.getDouble(cur.getColumnIndex("max_flashScore"));
+//                avgscore=cur.getDouble(cur.getColumnIndex("avg_flashScore"));
+//            }
+//        }else{
+//            cur.close();
+//        }
+//
+//        tv_minscore.setText(String.valueOf(minscore)+" %");
+//        tv_maxscore.setText(String.valueOf(maxscore)+" %");
+//        Double avgpercent=round(avgscore,2);
+//        tv_avgscore.setText(String.valueOf(avgpercent)+" %");
+//
+//        Cursor mycursor=myhelper.getFlashTestData(testId);
+//        if(mycursor.getCount()>0){
+//            while(mycursor.moveToNext()){
+//                fattemptList.add(new SingleFlashAttempt(mycursor.getString(mycursor.getColumnIndex("startDttm")),mycursor.getInt(mycursor.getColumnIndex("attemptQCount")),mycursor.getInt(mycursor.getColumnIndex("iknowCount")),mycursor.getInt(mycursor.getColumnIndex("donknowCount")),mycursor.getInt(mycursor.getColumnIndex("skipCount")),mycursor.getDouble(mycursor.getColumnIndex("percentageObtain"))));
+//            }
+//        }else{
+//            mycursor.close();
+//        }
+//
+//        if (fattemptList.size() != 0) {
+//            Log.e("Advtlist.size()", "comes:" + fattemptList.size());
+//            tv_emptyflashdata.setVisibility(View.GONE);
+//            fAdp = new FlashAttemptAdapter(fattemptList,AttemptDataActivity.this);
+//            myLayoutManager = new LinearLayoutManager(AttemptDataActivity.this, LinearLayoutManager.VERTICAL,false);
+//            rv_fattemptdata.setLayoutManager(myLayoutManager);
+//            rv_fattemptdata.setItemAnimator(new DefaultItemAnimator());
+//            rv_fattemptdata.setAdapter(fAdp);
+//        } else {
+//            rv_fattemptdata.setAdapter(null);
+//            tv_emptyflashdata.setText("No Flash Attempt History");
+//            tv_emptyflashdata.setVisibility(View.VISIBLE);
+//        }
+//    }
 
     public static double round(double value, int places) {
         if (places < 0) throw new IllegalArgumentException();

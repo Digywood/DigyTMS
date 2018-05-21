@@ -261,8 +261,8 @@ public class ReviewActivity extends AppCompatActivity implements
         });
 
         try {
-            count = dataObj.getAttempCount()-1 ;
-            Cursor c = dataObj.getAttempt(dataObj.getLastTestAttempt(testid));
+            count = dataObj.getAttempCount(studentId)-1 ;
+            Cursor c = dataObj.getAttempt(dataObj.getLastTestAttempt(testid,studentId));
             //if cursor has values then the test is being resumed and data is retrieved from database
             if(c.getCount()> 0) {
                 c.moveToLast();

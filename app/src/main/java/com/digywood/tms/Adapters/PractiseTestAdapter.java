@@ -123,7 +123,7 @@ public class PractiseTestAdapter extends RecyclerView.Adapter<PractiseTestAdapte
     public void onBindViewHolder(final MyViewHolder holder, final int position) {
 
         final SingleTest singletest = testList.get(position);
-        Cursor mycursor=myhelper.getTestRawData(singletest.getTestid());
+        Cursor mycursor=myhelper.getTestRawData(singletest.getTestid(),studentid);
         if(mycursor.getCount()>0) {
             while (mycursor.moveToNext()) {
                 minscore = mycursor.getDouble(mycursor.getColumnIndex("minscore"));
@@ -134,7 +134,7 @@ public class PractiseTestAdapter extends RecyclerView.Adapter<PractiseTestAdapte
 
         List<PieEntry> yvalues = new ArrayList<PieEntry>();
 
-        holder.tv_testAttempt.setText(String.valueOf(myhelper.getTestAttempCount(singletest.getTestid())));
+        holder.tv_testAttempt.setText(String.valueOf(myhelper.getTestAttempCount(singletest.getTestid(),studentid)));
         holder.tv_attempt_min.setText(String.format("%.1f", minscore));
         holder.tv_attempt_max.setText(String.format("%.1f", maxscore));
         holder.tv_attempt_avg.setText(String.format("%.1f", avgscore));
@@ -164,7 +164,7 @@ public class PractiseTestAdapter extends RecyclerView.Adapter<PractiseTestAdapte
             holder.iv_review.setEnabled(false);
         } else
             holder.iv_review.setEnabled(true);
-        final Cursor c = dataObj.getAttempt(dataObj.getLastTestAttempt(singletest.getTestid()));
+        final Cursor c = dataObj.getAttempt(dataObj.getLastTestAttempt(singletest.getTestid(),studentid));
         //if cursor has values then the test is being resumed and data is retrieved from database
         if (c.getCount() > 0) {
             c.moveToLast();
@@ -308,14 +308,14 @@ public class PractiseTestAdapter extends RecyclerView.Adapter<PractiseTestAdapte
                                 }else{*/
                                     dataObj.DestroyPracticeRecord("attempt_data",singletest.getTestid());
 //                                    dataObj.Destroy("attempt_data");
-                                    int count = dataObj.getTestAttempCount(singletest.getTestid());
+                                    int count = dataObj.getTestAttempCount(singletest.getTestid(),studentid);
                                     Log.e("Attempt Count",""+count);
-                                    Cursor c = dataObj.getAttempt(dataObj.getLastTestAttempt(singletest.getTestid()));
+                                    Cursor c = dataObj.getAttempt(dataObj.getLastTestAttempt(singletest.getTestid(),studentid));
 
                                     if (c.getCount() > 0) {
                                         c.moveToLast();
                                         if (c.getInt(c.getColumnIndex("Attempt_Status")) != 2) {
-                                            dataObj.DeleteAttempt(dataObj.getLastTestAttempt(singletest.getTestid()));
+                                            dataObj.DeleteAttempt(dataObj.getLastTestAttempt(singletest.getTestid(),studentid));
                                         }
                                     }
                                     try {
@@ -325,6 +325,7 @@ public class PractiseTestAdapter extends RecyclerView.Adapter<PractiseTestAdapte
                                         Log.e("FULLTEST:---","sample:--"+fullTest);
                                         Log.e("attempt:---","sample:--"+attempt);
                                         Intent i = new Intent(mycontext, PracticeTestActivity.class);
+                                        i.putExtra("studentid",studentid);
                                         i.putExtra("json", attempt);
                                         i.putExtra("test", testid);
                                         i.putExtra("status", "NEW");
@@ -452,6 +453,7 @@ public class PractiseTestAdapter extends RecyclerView.Adapter<PractiseTestAdapte
             public void onClick(View v) {
                 Intent i = new Intent(mycontext, AttemptDataActivity.class);
                 i.putExtra("testId", singletest.getTestid());
+                i.putExtra("studentid", studentid);
                 mycontext.startActivity(i);
             }
         });

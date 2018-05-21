@@ -42,7 +42,7 @@ public class TestAttemptFragment extends Fragment {
     TextView tv_attempt_Id,tv_testid,tv_minscore,tv_maxscore,tv_avgscore,tv_emptytestdata;
     RecyclerView rv_tattemptdata;
     DBHelper dataObj;
-    String testId="";
+    String testId="",studentId;
     TestAttemptAdapter tAdp;
     LinearLayoutManager myLayoutManager;
     ArrayList<SingleTestAttempt> tattemptList=new ArrayList<>();
@@ -90,6 +90,7 @@ public class TestAttemptFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_test_attempt, container, false);
         testId = getActivity().getIntent().getStringExtra("testId");
+        studentId = getActivity().getIntent().getStringExtra("studentid");
         dataObj= new DBHelper(getActivity().getApplicationContext());
         tv_testid=view.findViewById(R.id.tv_ftestid);
         tv_testid.setText(testId);
@@ -107,7 +108,7 @@ public class TestAttemptFragment extends Fragment {
     public void getTestAttemptData(String testId){
 
         Double minscore=0.0,maxscore=0.0,avgscore=0.0;
-        Cursor cur=dataObj.getTestRawData(testId);
+        Cursor cur=dataObj.getTestRawData(testId,studentId);
         if(cur.getCount()>0){
             while (cur.moveToNext()){
                 minscore=cur.getDouble(cur.getColumnIndex("minscore"));
@@ -122,7 +123,7 @@ public class TestAttemptFragment extends Fragment {
         tv_maxscore.setText(String.format("%.2f",maxscore)+" %");
         Double avgpercent=round(avgscore,2);
         tv_avgscore.setText(String.format("%.2f",avgpercent)+" %");
-        Cursor mycursor=dataObj.getTestAttemptData(testId);
+        Cursor mycursor=dataObj.getTestAttemptData(testId,studentId);
         Log.e("tadapter", ""+ mycursor.getCount());
 
         if(mycursor.getCount()>0){

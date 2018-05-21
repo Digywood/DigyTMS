@@ -38,7 +38,7 @@ public class FlashAttemptFragment extends Fragment {
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
     DBHelper myhelper;
-    String testId="";
+    String testId="",studentId;
     RecyclerView rv_fattemptdata;
     TextView tv_emptyflashdata;
     FlashAttemptAdapter fAdp;
@@ -90,6 +90,7 @@ public class FlashAttemptFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_flash_attempt, container, false);
         myhelper=new DBHelper(getActivity().getApplicationContext());
         testId = getActivity().getIntent().getStringExtra("testId");
+        studentId = getActivity().getIntent().getStringExtra("studentid");
         tv_testid=view.findViewById(R.id.tv_ftestid);
         tv_testid.setText(testId);
         tv_minscore=view.findViewById(R.id.tv_minpercent);
@@ -104,7 +105,7 @@ public class FlashAttemptFragment extends Fragment {
     public void getFlashAttemptData(String testId){
 
         Double minscore=0.0,maxscore=0.0,avgscore=0.0;
-        Cursor cur=myhelper.getTestFlashData(testId);
+        Cursor cur=myhelper.getTestFlashData(testId,studentId);
         if(cur.getCount()>0){
             while (cur.moveToNext()){
                 minscore=cur.getDouble(cur.getColumnIndex("min_flashScore"));
