@@ -181,6 +181,7 @@ public class FlashCardActivity extends AppCompatActivity {
         }
 
         if(testId!=null){
+            Log.e("FCARDActivity---","sid:--"+studentid+"  testid"+testId);
             Cursor mycursor=myhelper.checkPractiseTest(studentid,testId);
             if(mycursor.getCount()>0){
                 while(mycursor.moveToNext()){
@@ -261,7 +262,7 @@ public class FlashCardActivity extends AppCompatActivity {
                     d=position;
                     JSONObject qObj=gja_questions.getJSONObject(position);
                     String imagefile=qObj.getString("qbm_flash_image");
-                    Log.e("Image Path :--",imagefile);
+                    Log.e("Image file :--",imagefile);
                     String sid=qObj.getString("qbm_SubjectID");
                     String pid=qObj.getString("qbm_Paper_ID");
                     String cid=qObj.getString("qbm_ChapterID");

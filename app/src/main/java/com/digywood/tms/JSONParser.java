@@ -18,6 +18,7 @@ import java.util.Random;
 public class JSONParser {
 
     ArrayList<String> quesIdList=new ArrayList<>();
+    ArrayList<String> allQIdList=new ArrayList<>();
     ArrayList<String> groupList=new ArrayList<>();
     ArrayList<String> groupcompList=new ArrayList<>();
     ArrayList<String> groupcloseList=new ArrayList<>();
@@ -78,6 +79,7 @@ public class JSONParser {
                 groupQuesIdList.clear();
                 groupmainList.clear();
                 groupConfigList.clear();
+                allQIdList.clear();
 //                groupList.clear();
                 groupcompList.clear();
                 groupcloseList.clear();
@@ -103,6 +105,8 @@ public class JSONParser {
                     quesObj=ja_questions.getJSONObject(q);
 
                     String flag=quesObj.getString("qbm_group_flag");
+
+                    allQIdList.add(quesObj.getString("qbm_ID"));
 
                     if(flag.equalsIgnoreCase("No")){
                         quesIdList.add(quesObj.getString("qbm_ID"));
@@ -306,248 +310,263 @@ public class JSONParser {
                 //Ques Object Creation
                 Log.e("QCOUNT-----",""+testQuesList.size());
 
-                for(int q=0;q<ja_questions.length();q++){
 
-                    if(cja_questions.length()<quescount){
-                        quesObj=ja_questions.getJSONObject(q);
-
-                        String flag=quesObj.getString("qbm_group_flag");
-
-                        if(flag.equalsIgnoreCase("No")){
-
-                            if(testQuesList.contains(quesObj.get("qbm_ID"))){
-
-                                seqno++;
-                                cquesObj=new JSONObject();
-                                cquesObj.put("qbm_ID",quesObj.get("qbm_ID"));
-                                cquesObj.put("qbm_SequenceId",seqno);
-                                cquesObj.put("qbm_ReferenceID",quesObj.get("qbm_ReferenceID"));
-                                cquesObj.put("qbm_Description",quesObj.get("qbm_Description"));
-                                cquesObj.put("qbm_SubjectID",quesObj.get("qbm_SubjectID"));
-                                cquesObj.put("qbm_Subjectname",quesObj.get("qbm_Subjectname"));
-                                cquesObj.put("qbm_Paper_ID",quesObj.get("qbm_Paper_ID"));
-                                cquesObj.put("qbm_Paper_name",quesObj.get("qbm_Paper_name"));
-                                cquesObj.put("qbm_ChapterID",quesObj.get("qbm_ChapterID"));
-                                cquesObj.put("qbm_Chapter_name",quesObj.get("qbm_Chapter_name"));
-                                cquesObj.put("qbm_CategoryID",quesObj.get("qbm_CategoryID"));
-                                cquesObj.put("qbm_CategoryName",quesObj.get("qbm_CategoryName"));
-                                cquesObj.put("qbm_Sub_CategoryID",quesObj.get("qbm_Sub_CategoryID"));
-                                cquesObj.put("qbm_Sub_CategoryName",quesObj.get("qbm_Sub_CategoryName"));
-                                cquesObj.put("qbm_level",quesObj.get("qbm_level"));
-                                cquesObj.put("qbm_Type",quesObj.get("qbm_Type"));
-                                cquesObj.put("qbm_marks",quesObj.get("qbm_marks"));
-                                cquesObj.put("qbm_negative_applicable",quesObj.get("qbm_negative_applicable"));
-                                cquesObj.put("qbm_negative_mrk",quesObj.get("qbm_negative_mrk"));
-                                cquesObj.put("qbm_question_type",quesObj.get("qbm_question_type"));
-                                cquesObj.put("qbm_text_applicable",quesObj.get("qbm_text_applicable"));
-                                cquesObj.put("qbm_text",quesObj.get("qbm_text"));
-                                cquesObj.put("qbm_image_file",quesObj.get("qbm_image_file"));
-                                cquesObj.put("qbm_video_file",quesObj.get("qbm_video_file"));
-                                cquesObj.put("qbm_media_type",quesObj.get("qbm_media_type"));
-                                cquesObj.put("qbm_answer",quesObj.get("qbm_answer"));
-                                cquesObj.put("qbm_group_flag",quesObj.get("qbm_group_flag"));
-                                cquesObj.put("qbm_review_flag",quesObj.get("qbm_review_flag"));
-                                cquesObj.put("qbm_Review_Type",quesObj.get("qbm_Review_Type"));
-                                cquesObj.put("qbm_Review_Images",quesObj.get("qbm_Review_Images"));
-                                cquesObj.put("qbm_review_Video",quesObj.get("qbm_review_Video"));
-                                cquesObj.put("qbm_Additional_Images_num",quesObj.get("qbm_Additional_Images_num"));
-                                cquesObj.put("qbm_Additional_Image_ref",quesObj.get("qbm_Additional_Image_ref"));
-                                cquesObj.put("gbg_id",quesObj.get("gbg_id"));
-                                cquesObj.put("gbg_type",quesObj.get("gbg_type"));
-                                cquesObj.put("gbg_media_type",quesObj.get("gbg_media_type"));
-                                cquesObj.put("gbg_media_file",quesObj.get("gbg_media_file"));
-                                cquesObj.put("gbg_text",quesObj.get("gbg_text"));
-                                cquesObj.put("qbm_jumbling_flag",quesObj.get("qbm_jumbling_flag"));
-                                cquesObj.put("qbm_flash_image",quesObj.get("qbm_flash_image"));
-                                cquesObj.put("gbg_no_questions",quesObj.get("gbg_no_questions"));
-                                cquesObj.put("gbg_no_pick",quesObj.get("gbg_no_pick"));
-                                cquesObj.put("qbm_jumbling_flag",quesObj.get("qbm_jumbling_flag"));
-                                cquesObj.put("qbm_QAdditional_type",quesObj.get("qbm_QAdditional_type"));
-                                cquesObj.put("qbm_QAdditional_Image",quesObj.get("qbm_QAdditional_Image"));
-                                cquesObj.put("qbm_QAdditional_Flag",quesObj.get("qbm_QAdditional_Flag"));
-                                cquesObj.put("qbm_support_flag",quesObj.get("qbm_support_flag"));
-                                cquesObj.put("qbm_support_type",quesObj.get("qbm_support_type"));
-                                cquesObj.put("qbm_support_image_file",quesObj.get("qbm_support_image_file"));
-
-                                ja_options=ja_questions.getJSONObject(q).getJSONArray("Options");
-                                JSONArray cja_options =new JSONArray();
-                                ArrayList<SingleOptions> opList=new ArrayList<>();
-                                for(int p=0;p<ja_options.length();p++){
-                                    optionObj=ja_options.getJSONObject(p);
-                                    try {
-
-                                        opList.add(new SingleOptions(optionObj.getString("qbo_id"),optionObj.getString("qbo_seq_no"),optionObj.getString("qbo_type"),optionObj.getString("qbo_text"),optionObj.getString("qbo_media_type"),optionObj.getString("qbo_media_file"),optionObj.getString("qbo_answer_flag")));
-
-                                    }catch (Exception e){
-                                        e.printStackTrace();
-                                    }
-                                }
-
-                                if (quesObj.getString("qbm_jumbling_flag").equalsIgnoreCase("YES")) {
-                                    if(opList.size()!=0){
-                                        Collections.shuffle(opList);
-                                        for(int b=0;b<opList.size();b++){
-                                            SingleOptions singleOptions=opList.get(b);
-                                            coptionObj = new JSONObject();
-                                            coptionObj.put("qbo_id",singleOptions.getQbo_id());
-                                            coptionObj.put("qbo_seq_no",singleOptions.getQbo_seq_no());
-                                            coptionObj.put("qbo_type",singleOptions.getQbo_type());
-                                            coptionObj.put("qbo_text",singleOptions.getQbo_text());
-                                            coptionObj.put("qbo_media_type",singleOptions.getQbo_media_type());
-                                            coptionObj.put("qbo_media_file",singleOptions.getQbo_media_file());
-                                            coptionObj.put("qbo_answer_flag",singleOptions.getQbo_answer_flag());
-                                            cja_options.put(coptionObj);
-                                        }
-                                    }
-                                }
-                                else{
-                                    if(opList.size()!=0){
-                                        for(int b=0;b<opList.size();b++){
-                                            SingleOptions singleOptions=opList.get(b);
-                                            coptionObj = new JSONObject();
-                                            coptionObj.put("qbo_id",singleOptions.getQbo_id());
-                                            coptionObj.put("qbo_seq_no",singleOptions.getQbo_seq_no());
-                                            coptionObj.put("qbo_type",singleOptions.getQbo_type());
-                                            coptionObj.put("qbo_text",singleOptions.getQbo_text());
-                                            coptionObj.put("qbo_media_type",singleOptions.getQbo_media_type());
-                                            coptionObj.put("qbo_media_file",singleOptions.getQbo_media_file());
-                                            coptionObj.put("qbo_answer_flag",singleOptions.getQbo_answer_flag());
-                                            cja_options.put(coptionObj);
-                                        }
-                                    }
-                                }
-
-                                cquesObj.put("Options",cja_options);
-                                JSONArray cja_additions=new JSONArray();
-                                ja_additions=quesObj.getJSONArray("Review");
-                                for(int p=0;p<ja_additions.length();p++){
-                                    additionsObj=ja_additions.getJSONObject(p);
-                                    cadditionsObj=new JSONObject();
-                                    cadditionsObj.put("qba_ID",additionsObj.get("qba_ID"));
-                                    cadditionsObj.put("qba_sequence",additionsObj.get("qba_sequence"));
-                                    cadditionsObj.put("qba_type",additionsObj.get("qba_type"));
-                                    cadditionsObj.put("qba_media_file",additionsObj.get("qba_media_file"));
-                                    cja_additions.put(cadditionsObj);
-                                }
-
-                                cquesObj.put("Review",cja_additions);
-                                cja_questions.put(cquesObj);
-
-                            }else{
-
-                            }
-
-                        }else {
-
-                            if(testQuesList.contains(quesObj.getString("qbm_ID"))){
-
-                                seqno++;
-                                cquesObj=new JSONObject();
-                                cquesObj.put("qbm_ID",quesObj.get("qbm_ID"));
-                                cquesObj.put("qbm_SequenceId",seqno);
-                                cquesObj.put("qbm_ReferenceID",quesObj.get("qbm_ReferenceID"));
-                                cquesObj.put("qbm_Description",quesObj.get("qbm_Description"));
-                                cquesObj.put("qbm_SubjectID",quesObj.get("qbm_SubjectID"));
-                                cquesObj.put("qbm_Subjectname",quesObj.get("qbm_Subjectname"));
-                                cquesObj.put("qbm_Paper_ID",quesObj.get("qbm_Paper_ID"));
-                                cquesObj.put("qbm_Paper_name",quesObj.get("qbm_Paper_name"));
-                                cquesObj.put("qbm_ChapterID",quesObj.get("qbm_ChapterID"));
-                                cquesObj.put("qbm_Chapter_name",quesObj.get("qbm_Chapter_name"));
-                                cquesObj.put("qbm_CategoryID",quesObj.get("qbm_CategoryID"));
-                                cquesObj.put("qbm_CategoryName",quesObj.get("qbm_CategoryName"));
-                                cquesObj.put("qbm_Sub_CategoryID",quesObj.get("qbm_Sub_CategoryID"));
-                                cquesObj.put("qbm_Sub_CategoryName",quesObj.get("qbm_Sub_CategoryName"));
-                                cquesObj.put("qbm_level",quesObj.get("qbm_level"));
-                                cquesObj.put("qbm_Type",quesObj.get("qbm_Type"));
-                                cquesObj.put("qbm_marks",quesObj.get("qbm_marks"));
-                                cquesObj.put("qbm_negative_applicable",quesObj.get("qbm_negative_applicable"));
-                                cquesObj.put("qbm_negative_mrk",quesObj.get("qbm_negative_mrk"));
-                                cquesObj.put("qbm_question_type",quesObj.get("qbm_question_type"));
-                                cquesObj.put("qbm_text_applicable",quesObj.get("qbm_text_applicable"));
-                                cquesObj.put("qbm_text",quesObj.get("qbm_text"));
-                                cquesObj.put("qbm_image_file",quesObj.get("qbm_image_file"));
-                                cquesObj.put("qbm_video_file",quesObj.get("qbm_video_file"));
-                                cquesObj.put("qbm_media_type",quesObj.get("qbm_media_type"));
-                                cquesObj.put("qbm_answer",quesObj.get("qbm_answer"));
-                                cquesObj.put("qbm_group_flag",quesObj.get("qbm_group_flag"));
-                                cquesObj.put("qbm_review_flag",quesObj.get("qbm_review_flag"));
-                                cquesObj.put("qbm_Review_Type",quesObj.get("qbm_Review_Type"));
-                                cquesObj.put("qbm_Review_Images",quesObj.get("qbm_Review_Images"));
-                                cquesObj.put("qbm_review_Video",quesObj.get("qbm_review_Video"));
-                                cquesObj.put("qbm_Additional_Images_num",quesObj.get("qbm_Additional_Images_num"));
-                                cquesObj.put("qbm_Additional_Image_ref",quesObj.get("qbm_Additional_Image_ref"));
-                                cquesObj.put("gbg_id",quesObj.get("gbg_id"));
-                                cquesObj.put("gbg_type",quesObj.get("gbg_type"));
-                                cquesObj.put("gbg_media_type",quesObj.get("gbg_media_type"));
-                                cquesObj.put("gbg_media_file",quesObj.get("gbg_media_file"));
-                                cquesObj.put("gbg_text",quesObj.get("gbg_text"));
-                                cquesObj.put("gbg_no_questions",quesObj.get("gbg_no_questions"));
-                                cquesObj.put("gbg_no_pick",quesObj.get("gbg_no_pick"));
-                                cquesObj.put("qbm_jumbling_flag",quesObj.get("qbm_jumbling_flag"));
-                                cquesObj.put("qbm_flash_image",quesObj.get("qbm_flash_image"));
-                                cquesObj.put("qbm_QAdditional_type",quesObj.get("qbm_QAdditional_type"));
-                                cquesObj.put("qbm_QAdditional_Image",quesObj.get("qbm_QAdditional_Image"));
-                                cquesObj.put("qbm_QAdditional_Flag",quesObj.get("qbm_QAdditional_Flag"));
-                                cquesObj.put("qbm_support_flag",quesObj.get("qbm_support_flag"));
-                                cquesObj.put("qbm_support_type",quesObj.get("qbm_support_type"));
-                                cquesObj.put("qbm_support_image_file",quesObj.get("qbm_support_image_file"));
-
-                                ja_options=ja_questions.getJSONObject(q).getJSONArray("Options");
-                                JSONArray cja_options =new JSONArray();
-                                ArrayList<SingleOptions> opList=new ArrayList<>();
-                                for(int p=0;p<ja_options.length();p++){
-                                    optionObj=ja_options.getJSONObject(p);
-                                    try {
-
-                                        opList.add(new SingleOptions(optionObj.getString("qbo_id"),optionObj.getString("qbo_seq_no"),optionObj.getString("qbo_type"),optionObj.getString("qbo_text"),optionObj.getString("qbo_media_type"),optionObj.getString("qbo_media_file"),optionObj.getString("qbo_answer_flag")));
-
-                                    }catch (Exception e){
-                                        e.printStackTrace();
-                                        Log.e("JSONParser----","OptionsParse:  "+e.toString());
-                                    }
-                                }
-
-                                Log.e("QOptionSize----",""+opList.size());
-                                if(opList.size()!=0){
-                                    Collections.shuffle(opList);
-                                    for(int b=0;b<opList.size();b++){
-                                        SingleOptions singleOptions=opList.get(b);
-                                        coptionObj = new JSONObject();
-                                        coptionObj.put("qbo_id",singleOptions.getQbo_id());
-                                        coptionObj.put("qbo_seq_no",singleOptions.getQbo_seq_no());
-                                        coptionObj.put("qbo_type",singleOptions.getQbo_type());
-                                        coptionObj.put("qbo_text",singleOptions.getQbo_text());
-                                        coptionObj.put("qbo_media_type",singleOptions.getQbo_media_type());
-                                        coptionObj.put("qbo_media_file",singleOptions.getQbo_media_file());
-                                        coptionObj.put("qbo_answer_flag",singleOptions.getQbo_answer_flag());
-                                        cja_options.put(coptionObj);
-                                    }
-                                }
-
-                                cquesObj.put("Options",cja_options);
-                                JSONArray cja_additions=new JSONArray();
-                                ja_additions=quesObj.getJSONArray("Review");
-                                for(int p=0;p<ja_additions.length();p++){
-                                    additionsObj=ja_additions.getJSONObject(p);
-                                    cadditionsObj=new JSONObject();
-                                    cadditionsObj.put("qba_ID",additionsObj.get("qba_ID"));
-                                    cadditionsObj.put("qba_sequence",additionsObj.get("qba_sequence"));
-                                    cadditionsObj.put("qba_type",additionsObj.get("qba_type"));
-                                    cadditionsObj.put("qba_media_file",additionsObj.get("qba_media_file"));
-                                    cja_additions.put(cadditionsObj);
-                                }
-                                cquesObj.put("Review",cja_additions);
-                                cja_questions.put(cquesObj);
-
-                            }else{
-
-                            }
+                for(int k=0;k<testQuesList.size();k++)
+                {
+                    for(int q=0;q<ja_questions.length();q++){
+                        if(testQuesList.get(k).equals(ja_questions.getJSONObject(q).get("qbm_ID")))
+                        {
+                            seqno++;
+                            JSONObject tempObj=ja_questions.getJSONObject(q);
+                            tempObj.put("qbm_SequenceId",seqno);
+                            cja_questions.put(tempObj);
 
                         }
-                    }else {
-
                     }
                 }
+
+
+//                for(int q=0;q<ja_questions.length();q++){
+//
+//                    if(cja_questions.length()<quescount){
+//                        quesObj=ja_questions.getJSONObject(q);
+//
+//                        String flag=quesObj.getString("qbm_group_flag");
+//                        if(flag.equalsIgnoreCase("No")){
+//
+//                            if(testQuesList.contains(quesObj.get("qbm_ID"))){
+//
+//                                seqno++;
+//                                cquesObj=new JSONObject();
+//                                cquesObj.put("qbm_ID",quesObj.get("qbm_ID"));
+//                                cquesObj.put("qbm_SequenceId",seqno);
+//                                cquesObj.put("qbm_ReferenceID",quesObj.get("qbm_ReferenceID"));
+//                                cquesObj.put("qbm_Description",quesObj.get("qbm_Description"));
+//                                cquesObj.put("qbm_SubjectID",quesObj.get("qbm_SubjectID"));
+//                                cquesObj.put("qbm_Subjectname",quesObj.get("qbm_Subjectname"));
+//                                cquesObj.put("qbm_Paper_ID",quesObj.get("qbm_Paper_ID"));
+//                                cquesObj.put("qbm_Paper_name",quesObj.get("qbm_Paper_name"));
+//                                cquesObj.put("qbm_ChapterID",quesObj.get("qbm_ChapterID"));
+//                                cquesObj.put("qbm_Chapter_name",quesObj.get("qbm_Chapter_name"));
+//                                cquesObj.put("qbm_CategoryID",quesObj.get("qbm_CategoryID"));
+//                                cquesObj.put("qbm_CategoryName",quesObj.get("qbm_CategoryName"));
+//                                cquesObj.put("qbm_Sub_CategoryID",quesObj.get("qbm_Sub_CategoryID"));
+//                                cquesObj.put("qbm_Sub_CategoryName",quesObj.get("qbm_Sub_CategoryName"));
+//                                cquesObj.put("qbm_level",quesObj.get("qbm_level"));
+//                                cquesObj.put("qbm_Type",quesObj.get("qbm_Type"));
+//                                cquesObj.put("qbm_marks",quesObj.get("qbm_marks"));
+//                                cquesObj.put("qbm_negative_applicable",quesObj.get("qbm_negative_applicable"));
+//                                cquesObj.put("qbm_negative_mrk",quesObj.get("qbm_negative_mrk"));
+//                                cquesObj.put("qbm_question_type",quesObj.get("qbm_question_type"));
+//                                cquesObj.put("qbm_text_applicable",quesObj.get("qbm_text_applicable"));
+//                                cquesObj.put("qbm_text",quesObj.get("qbm_text"));
+//                                cquesObj.put("qbm_image_file",quesObj.get("qbm_image_file"));
+//                                cquesObj.put("qbm_video_file",quesObj.get("qbm_video_file"));
+//                                cquesObj.put("qbm_media_type",quesObj.get("qbm_media_type"));
+//                                cquesObj.put("qbm_answer",quesObj.get("qbm_answer"));
+//                                cquesObj.put("qbm_group_flag",quesObj.get("qbm_group_flag"));
+//                                cquesObj.put("qbm_review_flag",quesObj.get("qbm_review_flag"));
+//                                cquesObj.put("qbm_Review_Type",quesObj.get("qbm_Review_Type"));
+//                                cquesObj.put("qbm_Review_Images",quesObj.get("qbm_Review_Images"));
+//                                cquesObj.put("qbm_review_Video",quesObj.get("qbm_review_Video"));
+//                                cquesObj.put("qbm_Additional_Images_num",quesObj.get("qbm_Additional_Images_num"));
+//                                cquesObj.put("qbm_Additional_Image_ref",quesObj.get("qbm_Additional_Image_ref"));
+//                                cquesObj.put("gbg_id",quesObj.get("gbg_id"));
+//                                cquesObj.put("gbg_type",quesObj.get("gbg_type"));
+//                                cquesObj.put("gbg_media_type",quesObj.get("gbg_media_type"));
+//                                cquesObj.put("gbg_media_file",quesObj.get("gbg_media_file"));
+//                                cquesObj.put("gbg_text",quesObj.get("gbg_text"));
+//                                cquesObj.put("qbm_jumbling_flag",quesObj.get("qbm_jumbling_flag"));
+//                                cquesObj.put("qbm_flash_image",quesObj.get("qbm_flash_image"));
+//                                cquesObj.put("gbg_no_questions",quesObj.get("gbg_no_questions"));
+//                                cquesObj.put("gbg_no_pick",quesObj.get("gbg_no_pick"));
+//                                cquesObj.put("qbm_jumbling_flag",quesObj.get("qbm_jumbling_flag"));
+//                                cquesObj.put("qbm_QAdditional_type",quesObj.get("qbm_QAdditional_type"));
+//                                cquesObj.put("qbm_QAdditional_Image",quesObj.get("qbm_QAdditional_Image"));
+//                                cquesObj.put("qbm_QAdditional_Flag",quesObj.get("qbm_QAdditional_Flag"));
+//                                cquesObj.put("qbm_support_flag",quesObj.get("qbm_support_flag"));
+//                                cquesObj.put("qbm_support_type",quesObj.get("qbm_support_type"));
+//                                cquesObj.put("qbm_support_image_file",quesObj.get("qbm_support_image_file"));
+//
+//                                ja_options=ja_questions.getJSONObject(q).getJSONArray("Options");
+//                                JSONArray cja_options =new JSONArray();
+//                                ArrayList<SingleOptions> opList=new ArrayList<>();
+//                                for(int p=0;p<ja_options.length();p++){
+//                                    optionObj=ja_options.getJSONObject(p);
+//                                    try {
+//
+//                                        opList.add(new SingleOptions(optionObj.getString("qbo_id"),optionObj.getString("qbo_seq_no"),optionObj.getString("qbo_type"),optionObj.getString("qbo_text"),optionObj.getString("qbo_media_type"),optionObj.getString("qbo_media_file"),optionObj.getString("qbo_answer_flag")));
+//
+//                                    }catch (Exception e){
+//                                        e.printStackTrace();
+//                                    }
+//                                }
+//
+//                                if (quesObj.getString("qbm_jumbling_flag").equalsIgnoreCase("YES")) {
+//                                    if(opList.size()!=0){
+//                                        Collections.shuffle(opList);
+//                                        for(int b=0;b<opList.size();b++){
+//                                            SingleOptions singleOptions=opList.get(b);
+//                                            coptionObj = new JSONObject();
+//                                            coptionObj.put("qbo_id",singleOptions.getQbo_id());
+//                                            coptionObj.put("qbo_seq_no",singleOptions.getQbo_seq_no());
+//                                            coptionObj.put("qbo_type",singleOptions.getQbo_type());
+//                                            coptionObj.put("qbo_text",singleOptions.getQbo_text());
+//                                            coptionObj.put("qbo_media_type",singleOptions.getQbo_media_type());
+//                                            coptionObj.put("qbo_media_file",singleOptions.getQbo_media_file());
+//                                            coptionObj.put("qbo_answer_flag",singleOptions.getQbo_answer_flag());
+//                                            cja_options.put(coptionObj);
+//                                        }
+//                                    }
+//                                }
+//                                else{
+//                                    if(opList.size()!=0){
+//                                        for(int b=0;b<opList.size();b++){
+//                                            SingleOptions singleOptions=opList.get(b);
+//                                            coptionObj = new JSONObject();
+//                                            coptionObj.put("qbo_id",singleOptions.getQbo_id());
+//                                            coptionObj.put("qbo_seq_no",singleOptions.getQbo_seq_no());
+//                                            coptionObj.put("qbo_type",singleOptions.getQbo_type());
+//                                            coptionObj.put("qbo_text",singleOptions.getQbo_text());
+//                                            coptionObj.put("qbo_media_type",singleOptions.getQbo_media_type());
+//                                            coptionObj.put("qbo_media_file",singleOptions.getQbo_media_file());
+//                                            coptionObj.put("qbo_answer_flag",singleOptions.getQbo_answer_flag());
+//                                            cja_options.put(coptionObj);
+//                                        }
+//                                    }
+//                                }
+//
+//                                cquesObj.put("Options",cja_options);
+//                                JSONArray cja_additions=new JSONArray();
+//                                ja_additions=quesObj.getJSONArray("Review");
+//                                for(int p=0;p<ja_additions.length();p++){
+//                                    additionsObj=ja_additions.getJSONObject(p);
+//                                    cadditionsObj=new JSONObject();
+//                                    cadditionsObj.put("qba_ID",additionsObj.get("qba_ID"));
+//                                    cadditionsObj.put("qba_sequence",additionsObj.get("qba_sequence"));
+//                                    cadditionsObj.put("qba_type",additionsObj.get("qba_type"));
+//                                    cadditionsObj.put("qba_media_file",additionsObj.get("qba_media_file"));
+//                                    cja_additions.put(cadditionsObj);
+//                                }
+//
+//                                cquesObj.put("Review",cja_additions);
+//                                cja_questions.put(cquesObj);
+//
+//                            }else{
+//
+//                            }
+//
+//                        }else {
+//
+//                            if(testQuesList.contains(quesObj.getString("qbm_ID"))){
+//
+//                                seqno++;
+//                                cquesObj=new JSONObject();
+//                                cquesObj.put("qbm_ID",quesObj.get("qbm_ID"));
+//                                cquesObj.put("qbm_SequenceId",seqno);
+//                                cquesObj.put("qbm_ReferenceID",quesObj.get("qbm_ReferenceID"));
+//                                cquesObj.put("qbm_Description",quesObj.get("qbm_Description"));
+//                                cquesObj.put("qbm_SubjectID",quesObj.get("qbm_SubjectID"));
+//                                cquesObj.put("qbm_Subjectname",quesObj.get("qbm_Subjectname"));
+//                                cquesObj.put("qbm_Paper_ID",quesObj.get("qbm_Paper_ID"));
+//                                cquesObj.put("qbm_Paper_name",quesObj.get("qbm_Paper_name"));
+//                                cquesObj.put("qbm_ChapterID",quesObj.get("qbm_ChapterID"));
+//                                cquesObj.put("qbm_Chapter_name",quesObj.get("qbm_Chapter_name"));
+//                                cquesObj.put("qbm_CategoryID",quesObj.get("qbm_CategoryID"));
+//                                cquesObj.put("qbm_CategoryName",quesObj.get("qbm_CategoryName"));
+//                                cquesObj.put("qbm_Sub_CategoryID",quesObj.get("qbm_Sub_CategoryID"));
+//                                cquesObj.put("qbm_Sub_CategoryName",quesObj.get("qbm_Sub_CategoryName"));
+//                                cquesObj.put("qbm_level",quesObj.get("qbm_level"));
+//                                cquesObj.put("qbm_Type",quesObj.get("qbm_Type"));
+//                                cquesObj.put("qbm_marks",quesObj.get("qbm_marks"));
+//                                cquesObj.put("qbm_negative_applicable",quesObj.get("qbm_negative_applicable"));
+//                                cquesObj.put("qbm_negative_mrk",quesObj.get("qbm_negative_mrk"));
+//                                cquesObj.put("qbm_question_type",quesObj.get("qbm_question_type"));
+//                                cquesObj.put("qbm_text_applicable",quesObj.get("qbm_text_applicable"));
+//                                cquesObj.put("qbm_text",quesObj.get("qbm_text"));
+//                                cquesObj.put("qbm_image_file",quesObj.get("qbm_image_file"));
+//                                cquesObj.put("qbm_video_file",quesObj.get("qbm_video_file"));
+//                                cquesObj.put("qbm_media_type",quesObj.get("qbm_media_type"));
+//                                cquesObj.put("qbm_answer",quesObj.get("qbm_answer"));
+//                                cquesObj.put("qbm_group_flag",quesObj.get("qbm_group_flag"));
+//                                cquesObj.put("qbm_review_flag",quesObj.get("qbm_review_flag"));
+//                                cquesObj.put("qbm_Review_Type",quesObj.get("qbm_Review_Type"));
+//                                cquesObj.put("qbm_Review_Images",quesObj.get("qbm_Review_Images"));
+//                                cquesObj.put("qbm_review_Video",quesObj.get("qbm_review_Video"));
+//                                cquesObj.put("qbm_Additional_Images_num",quesObj.get("qbm_Additional_Images_num"));
+//                                cquesObj.put("qbm_Additional_Image_ref",quesObj.get("qbm_Additional_Image_ref"));
+//                                cquesObj.put("gbg_id",quesObj.get("gbg_id"));
+//                                cquesObj.put("gbg_type",quesObj.get("gbg_type"));
+//                                cquesObj.put("gbg_media_type",quesObj.get("gbg_media_type"));
+//                                cquesObj.put("gbg_media_file",quesObj.get("gbg_media_file"));
+//                                cquesObj.put("gbg_text",quesObj.get("gbg_text"));
+//                                cquesObj.put("gbg_no_questions",quesObj.get("gbg_no_questions"));
+//                                cquesObj.put("gbg_no_pick",quesObj.get("gbg_no_pick"));
+//                                cquesObj.put("qbm_jumbling_flag",quesObj.get("qbm_jumbling_flag"));
+//                                cquesObj.put("qbm_flash_image",quesObj.get("qbm_flash_image"));
+//                                cquesObj.put("qbm_QAdditional_type",quesObj.get("qbm_QAdditional_type"));
+//                                cquesObj.put("qbm_QAdditional_Image",quesObj.get("qbm_QAdditional_Image"));
+//                                cquesObj.put("qbm_QAdditional_Flag",quesObj.get("qbm_QAdditional_Flag"));
+//                                cquesObj.put("qbm_support_flag",quesObj.get("qbm_support_flag"));
+//                                cquesObj.put("qbm_support_type",quesObj.get("qbm_support_type"));
+//                                cquesObj.put("qbm_support_image_file",quesObj.get("qbm_support_image_file"));
+//
+//                                ja_options=ja_questions.getJSONObject(q).getJSONArray("Options");
+//                                JSONArray cja_options =new JSONArray();
+//                                ArrayList<SingleOptions> opList=new ArrayList<>();
+//                                for(int p=0;p<ja_options.length();p++){
+//                                    optionObj=ja_options.getJSONObject(p);
+//                                    try {
+//
+//                                        opList.add(new SingleOptions(optionObj.getString("qbo_id"),optionObj.getString("qbo_seq_no"),optionObj.getString("qbo_type"),optionObj.getString("qbo_text"),optionObj.getString("qbo_media_type"),optionObj.getString("qbo_media_file"),optionObj.getString("qbo_answer_flag")));
+//
+//                                    }catch (Exception e){
+//                                        e.printStackTrace();
+//                                        Log.e("JSONParser----","OptionsParse:  "+e.toString());
+//                                    }
+//                                }
+//
+//                                Log.e("QOptionSize----",""+opList.size());
+//                                if(opList.size()!=0){
+//                                    Collections.shuffle(opList);
+//                                    for(int b=0;b<opList.size();b++){
+//                                        SingleOptions singleOptions=opList.get(b);
+//                                        coptionObj = new JSONObject();
+//                                        coptionObj.put("qbo_id",singleOptions.getQbo_id());
+//                                        coptionObj.put("qbo_seq_no",singleOptions.getQbo_seq_no());
+//                                        coptionObj.put("qbo_type",singleOptions.getQbo_type());
+//                                        coptionObj.put("qbo_text",singleOptions.getQbo_text());
+//                                        coptionObj.put("qbo_media_type",singleOptions.getQbo_media_type());
+//                                        coptionObj.put("qbo_media_file",singleOptions.getQbo_media_file());
+//                                        coptionObj.put("qbo_answer_flag",singleOptions.getQbo_answer_flag());
+//                                        cja_options.put(coptionObj);
+//                                    }
+//                                }
+//
+//                                cquesObj.put("Options",cja_options);
+//                                JSONArray cja_additions=new JSONArray();
+//                                ja_additions=quesObj.getJSONArray("Review");
+//                                for(int p=0;p<ja_additions.length();p++){
+//                                    additionsObj=ja_additions.getJSONObject(p);
+//                                    cadditionsObj=new JSONObject();
+//                                    cadditionsObj.put("qba_ID",additionsObj.get("qba_ID"));
+//                                    cadditionsObj.put("qba_sequence",additionsObj.get("qba_sequence"));
+//                                    cadditionsObj.put("qba_type",additionsObj.get("qba_type"));
+//                                    cadditionsObj.put("qba_media_file",additionsObj.get("qba_media_file"));
+//                                    cja_additions.put(cadditionsObj);
+//                                }
+//                                cquesObj.put("Review",cja_additions);
+//                                cja_questions.put(cquesObj);
+//
+//                            }else{
+//
+//                            }
+//
+//                        }
+//                    }else {
+//
+//                    }
+//                }
 
                 csecObj.put("Questions",cja_questions);
 

@@ -129,7 +129,7 @@ public class PaperActivity extends AppCompatActivity {
 
                 ptestcount=myhelper.getTestsByPaper(studentid,paperidList.get(i));
 
-                Cursor mycur=myhelper.getPractiseSummaryByPaper(paperidList.get(i));
+                Cursor mycur=myhelper.getPractiseSummaryByPaper(studentid,paperidList.get(i));
                 if(mycur.getCount()>0){
                     while (mycur.moveToNext()){
 

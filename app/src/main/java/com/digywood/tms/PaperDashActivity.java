@@ -97,7 +97,7 @@ public class PaperDashActivity extends AppCompatActivity {
 
                 int totaltestcount=myhelper.getTestsByPaper(studentid,paperids.get(i));
 
-                Cursor mycur=myhelper.getPractiseSummaryByPaper(paperids.get(i));
+                Cursor mycur=myhelper.getPractiseSummaryByPaper(studentid,paperids.get(i));
                 if(mycur.getCount()>0){
                     while (mycur.moveToNext()){
                         Log.e("Cursor Row:----",""+mycur.getCount()+"  paperid:--"+paperids.get(i));

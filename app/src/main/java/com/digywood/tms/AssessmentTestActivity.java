@@ -230,7 +230,7 @@ public class AssessmentTestActivity extends AppCompatActivity implements
             requestPermission();
         }
 
-        Cursor cursor = dataObj.getSingleAssessmentTests(testid);
+        Cursor cursor = dataObj.getSingleAssessmentTests(studentId,testid);
         if (cursor.getCount() > 0) {
             while (cursor.moveToNext()) {
                 if (cursor.getString(cursor.getColumnIndex("satu_ID")).equals(testid)) {
