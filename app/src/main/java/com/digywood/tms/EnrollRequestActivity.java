@@ -495,7 +495,7 @@ public class EnrollRequestActivity extends AppCompatActivity {
         hashMap.put("feetax",feetax);
         hashMap.put("totalfee",totalfee);
         hashMap.put("activationkey",CreateRandomString(8));
-        new BagroundTask(URLClass.hosturl+"insertEnrollRequest.php", hashMap, EnrollRequestActivity.this,new IBagroundListener() {
+        new BagroundTask(URLClass.hosturl+"insertEnrollRequest.php",hashMap,EnrollRequestActivity.this,new IBagroundListener() {
             @Override
             public void bagroundData(String json) {
                 try{
