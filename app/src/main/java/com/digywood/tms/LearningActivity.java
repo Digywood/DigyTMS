@@ -79,6 +79,24 @@ public class LearningActivity extends AppCompatActivity {
             studentname=cmgintent.getStringExtra("sname");
         }
 
+        rv_enroll.addOnItemTouchListener(new RecyclerTouchListener(getApplicationContext(),rv_enroll,new RecyclerTouchListener.OnItemClickListener(){
+            @Override
+            public void onClick(View view, int position) {
+                SingleEnrollment singleEnrollment=enrollList.get(position);
+                Intent intent=new Intent(getApplicationContext(),PaperActivity.class);
+                intent.putExtra("studentid",studentid);
+                intent.putExtra("enrollid",singleEnrollment.getEnrollid());
+                intent.putExtra("courseid",singleEnrollment.getCourseid());
+                startActivity(intent);
+                finish();
+            }
+
+            @Override
+            public void onLongClick(View view, int position) {
+
+            }
+        }));
+
         getEnrollsFromLocal();
 
     }
@@ -130,7 +148,7 @@ public class LearningActivity extends AppCompatActivity {
 
     public void getEnrollsFromLocal(){
 
-        Cursor mycursor=myhelper.getStudentEnrolls();
+        Cursor mycursor=myhelper.getStudentEnrolls(studentid);
         if(mycursor.getCount()>0){
             while (mycursor.moveToNext()) {
                 String coursename=myhelper.getCoursenameById(mycursor.getString(mycursor.getColumnIndex("Enroll_course_ID")));

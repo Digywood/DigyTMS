@@ -91,7 +91,7 @@ public class DashBoardNavActivity extends AppCompatActivity implements Navigatio
         tv_email=header.findViewById(R.id.tv_hsemail);
         tv_email.setText(email);
 
-        Cursor mycursor=myhelper.getAllEnrolls();
+        Cursor mycursor=myhelper.getAllEnrolls(studentid);
         Log.e("EnrollCount---",""+mycursor.getCount());
         if(mycursor.getCount()>0){
 
@@ -248,7 +248,7 @@ public class DashBoardNavActivity extends AppCompatActivity implements Navigatio
 
                                 testObj=ja_tests_table.getJSONObject(i);
 
-                                Cursor mycursor=myhelper.checkPractiseTest(testObj.getString("sptu_ID"));
+                                Cursor mycursor=myhelper.checkPractiseTest(studentid,testObj.getString("sptu_ID"));
                                 if(mycursor.getCount()>0){
                                     long updateFlag=myhelper.updatePractiseTestData(testObj.getString("sptu_org_id"),testObj.getString("sptu_entroll_id"),testObj.getString("sptu_student_ID"),
                                             testObj.getString("sptu_batch"),testObj.getString("sptu_ID"),testObj.getString("sptu_paper_ID"),testObj.getString("sptu_subjet_ID"),
@@ -295,7 +295,7 @@ public class DashBoardNavActivity extends AppCompatActivity implements Navigatio
 
                                 assesmentObj=ja_assesmenttests.getJSONObject(i);
 
-                                Cursor mycursor=myhelper.checkAssessmentTest(assesmentObj.getString("satu_ID"));
+                                Cursor mycursor=myhelper.checkAssessmentTest(studentid,assesmentObj.getString("satu_ID"));
 
                                 if(mycursor.getCount()>0){
                                     long updateFlag=myhelper.updateAssesmentTest(assesmentObj.getString("satu_org_id"),assesmentObj.getString("satu_entroll_id"),assesmentObj.getString("satu_student_id"),
@@ -637,7 +637,7 @@ public class DashBoardNavActivity extends AppCompatActivity implements Navigatio
                 }
                 finalPractiseObj.put("PractiseData",PrcatiseList);
 
-                Cursor mycur=myhelper.getAllPTestData("NotUploaded");
+                Cursor mycur=myhelper.getAllPTestData(studentid,"NotUploaded");
 
                 if(mycur.getCount()>0){
                     try{
@@ -742,7 +742,7 @@ public class DashBoardNavActivity extends AppCompatActivity implements Navigatio
 
                 finalFlashObj.put("FlashData",FlashList);
 
-                Cursor mycur=myhelper.getAllPTestData("NotUploaded");
+                Cursor mycur=myhelper.getAllPTestData(studentid,"NotUploaded");
 
                 if(mycur.getCount()>0){
                     try{
@@ -809,7 +809,7 @@ public class DashBoardNavActivity extends AppCompatActivity implements Navigatio
                                     Log.e("DBNActivity---","updated_test_rec:--"+ja_testIds.length());
                                     for(int i=0;i<ja_testIds.length();i++){
                                         testObj=ja_testIds.getJSONObject(i);
-                                        long updateFlag=myhelper.updatePTestUPLDStatus(testObj.getString("testId"),"Uploaded");
+                                        long updateFlag=myhelper.updatePTestUPLDStatus(studentid,testObj.getString("testId"),"Uploaded");
                                         if(updateFlag>0){
                                             p++;
                                         }else{

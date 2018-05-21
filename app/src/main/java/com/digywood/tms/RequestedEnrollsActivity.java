@@ -121,46 +121,48 @@ public class RequestedEnrollsActivity extends AppCompatActivity {
                                                         Toast.makeText(getApplicationContext(),"Unable to update Enrollment validation",Toast.LENGTH_SHORT).show();
                                                     }else{
 
-                                                        long updatesFlag=myhelper.updateEnrollmentStatus(singleEnrollRequest.getEnrollId(),"ACTIVATED");
+//                                                        long updatesFlag=myhelper.updateEnrollmentStatus(singleEnrollRequest.getEnrollId(),"ACTIVATED");
+//
+//                                                        if(updatesFlag>0){
+//                                                            Log.e("RequstedEnrollActivity","Enroll Status Updated Locally");
+//
+//                                                        }else{
+//                                                            Log.e("RequstedEnrollActivity","Unable to update Enroll Status Locally");
+//                                                        }
 
-                                                        if(updatesFlag>0){
-                                                            Log.e("RequstedEnrollActivity","Enroll Status Updated Locally");
-                                                            if(json.equalsIgnoreCase("Enrollment_Not_Exist")){
-                                                                Toast.makeText(getApplicationContext(),"Validated,Unable to get Enroll Data",Toast.LENGTH_SHORT).show();
-                                                            }else{
+                                                        if(json.equalsIgnoreCase("Enrollment_Not_Exist")){
+                                                            Toast.makeText(getApplicationContext(),"Validated,Unable to get Enroll Data",Toast.LENGTH_SHORT).show();
+                                                        }else{
 
-                                                                JSONObject myObj=null;
-                                                                JSONArray ja=new JSONArray(json);
-                                                                for(int i=0;i<ja.length();i++){
-                                                                    myObj=ja.getJSONObject(i);
+                                                            JSONObject myObj=null;
+                                                            JSONArray ja=new JSONArray(json);
+                                                            for(int i=0;i<ja.length();i++){
+                                                                myObj=ja.getJSONObject(i);
 
-                                                                    long checkFlag=myhelper.checkEnrollment(myObj.getString("Enroll_ID"));
+                                                                long checkFlag=myhelper.checkEnrollment(myObj.getString("Enroll_ID"));
 
-                                                                    if(checkFlag>0){
-                                                                        long updateFlag=myhelper.updateEnrollment(myObj.getString("Enroll_ID"),myObj.getString("Enroll_org_id"),myObj.getString("Enroll_Student_ID"),
-                                                                                myObj.getString("Enroll_batch_ID"),myObj.getString("Enroll_course_ID"),myObj.getString("Enroll_batch_start_Dt"),myObj.getString("Enroll_batch_end_Dt"),
-                                                                                myObj.getString("Enroll_Device_ID"),myObj.getString("Enroll_Date"),myObj.getString("Enroll_Status"));
-                                                                        if(updateFlag>0){
-                                                                            Log.e("ReqEnrollActivity---","Enroll Updated");
-                                                                        }else {
-                                                                            Log.e("ReqEnrollActivity---","Unable to update Enroll");
-                                                                        }
-                                                                    }else{
-                                                                        long insertFlag=myhelper.insertEnrollment(myObj.getInt("Enroll_key"),myObj.getString("Enroll_ID"),myObj.getString("Enroll_org_id"),myObj.getString("Enroll_Student_ID"),
-                                                                                myObj.getString("Enroll_batch_ID"),myObj.getString("Enroll_course_ID"),myObj.getString("Enroll_batch_start_Dt"),myObj.getString("Enroll_batch_end_Dt"),
-                                                                                myObj.getString("Enroll_Device_ID"),myObj.getString("Enroll_Date"),myObj.getString("Enroll_Status"));
-                                                                        if(insertFlag>0){
-                                                                            Log.e("ReqEnrollActivity---","Enroll Inserted");
-                                                                        }else {
-                                                                            Log.e("ReqEnrollActivity---","Unable to insert Enroll");
-                                                                        }
+                                                                if(checkFlag>0){
+                                                                    long updateFlag=myhelper.updateEnrollment(myObj.getString("Enroll_ID"),myObj.getString("Enroll_org_id"),myObj.getString("Enroll_Student_ID"),
+                                                                            myObj.getString("Enroll_batch_ID"),myObj.getString("Enroll_course_ID"),myObj.getString("Enroll_batch_start_Dt"),myObj.getString("Enroll_batch_end_Dt"),
+                                                                            myObj.getString("Enroll_Device_ID"),myObj.getString("Enroll_Date"),myObj.getString("Enroll_Status"));
+                                                                    if(updateFlag>0){
+                                                                        Log.e("ReqEnrollActivity---","Enroll Updated");
+                                                                    }else {
+                                                                        Log.e("ReqEnrollActivity---","Unable to update Enroll");
                                                                     }
-
+                                                                }else{
+                                                                    long insertFlag=myhelper.insertEnrollment(myObj.getInt("Enroll_key"),myObj.getString("Enroll_ID"),myObj.getString("Enroll_org_id"),myObj.getString("Enroll_Student_ID"),
+                                                                            myObj.getString("Enroll_batch_ID"),myObj.getString("Enroll_course_ID"),myObj.getString("Enroll_batch_start_Dt"),myObj.getString("Enroll_batch_end_Dt"),
+                                                                            myObj.getString("Enroll_Device_ID"),myObj.getString("Enroll_Date"),myObj.getString("Enroll_Status"));
+                                                                    if(insertFlag>0){
+                                                                        Log.e("ReqEnrollActivity---","Enroll Inserted");
+                                                                    }else {
+                                                                        Log.e("ReqEnrollActivity---","Unable to insert Enroll");
+                                                                    }
                                                                 }
 
                                                             }
-                                                        }else{
-                                                            Log.e("RequstedEnrollActivity","Unable to update Enroll Status Locally");
+
                                                         }
 
                                                     }

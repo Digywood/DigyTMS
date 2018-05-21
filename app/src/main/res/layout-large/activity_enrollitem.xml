@@ -19,225 +19,201 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:weightSum="10"
-            android:orientation="horizontal">
+            android:orientation="vertical">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="0.5"
-                android:orientation="vertical">
+                android:orientation="horizontal">
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal">
+                    android:layout_margin="2dp"
+                    android:layout_weight="1">
 
-                    <LinearLayout
-                        android:layout_width="match_parent"
+                    <TextView
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_margin="2dp"
-                        android:layout_weight="1">
+                        android:layout_marginRight="5dp"
+                        android:text="EnrollId"
+                        android:textColor="@color/green"
+                        android:gravity="center_vertical"
+                        android:textSize="16dp"/>
 
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginRight="5dp"
-                            android:text="EnrollId"
-                            android:textColor="@color/green"
-                            android:gravity="center_vertical"
-                            android:textSize="16dp"/>
-
-                        <TextView
-                            android:id="@+id/tv_enrollid"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:textColor="#000000"
-                            android:gravity="center_vertical"
-                            android:textSize="16dp"/>
-
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
+                    <TextView
+                        android:id="@+id/tv_enrollid"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_margin="2dp"
-                        android:layout_weight="1">
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginRight="5dp"
-                            android:text="BatchId"
-                            android:textColor="@color/green"
-                            android:gravity="center_vertical"
-                            android:textSize="16dp"/>
-
-                        <TextView
-                            android:id="@+id/tv_batchid"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:gravity="center_vertical"
-                            android:textColor="#000000"
-                            android:textSize="16dp"/>
-
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_margin="2dp"
-                        android:layout_weight="1">
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginRight="5dp"
-                            android:text="OrgId"
-                            android:textColor="@color/green"
-                            android:gravity="center_vertical"
-                            android:textSize="16dp"/>
-
-                        <TextView
-                            android:id="@+id/tv_orgnisationid"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:gravity="center_vertical"
-                            android:textColor="#000000"
-                            android:textSize="16dp"/>
-
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_margin="2dp"
-                        android:layout_weight="1">
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginRight="5dp"
-                            android:text="Days Left"
-                            android:textColor="@color/green"
-                            android:gravity="center_vertical"
-                            android:textSize="16dp"/>
-
-                        <TextView
-                            android:id="@+id/tv_daysleft"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:gravity="center_vertical"
-                            android:textColor="#000000"
-                            android:textSize="16dp"/>
-
-                    </LinearLayout>
+                        android:textColor="#000000"
+                        android:gravity="center_vertical"
+                        android:textSize="16dp"/>
 
                 </LinearLayout>
 
-                <View
+                <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="0.1dip"
-                    android:layout_margin="3dp"
-                    android:background="#7f7f7f"/>
+                    android:layout_height="wrap_content"
+                    android:layout_margin="2dp"
+                    android:layout_weight="1">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginRight="5dp"
+                        android:text="BatchId"
+                        android:textColor="@color/green"
+                        android:gravity="center_vertical"
+                        android:textSize="16dp"/>
+
+                    <TextView
+                        android:id="@+id/tv_batchid"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical"
+                        android:textColor="#000000"
+                        android:textSize="16dp"/>
+
+                </LinearLayout>
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:weightSum="10"
-                    android:orientation="horizontal">
+                    android:layout_margin="2dp"
+                    android:layout_weight="1">
 
-                    <LinearLayout
-                        android:layout_width="match_parent"
+                    <TextView
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_margin="2dp"
-                        android:layout_weight="2">
+                        android:layout_marginRight="5dp"
+                        android:text="OrgId"
+                        android:textColor="@color/green"
+                        android:gravity="center_vertical"
+                        android:textSize="16dp"/>
 
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="CourseName"
-                            android:layout_marginRight="5dp"
-                            android:textColor="@color/green"
-                            android:gravity="center_vertical"
-                            android:textSize="16dp"/>
-
-                        <TextView
-                            android:id="@+id/tv_coursename"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:textColor="#000000"
-                            android:gravity="center_vertical"
-                            android:textSize="16dp"/>
-
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
+                    <TextView
+                        android:id="@+id/tv_orgnisationid"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_margin="2dp"
-                        android:layout_weight="4">
+                        android:gravity="center_vertical"
+                        android:textColor="#000000"
+                        android:textSize="16dp"/>
 
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Actived Date"
-                            android:layout_marginRight="5dp"
-                            android:textColor="@color/green"
-                            android:gravity="center_vertical"
-                            android:textSize="16dp"/>
+                </LinearLayout>
 
-                        <TextView
-                            android:id="@+id/tv_activateddate"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:gravity="center_vertical"
-                            android:textColor="#000000"
-                            android:textSize="16dp"/>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="2dp"
+                    android:layout_weight="1">
 
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
+                    <TextView
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_margin="2dp"
-                        android:layout_weight="4">
+                        android:layout_marginRight="5dp"
+                        android:text="Days Left"
+                        android:textColor="@color/green"
+                        android:gravity="center_vertical"
+                        android:textSize="16dp"/>
 
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginRight="5dp"
-                            android:text="End Date"
-                            android:textColor="@color/green"
-                            android:gravity="center_vertical"
-                            android:textSize="16dp"/>
-
-                        <TextView
-                            android:id="@+id/tv_enddate"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:gravity="center_vertical"
-                            android:textColor="#000000"
-                            android:textSize="16dp"/>
-
-                    </LinearLayout>
+                    <TextView
+                        android:id="@+id/tv_daysleft"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical"
+                        android:textColor="#000000"
+                        android:textSize="16dp"/>
 
                 </LinearLayout>
 
             </LinearLayout>
 
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="0.1dip"
+                android:layout_margin="3dp"
+                android:background="#7f7f7f"/>
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical|center_horizontal"
-                android:layout_weight="9.5">
+                android:weightSum="10"
+                android:orientation="horizontal">
 
-                <Button
-                    android:id="@+id/btn_enrolldet"
-                    android:layout_width="40dp"
-                    android:layout_height="40dp"
-                    android:layout_gravity="center_vertical|end"
-                    android:background="@drawable/details1"/>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="2dp"
+                    android:layout_weight="2">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="CourseName"
+                        android:layout_marginRight="5dp"
+                        android:textColor="@color/green"
+                        android:gravity="center_vertical"
+                        android:textSize="16dp"/>
+
+                    <TextView
+                        android:id="@+id/tv_coursename"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="#000000"
+                        android:gravity="center_vertical"
+                        android:textSize="16dp"/>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="2dp"
+                    android:layout_weight="4">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Actived Date"
+                        android:layout_marginRight="5dp"
+                        android:textColor="@color/green"
+                        android:gravity="center_vertical"
+                        android:textSize="16dp"/>
+
+                    <TextView
+                        android:id="@+id/tv_activateddate"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical"
+                        android:textColor="#000000"
+                        android:textSize="16dp"/>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="2dp"
+                    android:layout_weight="4">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginRight="5dp"
+                        android:text="End Date"
+                        android:textColor="@color/green"
+                        android:gravity="center_vertical"
+                        android:textSize="16dp"/>
+
+                    <TextView
+                        android:id="@+id/tv_enddate"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical"
+                        android:textColor="#000000"
+                        android:textSize="16dp"/>
+
+                </LinearLayout>
 
             </LinearLayout>
 

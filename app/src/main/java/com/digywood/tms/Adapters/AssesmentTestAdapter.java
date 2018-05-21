@@ -63,7 +63,8 @@ public class AssesmentTestAdapter extends RecyclerView.Adapter<AssesmentTestAdap
     Boolean value = false;
     JSONParser myparser;
     String downloadjsonpath="",tfiledwdpath="",localpath="";
-    String filedata = "", path, jsonPath, assessmentPath, photoPath, enrollid, courseid, subjectId, paperid, testid,fullTest ,assessment ,json;
+    String filedata = "", path, jsonPath, assessmentPath, photoPath, enrollid, courseid;
+    String studentid="",subjectId, paperid, testid,fullTest ,assessment ,json;
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
 
@@ -123,7 +124,7 @@ public class AssesmentTestAdapter extends RecyclerView.Adapter<AssesmentTestAdap
                 submit.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        Cursor cursor = myhelper.validateAssessmentTestKey(singletest.getTestid());
+                        Cursor cursor = myhelper.validateAssessmentTestKey(studentid,singletest.getTestid());
                         if(cursor.getCount()> 0){
                             while (cursor.moveToNext()){
                                 String auth = cursor.getString(cursor.getColumnIndex("satu_exam_key"));
@@ -222,14 +223,14 @@ public class AssesmentTestAdapter extends RecyclerView.Adapter<AssesmentTestAdap
                             Log.e("UploadStatus---",json);
                             if(json.equalsIgnoreCase("Updated")){
 
-                                long updateFlag=myhelper.updateATestStatus(singletest.getTestid(),"STARTED");
+                                long updateFlag=myhelper.updateATestStatus(studentid,singletest.getTestid(),"STARTED");
                                 if(updateFlag>0){
                                     Log.e("LocalStatusUpdate---","Updated Locally");
                                 }else{
                                     Log.e("LocalStatusUpdate---","Unable to Update Locally");
                                 }
 
-                                Cursor mycursor=myhelper.checkAssessmentTest(singletest.getTestid());
+                                Cursor mycursor=myhelper.checkAssessmentTest(studentid,singletest.getTestid());
                                 if(mycursor.getCount()>0){
                                     while(mycursor.moveToNext()){
 
@@ -334,7 +335,7 @@ public class AssesmentTestAdapter extends RecyclerView.Adapter<AssesmentTestAdap
 
                                                                                 Log.e("UploadStatus---",json);
                                                                                 if(json.equalsIgnoreCase("Updated")){
-                                                                                    long updateFlag=myhelper.updateATestStatus(singletest.getTestid(),"DOWNLOADED");
+                                                                                    long updateFlag=myhelper.updateATestStatus(studentid,singletest.getTestid(),"DOWNLOADED");
                                                                                     if(updateFlag>0){
                                                                                         Log.e("LocalStatusUpdate---","Updated Locally");
                                                                                     }else{
@@ -431,7 +432,7 @@ public class AssesmentTestAdapter extends RecyclerView.Adapter<AssesmentTestAdap
     public String getExternalPath(Context context, SingleAssessment singletest) {
         DBHelper dataObj = new DBHelper(context);
         testid = singletest.getTestid();
-        Cursor cursor = dataObj.getSingleAssessmentTests(testid);
+        Cursor cursor = dataObj.getSingleAssessmentTests(studentid,testid);
 
         if (cursor.getCount() > 0) {
             while (cursor.moveToNext()) {

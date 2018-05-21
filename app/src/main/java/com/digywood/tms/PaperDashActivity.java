@@ -24,7 +24,7 @@ public class PaperDashActivity extends AppCompatActivity {
     RecyclerView rv_ptests;
     TextView tv_emptyptests;
     DBHelper myhelper;
-    String courseid="",testtype="";
+    String studentid="",courseid="",testtype="";
     PaperDashAdapter pdAdp;
     LinearLayoutManager myLayoutManager;
     ArrayList<SingleDashPaper> dashPaperList=new ArrayList<>();
@@ -53,6 +53,7 @@ public class PaperDashActivity extends AppCompatActivity {
 
         Intent cmgintent=getIntent();
         if(cmgintent!=null){
+            studentid=cmgintent.getStringExtra("studentid");
             courseid=cmgintent.getStringExtra("courseid");
             testtype=cmgintent.getStringExtra("testtype");
         }
@@ -94,7 +95,7 @@ public class PaperDashActivity extends AppCompatActivity {
 
             for(int i=0;i<paperids.size();i++){
 
-                int totaltestcount=myhelper.getTestsByPaper(paperids.get(i));
+                int totaltestcount=myhelper.getTestsByPaper(studentid,paperids.get(i));
 
                 Cursor mycur=myhelper.getPractiseSummaryByPaper(paperids.get(i));
                 if(mycur.getCount()>0){
@@ -155,7 +156,7 @@ public class PaperDashActivity extends AppCompatActivity {
             double min=0.0,max=0.0,avg=0.0,bmin=0.0,bmax=0.0,bavg=0.0;
 
             for(int i=0;i<paperids.size();i++){
-                int totaltestcount=myhelper.getTestsByPaper(paperids.get(i));
+                int totaltestcount=myhelper.getTestsByPaper(studentid,paperids.get(i));
 
                 Cursor mycur=myhelper.getFlashSummaryByPaper(paperids.get(i));
                 if(mycur.getCount()>0){
@@ -193,7 +194,7 @@ public class PaperDashActivity extends AppCompatActivity {
         if (dashPaperList.size() != 0) {
             Log.e("Advtlist.size()", "comes:" + dashPaperList.size());
             tv_emptyptests.setVisibility(View.GONE);
-            pdAdp = new PaperDashAdapter(dashPaperList,PaperDashActivity.this,"PRACTISE");
+            pdAdp = new PaperDashAdapter(dashPaperList,PaperDashActivity.this,studentid,"PRACTISE");
             myLayoutManager = new LinearLayoutManager(PaperDashActivity.this,LinearLayoutManager.VERTICAL,false);
             rv_ptests.setLayoutManager(myLayoutManager);
             rv_ptests.setItemAnimator(new DefaultItemAnimator());
@@ -208,7 +209,7 @@ public class PaperDashActivity extends AppCompatActivity {
         if (dashPaperList.size() != 0) {
             Log.e("Advtlist.size()", "comes:" + dashPaperList.size());
             tv_emptyptests.setVisibility(View.GONE);
-            pdAdp = new PaperDashAdapter(dashPaperList,PaperDashActivity.this,"FLASH");
+            pdAdp = new PaperDashAdapter(dashPaperList,PaperDashActivity.this,studentid,"FLASH");
             myLayoutManager = new LinearLayoutManager(PaperDashActivity.this,LinearLayoutManager.VERTICAL,false);
             rv_ptests.setLayoutManager(myLayoutManager);
             rv_ptests.setItemAnimator(new DefaultItemAnimator());

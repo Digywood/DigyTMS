@@ -63,7 +63,7 @@ public class ListofPractiseTests extends AppCompatActivity {
     ArrayList<String> alreadydwdList;
     ArrayList<SingleTest> dwdupdateList;
     LinearLayoutManager myLayoutManager;
-    String enrollid="",courseid="",paperid="",subjectid="",downloadjsonpath="",path="",localpath="",filedata="",groupdata="",tfiledwdpath="";
+    String studentid="",enrollid="",courseid="",paperid="",subjectid="",downloadjsonpath="",path="",localpath="",filedata="",groupdata="",tfiledwdpath="";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -105,6 +105,7 @@ public class ListofPractiseTests extends AppCompatActivity {
 
         Intent cmgintent=getIntent();
         if(cmgintent!=null){
+            studentid=cmgintent.getStringExtra("studentid");
             enrollid=cmgintent.getStringExtra("enrollid");
             courseid=cmgintent.getStringExtra("courseid");
             paperid=cmgintent.getStringExtra("paperid");
@@ -132,14 +133,14 @@ public class ListofPractiseTests extends AppCompatActivity {
                     Log.e("UploadStatus---",json);
                     if(json.equalsIgnoreCase("Updated")){
 
-                        long updateFlag=myhelper.updatePTestStatus(selectedtestidList.get(currentitem),"STARTED");
+                        long updateFlag=myhelper.updatePTestStatus(studentid,selectedtestidList.get(currentitem),"STARTED");
                         if(updateFlag>0){
                             Log.e("LocalStatusUpdate---","Updated Locally");
                         }else{
 
                         }
 
-                        Cursor mycursor=myhelper.checkPractiseTest(selectedtestidList.get(currentitem));
+                        Cursor mycursor=myhelper.checkPractiseTest(studentid,selectedtestidList.get(currentitem));
                         if(mycursor.getCount()>0){
                             while(mycursor.moveToNext()){
 
@@ -253,7 +254,7 @@ public class ListofPractiseTests extends AppCompatActivity {
 
                                                                         Log.e("UploadStatus---",json);
                                                                         if(json.equalsIgnoreCase("Updated")){
-                                                                            long updateFlag=myhelper.updatePTestStatus(selectedtestidList.get(currentitem),"DOWNLOADED");
+                                                                            long updateFlag=myhelper.updatePTestStatus(studentid,selectedtestidList.get(currentitem),"DOWNLOADED");
                                                                             if(updateFlag>0){
                                                                                 Log.e("LocalStatusUpdate---","Updated Locally");
                                                                             }else{
@@ -327,7 +328,7 @@ public class ListofPractiseTests extends AppCompatActivity {
     public void getTestIdsFromLocal(){
         testidList.clear();
         try {
-            Cursor mycursor=myhelper.getStudentTests(enrollid,courseid,paperid,"A");
+            Cursor mycursor=myhelper.getStudentTests(studentid,enrollid,courseid,paperid,"A");
             if(mycursor.getCount()>0){
                 while (mycursor.moveToNext()) {
                     testidList.add(new SingleTest(mycursor.getString(mycursor.getColumnIndex("sptu_ID")),mycursor.getString(mycursor.getColumnIndex("sptu_name")),mycursor.getString(mycursor.getColumnIndex("sptu_subjet_ID")),mycursor.getString(mycursor.getColumnIndex("sptu_dwnld_status"))));
@@ -556,7 +557,7 @@ public class ListofPractiseTests extends AppCompatActivity {
         if (testidList.size() != 0) {
             Log.e("Advtlist.size()", "comes:" + testidList.size());
             tv_emptytests.setVisibility(View.GONE);
-            tAdp = new PractiseTestAdapter(testidList,ListofPractiseTests.this);
+            tAdp = new PractiseTestAdapter(testidList,ListofPractiseTests.this,studentid);
             myLayoutManager = new LinearLayoutManager(ListofPractiseTests.this, LinearLayoutManager.VERTICAL,false);
             rv_tests.setLayoutManager(myLayoutManager);
             rv_tests.setItemAnimator(new DefaultItemAnimator());

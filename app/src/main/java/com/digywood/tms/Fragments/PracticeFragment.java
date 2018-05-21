@@ -59,7 +59,7 @@ public class PracticeFragment extends Fragment implements OnChartValueSelectedLi
     private String mParam2;
 
     DBHelper myhelper;
-    String enrollid="",courseid="";
+    String enrollid="",courseid="",studentid="",studentname="";
     int totptestcount=0,attemptpcount=0;
     float attemptpercent=0.0f;
     Double min=0.0,max=0.0,avg=0.0;
@@ -136,6 +136,17 @@ public class PracticeFragment extends Fragment implements OnChartValueSelectedLi
 
         myhelper=new DBHelper(getActivity());
 
+        try{
+            Intent cmgintent=getActivity().getIntent();
+            if(cmgintent!=null){
+                studentid=cmgintent.getStringExtra("studentid");
+                studentname=cmgintent.getStringExtra("sname");
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+            Log.e("PractiseFragment---",""+e.toString());
+        }
+
         return view;
     }
 
@@ -143,7 +154,7 @@ public class PracticeFragment extends Fragment implements OnChartValueSelectedLi
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        Cursor mycursor=myhelper.getAllEnrolls();
+        Cursor mycursor=myhelper.getAllEnrolls(studentid);
         Log.e("CursorCount---",""+mycursor.getCount());
         if(mycursor.getCount()>0){
             while(mycursor.moveToNext()){
@@ -163,6 +174,7 @@ public class PracticeFragment extends Fragment implements OnChartValueSelectedLi
             @Override
             public void onClick(View v) {
                 Intent i=new Intent(getActivity(), PaperDashActivity.class);
+                i.putExtra("studentid",studentid);
                 i.putExtra("courseid",courseid);
                 i.putExtra("testtype","PRACTISE");
                 startActivity(i);
@@ -456,7 +468,7 @@ public class PracticeFragment extends Fragment implements OnChartValueSelectedLi
     }
 
     public void updateData(String enrollId){
-        totptestcount=myhelper.getPTestsCount(enrollId);
+        totptestcount=myhelper.getPTestsCount(studentid,enrollId);
         tv_ptottests.setText(""+totptestcount);
 
         Cursor mycur1=myhelper.getPractiseSummary(enrollId);

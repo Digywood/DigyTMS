@@ -17,12 +17,11 @@ import android.widget.TextView;
 import com.digywood.tms.Adapters.TestDashAdapter;
 import com.digywood.tms.DBHelper.DBHelper;
 import com.digywood.tms.Pojo.SingleDashTest;
-
 import java.util.ArrayList;
 
 public class TestDashActivity extends AppCompatActivity {
 
-    String paperid="",testtype="";;
+    String studentid="",paperid="",testtype="";
     RecyclerView rv_tests;
     TextView tv_emptytests;
     DBHelper myhelper;
@@ -55,6 +54,7 @@ public class TestDashActivity extends AppCompatActivity {
 
         Intent cmgintent=getIntent();
         if(cmgintent!=null){
+            studentid=cmgintent.getStringExtra("studentid");
             paperid=cmgintent.getStringExtra("paperid");
             testtype=cmgintent.getStringExtra("testtype");
         }
@@ -74,7 +74,7 @@ public class TestDashActivity extends AppCompatActivity {
     public void getTestsByPaperP(String paperid){
 
         testids.clear();
-        Cursor mycursor=myhelper.getTestDataByPaper(paperid);
+        Cursor mycursor=myhelper.getTestDataByPaper(studentid,paperid);
         if(mycursor.getCount()>0){
             while (mycursor.moveToNext()){
                 String testid=mycursor.getString(mycursor.getColumnIndex("sptu_ID"));
@@ -97,7 +97,7 @@ public class TestDashActivity extends AppCompatActivity {
 
             for(int i=0;i<testids.size();i++){
 
-                Cursor mycur=myhelper.getTestPractiseSummary(testids.get(i));
+                Cursor mycur=myhelper.getTestPractiseSummary(testids.get(i),studentid);
                 if(mycur.getCount()>0){
                     while (mycur.moveToNext()){
                         attemptcount=mycur.getInt(mycur.getColumnIndex("sptu_no_of_attempts"));
@@ -136,7 +136,7 @@ public class TestDashActivity extends AppCompatActivity {
     public void getTestsByPaperF(String paperId){
 
         testids.clear();
-        Cursor mycursor=myhelper.getTestDataByPaper(paperId);
+        Cursor mycursor=myhelper.getTestDataByPaper(studentid,paperId);
         if(mycursor.getCount()>0){
             while (mycursor.moveToNext()){
                 String testid=mycursor.getString(mycursor.getColumnIndex("sptu_ID"));
@@ -159,7 +159,7 @@ public class TestDashActivity extends AppCompatActivity {
 
             for(int i=0;i<testids.size();i++){
 
-                Cursor mycur=myhelper.getTestFlashSummary(testids.get(i));
+                Cursor mycur=myhelper.getTestFlashSummary(testids.get(i),studentid);
                 if(mycur.getCount()>0){
                     while (mycur.moveToNext()){
                         attemptcount=mycur.getInt(mycur.getColumnIndex("sptuflash_attempts"));
