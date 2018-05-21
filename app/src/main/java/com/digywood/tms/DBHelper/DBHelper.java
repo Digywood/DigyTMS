@@ -744,20 +744,20 @@ public class DBHelper extends SQLiteOpenHelper {
         return c;
     }
 
-    public Cursor getPractiseSummary(String enrollId){
-        String query ="SELECT count(distinct Attempt_Test_ID) as attemptpcount,MIN(Attempt_Percentage) as minscore,MAX(Attempt_Percentage) as maxscore,AVG(Attempt_Percentage) as avgscore FROM "+"attempt_list"+" WHERE Attempt_enrollId ='"+enrollId+"'";
+    public Cursor getPractiseSummary(String enrollId,String studentId){
+        String query ="SELECT count(distinct Attempt_Test_ID) as attemptpcount,MIN(Attempt_Percentage) as minscore,MAX(Attempt_Percentage) as maxscore,AVG(Attempt_Percentage) as avgscore FROM "+"attempt_list"+" WHERE Attempt_enrollId ='"+enrollId+"' and Attempt_studentId ='"+studentId+"'";
         Cursor c=db.rawQuery(query,null);
         return c;
     }
 
-    public Cursor getPractiseSummaryByPaper(String paperId){
-        String query ="SELECT count(distinct Attempt_Test_ID) as attemptpcount,MIN(Attempt_Percentage) as minscore,MAX(Attempt_Percentage) as maxscore,AVG(Attempt_Percentage) as avgscore FROM "+"attempt_list"+" WHERE Attempt_paperId ='"+paperId+"'";
+    public Cursor getPractiseSummaryByPaper(String studentId,String paperId){
+        String query ="SELECT count(distinct Attempt_Test_ID) as attemptpcount,MIN(Attempt_Percentage) as minscore,MAX(Attempt_Percentage) as maxscore,AVG(Attempt_Percentage) as avgscore FROM "+"attempt_list"+" WHERE Attempt_studentId ='"+studentId+"' and Attempt_paperId ='"+paperId+"'";
         Cursor c=db.rawQuery(query,null);
         return c;
     }
 
-    public Cursor getPractiseSummaryByTest(String testId){
-        String query ="SELECT count(distinct Attempt_Test_ID) as attemptpcount,MIN(Attempt_Percentage) as minscore,MAX(Attempt_Percentage) as maxscore,AVG(Attempt_Percentage) as avgscore FROM "+"attempt_list"+" WHERE Attempt_Test_ID ='"+testId+"'";
+    public Cursor getPractiseSummaryByTest(String studentId,String testId){
+        String query ="SELECT count(distinct Attempt_Test_ID) as attemptpcount,MIN(Attempt_Percentage) as minscore,MAX(Attempt_Percentage) as maxscore,AVG(Attempt_Percentage) as avgscore FROM "+"attempt_list"+" WHERE Attempt_studentId ='"+studentId+"' and Attempt_Test_ID ='"+testId+"'";
         Cursor c=db.rawQuery(query,null);
         return c;
     }
