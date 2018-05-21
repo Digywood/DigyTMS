@@ -652,7 +652,10 @@ public class DBHelper extends SQLiteOpenHelper {
     }
 
     public Cursor getAssesmentTestsByEnroll(String studentId,String enrollId){
-        Cursor c =db.query("satu_student", new String[] {"satu_entroll_id,satu_student_id,satu_batch,satu_ID,satu_name,satu_paper_ID,satu_subjet_ID,satu_course_id,satu_start_date,satu_end_date,satu_dwnld_status"},"satu_entroll_id='"+enrollId+"'", null, null, null,null);
+        String query ="SELECT * FROM satu_student WHERE satu_student_id='"+studentId+"' and satu_entroll_id='"+enrollId+"'";
+        Cursor c=db.rawQuery(query,null);
+        Log.e("DBHELPER:---",""+query);
+//        Cursor c =db.query("satu_student",new String[] {"satu_entroll_id,satu_student_id,satu_batch,satu_ID,satu_name,satu_paper_ID,satu_subjet_ID,satu_course_id,satu_start_date,satu_end_date,satu_dwnld_status"},"satu_student_id='"+studentId+"' and satu_entroll_id='"+enrollId+"'", null, null, null,null);
         return c;
     }
 

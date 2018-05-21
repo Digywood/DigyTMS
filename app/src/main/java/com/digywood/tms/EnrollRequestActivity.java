@@ -53,7 +53,7 @@ public class EnrollRequestActivity extends AppCompatActivity {
     Button btn_reqenroll;
     DataAdaper dAdp;
     LinearLayoutManager myLayoutManager;
-    String startdate="",enddate="",studentid="";
+    String startdate="",enddate="",studentid="",batchid="";
     String orgid="",courseid="",branchid="",feeamount="",feetax="",totalfee="",RandomAudioFileName="ABCDEFGHIJKLMNOPQRSTUVWXYZ";
     ArrayAdapter<String> orgAdp,courseAdp,branchAdp,batchAdp;
     HashMap<String,String> hashMap=new HashMap<>();
@@ -127,6 +127,7 @@ public class EnrollRequestActivity extends AppCompatActivity {
                     orgid="";
                     courseid="";
                     branchid="";
+                    batchid="";
                     courseids.clear();
                     coursenames.clear();
                     sp_course.setAdapter(null);
@@ -144,6 +145,7 @@ public class EnrollRequestActivity extends AppCompatActivity {
                     orgid=orgids.get(position-1);
                     courseid="";
                     branchid="";
+                    batchid="";
                     courseids.clear();
                     coursenames.clear();
                     branchids.clear();
@@ -172,12 +174,14 @@ public class EnrollRequestActivity extends AppCompatActivity {
 
                 if(position==0){
                     courseid="";
+                    batchid="";
                     batchnames.clear();
                     batchList.clear();
                     batchdataList.clear();
                     sp_batch.setAdapter(null);
                 }else{
                     courseid=courseids.get(position-1);
+                    batchid="";
                     getBatches();
                 }
 
@@ -195,11 +199,13 @@ public class EnrollRequestActivity extends AppCompatActivity {
 
                 if(position==0){
                     branchid="";
+                    batchid="";
                     batchnames.clear();
                     batchList.clear();
                     batchdataList.clear();
                     sp_batch.setAdapter(null);
                 }else{
+                    batchid="";
                     branchid=branchids.get(position-1);
                     getBatches();
                 }
@@ -234,6 +240,9 @@ public class EnrollRequestActivity extends AppCompatActivity {
 
                     startdate=sb.getStartdate();
                     enddate=sb.getEnddate();
+
+                    batchid=sb.getId();
+
                 }
 
             }
@@ -483,7 +492,7 @@ public class EnrollRequestActivity extends AppCompatActivity {
         hashMap.put("StudentId",studentid);
         hashMap.put("OrgId",orgid);
         hashMap.put("CourseId",courseid);
-        hashMap.put("BranchId",branchid);
+        hashMap.put("BatchId",batchid);
         hashMap.put("startDate",startdate);
         hashMap.put("endDate",enddate);
         String androidid= Settings.Secure.getString(getApplicationContext().getContentResolver(), Settings.Secure.ANDROID_ID);

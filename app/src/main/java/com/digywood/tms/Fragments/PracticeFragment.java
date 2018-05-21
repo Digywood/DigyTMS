@@ -173,7 +173,7 @@ public class PracticeFragment extends Fragment implements OnChartValueSelectedLi
         btn_pdetails.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent i=new Intent(getActivity(), PaperDashActivity.class);
+                Intent i=new Intent(getActivity(),PaperDashActivity.class);
                 i.putExtra("studentid",studentid);
                 i.putExtra("courseid",courseid);
                 i.putExtra("testtype","PRACTISE");
