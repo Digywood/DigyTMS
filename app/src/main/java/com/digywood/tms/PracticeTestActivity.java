@@ -92,6 +92,7 @@ public class PracticeTestActivity extends AppCompatActivity implements
     Bundle bundle;
     Button btn_group_info, btn_qadditional, btn_review, btn_prev, btn_next, btn_clear_option, btn_mark,btn_confirm;
     Cursor c;
+    AlertDialog alertbox;
     public static PracticeTestActivity pactivity;
     AlertDialog alertDialog;
     Bitmap b, op, bitmap;
@@ -744,9 +745,9 @@ public class PracticeTestActivity extends AppCompatActivity implements
         try {
             buffer = attempt.getJSONArray("Sections").getJSONObject(pos).getJSONArray("Questions");
             Id = buffer.getJSONObject(index).getString("qbm_ID");
-            if (dataObj.getPosition(Id) > -1) {
+            if (dataObj.getPosition(Id,testid) > -1) {
                 Log.e("SelectedOption", "Reached");
-                opAdapter.setOptionsList(dataObj.getPosition(Id));
+                opAdapter.setOptionsList(dataObj.getPosition(Id,testid));
                 rv_option.setItemAnimator(null);
                 opAdapter.notifyDataSetChanged();
             }
@@ -776,7 +777,7 @@ public class PracticeTestActivity extends AppCompatActivity implements
                 if (result == 0) {
                     dataObj.InsertQuestion(attempt.getString("ptu_test_ID"), null, Id, Seq,attempt.getJSONArray("Sections").getJSONObject(pos).getString("ptu_section_name"),questionobj.getString("qbm_Chapter_name"),questionobj.getString("qbm_Sub_CategoryName"), Integer.valueOf(questionobj.getString("qbm_marks")), Double.valueOf(questionobj.getString("qbm_negative_mrk")), 0, 0, indx, listOfLists.get(pos).get(index).getQ_status(), opAdapter.getSelectedSequence(), opAdapter.getFlag());
                 }
-                Log.e("CurrentStatus", "" + dataObj.getPosition(Id));
+                Log.e("CurrentStatus", "" + dataObj.getPosition(Id,testid));
             }
 
         } catch (JSONException e) {
@@ -791,7 +792,7 @@ public class PracticeTestActivity extends AppCompatActivity implements
             Id = buffer.getJSONObject(index).getString("qbm_ID");
             Seq = buffer.getJSONObject(index).getString("qbm_SequenceId");
             questionobj = buffer.getJSONObject(index);
-            long value = dataObj.UpdateQuestion(attempt.getString("ptu_test_ID"), dataObj.getLastAttempt(), Id, Seq,attempt.getJSONArray("Sections").getJSONObject(pos).getString("ptu_section_name"),questionobj.getString("qbm_Chapter_name"),questionobj.getString("qbm_Sub_CategoryName"), Integer.valueOf(questionobj.getString("qbm_marks")), Double.valueOf(questionobj.getString("qbm_negative_mrk")), dataObj.getCorrectSum(), dataObj.getWrongSum(), -1, listOfLists.get(pos).get(index).getQ_status(), opAdapter.getSelectedSequence(), opAdapter.getFlag());
+            long value = dataObj.UpdateQuestion(attempt.getString("ptu_test_ID"), dataObj.getLastAttempt(), Id, Seq,attempt.getJSONArray("Sections").getJSONObject(pos).getString("ptu_section_name"),questionobj.getString("qbm_Chapter_name"),questionobj.getString("qbm_Sub_CategoryName"), Integer.valueOf(questionobj.getString("qbm_marks")), Double.valueOf(questionobj.getString("qbm_negative_mrk")), dataObj.getCorrectSum(testid), dataObj.getWrongSum(testid), -1, listOfLists.get(pos).get(index).getQ_status(), opAdapter.getSelectedSequence(), opAdapter.getFlag());
             if(value > 0){
                 listOfLists.get(pos).get(index).setQ_status(notAttempted);
                 listOfLists.get(pos).get(index).setQ_check(not_confirmed);
@@ -834,7 +835,7 @@ public class PracticeTestActivity extends AppCompatActivity implements
             @Override
             public void onClick(View v) {
                 AlertDialog alertbox = new AlertDialog.Builder(PracticeTestActivity.this)
-                        .setMessage("Do you want to finish Test?" + " " + dataObj.getQuestionCount())
+                        .setMessage("Do you want to finish Test?" + " " + dataObj.getQuestionCount(testid))
                         .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
 
                             // do something when the button is clicked

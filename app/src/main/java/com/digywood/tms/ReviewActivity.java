@@ -385,7 +385,7 @@ public class ReviewActivity extends AppCompatActivity implements
                                 btn_next.setText("Finish");
 //                                writeOption(opAdapter.getSelectedItem());
                                 AlertDialog alertbox = new AlertDialog.Builder(ReviewActivity.this)
-                                        .setMessage("Do you want to finish Review?" + " " + dataObj.getQuestionCount())
+                                        .setMessage("Do you want to finish Review?" + " " + dataObj.getQuestionCount(testid))
                                         .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                                             // do something when the button is clicked
                                             public void onClick(DialogInterface arg0, int arg1) {
@@ -602,8 +602,8 @@ public class ReviewActivity extends AppCompatActivity implements
         try {
             buffer = attempt.getJSONArray("Sections").getJSONObject(pos).getJSONArray("Questions");
             Id = buffer.getJSONObject(index).getString("qbm_ID");
-            if (dataObj.getPosition(Id) > -1) {
-                opAdapter.setOptionsList(dataObj.getPosition(Id));
+            if (dataObj.getPosition(Id,testid) > -1) {
+                opAdapter.setOptionsList(dataObj.getPosition(Id,testid));
                 opAdapter.notifyDataSetChanged();
                 ((SimpleItemAnimator) rv_option.getItemAnimator()).setSupportsChangeAnimations(false);
             }

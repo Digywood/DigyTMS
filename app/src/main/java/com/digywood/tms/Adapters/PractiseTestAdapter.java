@@ -159,7 +159,7 @@ public class PractiseTestAdapter extends RecyclerView.Adapter<PractiseTestAdapte
 
         holder.tv_teststatus.setText(singletest.getStatus());
         final DBHelper dataObj = new DBHelper(mycontext);
-        if (dataObj.getQuestionCount() == 0) {
+        if (dataObj.getQuestionCount(testid) == 0) {
             holder.iv_review.setEnabled(false);
         } else
             holder.iv_review.setEnabled(true);

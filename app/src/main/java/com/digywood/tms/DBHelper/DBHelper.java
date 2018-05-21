@@ -1540,14 +1540,20 @@ public class DBHelper extends SQLiteOpenHelper {
 
 
 
-    public Cursor getSections(){
-        String query ="SELECT DISTINCT Question_Section FROM attempt_data";
+    public Cursor getSections(String testId){
+        String query ="SELECT DISTINCT Question_Section FROM attempt_data WHERE Test_ID = '"+testId+"'";
         Cursor c=db.rawQuery(query,null);
         return c;
     }
 
     public Cursor getSubcategories(){
         String query ="SELECT DISTINCT Question_SubCategory FROM attempt_data";
+        Cursor c=db.rawQuery(query,null);
+        return c;
+    }
+
+    public Cursor getTestSubcategories(String testId){
+        String query ="SELECT DISTINCT Question_SubCategory FROM attempt_data WHERE Test_ID = '"+testId+"'";
         Cursor c=db.rawQuery(query,null);
         return c;
     }
@@ -1709,50 +1715,50 @@ public class DBHelper extends SQLiteOpenHelper {
         return CorrectList;
     }
 
-    public int getCorrectOptionsCount(){
+    public int getCorrectOptionsCount(String testId){
         int count = 0;
         ArrayList<Integer> OptionList = new ArrayList<>();
-        String query ="SELECT  Question_Option FROM "+" attempt_data"+" WHERE Option_Answer_Flag = 'YES' and Question_Status <> 'SKIPPED'";
+        String query ="SELECT  Question_Option FROM "+" attempt_data"+" WHERE Option_Answer_Flag = 'YES' and Question_Status <> 'SKIPPED' and Test_ID = '"+testId+"'";
         Cursor c=db.rawQuery(query,null);
         count = c.getCount();
         c.close();
         return count;
     }
 
-    public int getCorrectSum(){
+    public int getCorrectSum(String testId){
         int sum = 0;
         ArrayList<Integer> OptionList = new ArrayList<>();
-        String query ="SELECT  SUM(Question_Max_Marks) as SumPos FROM "+" attempt_data"+" WHERE Option_Answer_Flag = 'YES' and Question_Status <> 'SKIPPED'";
+        String query ="SELECT  SUM(Question_Max_Marks) as SumPos FROM "+" attempt_data"+" WHERE Option_Answer_Flag = 'YES' and Question_Status <> 'SKIPPED' and Test_ID = '"+testId+"'";
         Cursor c=db.rawQuery(query,null);
         sum = c.getInt(c.getColumnIndex("SumPos"));
         c.close();
         return sum;
     }
 
-    public int getWrongSum(){
+    public int getWrongSum(String testId){
         int sum = 0;
         ArrayList<Integer> OptionList = new ArrayList<>();
-        String query ="SELECT  SUM(Question_Max_Marks) as SumNeg FROM "+" attempt_data"+" WHERE Option_Answer_Flag = 'NO' and Question_Status <> 'SKIPPED'";
+        String query ="SELECT  SUM(Question_Max_Marks) as SumNeg FROM "+" attempt_data"+" WHERE Option_Answer_Flag = 'NO' and Question_Status <> 'SKIPPED' and Test_ID = '"+testId+"'";
         Cursor c=db.rawQuery(query,null);
         sum = c.getInt(c.getColumnIndex("SumNeg"));
         c.close();
         return sum;
     }
 
-    public int getWrongOptionsCount(){
+    public int getWrongOptionsCount(String testId){
         int count = 0;
         ArrayList<Integer> OptionList = new ArrayList<>();
-        String query ="SELECT  Question_Option FROM "+" attempt_data"+" WHERE Option_Answer_Flag = 'NO' and Question_Status NOT IN ('NOT_ATTEMPTED','SKIPPED') ";
+        String query ="SELECT  Question_Option FROM "+" attempt_data"+" WHERE Option_Answer_Flag = 'NO' and Question_Status NOT IN ('NOT_ATTEMPTED','SKIPPED') and Test_ID = '"+testId+"'";
         Cursor c=db.rawQuery(query,null);
         count = c.getCount();
         c.close();
         return count;
     }
 
-    public int getPosition(String qId){
+    public int getPosition(String qId,String testId){
         int value = -1;
         try {
-            String query ="SELECT  Question_Option FROM "+" attempt_data"+" WHERE Question_ID ='"+qId+"'";
+            String query ="SELECT  Question_Option FROM "+" attempt_data"+" WHERE Question_ID ='"+qId+"' and Test_ID = '"+testId+"'";
             db=this.getWritableDatabase();
             Cursor cursor=db.rawQuery(query,null);
             cursor.moveToFirst();
@@ -1764,7 +1770,7 @@ public class DBHelper extends SQLiteOpenHelper {
         return value;
     }
 
-    public int getQuestionCount(){
+    public int getQuestionCount(String testId){
         int count=0;
         String countQuery = "select * from attempt_data";
         Cursor c = db.rawQuery(countQuery, null);
@@ -1774,9 +1780,9 @@ public class DBHelper extends SQLiteOpenHelper {
 
     }
 
-    public int getQuestionAttempted(){
+    public int getQuestionAttempted(String testId){
         int count=0;
-        String query ="SELECT  Question_Status FROM "+" attempt_data"+" WHERE Question_Status = 'ATTEMPTED'";
+        String query ="SELECT  Question_Status FROM "+" attempt_data"+" WHERE Question_Status = 'ATTEMPTED' and Test_ID = '"+testId+"'";
         Cursor c = db.rawQuery(query, null);
         count=c.getCount();
         c.close();
@@ -1784,18 +1790,18 @@ public class DBHelper extends SQLiteOpenHelper {
 
     }
 
-    public int getQuestionSkipped(){
+    public int getQuestionSkipped(String testId){
         int count=0;
-        String query ="SELECT  Question_Status FROM "+" attempt_data"+" WHERE Question_Status = 'SKIPPED'";
+        String query ="SELECT  Question_Status FROM "+" attempt_data"+" WHERE Question_Status = 'SKIPPED' and Test_ID = '"+testId+"'";
         Cursor c = db.rawQuery(query, null);
         count=c.getCount();
         return count;
 
     }
 
-    public int getQuestionBookmarked(){
+    public int getQuestionBookmarked(String testId){
         int count=0;
-        String query ="SELECT  Question_Status FROM "+" attempt_data"+" WHERE Question_Status = 'BOOKMARKED'";
+        String query ="SELECT  Question_Status FROM "+" attempt_data"+" WHERE Question_Status = 'BOOKMARKED' and Test_ID = '"+testId+"'";
         Cursor c = db.rawQuery(query, null);
         count=c.getCount();
         c.close();
@@ -1803,9 +1809,9 @@ public class DBHelper extends SQLiteOpenHelper {
 
     }
 
-    public int getQuestionNotAttempted(){
+    public int getQuestionNotAttempted(String testId){
         int count=0;
-        String query ="SELECT  Question_Status FROM "+" attempt_data"+" WHERE Question_Status = 'NOT_ATTEMPTED'";
+        String query ="SELECT  Question_Status FROM "+" attempt_data"+" WHERE Question_Status = 'NOT_ATTEMPTED' and Test_ID = '"+testId+"'";
         Cursor c = db.rawQuery(query, null);
         count=c.getCount();
         c.close();
