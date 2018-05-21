@@ -175,7 +175,7 @@ public class ListofAssessmentTests extends AppCompatActivity {
         if (testidList.size() != 0) {
             Log.e("Advtlist.size()", "comes:" + testidList.size());
             tv_emptytests.setVisibility(View.GONE);
-            tAdp = new AssesmentTestAdapter(testidList,ListofAssessmentTests.this);
+            tAdp = new AssesmentTestAdapter(testidList,ListofAssessmentTests.this,studentid);
             myLayoutManager = new LinearLayoutManager(ListofAssessmentTests.this, LinearLayoutManager.VERTICAL,false);
             rv_tests.setLayoutManager(myLayoutManager);
             rv_tests.setItemAnimator(new DefaultItemAnimator());

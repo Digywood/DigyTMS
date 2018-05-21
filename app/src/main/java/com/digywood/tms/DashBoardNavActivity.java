@@ -100,12 +100,12 @@ public class DashBoardNavActivity extends AppCompatActivity implements Navigatio
             showAlert("No Existing Enrollments Found \n Please Sync from Server");
         }
 
-        if(restoredsname.equalsIgnoreCase("main")){
-            finalUrl=URLClass.hosturl;
-        }else{
-            serverId=myhelper.getServerId(restoredsname);
-            finalUrl="http://"+serverId+URLClass.loc_hosturl;
-        }
+//        if(restoredsname.equalsIgnoreCase("main")){
+//            finalUrl=URLClass.hosturl;
+//        }else{
+//            serverId=myhelper.getServerId(restoredsname);
+//            finalUrl="http://"+serverId+URLClass.loc_hosturl;
+//        }
 
         Log.e("FINALURL:--",finalUrl);
 
@@ -789,7 +789,7 @@ public class DashBoardNavActivity extends AppCompatActivity implements Navigatio
                 hmap.clear();
 //                Log.e("GNGJSON:--",finalFlashObj.toString());
                 hmap.put("jsonstr",finalFlashObj.toString());
-                new BagroundTask(finalUrl+"syncFlashData.php", hmap,DashBoardNavActivity.this,new IBagroundListener() {
+                new BagroundTask(URLClass.hosturl+"syncFlashData.php", hmap,DashBoardNavActivity.this,new IBagroundListener() {
                     @Override
                     public void bagroundData(String json) {
                         try{

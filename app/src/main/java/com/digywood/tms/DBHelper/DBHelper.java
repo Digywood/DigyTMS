@@ -1266,7 +1266,7 @@ public class DBHelper extends SQLiteOpenHelper {
     }
 
     public Cursor getSingleAssessmentTests(String studentId,String testId){
-        Cursor c =db.query("satu_student", new String[] {"satu_entroll_id,satu_student_ID,satu_ID,satu_paper_ID,satu_subjet_ID,satu_course_id,satu_dwnld_status"},"satu_student_id="+studentId+"' and satu_ID='"+testId+"'", null, null, null,null);
+        Cursor c =db.query("satu_student", new String[] {"satu_entroll_id,satu_student_ID,satu_ID,satu_paper_ID,satu_subjet_ID,satu_course_id,satu_dwnld_status"},"satu_student_id='"+studentId+"' and satu_ID='"+testId+"'", null, null, null,null);
         return c;
     }
 
