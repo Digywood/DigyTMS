@@ -225,13 +225,24 @@ public class ListofAssessmentTests extends AppCompatActivity {
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (keyCode == KeyEvent.KEYCODE_BACK) {
-//            exitByBackKey();
+            exitByBackKey();
 
             //moveTaskToBack(false);
 
             return true;
         }
         return super.onKeyDown(keyCode, event);
+    }
+
+    protected void exitByBackKey() {
+        finish();
+        Intent intent = new Intent(ListofAssessmentTests.this, PaperActivity.class);
+        intent.putExtra("studentid",studentid);
+        intent.putExtra("enrollid",enrollid);
+        intent.putExtra("courseid",courseid);
+        intent.putExtra("paperid",paperid);
+        startActivity(intent);
+
     }
 
 }

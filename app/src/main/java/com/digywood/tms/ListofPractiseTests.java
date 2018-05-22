@@ -820,7 +820,11 @@ public class ListofPractiseTests extends AppCompatActivity {
 
     protected void exitByBackKey() {
         finish();
-        Intent intent = new Intent(ListofPractiseTests.this, LearningActivity.class);
+        Intent intent = new Intent(ListofPractiseTests.this, PaperActivity.class);
+        intent.putExtra("studentid",studentid);
+        intent.putExtra("enrollid",enrollid);
+        intent.putExtra("courseid",courseid);
+        intent.putExtra("paperid",paperid);
         startActivity(intent);
 
     }

@@ -56,10 +56,17 @@ public class ScoreActivity extends AppCompatActivity {
         setContentView(R.layout.activity_score);
         bundle = new Bundle();
         bundle = getIntent().getBundleExtra("BUNDLE");
+        if (PracticeTestActivity.pactivity != null) {
+            PracticeTestActivity.pactivity.finish();
+        }
+
+        if (AssessmentTestActivity.Aactivity != null) {
+            AssessmentTestActivity.Aactivity.finish();
+        }
 
         try {
-            PracticeTestActivity.pactivity.finish();
-            attempt = new JSONObject(bundle.getString("JSON"));
+            attempt = new JSONObject(getIntent().getStringExtra("JSON"));
+            Log.e("AssessmentScore",attempt.toString());
         } catch (JSONException|NullPointerException e) {
             e.printStackTrace();
         }
@@ -142,10 +149,10 @@ public class ScoreActivity extends AppCompatActivity {
 
             }
             else {
-
+                testId = attempt.getString("atu_ID");
                 CorrectCount = dataObj.getAssessmentCorrectOptionsCount();
                 TotalCount = dataObj.getAssessmentQuestionAttempted()+dataObj.getAssessmentQuestionBookmarked();
-                testId = attempt.getString("atu_ID");
+
                 WrongCount = dataObj.getAssessmentWrongOptionsCount();
                 if(dataObj.getAssessmentQuestionAttempted() == 0){
                     TotalPositive = 0.0;
