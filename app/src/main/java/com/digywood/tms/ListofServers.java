@@ -161,6 +161,7 @@ public class ListofServers extends AppCompatActivity {
         if (serverList.size() != 0) {
             Log.e("serverlist.size()", "comes:" + serverList.size());
             tv_emptyservers.setVisibility(View.GONE);
+            btn_setserver.setVisibility(View.VISIBLE);
             sAdp = new ServerAdapter(serverList,ListofServers.this);
             myLayoutManager = new LinearLayoutManager(ListofServers.this,LinearLayoutManager.VERTICAL,false);
             rv_servers.setLayoutManager(myLayoutManager);
@@ -170,6 +171,7 @@ public class ListofServers extends AppCompatActivity {
             rv_servers.setAdapter(null);
             tv_emptyservers.setText("No Tests Attempt History");
             tv_emptyservers.setVisibility(View.VISIBLE);
+            btn_setserver.setVisibility(View.INVISIBLE);
         }
 
     }
