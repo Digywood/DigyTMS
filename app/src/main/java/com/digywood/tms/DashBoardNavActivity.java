@@ -48,7 +48,7 @@ public class DashBoardNavActivity extends AppCompatActivity implements Navigatio
     String testType="",restoredsname="",finalUrl="",serverId="";
     SharedPreferences restoredprefs;
     TextView tv_name,tv_email,tv_studentid;
-    String studentid,spersonname,email;
+    String studentid="",spersonname="",snumber="",email="";
     HashMap<String,String> hmap=new HashMap<>();
     DBHelper myhelper;
 
@@ -63,7 +63,7 @@ public class DashBoardNavActivity extends AppCompatActivity implements Navigatio
         myhelper=new DBHelper(this);
 
         restoredprefs = getSharedPreferences("SERVERPREF", MODE_PRIVATE);
-        restoredsname = restoredprefs.getString("servername","main");
+        restoredsname = restoredprefs.getString("servername","main_server");
 
         FragmentTransaction tx = getSupportFragmentManager().beginTransaction();
         tx.replace(R.id.fl_base, new HomeFragment());
@@ -79,6 +79,7 @@ public class DashBoardNavActivity extends AppCompatActivity implements Navigatio
         if(cmgintent!=null){
             studentid=cmgintent.getStringExtra("studentid");
             spersonname=cmgintent.getStringExtra("sname");
+            snumber=cmgintent.getStringExtra("number");
             email=cmgintent.getStringExtra("email");
             tv_studentid.setText(studentid);
         }
@@ -100,12 +101,12 @@ public class DashBoardNavActivity extends AppCompatActivity implements Navigatio
             showAlert("No Existing Enrollments Found \n Please Sync from Server");
         }
 
-//        if(restoredsname.equalsIgnoreCase("main")){
-//            finalUrl=URLClass.hosturl;
-//        }else{
-//            serverId=myhelper.getServerId(restoredsname);
-//            finalUrl="http://"+serverId+URLClass.loc_hosturl;
-//        }
+        if(restoredsname.equalsIgnoreCase("main_server")){
+            finalUrl=URLClass.hosturl;
+        }else{
+            serverId=myhelper.getServerId(restoredsname);
+            finalUrl="http://"+serverId+URLClass.loc_hosturl;
+        }
 
         Log.e("FINALURL:--",finalUrl);
 
@@ -309,6 +310,7 @@ public class DashBoardNavActivity extends AppCompatActivity implements Navigatio
                                         s++;
                                     }
                                 }else{
+
                                     long insertFlag=myhelper.insertAssesmentTest(assesmentObj.getInt("satu_key"),assesmentObj.getString("satu_org_id"),assesmentObj.getString("satu_entroll_id"),assesmentObj.getString("satu_student_id"),
                                             assesmentObj.getString("satu_batch"),assesmentObj.getString("satu_ID"),assesmentObj.getString("satu_name"),assesmentObj.getString("satu_paper_ID"),assesmentObj.getString("satu_subjet_ID"),
                                             assesmentObj.getString("satu_course_id"),assesmentObj.getString("satu_start_date"),assesmentObj.getString("satu_end_date"),assesmentObj.getString("satu_dwnld_status"),
@@ -542,9 +544,9 @@ public class DashBoardNavActivity extends AppCompatActivity implements Navigatio
 
         } else if (id == R.id.nav_configserver) {
 
-            Toast.makeText(getApplicationContext(),"restoredsname:--"+restoredsname,Toast.LENGTH_SHORT).show();
             Intent i=new Intent(getApplicationContext(),ListofServers.class);
             i.putExtra("studentid",studentid);
+            i.putExtra("number",snumber);
             startActivity(i);
 
         } else if (id == R.id.nav_contactus) {
@@ -683,7 +685,7 @@ public class DashBoardNavActivity extends AppCompatActivity implements Navigatio
 
                 hmap.clear();
                 hmap.put("jsonstr",finalPractiseObj.toString());
-                new BagroundTask(URLClass.hosturl +"syncPractiseTestData.php", hmap,DashBoardNavActivity.this,new IBagroundListener() {
+                new BagroundTask(finalUrl +"syncPractiseTestData.php", hmap,DashBoardNavActivity.this,new IBagroundListener() {
                     @Override
                     public void bagroundData(String json) {
                         try{
@@ -715,7 +717,7 @@ public class DashBoardNavActivity extends AppCompatActivity implements Navigatio
 
         JSONObject finalFlashObj=new JSONObject();
 
-        Cursor mycursor=myhelper.getFlashUploadData("NotUploaded");
+        Cursor mycursor=myhelper.getFlashUploadData(studentid,"NotUploaded");
         if(mycursor.getCount()>0){
             try{
                 JSONArray FlashList = new JSONArray();
@@ -789,7 +791,7 @@ public class DashBoardNavActivity extends AppCompatActivity implements Navigatio
                 hmap.clear();
 //                Log.e("GNGJSON:--",finalFlashObj.toString());
                 hmap.put("jsonstr",finalFlashObj.toString());
-                new BagroundTask(URLClass.hosturl+"syncFlashData.php", hmap,DashBoardNavActivity.this,new IBagroundListener() {
+                new BagroundTask(finalUrl+"syncFlashData.php", hmap,DashBoardNavActivity.this,new IBagroundListener() {
                     @Override
                     public void bagroundData(String json) {
                         try{
@@ -797,7 +799,6 @@ public class DashBoardNavActivity extends AppCompatActivity implements Navigatio
                             JSONObject testObj=null,flashObj=null;
                             Log.e("json"," comes :  "+json);
                             JSONObject mainObj=new JSONObject(json);
-
 
                             Object obj1=mainObj.get("testIds");
 
@@ -903,7 +904,7 @@ public class DashBoardNavActivity extends AppCompatActivity implements Navigatio
 
                 hmap.clear();
                 hmap.put("jsonstr",finalAssessmentObj.toString());
-                new BagroundTask(URLClass.hosturl +"syncAssessmentTestData.php", hmap,DashBoardNavActivity.this,new IBagroundListener() {
+                new BagroundTask(finalUrl+"syncAssessmentTestData.php", hmap,DashBoardNavActivity.this,new IBagroundListener() {
                     @Override
                     public void bagroundData(String json) {
                         try{
