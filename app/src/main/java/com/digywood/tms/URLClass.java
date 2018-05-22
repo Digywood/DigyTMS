@@ -26,7 +26,7 @@ public class URLClass {
 
     public static final String downloadjson="http://www.digywoodads.com/digytms/assets/";
 
-    public static final String loc_downloadjson="http://192.168.1.18/digywoodads/digytms/assets/";
+    public static final String loc_downloadjson="/digywoodads/digytms/assets/";
 
     public static final String mainpath=android.os.Environment.getExternalStorageDirectory().toString()+ "/tms/";
 

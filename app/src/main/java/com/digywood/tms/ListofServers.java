@@ -99,35 +99,41 @@ public class ListofServers extends AppCompatActivity {
                         editor.apply();
                         finish();
                     }else{
-                        serverId=myhelper.getServerId(selectedserver);
-                        finalUrl="http://"+serverId+URLClass.loc_hosturl;
+//                        serverId=myhelper.getServerId(selectedserver);
+//                        finalUrl="http://"+serverId+URLClass.loc_hosturl;
+//
+//                        hmap.clear();
+//                        hmap.put("email",snumber);
+//                        Log.e("FINALURL:--",""+finalUrl);
+//                        new BagroundTask(finalUrl+"checkUserExist.php",hmap,ListofServers.this,new IBagroundListener() {
+//                            @Override
+//                            public void bagroundData(String json) {
+//                                try{
+//                                    if(json!=null){
+//                                        Toast.makeText(getApplicationContext(),"Server:   "+selectedserver,Toast.LENGTH_SHORT).show();
+//                                        editor = getSharedPreferences("SERVERPREF", MODE_PRIVATE).edit();
+//                                        editor.putString("servername",selectedserver);
+//                                        editor.apply();
+//                                        finish();
+//                                        Toast.makeText(getApplicationContext(),"Connection Ok",Toast.LENGTH_SHORT).show();
+//                                    }else{
+//                                        Toast.makeText(getApplicationContext(),"This Connection is not available now",Toast.LENGTH_SHORT).show();
+//                                    }
+//
+//                                }catch (Exception e){
+//
+//                                    e.printStackTrace();
+//                                    Log.e("MainActivity----",e.toString());
+//
+//                                }
+//                            }
+//                        }).execute();
 
-                        hmap.clear();
-                        hmap.put("email",snumber);
-                        Log.e("FINALURL:--",""+finalUrl);
-                        new BagroundTask(finalUrl+"checkUserExist.php",hmap,ListofServers.this,new IBagroundListener() {
-                            @Override
-                            public void bagroundData(String json) {
-                                try{
-                                    if(json!=null){
-                                        Toast.makeText(getApplicationContext(),"Server:   "+selectedserver,Toast.LENGTH_SHORT).show();
-                                        editor = getSharedPreferences("SERVERPREF", MODE_PRIVATE).edit();
-                                        editor.putString("servername",selectedserver);
-                                        editor.apply();
-                                        finish();
-                                        Toast.makeText(getApplicationContext(),"Connection Ok",Toast.LENGTH_SHORT).show();
-                                    }else{
-                                        Toast.makeText(getApplicationContext(),"This Connection is not available now",Toast.LENGTH_SHORT).show();
-                                    }
+                        editor = getSharedPreferences("SERVERPREF", MODE_PRIVATE).edit();
+                        editor.putString("servername",selectedserver);
+                        editor.apply();
+                        finish();
 
-                                }catch (Exception e){
-
-                                    e.printStackTrace();
-                                    Log.e("MainActivity----",e.toString());
-
-                                }
-                            }
-                        }).execute();
                     }
                 }
             }
