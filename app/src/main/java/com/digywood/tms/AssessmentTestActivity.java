@@ -1221,6 +1221,7 @@ public class AssessmentTestActivity extends AppCompatActivity implements
             Log.e("ItemSelected", "reached");
             mHideRunnable.run();
             pos = position;
+          
             //Instantiate grid adapter
             scrollAdapter = new ScrollGridAdapter(AssessmentTestActivity.this, attempt.getJSONArray("Sections").getJSONObject(pos).getJSONArray("Questions"), listOfLists.get(pos), getScreenSize());
             setScrollbar(pos);
