@@ -19,6 +19,7 @@ import android.view.ViewAnimationUtils;
 import android.view.ViewTreeObserver;
 import android.view.animation.AccelerateInterpolator;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TableLayout;
 import android.widget.TableRow;
@@ -437,6 +438,7 @@ public class ScoreActivity extends AppCompatActivity {
         View layout = inflater.inflate(R.layout.detailedscoreview, null);
         AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);
         dialogBuilder.setView(layout);
+        ImageView close = layout.findViewById(R.id.iv_close);
         TableLayout tbl = layout.findViewById(R.id.tbl_score_details);
         TableRow tr1 = null;
         Log.e("SubcatQuestions","data:"+catList.size());
