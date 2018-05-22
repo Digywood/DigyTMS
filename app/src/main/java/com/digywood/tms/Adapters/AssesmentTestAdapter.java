@@ -4,6 +4,7 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.RecyclerView;
@@ -46,6 +47,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import static android.content.Context.MODE_PRIVATE;
+
 public class AssesmentTestAdapter extends RecyclerView.Adapter<AssesmentTestAdapter.MyViewHolder> {
 
     ArrayList<SingleAssessment> testList;
@@ -62,6 +65,8 @@ public class AssesmentTestAdapter extends RecyclerView.Adapter<AssesmentTestAdap
     DBHelper myhelper;
     Boolean value = false;
     JSONParser myparser;
+    SharedPreferences restoredprefs;
+    String finalUrl="",finalAssetUrl="",restoredsname="",serverId="";
     String downloadjsonpath="",tfiledwdpath="",localpath="";
     String filedata = "", path, jsonPath, assessmentPath, photoPath, enrollid="",courseid;
     String studentid="",subjectId, paperid, testid,fullTest ,assessment ,json;
@@ -87,6 +92,17 @@ public class AssesmentTestAdapter extends RecyclerView.Adapter<AssesmentTestAdap
         this.studentid=studentId;
         this.enrollid=enrollId;
         myhelper=new DBHelper(c);
+
+        restoredprefs = mycontext.getSharedPreferences("SERVERPREF", MODE_PRIVATE);
+        restoredsname = restoredprefs.getString("servername","main_server");
+        if(restoredsname.equalsIgnoreCase("main_server")){
+            finalUrl=URLClass.hosturl;
+            finalAssetUrl=URLClass.downloadjson;
+        }else{
+            serverId=myhelper.getServerId(restoredsname);
+            finalUrl="http://"+serverId+URLClass.loc_hosturl;
+            finalAssetUrl="http://"+serverId+URLClass.loc_downloadjson;
+        }
     }
 
     @Override
@@ -220,7 +236,7 @@ public class AssesmentTestAdapter extends RecyclerView.Adapter<AssesmentTestAdap
                 hmap.clear();
                 hmap.put("testid",singletest.getTestid());
                 hmap.put("status","STARTED");
-                new BagroundTask(URLClass.hosturl +"updateAssesmentTestStatus.php",hmap,mycontext,new IBagroundListener() {
+                new BagroundTask(finalUrl+"updateAssesmentTestStatus.php",hmap,mycontext,new IBagroundListener() {
                     @Override
                     public void bagroundData(String json) {
                         try{
@@ -248,9 +264,9 @@ public class AssesmentTestAdapter extends RecyclerView.Adapter<AssesmentTestAdap
 
                                 path=courseid+"/"+subjectId+"/"+paperid+"/"+singletest.getTestid()+"/";
 
-                                downloadjsonpath=URLClass.downloadjson+"courses/"+path+singletest.getTestid()+".json";
+                                downloadjsonpath=finalAssetUrl+"courses/"+path+singletest.getTestid()+".json";
 
-                                tfiledwdpath=URLClass.downloadjson+"courses/"+path;
+                                tfiledwdpath=finalAssetUrl+"courses/"+path;
 
                                 localpath=enrollid+"/"+courseid+"/"+subjectId+"/"+paperid+"/"+singletest.getTestid()+"/";
 
@@ -308,7 +324,7 @@ public class AssesmentTestAdapter extends RecyclerView.Adapter<AssesmentTestAdap
 
                                                         }else{
 
-                                                            String tPath=URLClass.downloadjson+"courses/"+courseid+"/"+sdq.getSubjectId()+"/"+sdq.getPaperId()+"/";
+                                                            String tPath=finalAssetUrl+"courses/"+courseid+"/"+sdq.getSubjectId()+"/"+sdq.getPaperId()+"/";
                                                             finalUrls.add(tPath+sdq.getChapterId()+"/"+sdq.getFileName());
                                                             finalNames.add(sdq.getFileName());
                                                             localPathList.add(URLClass.mainpath+enrollid+"/"+courseid+"/"+sdq.getSubjectId()+"/"+sdq.getPaperId()+"/"+sdq.getChapterId()+"/");
@@ -529,7 +545,7 @@ public class AssesmentTestAdapter extends RecyclerView.Adapter<AssesmentTestAdap
         hmap.clear();
         hmap.put("testid",testid);
         hmap.put("status","DOWNLOADED");
-        new BagroundTask(URLClass.hosturl +"updateAssesmentTestStatus.php",hmap, mycontext, new IBagroundListener() {
+        new BagroundTask(finalUrl+"updateAssesmentTestStatus.php",hmap, mycontext, new IBagroundListener() {
             @Override
             public void bagroundData(String json) {
                 try {
