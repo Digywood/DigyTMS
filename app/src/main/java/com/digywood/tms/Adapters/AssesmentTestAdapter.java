@@ -63,7 +63,7 @@ public class AssesmentTestAdapter extends RecyclerView.Adapter<AssesmentTestAdap
     Boolean value = false;
     JSONParser myparser;
     String downloadjsonpath="",tfiledwdpath="",localpath="";
-    String filedata = "", path, jsonPath, assessmentPath, photoPath, enrollid, courseid;
+    String filedata = "", path, jsonPath, assessmentPath, photoPath, enrollid="",courseid;
     String studentid="",subjectId, paperid, testid,fullTest ,assessment ,json;
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
@@ -81,10 +81,11 @@ public class AssesmentTestAdapter extends RecyclerView.Adapter<AssesmentTestAdap
         }
     }
 
-    public AssesmentTestAdapter(ArrayList<SingleAssessment> testList, Context c,String studentId) {
+    public AssesmentTestAdapter(ArrayList<SingleAssessment> testList, Context c,String studentId,String enrollId) {
         this.testList = testList;
         this.mycontext = c;
         this.studentid=studentId;
+        this.enrollid=enrollId;
         myhelper=new DBHelper(c);
     }
 
@@ -136,6 +137,7 @@ public class AssesmentTestAdapter extends RecyclerView.Adapter<AssesmentTestAdap
                                         assessment = new String(SaveJSONdataToFile.bytesFromFile(getExternalPath(mycontext, singletest) ), "UTF-8");
                                         Intent i = new Intent(mycontext, AssessmentTestActivity.class);
                                         i.putExtra("json", assessment);
+                                        i.putExtra("enrollid",enrollid);
                                         i.putExtra("test", testid);
                                         i.putExtra("status", "NEW");
                                         mycontext.startActivity(i);
@@ -231,11 +233,9 @@ public class AssesmentTestAdapter extends RecyclerView.Adapter<AssesmentTestAdap
                                     Log.e("LocalStatusUpdate---","Unable to Update Locally");
                                 }
 
-                                Cursor mycursor=myhelper.checkAssessmentTest(studentid,singletest.getTestid());
+                                Cursor mycursor=myhelper.checkAssessmentTest(studentid,enrollid,singletest.getTestid());
                                 if(mycursor.getCount()>0){
                                     while(mycursor.moveToNext()){
-
-                                        enrollid=mycursor.getString(mycursor.getColumnIndex("satu_entroll_id"));
                                         courseid=mycursor.getString(mycursor.getColumnIndex("satu_course_id"));
                                         subjectId=mycursor.getString(mycursor.getColumnIndex("satu_subjet_ID"));
                                         paperid=mycursor.getString(mycursor.getColumnIndex("satu_paper_ID"));
@@ -315,6 +315,7 @@ public class AssesmentTestAdapter extends RecyclerView.Adapter<AssesmentTestAdap
                                                     }
 
                                                 }else{
+                                                    updateAssessmentTestStatus(singletest.getTestid());
                                                     Log.e("LearningActivity----","No Downloaded Images for test");
                                                 }
 
@@ -326,34 +327,8 @@ public class AssesmentTestAdapter extends RecyclerView.Adapter<AssesmentTestAdap
 
                                                             try{
                                                                 if(status.equalsIgnoreCase("Completed")){
-                                                                    hmap.clear();
-                                                                    hmap.put("testid",singletest.getTestid());
-                                                                    hmap.put("status","Downloaded");
-                                                                    new BagroundTask(URLClass.hosturl +"updateAssesmentTestStatus.php",hmap, mycontext, new IBagroundListener() {
-                                                                        @Override
-                                                                        public void bagroundData(String json) {
-                                                                            try {
 
-                                                                                Log.e("UploadStatus---",json);
-                                                                                if(json.equalsIgnoreCase("Updated")){
-                                                                                    long updateFlag=myhelper.updateATestStatus(studentid,singletest.getTestid(),"DOWNLOADED");
-                                                                                    if(updateFlag>0){
-                                                                                        Log.e("LocalStatusUpdate---","Updated Locally");
-                                                                                    }else{
-                                                                                        Log.e("LocalStatusUpdate---","Unable to Update Locally");
-                                                                                    }
-
-                                                                                    Toast.makeText(mycontext,"All Downloaded",Toast.LENGTH_SHORT).show();
-                                                                                }else{
-
-                                                                                }
-
-                                                                            } catch (Exception e) {
-                                                                                e.printStackTrace();
-                                                                                Log.e("ListofPractiseTests----", e.toString());
-                                                                            }
-                                                                        }
-                                                                    }).execute();
+                                                                    updateAssessmentTestStatus(singletest.getTestid());
 
                                                                 }else{
 
@@ -369,8 +344,8 @@ public class AssesmentTestAdapter extends RecyclerView.Adapter<AssesmentTestAdap
 
                                                 }else{
 
+                                                    updateAssessmentTestStatus(singletest.getTestid());
                                                     Toast.makeText(mycontext,"All Downloaded",Toast.LENGTH_SHORT).show();
-
                                                 }
 
                                             }else{
@@ -433,11 +408,10 @@ public class AssesmentTestAdapter extends RecyclerView.Adapter<AssesmentTestAdap
     public String getExternalPath(Context context, SingleAssessment singletest) {
         DBHelper dataObj = new DBHelper(context);
         testid = singletest.getTestid();
-        Cursor cursor = dataObj.getSingleAssessmentTests(studentid,testid);
+        Cursor cursor = dataObj.getSingleAssessmentTests(studentid,enrollid,testid);
 
         if (cursor.getCount() > 0) {
             while (cursor.moveToNext()) {
-                enrollid = cursor.getString(cursor.getColumnIndex("satu_entroll_id"));
                 courseid = cursor.getString(cursor.getColumnIndex("satu_course_id"));
                 subjectId = cursor.getString(cursor.getColumnIndex("satu_subjet_ID"));
                 paperid = cursor.getString(cursor.getColumnIndex("satu_paper_ID"));
@@ -548,6 +522,37 @@ public class AssesmentTestAdapter extends RecyclerView.Adapter<AssesmentTestAdap
             e.printStackTrace();
             Log.e("JSONPARSE---",e.toString());
         }
+    }
+
+    public  void updateAssessmentTestStatus(final String testid){
+        hmap.clear();
+        hmap.put("testid",testid);
+        hmap.put("status","DOWNLOADED");
+        new BagroundTask(URLClass.hosturl +"updateAssesmentTestStatus.php",hmap, mycontext, new IBagroundListener() {
+            @Override
+            public void bagroundData(String json) {
+                try {
+
+                    Log.e("UploadStatus---",json);
+                    if(json.equalsIgnoreCase("Updated")){
+                        long updateFlag=myhelper.updateATestStatus(studentid,testid,"DOWNLOADED");
+                        if(updateFlag>0){
+                            Log.e("LocalStatusUpdate---","Updated Locally");
+                        }else{
+                            Log.e("LocalStatusUpdate---","Unable to Update Locally");
+                        }
+
+                        Toast.makeText(mycontext,"All Downloaded",Toast.LENGTH_SHORT).show();
+                    }else{
+
+                    }
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    Log.e("ListofPractiseTests----", e.toString());
+                }
+            }
+        }).execute();
     }
 
 }
