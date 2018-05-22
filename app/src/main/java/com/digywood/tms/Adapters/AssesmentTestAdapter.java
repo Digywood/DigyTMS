@@ -131,7 +131,7 @@ public class AssesmentTestAdapter extends RecyclerView.Adapter<AssesmentTestAdap
                             while (cursor.moveToNext()){
                                 String auth = cursor.getString(cursor.getColumnIndex("satu_exam_key"));
                                 if(auth.equals(key.getText().toString())){
-//                                    myhelper.Destroy("assessment_data");
+                                    myhelper.Destroy("assessment_data");
                                     try {
                                         assessment = new String(SaveJSONdataToFile.bytesFromFile(getExternalPath(mycontext, singletest) ), "UTF-8");
                                     } catch (IOException | ClassNotFoundException | NullPointerException e) {

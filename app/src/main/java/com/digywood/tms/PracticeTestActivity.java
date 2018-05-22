@@ -82,6 +82,7 @@ public class PracticeTestActivity extends AppCompatActivity implements
     LinearLayoutManager myLayoutManager;
     ArrayAdapter adapter;
     RecyclerView rv_option;
+    RelativeLayout parent;
     ArrayList<String> categories;
     private static final String TAG = "PracticeTestActivity";
     ArrayList<Integer> oplist = new ArrayList<>();
@@ -125,7 +126,7 @@ public class PracticeTestActivity extends AppCompatActivity implements
      */
     private static final int UI_ANIMATION_DELAY = 300;
     private final Handler mHideHandler = new Handler();
-    private View mContentView;
+//    private View mContentView;
     private final Runnable mHidePart2Runnable = new Runnable() {
         @SuppressLint("InlinedApi")
         @Override
@@ -146,12 +147,12 @@ public class PracticeTestActivity extends AppCompatActivity implements
     private final Runnable mShowPart2Runnable = new Runnable() {
         @Override
         public void run() {
-            // Delayed display of UI elements
-            ActionBar actionBar = getSupportActionBar();
-            if (actionBar != null) {
-                actionBar.show();
-            }
-            mControlsView.setVisibility(View.VISIBLE);
+//            // Delayed display of UI elements
+//            ActionBar actionBar = getSupportActionBar();
+//            if (actionBar != null) {
+//                actionBar.show();
+//            }
+//            parent.setVisibility(View.VISIBLE);
         }
     };
     private boolean mVisible;
@@ -184,6 +185,7 @@ public class PracticeTestActivity extends AppCompatActivity implements
 
         dataObj = new DBHelper(this);
         pactivity = this;
+        parent = findViewById(R.id.parent);
         question_scroll = findViewById(R.id.question_scroll);
         question_img = findViewById(R.id.question_img);
         btn_prev = findViewById(R.id.prev_btn);
@@ -255,6 +257,21 @@ public class PracticeTestActivity extends AppCompatActivity implements
         temp = new JSONObject();
         sectionArray = new JSONArray();
         attempt = new JSONObject();
+
+        parent.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                toggle();
+            }
+        });
+        show();
+        question_img.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                hide();
+                return false;
+            }
+        });
 
         gd = new GestureDetector(PracticeTestActivity.this, new GestureDetector.SimpleOnGestureListener() {
 
@@ -484,12 +501,12 @@ public class PracticeTestActivity extends AppCompatActivity implements
 
                                                 Intent intent = new Intent(PracticeTestActivity.this, ScoreActivity.class);
                                                 bundle = new Bundle();
-                                                bundle.putString("JSON", attempt.toString());
                                                 bundle.putString("enrollid",enrollid);
                                                 bundle.putString("courseid", courseid);
                                                 bundle.putString("subjectid", subjectId);
                                                 bundle.putString("paperid",paperid);
                                                 bundle.putString("Type","PRACTICE");
+                                                intent.putExtra("JSON", attempt.toString());
                                                 intent.putExtra("studentid",studentId);
                                                 intent.putExtra("BUNDLE", bundle);
                                                 intent.putExtra("Xreveal", revealX);
@@ -500,7 +517,7 @@ public class PracticeTestActivity extends AppCompatActivity implements
                                         .setNegativeButton("No", new DialogInterface.OnClickListener() {
                                             // do something when the button is clicked
                                             public void onClick(DialogInterface arg0, int arg1) {
-                                                mHideRunnable.run();
+                                                toggle();
                                                 btn_next.setText("Next");
                                             }
                                         })
@@ -508,7 +525,7 @@ public class PracticeTestActivity extends AppCompatActivity implements
                                 alertbox.setOnCancelListener(new DialogInterface.OnCancelListener() {
                                     @Override
                                     public void onCancel(DialogInterface dialog) {
-                                        mHideRunnable.run();
+                                        toggle();
                                         btn_next.setText("Next");
                                     }
                                 });
@@ -726,7 +743,7 @@ public class PracticeTestActivity extends AppCompatActivity implements
                 @Override
                 public void onClick(View v) {
                     alertDialog.cancel();
-                    mHideRunnable.run();
+                    toggle();
                 }
             });
             //Instantiate grid view
@@ -864,12 +881,12 @@ public class PracticeTestActivity extends AppCompatActivity implements
                                     int revealY = (int) (finish_view.getY() + finish_view.getHeight() / 2);
                                     Intent intent = new Intent(PracticeTestActivity.this, ScoreActivity.class);
                                     bundle = new Bundle();
-                                    bundle.putString("JSON", attempt.toString());
                                     bundle.putString("enrollid",enrollid);
                                     bundle.putString("courseid", courseid);
                                     bundle.putString("subjectid", subjectId);
                                     bundle.putString("paperid",paperid);
                                     bundle.putString("Type","PRACTICE");
+                                    intent.putExtra("JSON", attempt.toString());
                                     intent.putExtra("studentid",studentId);
                                     intent.putExtra("BUNDLE", bundle);
                                     intent.putExtra("Xreveal", revealX);
@@ -884,7 +901,7 @@ public class PracticeTestActivity extends AppCompatActivity implements
                         .setNegativeButton("No", new DialogInterface.OnClickListener() {
                             // do something when the button is clicked
                             public void onClick(DialogInterface arg0, int arg1) {
-                                mHideRunnable.run();
+                                toggle();
                                 btn_next.setText("Next");
                             }
                         })
@@ -892,7 +909,7 @@ public class PracticeTestActivity extends AppCompatActivity implements
                 alertbox.setOnCancelListener(new DialogInterface.OnCancelListener() {
                     @Override
                     public void onCancel(DialogInterface dialog) {
-                        mHideRunnable.run();
+                        toggle();
                         btn_next.setText("Next");
                     }
                 });
@@ -905,7 +922,7 @@ public class PracticeTestActivity extends AppCompatActivity implements
             @Override
             public void onClick(View v) {
                 alertDialog.cancel();
-                mHideRunnable.run();
+                toggle();
             }
         });
     }
@@ -1200,7 +1217,7 @@ public class PracticeTestActivity extends AppCompatActivity implements
 
                     // do something when the button is clicked
                     public void onClick(DialogInterface arg0, int arg1) {
-                        mHideRunnable.run();
+                        toggle();
                     }
                 })
                 .show();
@@ -1241,7 +1258,7 @@ public class PracticeTestActivity extends AppCompatActivity implements
     @SuppressLint("InlinedApi")
     private void show() {
         // Show the system bar
-        mContentView.setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+        parent.setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
                 | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION);
         mVisible = true;
 
@@ -1262,7 +1279,7 @@ public class PracticeTestActivity extends AppCompatActivity implements
 
     @Override
     protected void onPostResume() {
-        mHideRunnable.run();
+        toggle();
         super.onPostResume();
     }
 
@@ -1271,7 +1288,7 @@ public class PracticeTestActivity extends AppCompatActivity implements
         ((TextView) parent.getChildAt(0)).setTextColor(Color.WHITE);
         try {
             Log.e("ItemSelected", "reached");
-            mHideRunnable.run();
+            toggle();
             pos = position;
             //Instantiate grid adapter
             Log.e("Size", "" + listOfLists.size());
@@ -1294,7 +1311,7 @@ public class PracticeTestActivity extends AppCompatActivity implements
             Log.e("NothingSelected", "reached");
             setScrollbar(0);
             pos = 0;
-            mHideRunnable.run();
+            toggle();
         } catch (JSONException e) {
             e.printStackTrace();
         }

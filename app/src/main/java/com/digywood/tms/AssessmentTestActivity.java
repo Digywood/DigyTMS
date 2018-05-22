@@ -1069,9 +1069,9 @@ public class AssessmentTestActivity extends AppCompatActivity implements
                     Id = array2.getJSONObject(j).getString("qbm_ID");
 //                    Seq = array2.getJSONObject(j).getString("qbm_SequenceId");
                     questionobj = array2.getJSONObject(j);
-                    Log.e("sequence", Id);
                     qListObj = new SingleQuestionList(array2.getJSONObject(j).getString("qbm_SequenceId"), notAttempted,not_confirmed);
-                    //dataObj.InsertAssessmentQuestion(attempt.getString("atu_ID"),generateUniqueId(Id), Id, null,attempt.getJSONArray("Sections").getJSONObject(pos).getString("atu_section_name"),questionobj.getString("qbm_ChapterName"),questionobj.getString("qbm_Sub_CategoryName"), 0, 0, 0, 0, -1, notAttempted,"NotUploaded", "-1", "NO");
+                    long value = dataObj.InsertAssessmentQuestion(attempt.getString("atu_ID"),generateUniqueId(Id), Id, null,attempt.getJSONArray("Sections").getJSONObject(pos).getString("atu_section_name"),questionobj.getString("qbm_ChapterName"),questionobj.getString("qbm_Sub_CategoryName"), 0, 0, 0, 0, -1, notAttempted,"NotUploaded", "-1", "NO");
+                    Log.e("StoreSectons",""+value);
                     questionOpList.add(qListObj);
                 }
                 listOfLists.add(questionOpList);
@@ -1131,10 +1131,6 @@ public class AssessmentTestActivity extends AppCompatActivity implements
                     public void onClick(DialogInterface arg0, int arg1) {
                         try {
                             long value = dataObj.UpdateAssessment(attempt.getString("atu_ID"),enrollid,studentId,courseid,subjectId,paperid,1,"", 0.0,dataObj.getAssessmentQuestionAttempted(),dataObj.getAssessmentQuestionSkipped(),dataObj.getAssessmentQuestionBookmarked(),dataObj.getAssessmentQuestionNotAttempted(), 0.0, millisRemaining, index, pos);
-/*                            if (value <= 0) {
-                                long ret = dataObj.InsertAttempt(generateUniqueId(0),attempt.getString("ptu_test_ID"),1, 0,dataObj.getQuestionAttempted(),dataObj.getQuestionSkipped(),dataObj.getQuestionBookmarked(),dataObj.getQuestionNotAttempted(), 0, millisRemaining, index, pos);
-                                Log.e("Insertion",""+ret);
-                            }*/
                             SaveJSONdataToFile.objectToFile(URLClass.mainpath + path + testid + ".json", attempt.toString());
                         } catch (JSONException|IOException e) {
                             e.printStackTrace();
@@ -1225,13 +1221,6 @@ public class AssessmentTestActivity extends AppCompatActivity implements
             Log.e("ItemSelected", "reached");
             mHideRunnable.run();
             pos = position;
-
-            if(listOfLists.size()==0){
-                Log.e("ERROR:--","NOSIZE");
-            }else{
-                Log.e("ERROR:--","SIZE");
-            }
-
             //Instantiate grid adapter
             scrollAdapter = new ScrollGridAdapter(AssessmentTestActivity.this, attempt.getJSONArray("Sections").getJSONObject(pos).getJSONArray("Questions"), listOfLists.get(pos), getScreenSize());
             setScrollbar(pos);
