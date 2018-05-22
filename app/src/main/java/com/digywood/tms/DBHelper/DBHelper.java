@@ -1246,17 +1246,37 @@ public class DBHelper extends SQLiteOpenHelper {
         return  deleteFlag;
     }
 
-    public long updatePTestStatus(String studentId,String testid,String status){
+    public long updatePTestStartStatus(String studentId,String testid,String status,String startdttm){
         long updateFlag=0;
         ContentValues cv = new ContentValues();
         cv.put("sptu_dwnld_status", status);
-        updateFlag=db.update("sptu_student", cv, "sptu_student_ID='"+studentId+"' and sptu_ID='"+testid+"'",null);
+        cv.put("sptu_dwnld_status", status);
+        updateFlag=db.update("sptu_student",cv, "sptu_student_ID='"+studentId+"' and sptu_ID='"+testid+"'",null);
         return  updateFlag;
     }
 
-    public long updateATestStatus(String studentId,String testid,String status){
+    public long updatePTestEndStatus(String studentId,String testid,String status,String enddttm){
         long updateFlag=0;
         ContentValues cv = new ContentValues();
+        cv.put("sptu_dwnld_status", status);
+        cv.put("sptu_dwnld_status", status);
+        updateFlag=db.update("sptu_student",cv, "sptu_student_ID='"+studentId+"' and sptu_ID='"+testid+"'",null);
+        return  updateFlag;
+    }
+
+    public long updateATestStartStatus(String studentId,String testid,String status,String startdttm){
+        long updateFlag=0;
+        ContentValues cv = new ContentValues();
+        cv.put("satu_dwnld_start_dttm",startdttm);
+        cv.put("satu_dwnld_status", status);
+        updateFlag=db.update("satu_student",cv,"satu_student_id='"+studentId+"' and satu_ID='"+testid+"'",null);
+        return  updateFlag;
+    }
+
+    public long updateATestEndStatus(String studentId,String testid,String status,String enddttm){
+        long updateFlag=0;
+        ContentValues cv = new ContentValues();
+        cv.put("satu_dwnld_completed_dttm",enddttm);
         cv.put("satu_dwnld_status", status);
         updateFlag=db.update("satu_student",cv,"satu_student_id='"+studentId+"' and satu_ID='"+testid+"'",null);
         return  updateFlag;

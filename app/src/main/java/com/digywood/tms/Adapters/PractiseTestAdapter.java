@@ -40,8 +40,10 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
+import java.util.TimeZone;
 
 
 public class PractiseTestAdapter extends RecyclerView.Adapter<PractiseTestAdapter.MyViewHolder> {
@@ -65,7 +67,7 @@ public class PractiseTestAdapter extends RecyclerView.Adapter<PractiseTestAdapte
     int fattemptcount=0;
     Double minscore,maxscore,avgscore,fminscore,favgscore,fmaxscore;
     public static final int RequestPermissionCode = 1;
-    String filedata = "", path, jsonPath, attemptPath, photoPath, enrollid, courseid,groupdata="";
+    String filedata = "", path, jsonPath, attemptPath, photoPath, enrollid, courseid,groupdata="",startdttm="",endddtm="";
     String studentid="",subjectId, paperid, testid, fullTest, attempt,json,downloadjsonpath="",tfiledwdpath="",localpath="";
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
@@ -469,14 +471,15 @@ public class PractiseTestAdapter extends RecyclerView.Adapter<PractiseTestAdapte
                 hmap.clear();
                 hmap.put("testid",singletest.getTestid());
                 hmap.put("status","STARTED");
-                new BagroundTask(URLClass.hosturl +"updatePractiseTestStatus.php",hmap,mycontext,new IBagroundListener() {
+                startdttm = new java.text.SimpleDateFormat("yyyy-MM-dd hh:mm:ss").format(Calendar.getInstance(TimeZone.getDefault()).getTime());
+                new BagroundTask(URLClass.hosturl +"updatePTestStartStatus.php",hmap,mycontext,new IBagroundListener() {
                     @Override
                     public void bagroundData(String json) {
                         try{
                             Log.e("UploadStatus---",json);
                             if(json.equalsIgnoreCase("Updated")){
 
-                                long updateFlag=myhelper.updatePTestStatus(studentid,singletest.getTestid(),"STARTED");
+                                long updateFlag=myhelper.updatePTestStartStatus(studentid,singletest.getTestid(),"STARTED",startdttm);
                                 if(updateFlag>0){
                                     Log.e("LocalStatusUpdate---","Updated Locally");
                                 }else{
@@ -567,6 +570,7 @@ public class PractiseTestAdapter extends RecyclerView.Adapter<PractiseTestAdapte
                                                     }
 
                                                 }else{
+                                                    updatePTestEndStatus(singletest.getTestid(),"DOWNLOADED");
                                                     Log.e("LearningActivity----","No Downloaded Images for test");
                                                 }
 
@@ -578,34 +582,8 @@ public class PractiseTestAdapter extends RecyclerView.Adapter<PractiseTestAdapte
 
                                                             try{
                                                                 if(status.equalsIgnoreCase("Completed")){
-                                                                    hmap.clear();
-                                                                    hmap.put("testid",singletest.getTestid());
-                                                                    hmap.put("status","DOWNLOADED");
-                                                                    new BagroundTask(URLClass.hosturl +"updatePractiseTestStatus.php",hmap, mycontext,new IBagroundListener() {
-                                                                        @Override
-                                                                        public void bagroundData(String json) {
-                                                                            try {
 
-                                                                                Log.e("UploadStatus---",json);
-                                                                                if(json.equalsIgnoreCase("Updated")){
-                                                                                    long updateFlag=myhelper.updatePTestStatus(studentid,singletest.getTestid(),"DOWNLOADED");
-                                                                                    if(updateFlag>0){
-                                                                                        Log.e("LocalStatusUpdate---","Updated Locally");
-                                                                                    }else{
-                                                                                        Log.e("LocalStatusUpdate---","Unable to Update Locally");
-                                                                                    }
-
-                                                                                    Toast.makeText(mycontext,"All Downloaded",Toast.LENGTH_SHORT).show();
-                                                                                }else{
-
-                                                                                }
-
-                                                                            } catch (Exception e) {
-                                                                                e.printStackTrace();
-                                                                                Log.e("ListofPractiseTests----", e.toString());
-                                                                            }
-                                                                        }
-                                                                    }).execute();
+                                                                    updatePTestEndStatus(singletest.getTestid(),"DOWNLOADED");
 
                                                                 }else{
 
@@ -621,6 +599,7 @@ public class PractiseTestAdapter extends RecyclerView.Adapter<PractiseTestAdapte
 
                                                 }else{
 
+                                                    updatePTestEndStatus(singletest.getTestid(),"DOWNLOADED");
                                                     Toast.makeText(mycontext,"All Downloaded",Toast.LENGTH_SHORT).show();
 
                                                 }
@@ -1109,6 +1088,38 @@ public class PractiseTestAdapter extends RecyclerView.Adapter<PractiseTestAdapte
         }).execute();
     }
 
+    public void updatePTestEndStatus(final String testId,final String status){
+        hmap.clear();
+        hmap.put("testid",testId);
+        hmap.put("status",status);
+        endddtm = new java.text.SimpleDateFormat("yyyy-MM-dd hh:mm:ss").format(Calendar.getInstance(TimeZone.getDefault()).getTime());
+        hmap.put("date",endddtm);
+        new BagroundTask(URLClass.hosturl +"updatePTestEndStatus.php",hmap, mycontext,new IBagroundListener() {
+            @Override
+            public void bagroundData(String json) {
+                try {
+
+                    Log.e("UploadStatus---",json);
+                    if(json.equalsIgnoreCase("Updated")){
+                        long updateFlag=myhelper.updatePTestEndStatus(studentid,testId,status,endddtm);
+                        if(updateFlag>0){
+                            Log.e("LocalStatusUpdate---","Updated Locally");
+                        }else{
+                            Log.e("LocalStatusUpdate---","Unable to Update Locally");
+                        }
+
+                        Toast.makeText(mycontext,"All Downloaded",Toast.LENGTH_SHORT).show();
+                    }else{
+
+                    }
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    Log.e("ListofPractiseTests----", e.toString());
+                }
+            }
+        }).execute();
+    }
 
     public ArrayList<String> readJson(String filedata) {
         ArrayList<String> flashimageList = new ArrayList();

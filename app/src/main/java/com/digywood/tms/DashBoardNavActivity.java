@@ -882,6 +882,7 @@ public class DashBoardNavActivity extends AppCompatActivity implements Navigatio
                 JSONObject AssessmentTestQues;
                 while (mycursor.moveToNext()){
                     AssessmentTestQues = new JSONObject();
+                    AssessmentTestQues.put("StudentId",studentid);
                     AssessmentTestQues.put("Test_ID",mycursor.getString(mycursor.getColumnIndex("Test_ID")));
                     AssessmentTestQues.put("Question_Key",mycursor.getString(mycursor.getColumnIndex("Question_Key")));
                     AssessmentTestQues.put("Question_ID",mycursor.getString(mycursor.getColumnIndex("Question_ID")));

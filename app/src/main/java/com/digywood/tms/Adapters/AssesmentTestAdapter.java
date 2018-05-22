@@ -45,7 +45,9 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashMap;
+import java.util.TimeZone;
 
 import static android.content.Context.MODE_PRIVATE;
 
@@ -66,7 +68,7 @@ public class AssesmentTestAdapter extends RecyclerView.Adapter<AssesmentTestAdap
     Boolean value = false;
     JSONParser myparser;
     SharedPreferences restoredprefs;
-    String finalUrl="",finalAssetUrl="",restoredsname="",serverId="";
+    String finalUrl="",finalAssetUrl="",restoredsname="",serverId="",startdttm="",endddtm="";
     String downloadjsonpath="",tfiledwdpath="",localpath="";
     String filedata = "", path, jsonPath, assessmentPath, photoPath, enrollid="",courseid;
     String studentid="",subjectId, paperid, testid,fullTest ,assessment ,json;
@@ -236,14 +238,16 @@ public class AssesmentTestAdapter extends RecyclerView.Adapter<AssesmentTestAdap
                 hmap.clear();
                 hmap.put("testid",singletest.getTestid());
                 hmap.put("status","STARTED");
-                new BagroundTask(finalUrl+"updateAssesmentTestStatus.php",hmap,mycontext,new IBagroundListener() {
+                startdttm = new java.text.SimpleDateFormat("yyyy-MM-dd hh:mm:ss").format(Calendar.getInstance(TimeZone.getDefault()).getTime());
+                hmap.put("date",startdttm);
+                new BagroundTask(finalUrl+"updateATestStartStatus.php",hmap,mycontext,new IBagroundListener() {
                     @Override
                     public void bagroundData(String json) {
                         try{
                             Log.e("UploadStatus---",json);
                             if(json.equalsIgnoreCase("Updated")){
 
-                                long updateFlag=myhelper.updateATestStatus(studentid,singletest.getTestid(),"STARTED");
+                                long updateFlag=myhelper.updateATestStartStatus(studentid,singletest.getTestid(),"STARTED",startdttm);
                                 if(updateFlag>0){
                                     Log.e("LocalStatusUpdate---","Updated Locally");
                                 }else{
@@ -332,7 +336,7 @@ public class AssesmentTestAdapter extends RecyclerView.Adapter<AssesmentTestAdap
                                                     }
 
                                                 }else{
-                                                    updateAssessmentTestStatus(singletest.getTestid());
+                                                    updateAssessmentTestStatus(singletest.getTestid(),"DOWNLOADED");
                                                     Log.e("LearningActivity----","No Downloaded Images for test");
                                                 }
 
@@ -344,9 +348,8 @@ public class AssesmentTestAdapter extends RecyclerView.Adapter<AssesmentTestAdap
 
                                                             try{
                                                                 if(status.equalsIgnoreCase("Completed")){
-
-                                                                    updateAssessmentTestStatus(singletest.getTestid());
-
+                                                                    updateAssessmentTestStatus(singletest.getTestid(),"DOWNLOADED");
+                                                                    Toast.makeText(mycontext,"All Downloaded",Toast.LENGTH_SHORT).show();
                                                                 }else{
 
                                                                 }
@@ -360,8 +363,7 @@ public class AssesmentTestAdapter extends RecyclerView.Adapter<AssesmentTestAdap
                                                     }).execute();
 
                                                 }else{
-
-                                                    updateAssessmentTestStatus(singletest.getTestid());
+                                                    updateAssessmentTestStatus(singletest.getTestid(),"DOWNLOADED");
                                                     Toast.makeText(mycontext,"All Downloaded",Toast.LENGTH_SHORT).show();
                                                 }
 
@@ -375,6 +377,8 @@ public class AssesmentTestAdapter extends RecyclerView.Adapter<AssesmentTestAdap
                                         }
                                     }
                                 }).execute();
+
+
                             }else{
                                 Toast.makeText(mycontext,"Unable download test",Toast.LENGTH_SHORT).show();
                             }
@@ -385,7 +389,6 @@ public class AssesmentTestAdapter extends RecyclerView.Adapter<AssesmentTestAdap
 
                     }
                 }).execute();
-
             }
         });
 
@@ -541,18 +544,20 @@ public class AssesmentTestAdapter extends RecyclerView.Adapter<AssesmentTestAdap
         }
     }
 
-    public  void updateAssessmentTestStatus(final String testid){
+    public  void updateAssessmentTestStatus(final String testid, final String status){
         hmap.clear();
         hmap.put("testid",testid);
-        hmap.put("status","DOWNLOADED");
-        new BagroundTask(finalUrl+"updateAssesmentTestStatus.php",hmap, mycontext, new IBagroundListener() {
+        hmap.put("status",status);
+        endddtm = new java.text.SimpleDateFormat("yyyy-MM-dd hh:mm:ss").format(Calendar.getInstance(TimeZone.getDefault()).getTime());
+        hmap.put("date",endddtm);
+        new BagroundTask(finalUrl+"updateATestEndStatus.php",hmap, mycontext,new IBagroundListener() {
             @Override
             public void bagroundData(String json) {
                 try {
 
                     Log.e("UploadStatus---",json);
                     if(json.equalsIgnoreCase("Updated")){
-                        long updateFlag=myhelper.updateATestStatus(studentid,testid,"DOWNLOADED");
+                        long updateFlag=myhelper.updateATestEndStatus(studentid,testid,status,endddtm);
                         if(updateFlag>0){
                             Log.e("LocalStatusUpdate---","Updated Locally");
                         }else{
