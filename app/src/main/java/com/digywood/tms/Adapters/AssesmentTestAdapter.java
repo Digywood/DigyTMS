@@ -133,20 +133,21 @@ public class AssesmentTestAdapter extends RecyclerView.Adapter<AssesmentTestAdap
                                 if(auth.equals(key.getText().toString())){
 //                                    myhelper.Destroy("assessment_data");
                                     try {
-                                        fullTest = new String(SaveJSONdataToFile.bytesFromFile(getExternalPath(mycontext, singletest)), "UTF-8");
                                         assessment = new String(SaveJSONdataToFile.bytesFromFile(getExternalPath(mycontext, singletest) ), "UTF-8");
-                                        Intent i = new Intent(mycontext, AssessmentTestActivity.class);
-                                        i.putExtra("json", assessment);
-                                        i.putExtra("enrollid",enrollid);
-                                        i.putExtra("test", testid);
-                                        i.putExtra("status", "NEW");
-                                        mycontext.startActivity(i);
                                     } catch (IOException | ClassNotFoundException | NullPointerException e) {
                                         e.printStackTrace();
                                     }
 
                                 }
                             }
+
+                            Intent i = new Intent(mycontext, AssessmentTestActivity.class);
+                            i.putExtra("studentid", studentid);
+                            i.putExtra("json", assessment);
+                            i.putExtra("enrollid",enrollid);
+                            i.putExtra("test", testid);
+                            i.putExtra("status", "NEW");
+                            mycontext.startActivity(i);
                         }
                         mydialog.cancel();
                     }

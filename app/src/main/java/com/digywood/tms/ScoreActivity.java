@@ -155,7 +155,7 @@ public class ScoreActivity extends AppCompatActivity {
                 {
                     TotalPositive = Double.valueOf(attempt.getString("atu_marks")) * CorrectCount;
                     TotalNegative = Double.valueOf(attempt.getString("atu_negative_mrk"))* WrongCount;
-                    MaxMarks = Double.valueOf(attempt.getString("atu_marks")) * dataObj.getAssessmentQuestionCount();
+                    MaxMarks = Double.valueOf(attempt.getString("atu_marks")) * dataObj.getAssessmentQuestionCount(testId);
                     TotalScore = TotalPositive - TotalNegative;
                     Percentage = (  TotalScore / MaxMarks )*100;
                 }
@@ -338,8 +338,8 @@ public class ScoreActivity extends AppCompatActivity {
             Log.e("AssmntSkippd",String.valueOf(dataObj.getAssessmentQuestionSkipped()));
             tv_bookmarked.setText(String.valueOf(dataObj.getAssessmentQuestionBookmarked()));
             Log.e("AssmntMarked",String.valueOf(dataObj.getAssessmentQuestionBookmarked()));
-            tv_totalQuestions.setText(String.valueOf(dataObj.getAssessmentQuestionCount()));
-            Log.e("AssmntnoOfQs",String.valueOf(dataObj.getAssessmentQuestionCount()));
+            tv_totalQuestions.setText(String.valueOf(dataObj.getAssessmentQuestionCount(testId)));
+            Log.e("AssmntnoOfQs",String.valueOf(dataObj.getAssessmentQuestionCount(testId)));
             tv_totalCorrect.setText(String.valueOf(dataObj.getAssessmentCorrectOptionsCount()));
             Log.e("AssmntCorrect",String.valueOf(dataObj.getAssessmentCorrectOptionsCount()));
         }

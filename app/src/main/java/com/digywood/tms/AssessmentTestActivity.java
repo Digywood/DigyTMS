@@ -104,7 +104,7 @@ public class AssessmentTestActivity extends AppCompatActivity implements
     final Boolean edit = true;
     public static final int RequestPermissionCode = 1;
     static int index = 0, pos = 0, max = 1, grp = 0, size, count = 0;
-    JSONObject /*obj,*/ sectionobj, groupobj, questionobj, temp;
+    JSONObject questionobj, temp;
     public static JSONObject assessment;
     JSONArray array, optionsArray, groupArray, sectionArray, attemptsectionarray, buffer;
     SingleOptions option;
@@ -242,6 +242,7 @@ public class AssessmentTestActivity extends AppCompatActivity implements
                     paperid=cursor.getString(cursor.getColumnIndex("satu_paper_ID"));
                 }
             }
+            Log.e("Data","Exists");
         }
 
         save = new SaveJSONdataToFile();
@@ -294,6 +295,7 @@ public class AssessmentTestActivity extends AppCompatActivity implements
                 assessment = new JSONObject(getIntent().getStringExtra("json"));
                 attemptsectionarray = new JSONArray();
                 attemptsectionarray = assessment.getJSONArray("Sections");
+                Log.e("sectionarray",""+attemptsectionarray.length());
                 restoreSections(dataObj.getQuestionStatus(testid), assessment);
 //                buffer = generateArray(assessment.getJSONArray("Sections").getJSONObject(pos));
                 index = c.getInt(c.getColumnIndex("Assessment_LastQuestion"));
@@ -444,7 +446,7 @@ public class AssessmentTestActivity extends AppCompatActivity implements
                                 btn_next.setText("Finish");
                                 writeOption(opAdapter.getSelectedItem());
                                 AlertDialog alertbox = new AlertDialog.Builder(AssessmentTestActivity.this)
-                                        .setMessage("Do you want to finish Test?" + " " + dataObj.getAssessmentQuestionCount())
+                                        .setMessage("Do you want to finish Test?" + " " + dataObj.getAssessmentQuestionCount(testid))
                                         .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
 
                                             // do something when the button is clicked
@@ -477,6 +479,7 @@ public class AssessmentTestActivity extends AppCompatActivity implements
                                                 bundle.putString("paperid",paperid);
                                                 bundle.putString("Type","ASSESSMENT");
                                                 intent.putExtra("BUNDLE", bundle);
+                                                intent.putExtra("studentid", studentId);
                                                 intent.putExtra("Xreveal", revealX);
                                                 intent.putExtra("Yreveal", revealY);
                                                 ActivityCompat.startActivity(AssessmentTestActivity.this, intent, options.toBundle());
@@ -605,8 +608,6 @@ public class AssessmentTestActivity extends AppCompatActivity implements
 
     public void newTest() throws JSONException {
         millisStart = 3600000;
-        //obj = new JSONObject(getIntent().getStringExtra("json"));
-        encObj = new EncryptDecrypt();
         attemptsectionarray = new JSONArray();
         max = 1;
         assessment = new JSONObject(getIntent().getStringExtra("json"));
@@ -831,7 +832,7 @@ public class AssessmentTestActivity extends AppCompatActivity implements
             @Override
             public void onClick(View v) {
                 AlertDialog alertbox = new AlertDialog.Builder(AssessmentTestActivity.this)
-                        .setMessage("Do you want to finish Test?" + " " + dataObj.getAssessmentQuestionCount())
+                        .setMessage("Do you want to finish Test?" + " " + dataObj.getAssessmentQuestionCount(testid))
                         .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
 
                             // do something when the button is clicked
@@ -860,6 +861,7 @@ public class AssessmentTestActivity extends AppCompatActivity implements
                                 bundle.putString("paperid",paperid);
                                 bundle.putString("Type","ASSESSMENT");
                                 intent.putExtra("BUNDLE", bundle);
+                                intent.putExtra("studentid", studentId);
                                 intent.putExtra("Xreveal", revealX);
                                 intent.putExtra("Yreveal", revealY);
                                 finish();
@@ -1137,6 +1139,7 @@ public class AssessmentTestActivity extends AppCompatActivity implements
                         intent.putExtra("enrollid",enrollid);
                         intent.putExtra("courseid", courseid);
                         intent.putExtra("paperid",paperid);
+                        intent.putExtra("studentid",studentId);
                         startActivity(intent);
 
                     }
