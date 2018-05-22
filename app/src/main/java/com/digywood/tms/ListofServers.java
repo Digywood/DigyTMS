@@ -47,7 +47,7 @@ public class ListofServers extends AppCompatActivity {
     Button btn_setserver;
     ServerAdapter sAdp;
     DBHelper myhelper;
-    String studentid="",selectedserver="";
+    String studentid="",snumber="",selectedserver="",serverId="",finalUrl="";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,6 +72,7 @@ public class ListofServers extends AppCompatActivity {
         Intent cmgintent=getIntent();
         if(cmgintent!=null){
             studentid=cmgintent.getStringExtra("studentid");
+            snumber=cmgintent.getStringExtra("number");
         }
 
         rv_servers=findViewById(R.id.rv_serverlist);
@@ -92,11 +93,42 @@ public class ListofServers extends AppCompatActivity {
                     Toast.makeText(getApplicationContext(),"Please Set Server",Toast.LENGTH_SHORT).show();
                 }else{
 
-                    Toast.makeText(getApplicationContext(),"Server:   "+selectedserver,Toast.LENGTH_SHORT).show();
-                    editor = getSharedPreferences("SERVERPREF", MODE_PRIVATE).edit();
-                    editor.putString("servername",selectedserver);
-                    editor.apply();
-                    finish();
+                    if(selectedserver.equalsIgnoreCase("main_server")){
+                        editor = getSharedPreferences("SERVERPREF", MODE_PRIVATE).edit();
+                        editor.putString("servername",selectedserver);
+                        editor.apply();
+                        finish();
+                    }else{
+                        serverId=myhelper.getServerId(selectedserver);
+                        finalUrl="http://"+serverId+URLClass.loc_hosturl;
+
+                        hmap.clear();
+                        hmap.put("email",snumber);
+                        Log.e("FINALURL:--",""+finalUrl);
+                        new BagroundTask(finalUrl+"checkUserExist.php",hmap,ListofServers.this,new IBagroundListener() {
+                            @Override
+                            public void bagroundData(String json) {
+                                try{
+                                    if(json!=null){
+                                        Toast.makeText(getApplicationContext(),"Server:   "+selectedserver,Toast.LENGTH_SHORT).show();
+                                        editor = getSharedPreferences("SERVERPREF", MODE_PRIVATE).edit();
+                                        editor.putString("servername",selectedserver);
+                                        editor.apply();
+                                        finish();
+                                        Toast.makeText(getApplicationContext(),"Connection Ok",Toast.LENGTH_SHORT).show();
+                                    }else{
+                                        Toast.makeText(getApplicationContext(),"This Connection is not available now",Toast.LENGTH_SHORT).show();
+                                    }
+
+                                }catch (Exception e){
+
+                                    e.printStackTrace();
+                                    Log.e("MainActivity----",e.toString());
+
+                                }
+                            }
+                        }).execute();
+                    }
                 }
             }
         });
@@ -112,6 +144,7 @@ public class ListofServers extends AppCompatActivity {
 
         Cursor mycursor=myhelper.getAvailLocalServers();
         if(mycursor.getCount()>0){
+            serverList.add(new SingleServer("","","main_server"));
             while (mycursor.moveToNext()){
                 serverList.add(new SingleServer(mycursor.getString(mycursor.getColumnIndex("branchId")),mycursor.getString(mycursor.getColumnIndex("serverId")),mycursor.getString(mycursor.getColumnIndex("serverName"))));
             }

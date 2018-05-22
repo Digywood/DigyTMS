@@ -488,10 +488,12 @@ public class EnrollRequestActivity extends AppCompatActivity {
 
     public void insertEnrollRequest(){
 
+        Log.e("BatchID:--",""+batchid);
         hashMap.clear();
         hashMap.put("StudentId",studentid);
         hashMap.put("OrgId",orgid);
         hashMap.put("CourseId",courseid);
+        hashMap.put("BranchId",branchid);
         hashMap.put("BatchId",batchid);
         hashMap.put("startDate",startdate);
         hashMap.put("endDate",enddate);

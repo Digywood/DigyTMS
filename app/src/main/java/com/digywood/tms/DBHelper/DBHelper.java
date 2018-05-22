@@ -701,8 +701,8 @@ public class DBHelper extends SQLiteOpenHelper {
         return  c;
     }
 
-    public Cursor getFlashUploadData(String status){
-        String query ="SELECT * FROM flashcard_attempt WHERE Status='"+status+"'";
+    public Cursor getFlashUploadData(String studentId,String status){
+        String query ="SELECT * FROM flashcard_attempt WHERE studentId='"+studentId+"' and Status='"+status+"'";
         Cursor c=db.rawQuery(query,null);
         return  c;
     }

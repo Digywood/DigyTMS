@@ -90,6 +90,7 @@ public class MainActivity extends AppCompatActivity {
                             if(enterpwd.equalsIgnoreCase(localpwd)){
                                 Intent i=new Intent(getApplicationContext(),DashBoardNavActivity.class);
                                 i.putExtra("studentid",studentid);
+                                i.putExtra("number",et_email.getText().toString());
                                 i.putExtra("sname",studentname);
                                 i.putExtra("email",semail);
                                 startActivity(i);
@@ -137,6 +138,7 @@ public class MainActivity extends AppCompatActivity {
                                                         if(enterpwd.equalsIgnoreCase(pwd)){
                                                             Intent i=new Intent(getApplicationContext(),DashBoardNavActivity.class);
                                                             i.putExtra("studentid",studentid);
+                                                            i.putExtra("number",et_email.getText().toString());
                                                             i.putExtra("sname",studentname);
                                                             i.putExtra("email",semail);
                                                             startActivity(i);
