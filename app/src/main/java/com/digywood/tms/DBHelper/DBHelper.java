@@ -641,8 +641,8 @@ public class DBHelper extends SQLiteOpenHelper {
        return updateFlag;
     }
 
-    public int getAssessmentTestsByPaper(String studentId,String paperid){
-        Cursor c =db.query("satu_student", new String[] {"satu_entroll_id,satu_ID,satu_course_id"},"satu_student_id='"+studentId+"' and satu_paper_ID='"+paperid+"'", null, null, null,null);
+    public int getAssessmentTestsByPaper(String studentId,String enrollId,String paperid){
+        Cursor c =db.query("satu_student", new String[] {"satu_entroll_id,satu_ID,satu_course_id"},"satu_student_id='"+studentId+"' and satu_entroll_id='"+enrollId+"' and satu_paper_ID='"+paperid+"'", null, null, null,null);
         return c.getCount();
     }
 
@@ -652,10 +652,7 @@ public class DBHelper extends SQLiteOpenHelper {
     }
 
     public Cursor getAssesmentTestsByEnroll(String studentId,String enrollId){
-        String query ="SELECT * FROM satu_student WHERE satu_student_id='"+studentId+"' and satu_entroll_id='"+enrollId+"'";
-        Cursor c=db.rawQuery(query,null);
-        Log.e("DBHELPER:---",""+query);
-//        Cursor c =db.query("satu_student",new String[] {"satu_entroll_id,satu_student_id,satu_batch,satu_ID,satu_name,satu_paper_ID,satu_subjet_ID,satu_course_id,satu_start_date,satu_end_date,satu_dwnld_status"},"satu_student_id='"+studentId+"' and satu_entroll_id='"+enrollId+"'", null, null, null,null);
+        Cursor c =db.query("satu_student",new String[] {"satu_entroll_id,satu_student_id,satu_batch,satu_ID,satu_name,satu_paper_ID,satu_subjet_ID,satu_course_id,satu_start_date,satu_end_date,satu_dwnld_status"},"satu_student_id='"+studentId+"' and satu_entroll_id='"+enrollId+"'", null, null, null,null);
         return c;
     }
 
@@ -1205,13 +1202,18 @@ public class DBHelper extends SQLiteOpenHelper {
         return c;
     }
 
+    public Cursor checkPractiseTest(String studentId,String enrollId,String testId){
+        Cursor c =db.query("sptu_student", new String[] {"sptu_entroll_id,sptu_student_ID,sptu_ID,sptu_paper_ID,sptu_subjet_ID,sptu_course_id,sptu_dwnld_status"},"sptu_student_ID='"+studentId+"' and sptu_entroll_id='"+enrollId+"' and sptu_ID='"+testId+"'", null, null, null,null);
+        return c;
+    }
+
     public Cursor checkPractiseTest(String studentId,String testId){
         Cursor c =db.query("sptu_student", new String[] {"sptu_entroll_id,sptu_student_ID,sptu_ID,sptu_paper_ID,sptu_subjet_ID,sptu_course_id,sptu_dwnld_status"},"sptu_student_ID='"+studentId+"' and sptu_ID='"+testId+"'", null, null, null,null);
         return c;
     }
 
-    public Cursor checkAssessmentTest(String studentId,String testId){
-        Cursor c =db.query("satu_student", new String[] {"satu_entroll_id,satu_student_id,satu_course_id,satu_paper_ID,satu_subjet_ID"},"satu_student_id='"+studentId+"' and satu_ID='"+testId+"'", null, null, null,null);
+    public Cursor checkAssessmentTest(String studentId,String enrollId,String testId){
+        Cursor c =db.query("satu_student", new String[] {"satu_entroll_id,satu_student_id,satu_course_id,satu_paper_ID,satu_subjet_ID"},"satu_student_id='"+studentId+"' and satu_entroll_id='"+enrollId+"' and satu_ID='"+testId+"'", null, null, null,null);
         return c;
     }
 
@@ -1268,8 +1270,8 @@ public class DBHelper extends SQLiteOpenHelper {
         return  updateFlag;
     }
 
-    public Cursor getSingleAssessmentTests(String studentId,String testId){
-        Cursor c =db.query("satu_student", new String[] {"satu_entroll_id,satu_student_ID,satu_ID,satu_paper_ID,satu_subjet_ID,satu_course_id,satu_dwnld_status"},"satu_student_id='"+studentId+"' and satu_ID='"+testId+"'", null, null, null,null);
+    public Cursor getSingleAssessmentTests(String studentId,String enrollId,String testId){
+        Cursor c =db.query("satu_student", new String[] {"satu_entroll_id,satu_student_ID,satu_ID,satu_paper_ID,satu_subjet_ID,satu_course_id,satu_dwnld_status"},"satu_student_id='"+studentId+"' and satu_entroll_id='"+enrollId+"' and satu_ID='"+testId+"'", null, null, null,null);
         return c;
     }
 

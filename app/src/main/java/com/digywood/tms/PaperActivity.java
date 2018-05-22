@@ -169,7 +169,7 @@ public class PaperActivity extends AppCompatActivity {
                     fprogress=0;
                 }
 
-                atestcount=myhelper.getAssessmentTestsByPaper(studentid,paperidList.get(i));
+                atestcount=myhelper.getAssessmentTestsByPaper(studentid,enrollid,paperidList.get(i));
 
 //                Cursor mycur2=myhelper.getPractiseSummaryByPaper(paperidList.get(i));
 //                if(mycur2.getCount()>0){
@@ -294,20 +294,23 @@ public class PaperActivity extends AppCompatActivity {
         }).execute();
     }
 
-
-    public void setData(){
-
-    }
-
     @Override
     public boolean onSupportNavigateUp() {
         finish();
+        Intent i=new Intent(getApplicationContext(),LearningActivity.class);
+        i.putExtra("studentid",studentid);
+        i.putExtra("sname","");
+        startActivity(i);
         return true;
     }
 
     @Override
     public void onBackPressed() {
         finish();
+        Intent i=new Intent(getApplicationContext(),LearningActivity.class);
+        i.putExtra("studentid",studentid);
+        i.putExtra("sname","");
+        startActivity(i);
     }
 
     public boolean checkPermission() {

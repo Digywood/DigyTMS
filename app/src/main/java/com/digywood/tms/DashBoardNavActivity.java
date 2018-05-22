@@ -248,7 +248,7 @@ public class DashBoardNavActivity extends AppCompatActivity implements Navigatio
 
                                 testObj=ja_tests_table.getJSONObject(i);
 
-                                Cursor mycursor=myhelper.checkPractiseTest(studentid,testObj.getString("sptu_ID"));
+                                Cursor mycursor=myhelper.checkPractiseTest(studentid,testObj.getString("sptu_entroll_id"),testObj.getString("sptu_ID"));
                                 if(mycursor.getCount()>0){
                                     long updateFlag=myhelper.updatePractiseTestData(testObj.getString("sptu_org_id"),testObj.getString("sptu_entroll_id"),testObj.getString("sptu_student_ID"),
                                             testObj.getString("sptu_batch"),testObj.getString("sptu_ID"),testObj.getString("sptu_paper_ID"),testObj.getString("sptu_subjet_ID"),
@@ -295,7 +295,7 @@ public class DashBoardNavActivity extends AppCompatActivity implements Navigatio
 
                                 assesmentObj=ja_assesmenttests.getJSONObject(i);
 
-                                Cursor mycursor=myhelper.checkAssessmentTest(studentid,assesmentObj.getString("satu_ID"));
+                                Cursor mycursor=myhelper.checkAssessmentTest(studentid,assesmentObj.getString("satu_entroll_id"),assesmentObj.getString("satu_ID"));
 
                                 if(mycursor.getCount()>0){
                                     long updateFlag=myhelper.updateAssesmentTest(assesmentObj.getString("satu_org_id"),assesmentObj.getString("satu_entroll_id"),assesmentObj.getString("satu_student_id"),

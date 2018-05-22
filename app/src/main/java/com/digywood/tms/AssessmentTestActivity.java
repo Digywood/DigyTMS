@@ -42,6 +42,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.digywood.tms.Adapters.AssesmentTestAdapter;
 import com.digywood.tms.Adapters.OptionsCheckAdapter;
 import com.digywood.tms.Adapters.QuestionListAdapter;
 import com.digywood.tms.Adapters.ScrollGridAdapter;
@@ -103,7 +104,7 @@ public class AssessmentTestActivity extends AppCompatActivity implements
     final Boolean edit = true;
     public static final int RequestPermissionCode = 1;
     static int index = 0, pos = 0, max = 1, grp = 0, size, count = 0;
-    JSONObject obj, sectionobj, groupobj, questionobj, temp;
+    JSONObject /*obj,*/ sectionobj, groupobj, questionobj, temp;
     public static JSONObject assessment;
     JSONArray array, optionsArray, groupArray, sectionArray, attemptsectionarray, buffer;
     SingleOptions option;
@@ -223,6 +224,7 @@ public class AssessmentTestActivity extends AppCompatActivity implements
         question_scroll.setAdapter(qAdapter);
         testid = getIntent().getStringExtra("test");
         studentId = getIntent().getStringExtra("studentid");
+        enrollid = getIntent().getStringExtra("enrollid");
         rv_option = findViewById(R.id.option_view);
 
         if(checkPermission()){
@@ -231,11 +233,10 @@ public class AssessmentTestActivity extends AppCompatActivity implements
             requestPermission();
         }
 
-        Cursor cursor = dataObj.getSingleAssessmentTests(studentId,testid);
+        Cursor cursor = dataObj.getSingleAssessmentTests(studentId,enrollid,testid);
         if (cursor.getCount() > 0) {
             while (cursor.moveToNext()) {
                 if (cursor.getString(cursor.getColumnIndex("satu_ID")).equals(testid)) {
-                    enrollid=cursor.getString(cursor.getColumnIndex("satu_entroll_id"));
                     courseid=cursor.getString(cursor.getColumnIndex("satu_course_id"));
                     subjectId=cursor.getString(cursor.getColumnIndex("satu_subjet_ID"));
                     paperid=cursor.getString(cursor.getColumnIndex("satu_paper_ID"));
@@ -282,6 +283,7 @@ public class AssessmentTestActivity extends AppCompatActivity implements
 
         try {
             //if cursor has values then the test is being resumed and data is retrieved from database
+            Log.e("AssesmentTestActivity",""+getIntent().getStringExtra("status"));
             if (getIntent().getStringExtra("status").equalsIgnoreCase("NEW")) {
                 newTest();
             }
@@ -603,7 +605,7 @@ public class AssessmentTestActivity extends AppCompatActivity implements
 
     public void newTest() throws JSONException {
         millisStart = 3600000;
-        obj = new JSONObject(getIntent().getStringExtra("json"));
+        //obj = new JSONObject(getIntent().getStringExtra("json"));
         encObj = new EncryptDecrypt();
         attemptsectionarray = new JSONArray();
         max = 1;
@@ -1063,7 +1065,7 @@ public class AssessmentTestActivity extends AppCompatActivity implements
                     questionobj = array2.getJSONObject(j);
                     Log.e("sequence", Id);
                     qListObj = new SingleQuestionList(array2.getJSONObject(j).getString("qbm_SequenceId"), notAttempted,not_confirmed);
-                    dataObj.InsertAssessmentQuestion(assessment.getString("atu_ID"),generateUniqueId(Id), Id, null,assessment.getJSONArray("Sections").getJSONObject(pos).getString("atu_section_name"),questionobj.getString("qbm_ChapterName"),questionobj.getString("qbm_Sub_CategoryName"), 0, 0, 0, 0, -1, notAttempted,"NotUploaded", "-1", "NO");
+                    //dataObj.InsertAssessmentQuestion(assessment.getString("atu_ID"),generateUniqueId(Id), Id, null,assessment.getJSONArray("Sections").getJSONObject(pos).getString("atu_section_name"),questionobj.getString("qbm_ChapterName"),questionobj.getString("qbm_Sub_CategoryName"), 0, 0, 0, 0, -1, notAttempted,"NotUploaded", "-1", "NO");
                     questionOpList.add(qListObj);
                 }
                 listOfLists.add(questionOpList);
@@ -1216,6 +1218,13 @@ public class AssessmentTestActivity extends AppCompatActivity implements
             Log.e("ItemSelected", "reached");
             mHideRunnable.run();
             pos = position;
+
+            if(listOfLists.size()==0){
+                Log.e("ERROR:--","NOSIZE");
+            }else{
+                Log.e("ERROR:--","SIZE");
+            }
+
             //Instantiate grid adapter
             scrollAdapter = new ScrollGridAdapter(AssessmentTestActivity.this, assessment.getJSONArray("Sections").getJSONObject(pos).getJSONArray("Questions"), listOfLists.get(pos), getScreenSize());
             setScrollbar(pos);
