@@ -1226,12 +1226,6 @@ public class AssessmentTestActivity extends AppCompatActivity implements
             mHideRunnable.run();
             pos = position;
 
-            if(listOfLists.size()==0){
-                Log.e("ERROR:--","NOSIZE");
-            }else{
-                Log.e("ERROR:--","SIZE");
-            }
-
             //Instantiate grid adapter
             scrollAdapter = new ScrollGridAdapter(AssessmentTestActivity.this, attempt.getJSONArray("Sections").getJSONObject(pos).getJSONArray("Questions"), listOfLists.get(pos), getScreenSize());
             setScrollbar(pos);
