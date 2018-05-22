@@ -1271,7 +1271,8 @@ public class DBHelper extends SQLiteOpenHelper {
     }
 
     public Cursor getSingleAssessmentTests(String studentId,String enrollId,String testId){
-        Cursor c =db.query("satu_student", new String[] {"satu_entroll_id,satu_student_ID,satu_ID,satu_paper_ID,satu_subjet_ID,satu_course_id,satu_dwnld_status"},"satu_student_id='"+studentId+"' and satu_entroll_id='"+enrollId+"' and satu_ID='"+testId+"'", null, null, null,null);
+        Log.e("DBHelper","studentId"+studentId+"; enrollId"+enrollId+"; testId"+testId);
+        Cursor c =db.query("satu_student", new String[] {"satu_entroll_id,satu_student_id,satu_ID,satu_paper_ID,satu_subjet_ID,satu_course_id,satu_dwnld_status"},"satu_student_id='"+studentId+"' and satu_entroll_id='"+enrollId+"' and satu_ID='"+testId+"'", null, null, null,null);
         return c;
     }
 
@@ -2369,9 +2370,9 @@ public class DBHelper extends SQLiteOpenHelper {
         return value;
     }
 
-    public int getAssessmentQuestionCount(){
+    public int getAssessmentQuestionCount(String testId){
         int count=0;
-        String countQuery = "select * from assessment_data";
+        String countQuery = "SELECT * FROM assessment_data WHERE Test_ID='"+testId+"'";
         Cursor c = db.rawQuery(countQuery, null);
         count=c.getCount();
         c.close();

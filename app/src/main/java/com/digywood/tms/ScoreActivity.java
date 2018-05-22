@@ -56,10 +56,17 @@ public class ScoreActivity extends AppCompatActivity {
         setContentView(R.layout.activity_score);
         bundle = new Bundle();
         bundle = getIntent().getBundleExtra("BUNDLE");
+        if (PracticeTestActivity.pactivity != null) {
+            PracticeTestActivity.pactivity.finish();
+        }
+
+        if (AssessmentTestActivity.Aactivity != null) {
+            AssessmentTestActivity.Aactivity.finish();
+        }
 
         try {
-            PracticeTestActivity.pactivity.finish();
-            attempt = new JSONObject(bundle.getString("JSON"));
+            attempt = new JSONObject(getIntent().getStringExtra("JSON"));
+            Log.e("AssessmentScore",attempt.toString());
         } catch (JSONException|NullPointerException e) {
             e.printStackTrace();
         }
@@ -142,10 +149,10 @@ public class ScoreActivity extends AppCompatActivity {
 
             }
             else {
-
+                testId = attempt.getString("atu_ID");
                 CorrectCount = dataObj.getAssessmentCorrectOptionsCount();
                 TotalCount = dataObj.getAssessmentQuestionAttempted()+dataObj.getAssessmentQuestionBookmarked();
-                testId = attempt.getString("atu_ID");
+
                 WrongCount = dataObj.getAssessmentWrongOptionsCount();
                 if(dataObj.getAssessmentQuestionAttempted() == 0){
                     TotalPositive = 0.0;
@@ -155,7 +162,7 @@ public class ScoreActivity extends AppCompatActivity {
                 {
                     TotalPositive = Double.valueOf(attempt.getString("atu_marks")) * CorrectCount;
                     TotalNegative = Double.valueOf(attempt.getString("atu_negative_mrk"))* WrongCount;
-                    MaxMarks = Double.valueOf(attempt.getString("atu_marks")) * dataObj.getAssessmentQuestionCount();
+                    MaxMarks = Double.valueOf(attempt.getString("atu_marks")) * dataObj.getAssessmentQuestionCount(testId);
                     TotalScore = TotalPositive - TotalNegative;
                     Percentage = (  TotalScore / MaxMarks )*100;
                 }
@@ -338,8 +345,8 @@ public class ScoreActivity extends AppCompatActivity {
             Log.e("AssmntSkippd",String.valueOf(dataObj.getAssessmentQuestionSkipped()));
             tv_bookmarked.setText(String.valueOf(dataObj.getAssessmentQuestionBookmarked()));
             Log.e("AssmntMarked",String.valueOf(dataObj.getAssessmentQuestionBookmarked()));
-            tv_totalQuestions.setText(String.valueOf(dataObj.getAssessmentQuestionCount()));
-            Log.e("AssmntnoOfQs",String.valueOf(dataObj.getAssessmentQuestionCount()));
+            tv_totalQuestions.setText(String.valueOf(dataObj.getAssessmentQuestionCount(testId)));
+            Log.e("AssmntnoOfQs",String.valueOf(dataObj.getAssessmentQuestionCount(testId)));
             tv_totalCorrect.setText(String.valueOf(dataObj.getAssessmentCorrectOptionsCount()));
             Log.e("AssmntCorrect",String.valueOf(dataObj.getAssessmentCorrectOptionsCount()));
         }
