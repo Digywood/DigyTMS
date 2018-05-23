@@ -300,6 +300,7 @@ public class DBHelper extends SQLiteOpenHelper {
                 "  `Test_ID` varchar(20) NOT NULL,\n" +
                 "  `Assessment_Instance_ID` varchar(20) DEFAULT NULL,\n" +
                 "  `Question_ID` varchar(15) DEFAULT NULL,\n" +
+                "  `Question_Key` text DEFAULT NULL,\n" +
                 "  `Question_Seq_No` varchar(15) DEFAULT NULL,\n" +
                 "  `Question_Section` varchar(15) DEFAULT NULL,\n" +
                 "  `Question_Category` varchar(15) DEFAULT NULL,\n" +
