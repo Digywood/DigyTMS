@@ -126,7 +126,7 @@ public class LearningActivity extends AppCompatActivity {
                                 Log.e("LearningActivity----","Enroll Already Exists");
                             }else{
                                 long insertFlag=myhelper.insertEnrollment(myObj.getInt("Enroll_key"),myObj.getString("Enroll_ID"),myObj.getString("Enroll_org_id"),myObj.getString("Enroll_Student_ID"),
-                                        myObj.getString("Enroll_batch_ID"),myObj.getString("Enroll_course_ID"),myObj.getString("Enroll_batch_start_Dt"),myObj.getString("Enroll_batch_end_Dt"),
+                                        myObj.getString("Enroll_branch_ID"),myObj.getString("Enroll_batch_ID"),myObj.getString("Enroll_course_ID"),myObj.getString("Enroll_batch_start_Dt"),myObj.getString("Enroll_batch_end_Dt"),
                                         myObj.getString("Enroll_Device_ID"),myObj.getString("Enroll_Date"),myObj.getString("Enroll_Status"));
                                 if(insertFlag>0){
                                     Log.e("LearningActivity----","Enroll Inserted in Local");

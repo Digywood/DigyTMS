@@ -145,7 +145,7 @@ public class DashBoardNavActivity extends AppCompatActivity implements Navigatio
 
                                 if(checkFlag>0){
                                     long updateFlag=myhelper.updateEnrollment(enrollObj.getString("Enroll_ID"),enrollObj.getString("Enroll_org_id"),enrollObj.getString("Enroll_Student_ID"),
-                                            enrollObj.getString("Enroll_batch_ID"),enrollObj.getString("Enroll_course_ID"),enrollObj.getString("Enroll_batch_start_Dt"),enrollObj.getString("Enroll_batch_end_Dt"),
+                                            enrollObj.getString("Enroll_branch_ID"),enrollObj.getString("Enroll_batch_ID"),enrollObj.getString("Enroll_course_ID"),enrollObj.getString("Enroll_batch_start_Dt"),enrollObj.getString("Enroll_batch_end_Dt"),
                                             enrollObj.getString("Enroll_Device_ID"),enrollObj.getString("Enroll_Date"),enrollObj.getString("Enroll_Status"));
                                     if(updateFlag>0){
                                         r++;
@@ -154,7 +154,7 @@ public class DashBoardNavActivity extends AppCompatActivity implements Navigatio
                                     }
                                 }else{
                                     long insertFlag=myhelper.insertEnrollment(enrollObj.getInt("Enroll_key"),enrollObj.getString("Enroll_ID"),enrollObj.getString("Enroll_org_id"),enrollObj.getString("Enroll_Student_ID"),
-                                            enrollObj.getString("Enroll_batch_ID"),enrollObj.getString("Enroll_course_ID"),enrollObj.getString("Enroll_batch_start_Dt"),enrollObj.getString("Enroll_batch_end_Dt"),
+                                            enrollObj.getString("Enroll_branch_ID"),enrollObj.getString("Enroll_batch_ID"),enrollObj.getString("Enroll_course_ID"),enrollObj.getString("Enroll_batch_start_Dt"),enrollObj.getString("Enroll_batch_end_Dt"),
                                             enrollObj.getString("Enroll_Device_ID"),enrollObj.getString("Enroll_Date"),enrollObj.getString("Enroll_Status"));
                                     if(insertFlag>0){
                                         p++;
@@ -296,10 +296,10 @@ public class DashBoardNavActivity extends AppCompatActivity implements Navigatio
 
                                 assesmentObj=ja_assesmenttests.getJSONObject(i);
 
-                                Cursor mycursor=myhelper.checkAssessmentTest(studentid,assesmentObj.getString("satu_entroll_id"),assesmentObj.getString("satu_ID"));
+                                Cursor mycursor=myhelper.checkAssessmentTest(studentid,assesmentObj.getString("satu_entroll_id"),assesmentObj.getString("satu_ID"),assesmentObj.getString("satu_instace_id"));
 
                                 if(mycursor.getCount()>0){
-                                    long updateFlag=myhelper.updateAssesmentTest(assesmentObj.getString("satu_org_id"),assesmentObj.getString("satu_entroll_id"),assesmentObj.getString("satu_student_id"),
+                                    long updateFlag=myhelper.updateAssesmentTest(assesmentObj.getString("satu_org_id"),assesmentObj.getString("satu_instace_id"),assesmentObj.getString("satu_entroll_id"),assesmentObj.getString("satu_student_id"),
                                             assesmentObj.getString("satu_batch"),assesmentObj.getString("satu_ID"),assesmentObj.getString("satu_name"),assesmentObj.getString("satu_paper_ID"),assesmentObj.getString("satu_subjet_ID"),
                                             assesmentObj.getString("satu_course_id"),assesmentObj.getString("satu_start_date"),assesmentObj.getString("satu_end_date"),assesmentObj.getString("satu_dwnld_status"),
                                             assesmentObj.getInt("satu_no_of_questions"),assesmentObj.getString("satu_file"),assesmentObj.getString("satu_exam_key"),assesmentObj.getDouble("satu_tot_marks"),
@@ -311,7 +311,7 @@ public class DashBoardNavActivity extends AppCompatActivity implements Navigatio
                                     }
                                 }else{
 
-                                    long insertFlag=myhelper.insertAssesmentTest(assesmentObj.getInt("satu_key"),assesmentObj.getString("satu_org_id"),assesmentObj.getString("satu_entroll_id"),assesmentObj.getString("satu_student_id"),
+                                    long insertFlag=myhelper.insertAssesmentTest(assesmentObj.getInt("satu_key"),assesmentObj.getString("satu_org_id"),assesmentObj.getString("satu_instace_id"),assesmentObj.getString("satu_entroll_id"),assesmentObj.getString("satu_student_id"),
                                             assesmentObj.getString("satu_batch"),assesmentObj.getString("satu_ID"),assesmentObj.getString("satu_name"),assesmentObj.getString("satu_paper_ID"),assesmentObj.getString("satu_subjet_ID"),
                                             assesmentObj.getString("satu_course_id"),assesmentObj.getString("satu_start_date"),assesmentObj.getString("satu_end_date"),assesmentObj.getString("satu_dwnld_status"),
                                             assesmentObj.getInt("satu_no_of_questions"),assesmentObj.getString("satu_file"),assesmentObj.getString("satu_exam_key"),assesmentObj.getDouble("satu_tot_marks"),
@@ -481,6 +481,7 @@ public class DashBoardNavActivity extends AppCompatActivity implements Navigatio
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
+
             return true;
         }
 
@@ -547,7 +548,10 @@ public class DashBoardNavActivity extends AppCompatActivity implements Navigatio
             Intent i=new Intent(getApplicationContext(),ListofServers.class);
             i.putExtra("studentid",studentid);
             i.putExtra("number",snumber);
+            i.putExtra("sname",spersonname);
+            i.putExtra("email",email);
             startActivity(i);
+            finish();
 
         } else if (id == R.id.nav_contactus) {
 
@@ -876,6 +880,7 @@ public class DashBoardNavActivity extends AppCompatActivity implements Navigatio
 
         JSONObject finalAssessmentObj=new JSONObject();
         Cursor mycursor=myhelper.getAssessmentUploadData("NotUploaded");
+        Log.e("CURCOUNT:--",""+mycursor.getCount());
         if(mycursor.getCount()>0){
             try{
                 JSONArray AssessmentList = new JSONArray();
@@ -912,11 +917,6 @@ public class DashBoardNavActivity extends AppCompatActivity implements Navigatio
                             JSONArray ja_assessmentKeys;
                             JSONObject assessmentObj;
                             Log.e("json"," comes :  "+json);
-//                            if(json.equalsIgnoreCase("Inserted")){
-//                                Toast.makeText(getApplicationContext(),"Practise Test Info Syncronised",Toast.LENGTH_SHORT).show();
-//                            }else{
-//                                Toast.makeText(getApplicationContext(),"Sorry,Try Again Later",Toast.LENGTH_SHORT).show();
-//                            }
 
                             JSONObject mainObj=new JSONObject(json);
 
