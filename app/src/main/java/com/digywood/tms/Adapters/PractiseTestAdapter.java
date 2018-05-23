@@ -322,6 +322,7 @@ public class PractiseTestAdapter extends RecyclerView.Adapter<PractiseTestAdapte
                                         }
                                     }
                                     try {
+                                        Log.e("dataexec",getExternalPath(mycontext, singletest, "BASE"));
                                         fullTest = new String(SaveJSONdataToFile.bytesFromFile(getExternalPath(mycontext, singletest, "BASE") + testid + ".json"), "UTF-8");
                                         myparser = new JSONParser(fullTest,getExternalPath(mycontext, singletest, "ATTEMPT"),"PRACTICE", mycontext);
                                         attempt = new String(SaveJSONdataToFile.bytesFromFile(getExternalPath(mycontext, singletest, "ATTEMPT") + testid + ".json"), "UTF-8");
