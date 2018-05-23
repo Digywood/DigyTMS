@@ -291,24 +291,29 @@ public class DBHelper extends SQLiteOpenHelper {
                 "   `Option_Answer_Flag` varchar(15) DEFAULT NULL)";
         db.execSQL(AttemptData);
 
-        String AssessmentData=" CREATE TABLE `assessment_data` (\n"+
-                "   `Test_ID` varchar(15),\n" +
-                "   `Question_Key` varchar(15),\n" +
-                "   `Question_ID` varchar(15),\n" +
-                "   `Question_Seq_No` varchar(15) DEFAULT NULL,\n" +
-                "   `Question_Section` varchar(15) DEFAULT NULL,\n" +
-                "   `Question_Category` varchar(15) DEFAULT NULL,\n" +
-                "   `Question_SubCategory` varchar(15) DEFAULT NULL,\n" +
-                "   `Question_Max_Marks` double(15) DEFAULT NULL,\n"+
-                "   `Question_Negative_Marks` double(15) DEFAULT NULL,\n"+
-                "   `Question_Marks_Obtained` double(15) DEFAULT NULL,\n"+
-                "   `Question_Negative_Applied` double(15) DEFAULT NULL,\n"+
-                "   `Question_Option` int(15) DEFAULT NULL,\n"+
-                "   `Question_Status` varchar(20) DEFAULT NULL,\n"+
-                "   `Question_Upload_Status` TEXT DEFAULT NULL,\n"+
-                "   `Question_Option_Sequence` varchar(20) DEFAULT NULL,\n"+
-                "   `Option_Answer_Flag` varchar(15) DEFAULT NULL,\n"+
-                "   PRIMARY KEY (`Question_Key`)\n"+
+        String AssessmentData="CREATE TABLE `assessment_data` (\n" +
+                "  `key` integer PRIMARY KEY AUTOINCREMENT,\n" +
+                "  `StudentId` varchar(20) NOT NULL,\n" +
+                "  `Org_ID` varchar(20) DEFAULT NULL,\n" +
+                "  `Branch_ID` varchar(20) DEFAULT NULL,\n" +
+                "  `Batch_ID` varchar(20) DEFAULT NULL,\n" +
+                "  `Test_ID` varchar(20) NOT NULL,\n" +
+                "  `Assessment_Instance_ID` varchar(20) DEFAULT NULL,\n" +
+                "  `Question_ID` varchar(15) DEFAULT NULL,\n" +
+                "  `Question_Seq_No` varchar(15) DEFAULT NULL,\n" +
+                "  `Question_Section` varchar(15) DEFAULT NULL,\n" +
+                "  `Question_Category` varchar(15) DEFAULT NULL,\n" +
+                "  `Question_SubCategory` varchar(15) DEFAULT NULL,\n" +
+                "  `Question_Max_Marks` double DEFAULT NULL,\n" +
+                "  `Question_Negative_Marks` double DEFAULT NULL,\n" +
+                "  `Question_Marks_Obtained` double DEFAULT NULL,\n" +
+                "  `Question_Negative_Applied` int(5) DEFAULT NULL,\n" +
+                "  `Question_Option` int(10) DEFAULT NULL,\n" +
+                "  `Question_OptionCount` int(5) DEFAULT NULL,\n" +
+                "  `Question_Status` varchar(20) DEFAULT NULL,\n" +
+                "  `Question_Upload_Status` varchar(20) DEFAULT NULL,\n" +
+                "  `Question_Option_Sequence` varchar(20) DEFAULT NULL,\n" +
+                "  `Option_Answer_Flag` varchar(20) DEFAULT NULL\n" +
                 ")";
         db.execSQL(AssessmentData);
 
