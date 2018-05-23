@@ -47,7 +47,7 @@ public class ListofServers extends AppCompatActivity {
     Button btn_setserver;
     ServerAdapter sAdp;
     DBHelper myhelper;
-    String studentid="",snumber="",selectedserver="",serverId="",finalUrl="";
+    String studentid="",snumber="",selectedserver="",spersonname="",email="",serverId="",finalUrl="";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -73,6 +73,8 @@ public class ListofServers extends AppCompatActivity {
         if(cmgintent!=null){
             studentid=cmgintent.getStringExtra("studentid");
             snumber=cmgintent.getStringExtra("number");
+            spersonname=cmgintent.getStringExtra("sname");
+            email=cmgintent.getStringExtra("email");
         }
 
         rv_servers=findViewById(R.id.rv_serverlist);
@@ -98,6 +100,12 @@ public class ListofServers extends AppCompatActivity {
                         editor.putString("servername",selectedserver);
                         editor.apply();
                         finish();
+                        Intent i=new Intent(getApplicationContext(),DashBoardNavActivity.class);
+                        i.putExtra("studentid",studentid);
+                        i.putExtra("number",snumber);
+                        i.putExtra("sname",spersonname);
+                        i.putExtra("email",email);
+                        startActivity(i);
                     }else{
 //                        serverId=myhelper.getServerId(selectedserver);
 //                        finalUrl="http://"+serverId+URLClass.loc_hosturl;
@@ -133,6 +141,12 @@ public class ListofServers extends AppCompatActivity {
                         editor.putString("servername",selectedserver);
                         editor.apply();
                         finish();
+                        Intent i=new Intent(getApplicationContext(),DashBoardNavActivity.class);
+                        i.putExtra("studentid",studentid);
+                        i.putExtra("number",snumber);
+                        i.putExtra("sname",spersonname);
+                        i.putExtra("email",email);
+                        startActivity(i);
 
                     }
                 }

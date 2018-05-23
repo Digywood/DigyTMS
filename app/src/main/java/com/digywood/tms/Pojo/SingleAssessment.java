@@ -6,17 +6,26 @@ package com.digywood.tms.Pojo;
 
 public class SingleAssessment {
 
-    private String testid,testName,subjectid,status;
+    private String testid,instanceId,testName,subjectid,status;
 
     public SingleAssessment(){
 
     }
 
-    public SingleAssessment(String testid,String testName,String subjectid, String status){
+    public SingleAssessment(String testid,String instanceid,String testName,String subjectid,String status){
         this.testid=testid;
+        this.instanceId=instanceid;
         this.testName=testName;
         this.subjectid=subjectid;
         this.status=status;
+    }
+
+    public String getInstanceId() {
+        return instanceId;
+    }
+
+    public void setInstanceId(String instanceId) {
+        this.instanceId = instanceId;
     }
 
     public String getTestName() {

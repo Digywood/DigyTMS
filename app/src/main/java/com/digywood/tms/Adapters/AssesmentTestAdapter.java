@@ -254,7 +254,7 @@ public class AssesmentTestAdapter extends RecyclerView.Adapter<AssesmentTestAdap
                                     Log.e("LocalStatusUpdate---","Unable to Update Locally");
                                 }
 
-                                Cursor mycursor=myhelper.checkAssessmentTest(studentid,enrollid,singletest.getTestid());
+                                Cursor mycursor=myhelper.checkAssessmentTest(studentid,enrollid,singletest.getTestid(),singletest.getInstanceId());
                                 if(mycursor.getCount()>0){
                                     while(mycursor.moveToNext()){
                                         courseid=mycursor.getString(mycursor.getColumnIndex("satu_course_id"));
