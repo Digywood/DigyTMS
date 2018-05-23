@@ -173,7 +173,7 @@ public class PractiseTestAdapter extends RecyclerView.Adapter<PractiseTestAdapte
                     holder.ll_resume.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            holder.ll_resume.setBackground(mycontext.getResources().getDrawable(R.drawable.layout_press_custom));
+//                            holder.ll_resume.setBackground(mycontext.getResources().getDrawable(R.drawable.layout_press_custom));
                             try {
                                 ((ListofPractiseTests)mycontext).finish();
                                 attempt = new String(SaveJSONdataToFile.bytesFromFile(getExternalPath(mycontext, singletest, "ATTEMPT") + testid + ".json"), "UTF-8");
@@ -193,7 +193,7 @@ public class PractiseTestAdapter extends RecyclerView.Adapter<PractiseTestAdapte
                 holder.ll_review.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        holder.ll_review.setBackground(mycontext.getResources().getDrawable(R.drawable.layout_press_custom));
+//                        holder.ll_review.setBackground(mycontext.getResources().getDrawable(R.drawable.layout_press_custom));
                         try {
                             ((ListofPractiseTests)mycontext).finish();
                             Log.e("Exec","Review,");
@@ -242,7 +242,7 @@ public class PractiseTestAdapter extends RecyclerView.Adapter<PractiseTestAdapte
                 }else{
                     showAlert("Test Configuration is not Available for " + singletest.getTestid() + " \n Please download test data to fetch configuration ");
                 }*/
-                holder.ll_start.setBackground(mycontext.getResources().getDrawable(R.drawable.layout_press_custom));
+//                holder.ll_start.setBackground(mycontext.getResources().getDrawable(R.drawable.layout_press_custom));
                 missFileData.clear();
 
                 Cursor mycursor = myhelper.checkPractiseTest(studentid,singletest.getTestid());
@@ -359,7 +359,7 @@ public class PractiseTestAdapter extends RecyclerView.Adapter<PractiseTestAdapte
             public void onClick(View v) {
 
                 missFileData.clear();
-                holder.ll_fstart.setBackground(mycontext.getResources().getDrawable(R.drawable.layout_press_custom));
+//                holder.ll_fstart.setBackground(mycontext.getResources().getDrawable(R.drawable.layout_press_custom));
                 Cursor mycursor = myhelper.checkPractiseTest(studentid,singletest.getTestid());
                 if (mycursor.getCount() > 0) {
                     while (mycursor.moveToNext()) {

@@ -18,17 +18,15 @@
 
             <GridView
                 android:id="@+id/paper_grid"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_margin="2dp"
-                android:gravity="center"
-                android:layout_gravity="center"
                 android:numColumns="auto_fit"
                 android:horizontalSpacing="4dp"
                 android:verticalSpacing="12dp"
                 android:scrollbars="vertical"
                 android:stretchMode="spacingWidthUniform"
-                android:columnWidth="300dp">
+                android:columnWidth="280dp">
             </GridView>
 
         </LinearLayout>
