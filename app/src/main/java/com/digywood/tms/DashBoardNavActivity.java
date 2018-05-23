@@ -880,7 +880,6 @@ public class DashBoardNavActivity extends AppCompatActivity implements Navigatio
 
         JSONObject finalAssessmentObj=new JSONObject();
         Cursor mycursor=myhelper.getAssessmentUploadData("NotUploaded");
-        Log.e("CURCOUNT:--",""+mycursor.getCount());
         if(mycursor.getCount()>0){
             try{
                 JSONArray AssessmentList = new JSONArray();
@@ -888,7 +887,14 @@ public class DashBoardNavActivity extends AppCompatActivity implements Navigatio
                 while (mycursor.moveToNext()){
                     AssessmentTestQues = new JSONObject();
                     AssessmentTestQues.put("StudentId",studentid);
+                    AssessmentTestQues.put("StudentId",studentid);
+                    AssessmentTestQues.put("StudentId",studentid);
+                    AssessmentTestQues.put("StudentId",studentid);
+
                     AssessmentTestQues.put("Test_ID",mycursor.getString(mycursor.getColumnIndex("Test_ID")));
+
+                    AssessmentTestQues.put("StudentId",studentid);
+
                     AssessmentTestQues.put("Question_Key",mycursor.getString(mycursor.getColumnIndex("Question_Key")));
                     AssessmentTestQues.put("Question_ID",mycursor.getString(mycursor.getColumnIndex("Question_ID")));
                     AssessmentTestQues.put("Question_Seq_No",mycursor.getString(mycursor.getColumnIndex("Question_Seq_No")));
@@ -900,6 +906,10 @@ public class DashBoardNavActivity extends AppCompatActivity implements Navigatio
                     AssessmentTestQues.put("Question_Marks_Obtained",mycursor.getString(mycursor.getColumnIndex("Question_Marks_Obtained")));
                     AssessmentTestQues.put("Question_Negative_Applied",mycursor.getInt(mycursor.getColumnIndex("Question_Negative_Applied")));
                     AssessmentTestQues.put("Question_Option",mycursor.getInt(mycursor.getColumnIndex("Question_Option")));
+
+                    AssessmentTestQues.put("Question_Option",mycursor.getInt(mycursor.getColumnIndex("Question_Option")));
+
+
                     AssessmentTestQues.put("Question_Status",mycursor.getInt(mycursor.getColumnIndex("Question_Status")));
                     AssessmentTestQues.put("Question_Upload_Status",mycursor.getInt(mycursor.getColumnIndex("Question_Upload_Status")));
                     AssessmentTestQues.put("Question_Option_Sequence",mycursor.getDouble(mycursor.getColumnIndex("Question_Option_Sequence")));
