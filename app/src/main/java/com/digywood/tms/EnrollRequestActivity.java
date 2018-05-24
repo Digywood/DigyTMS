@@ -310,8 +310,8 @@ public class EnrollRequestActivity extends AppCompatActivity {
 
                      }
                  }
-                 orgAdp= new ArrayAdapter(EnrollRequestActivity.this,R.layout.spinner_text,orgnames);
-                 orgAdp.setDropDownViewResource(R.layout.simple_spinner_dropdown);
+                 orgAdp= new ArrayAdapter(EnrollRequestActivity.this,android.R.layout.simple_spinner_item,orgnames);
+                 orgAdp.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                  sp_org.setAdapter(orgAdp);
              }catch (Exception e){
                  e.printStackTrace();
