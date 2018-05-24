@@ -236,7 +236,9 @@ public class AssesmentTestAdapter extends RecyclerView.Adapter<AssesmentTestAdap
                 filedata="";
 
                 hmap.clear();
-                hmap.put("testid",singletest.getTestid());
+                hmap.put("studentid",studentid);
+                hmap.put("enrollid",enrollid);
+                hmap.put("instanceid",singletest.getInstanceId());
                 hmap.put("status","STARTED");
                 startdttm = new java.text.SimpleDateFormat("yyyy-MM-dd hh:mm:ss").format(Calendar.getInstance(TimeZone.getDefault()).getTime());
                 hmap.put("date",startdttm);
@@ -336,7 +338,7 @@ public class AssesmentTestAdapter extends RecyclerView.Adapter<AssesmentTestAdap
                                                     }
 
                                                 }else{
-                                                    updateAssessmentTestStatus(singletest.getTestid(),"DOWNLOADED");
+                                                    updateAssessmentTestStatus(singletest.getInstanceId(),"DOWNLOADED");
                                                     Log.e("LearningActivity----","No Downloaded Images for test");
                                                 }
 
@@ -348,7 +350,7 @@ public class AssesmentTestAdapter extends RecyclerView.Adapter<AssesmentTestAdap
 
                                                             try{
                                                                 if(status.equalsIgnoreCase("Completed")){
-                                                                    updateAssessmentTestStatus(singletest.getTestid(),"DOWNLOADED");
+                                                                    updateAssessmentTestStatus(singletest.getInstanceId(),"DOWNLOADED");
                                                                     Toast.makeText(mycontext,"All Downloaded",Toast.LENGTH_SHORT).show();
                                                                 }else{
 
@@ -363,7 +365,7 @@ public class AssesmentTestAdapter extends RecyclerView.Adapter<AssesmentTestAdap
                                                     }).execute();
 
                                                 }else{
-                                                    updateAssessmentTestStatus(singletest.getTestid(),"DOWNLOADED");
+                                                    updateAssessmentTestStatus(singletest.getInstanceId(),"DOWNLOADED");
                                                     Toast.makeText(mycontext,"All Downloaded",Toast.LENGTH_SHORT).show();
                                                 }
 
@@ -544,9 +546,11 @@ public class AssesmentTestAdapter extends RecyclerView.Adapter<AssesmentTestAdap
         }
     }
 
-    public  void updateAssessmentTestStatus(final String testid, final String status){
+    public  void updateAssessmentTestStatus(final String instanceid,final String status){
         hmap.clear();
-        hmap.put("testid",testid);
+        hmap.put("studentid",studentid);
+        hmap.put("enrollid",enrollid);
+        hmap.put("instanceid",instanceid);
         hmap.put("status",status);
         endddtm = new java.text.SimpleDateFormat("yyyy-MM-dd hh:mm:ss").format(Calendar.getInstance(TimeZone.getDefault()).getTime());
         hmap.put("date",endddtm);

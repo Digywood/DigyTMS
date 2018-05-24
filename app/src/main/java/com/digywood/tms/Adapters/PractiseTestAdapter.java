@@ -3,6 +3,7 @@ package com.digywood.tms.Adapters;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.RecyclerView;
@@ -45,6 +46,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.TimeZone;
 
+import static android.content.Context.MODE_PRIVATE;
+
 
 public class PractiseTestAdapter extends RecyclerView.Adapter<PractiseTestAdapter.MyViewHolder> {
 
@@ -65,10 +68,12 @@ public class PractiseTestAdapter extends RecyclerView.Adapter<PractiseTestAdapte
     Boolean value = false;
     JSONParser myparser;
     int fattemptcount=0;
+    SharedPreferences restoredprefs;
     Double minscore,maxscore,avgscore,fminscore,favgscore,fmaxscore;
     public static final int RequestPermissionCode = 1;
-    String filedata = "", path, jsonPath, attemptPath, photoPath, enrollid, courseid,groupdata="",startdttm="",endddtm="";
+    String filedata = "", path, jsonPath, attemptPath, photoPath, enrollid="", courseid,groupdata="",startdttm="",endddtm="";
     String studentid="",subjectId, paperid, testid, fullTest, attempt,json,downloadjsonpath="",tfiledwdpath="",localpath="";
+    String restoredsname="",serverId="",finalUrl="",finalAssetUrl="";
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
 
@@ -107,11 +112,24 @@ public class PractiseTestAdapter extends RecyclerView.Adapter<PractiseTestAdapte
         }
     }
 
-    public PractiseTestAdapter(ArrayList<SingleTest> testList,Context c,String studentId) {
+    public PractiseTestAdapter(ArrayList<SingleTest> testList,Context c,String studentId,String enrollId) {
         this.testList = testList;
         this.mycontext = c;
         this.studentid=studentId;
+        this.enrollid=enrollId;
         myhelper = new DBHelper(c);
+
+        restoredprefs = mycontext.getSharedPreferences("SERVERPREF", MODE_PRIVATE);
+        restoredsname = restoredprefs.getString("servername","main_server");
+        if(restoredsname.equalsIgnoreCase("main_server")){
+            finalUrl=URLClass.hosturl;
+            finalAssetUrl=URLClass.downloadjson;
+        }else{
+            serverId=myhelper.getServerId(restoredsname);
+            finalUrl="http://"+serverId+URLClass.loc_hosturl;
+            finalAssetUrl="http://"+serverId+URLClass.loc_downloadjson;
+        }
+
     }
 
     @Override
@@ -251,7 +269,6 @@ public class PractiseTestAdapter extends RecyclerView.Adapter<PractiseTestAdapte
                 if (mycursor.getCount() > 0) {
                     while (mycursor.moveToNext()) {
 //                        studentid=mycursor.getString(mycursor.getColumnIndex("sptu_student_ID"));
-                        enrollid = mycursor.getString(mycursor.getColumnIndex("sptu_entroll_id"));
                         courseid = mycursor.getString(mycursor.getColumnIndex("sptu_course_id"));
                         subjectId = mycursor.getString(mycursor.getColumnIndex("sptu_subjet_ID"));
                         paperid = mycursor.getString(mycursor.getColumnIndex("sptu_paper_ID"));
@@ -366,7 +383,6 @@ public class PractiseTestAdapter extends RecyclerView.Adapter<PractiseTestAdapte
                 if (mycursor.getCount() > 0) {
                     while (mycursor.moveToNext()) {
 //                        studentid=mycursor.getString(mycursor.getColumnIndex("sptu_student_ID"));
-                        enrollid = mycursor.getString(mycursor.getColumnIndex("sptu_entroll_id"));
                         courseid = mycursor.getString(mycursor.getColumnIndex("sptu_course_id"));
                         subjectId = mycursor.getString(mycursor.getColumnIndex("sptu_subjet_ID"));
                         paperid = mycursor.getString(mycursor.getColumnIndex("sptu_paper_ID"));
@@ -469,10 +485,13 @@ public class PractiseTestAdapter extends RecyclerView.Adapter<PractiseTestAdapte
                 filedata="";
 
                 hmap.clear();
+                hmap.put("studentid",studentid);
+                hmap.put("enrollid",enrollid);
                 hmap.put("testid",singletest.getTestid());
                 hmap.put("status","STARTED");
                 startdttm = new java.text.SimpleDateFormat("yyyy-MM-dd hh:mm:ss").format(Calendar.getInstance(TimeZone.getDefault()).getTime());
-                new BagroundTask(URLClass.hosturl +"updatePTestStartStatus.php",hmap,mycontext,new IBagroundListener() {
+                hmap.put("date",startdttm);
+                new BagroundTask(finalUrl+"updatePTestStartStatus.php",hmap,mycontext,new IBagroundListener() {
                     @Override
                     public void bagroundData(String json) {
                         try{
@@ -490,7 +509,6 @@ public class PractiseTestAdapter extends RecyclerView.Adapter<PractiseTestAdapte
                                 if(mycursor.getCount()>0){
                                     while(mycursor.moveToNext()){
 
-                                        enrollid=mycursor.getString(mycursor.getColumnIndex("sptu_entroll_id"));
                                         courseid=mycursor.getString(mycursor.getColumnIndex("sptu_course_id"));
                                         subjectId=mycursor.getString(mycursor.getColumnIndex("sptu_subjet_ID"));
                                         paperid=mycursor.getString(mycursor.getColumnIndex("sptu_paper_ID"));
@@ -502,9 +520,9 @@ public class PractiseTestAdapter extends RecyclerView.Adapter<PractiseTestAdapte
 
                                 path=courseid+"/"+subjectId+"/"+paperid+"/"+singletest.getTestid()+"/";
 
-                                downloadjsonpath=URLClass.downloadjson+"courses/"+path+singletest.getTestid()+".json";
+                                downloadjsonpath=finalAssetUrl+"courses/"+path+singletest.getTestid()+".json";
 
-                                tfiledwdpath=URLClass.downloadjson+"courses/"+path;
+                                tfiledwdpath=finalAssetUrl+"courses/"+path;
 
                                 localpath=enrollid+"/"+courseid+"/"+subjectId+"/"+paperid+"/"+singletest.getTestid()+"/";
 
@@ -562,7 +580,7 @@ public class PractiseTestAdapter extends RecyclerView.Adapter<PractiseTestAdapte
 
                                                         }else{
 
-                                                            String tPath=URLClass.downloadjson+"courses/"+courseid+"/"+sdq.getSubjectId()+"/"+sdq.getPaperId()+"/";
+                                                            String tPath=finalAssetUrl+"courses/"+courseid+"/"+sdq.getSubjectId()+"/"+sdq.getPaperId()+"/";
                                                             finalUrls.add(tPath+sdq.getChapterId()+"/"+sdq.getFileName());
                                                             finalNames.add(sdq.getFileName());
                                                             localPathList.add(URLClass.mainpath+enrollid+"/"+courseid+"/"+sdq.getSubjectId()+"/"+sdq.getPaperId()+"/"+sdq.getChapterId()+"/");
@@ -685,7 +703,7 @@ public class PractiseTestAdapter extends RecyclerView.Adapter<PractiseTestAdapte
                         hmap.clear();
                         hmap.put("MissingFiles",finalObj.toString());
                         try {
-                            new BagroundTask(URLClass.hosturl+"insertmissingFileInfo.php",hmap,mycontext,new IBagroundListener() {
+                            new BagroundTask(finalUrl+"insertmissingFileInfo.php",hmap,mycontext,new IBagroundListener() {
                                 @Override
                                 public void bagroundData(String json) {
                                     Log.d("ja", "comes:" + json);
@@ -878,11 +896,12 @@ public class PractiseTestAdapter extends RecyclerView.Adapter<PractiseTestAdapte
         }
     }
 
-    private void getTestConfig(final String testid, String groupidData){
+    private void getTestConfig(final String testid,String groupidData){
+
         hmap.clear();
         hmap.put("testId",testid);
         hmap.put("groupiddata",groupidData);
-        new BagroundTask(URLClass.hosturl +"getTestConfig.php",hmap,mycontext,new IBagroundListener() {
+        new BagroundTask(finalUrl+"getTestConfig.php",hmap,mycontext,new IBagroundListener() {
             @Override
             public void bagroundData(String json) {
 
@@ -1090,11 +1109,13 @@ public class PractiseTestAdapter extends RecyclerView.Adapter<PractiseTestAdapte
 
     public void updatePTestEndStatus(final String testId,final String status){
         hmap.clear();
+        hmap.put("studentid",studentid);
+        hmap.put("enrollid",enrollid);
         hmap.put("testid",testId);
         hmap.put("status",status);
         endddtm = new java.text.SimpleDateFormat("yyyy-MM-dd hh:mm:ss").format(Calendar.getInstance(TimeZone.getDefault()).getTime());
         hmap.put("date",endddtm);
-        new BagroundTask(URLClass.hosturl +"updatePTestEndStatus.php",hmap, mycontext,new IBagroundListener() {
+        new BagroundTask(finalUrl+"updatePTestEndStatus.php",hmap,mycontext,new IBagroundListener() {
             @Override
             public void bagroundData(String json) {
                 try {
