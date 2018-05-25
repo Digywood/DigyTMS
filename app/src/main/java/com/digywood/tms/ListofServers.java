@@ -100,6 +100,7 @@ public class ListofServers extends AppCompatActivity {
                         editor.apply();
                         finish();
                         Intent i=new Intent(getApplicationContext(),DashBoardNavActivity.class);
+                        i.putExtra("connection",selectedserver);
                         i.putExtra("studentid",studentid);
                         i.putExtra("number",snumber);
                         i.putExtra("sname",spersonname);
@@ -141,6 +142,7 @@ public class ListofServers extends AppCompatActivity {
                         editor.apply();
                         finish();
                         Intent i=new Intent(getApplicationContext(),DashBoardNavActivity.class);
+                        i.putExtra("connection",selectedserver);
                         i.putExtra("studentid",studentid);
                         i.putExtra("number",snumber);
                         i.putExtra("sname",spersonname);
