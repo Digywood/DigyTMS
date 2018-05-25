@@ -123,8 +123,11 @@ public class ListofPractiseTests extends AppCompatActivity {
             Cursor mycursor=myhelper.getStudentTests(studentid,enrollid,courseid,paperid,"A");
             if(mycursor.getCount()>0){
                 while (mycursor.moveToNext()) {
+                    // only 1 test for enrollment EAA0000010
                     testidList.add(new SingleTest(mycursor.getString(mycursor.getColumnIndex("sptu_ID")),mycursor.getString(mycursor.getColumnIndex("sptu_name")),mycursor.getString(mycursor.getColumnIndex("sptu_subjet_ID")),mycursor.getString(mycursor.getColumnIndex("sptu_dwnld_status"))));
                     subjectIds.add(mycursor.getString(mycursor.getColumnIndex("sptu_subjet_ID")));
+                    Log.e("Test:--","Eid:---"+enrollid+"  Cid:---"+courseid+"  Pid:----"+paperid+"Sub---"+mycursor.getString(mycursor.getColumnIndex("sptu_subjet_ID"))+"count---"+mycursor.getCount());
+
                 }
             }else {
                 mycursor.close();
