@@ -42,7 +42,7 @@ public class TestAttemptFragment extends Fragment {
     TextView tv_attempt_Id,tv_testid,tv_minscore,tv_maxscore,tv_avgscore,tv_emptytestdata;
     RecyclerView rv_tattemptdata;
     DBHelper dataObj;
-    String testId="",studentId;
+    String testId="",studentId="",enrollId="";
     TestAttemptAdapter tAdp;
     LinearLayoutManager myLayoutManager;
     ArrayList<SingleTestAttempt> tattemptList=new ArrayList<>();
@@ -91,6 +91,7 @@ public class TestAttemptFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_test_attempt, container, false);
         testId = getActivity().getIntent().getStringExtra("testId");
         studentId = getActivity().getIntent().getStringExtra("studentid");
+        enrollId = getActivity().getIntent().getStringExtra("enrollid");
         dataObj= new DBHelper(getActivity().getApplicationContext());
         tv_testid=view.findViewById(R.id.tv_ftestid);
         tv_testid.setText(testId);
@@ -108,7 +109,7 @@ public class TestAttemptFragment extends Fragment {
     public void getTestAttemptData(String testId){
 
         Double minscore=0.0,maxscore=0.0,avgscore=0.0;
-        Cursor cur=dataObj.getTestRawData(testId,studentId);
+        Cursor cur=dataObj.getTestRawData(testId,studentId,enrollId);
         if(cur.getCount()>0){
             while (cur.moveToNext()){
                 minscore=cur.getDouble(cur.getColumnIndex("minscore"));

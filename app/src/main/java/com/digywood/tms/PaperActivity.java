@@ -128,7 +128,7 @@ public class PaperActivity extends AppCompatActivity {
 
                 ptestcount=myhelper.getTestsByPaper(studentid,enrollid,paperidList.get(i));
 
-                Cursor mycur=myhelper.getPractiseSummaryByPaper(studentid,paperidList.get(i));
+                Cursor mycur=myhelper.getPractiseSummaryByPaper(studentid,enrollid,paperidList.get(i));
                 if(mycur.getCount()>0){
                     while (mycur.moveToNext()){
 
@@ -136,6 +136,7 @@ public class PaperActivity extends AppCompatActivity {
                         pmin=mycur.getDouble(mycur.getColumnIndex("minscore"));
                         pmax=mycur.getDouble(mycur.getColumnIndex("maxscore"));
                         pavg=mycur.getDouble(mycur.getColumnIndex("avgscore"));
+
                     }
                 }else{
                     mycur.close();
@@ -170,18 +171,18 @@ public class PaperActivity extends AppCompatActivity {
 
                 atestcount=myhelper.getAssessmentTestsByPaper(studentid,enrollid,paperidList.get(i));
 
-//                Cursor mycur2=myhelper.getPractiseSummaryByPaper(paperidList.get(i));
-//                if(mycur2.getCount()>0){
-//                    while (mycur2.moveToNext()){
-//
-//                        aattemptcount=mycur2.getInt(mycur2.getColumnIndex("attemptpcount"));
-//                        amin=mycur2.getDouble(mycur2.getColumnIndex("minscore"));
-//                        amax=mycur2.getDouble(mycur2.getColumnIndex("maxscore"));
-//                        aavg=mycur2.getDouble(mycur2.getColumnIndex("avgscore"));
-//                    }
-//                }else{
-//                    mycur2.close();
-//                }
+                Cursor mycur2=myhelper.getAssessmentSummaryByPaper(studentid,enrollid,paperidList.get(i));
+                if(mycur2.getCount()>0){
+                    while (mycur2.moveToNext()){
+
+                        aattemptcount=mycur2.getInt(mycur2.getColumnIndex("attemptacount"));
+                        amin=mycur2.getDouble(mycur2.getColumnIndex("minscore"));
+                        amax=mycur2.getDouble(mycur2.getColumnIndex("maxscore"));
+                        aavg=mycur2.getDouble(mycur2.getColumnIndex("avgscore"));
+                    }
+                }else{
+                    mycur2.close();
+                }
 
                 if(atestcount>0){
                     Double varcount=Double.parseDouble(String.valueOf(aattemptcount));

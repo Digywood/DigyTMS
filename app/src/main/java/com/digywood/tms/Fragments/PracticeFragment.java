@@ -198,7 +198,7 @@ public class PracticeFragment extends Fragment implements OnChartValueSelectedLi
             }
         });
 
-        attemptpercent=(Float.parseFloat(String.valueOf(attemptpcount))/totptestcount)*100;
+//        attemptpercent=(Float.parseFloat(String.valueOf(attemptpcount))/totptestcount)*100;
 
         mChart.setUsePercentValues(true);
         mChart.getDescription().setEnabled(false);

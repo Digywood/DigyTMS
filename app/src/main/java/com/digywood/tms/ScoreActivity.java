@@ -139,7 +139,7 @@ public class ScoreActivity extends AppCompatActivity {
 
 
                 flag = dataObj.UpdateAttempt(dataObj.getLastTestAttempt(testId,studentId), attempt.getString("ptu_test_ID"), 2,"NotUploaded",TotalScore,dataObj.getTestQuestionAttempted(testId),dataObj.getTestQuestionSkipped(testId),dataObj.getTestQuestionBookmarked(testId),dataObj.getTestQuestionNotAttempted(testId),Percentage , 0, 0, 0);
-                Cursor mycursor=dataObj.getTestRawData(testId,studentId);
+                Cursor mycursor=dataObj.getTestRawData(testId,studentId,enrollid);
                 if(mycursor.getCount()>0) {
                     while (mycursor.moveToNext()) {
                         minscore = mycursor.getDouble(mycursor.getColumnIndex("minscore"));
