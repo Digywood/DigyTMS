@@ -107,7 +107,7 @@ public class ListofAssessmentTests extends AppCompatActivity {
     public void getTestIdsFromLocal(){
         testidList.clear();
         try {
-            Cursor mycursor=myhelper.getAssessmentTestsByEnroll(studentid,enrollid);
+            Cursor mycursor=myhelper.getAssesmentTestsByEnroll(studentid,enrollid,courseid,paperid);
             if(mycursor.getCount()>0){
                 while (mycursor.moveToNext()) {
                     testidList.add(new SingleAssessment(mycursor.getString(mycursor.getColumnIndex("satu_ID")),mycursor.getString(mycursor.getColumnIndex("satu_instace_id")),mycursor.getString(mycursor.getColumnIndex("satu_name")),mycursor.getString(mycursor.getColumnIndex("satu_subjet_ID")),mycursor.getString(mycursor.getColumnIndex("satu_dwnld_status"))));
@@ -130,7 +130,7 @@ public class ListofAssessmentTests extends AppCompatActivity {
             @Override
             public void bagroundData(String json) {
                 try{
-                    Log.e("ListofPractiseTests----","JSON:comes-"+json);
+                    Log.e("ListofAssesmentTests","JSON:comes-"+json);
                     if(json.equalsIgnoreCase("Tests_Not_Exist")){
                         Toast.makeText(getApplicationContext(),"No Tests for User",Toast.LENGTH_SHORT).show();
                     }else{
@@ -146,7 +146,7 @@ public class ListofAssessmentTests extends AppCompatActivity {
 
                             long checkFlag=myhelper.checkTest(myObj.getInt("atu_key"));
                             if(checkFlag>0){
-                                Log.e("ListofPractiseTests----","Test Already Exists");
+                                Log.e("ListofAssesmentTests","Test Already Exists");
                             }else{
 //                                long insertFlag=myhelper.insertPractiseTest(myObj.getInt("atu_key"),myObj.getString("atu_org_id"),myObj.getString("atu_entroll_id"),myObj.getString("atu_student_ID"),
 //                                        myObj.getString("atu_batch"),myObj.getString("atu_ID"),myObj.getString("atu_paper_ID"),myObj.getString("atu_subjet_ID"),
@@ -164,7 +164,7 @@ public class ListofAssessmentTests extends AppCompatActivity {
                     getTestIdsFromLocal();
                 }catch (Exception e){
                     e.printStackTrace();
-                    Log.e("ListofPractiseTests----",e.toString());
+                    Log.e("ListofAssesmentTests",e.toString());
                 }
             }
         }).execute();

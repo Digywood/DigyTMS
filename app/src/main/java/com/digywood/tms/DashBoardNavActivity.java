@@ -71,7 +71,7 @@ public class DashBoardNavActivity extends AppCompatActivity implements Navigatio
 
         DrawerLayout drawer =findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-                this, drawer, toolbar, R.string.navigation_drawer_open,R.string.navigation_drawer_close);
+                this,drawer,toolbar,R.string.navigation_drawer_open,R.string.navigation_drawer_close);
         drawer.addDrawerListener(toggle);
         toggle.syncState();
 
@@ -161,7 +161,9 @@ public class DashBoardNavActivity extends AppCompatActivity implements Navigatio
                                 if(checkFlag>0){
                                     long updateFlag=myhelper.updateEnrollment(enrollObj.getString("Enroll_ID"),enrollObj.getString("Enroll_org_id"),enrollObj.getString("Enroll_Student_ID"),
                                             enrollObj.getString("Enroll_branch_ID"),enrollObj.getString("Enroll_batch_ID"),enrollObj.getString("Enroll_course_ID"),enrollObj.getString("Enroll_batch_start_Dt"),enrollObj.getString("Enroll_batch_end_Dt"),
-                                            enrollObj.getString("Enroll_Device_ID"),enrollObj.getString("Enroll_Date"),enrollObj.getString("Enroll_Status"));
+                                            enrollObj.getString("Enroll_Device_ID"),enrollObj.getString("Enroll_Date"),enrollObj.getString("Enroll_Status"),enrollObj.getString("enroll_Fee_Currency"),enrollObj.getString("enroll_Fee_Amount"),enrollObj.getString("enroll_Fee_tax_percentage"),
+                                            enrollObj.getString("enroll_Total_Amount"),enrollObj.getString("enroll_Activation_Key"),enrollObj.getString("enroll_Activation_Date"),enrollObj.getString("enroll_Request_Date"),enrollObj.getString("enroll_ActivatedBy"),
+                                            enrollObj.getString("enroll_Refdetails"),enrollObj.getString("remarks1"),enrollObj.getString("remarks2"));
                                     if(updateFlag>0){
                                         r++;
                                     }else {
@@ -170,7 +172,9 @@ public class DashBoardNavActivity extends AppCompatActivity implements Navigatio
                                 }else{
                                     long insertFlag=myhelper.insertEnrollment(enrollObj.getInt("Enroll_key"),enrollObj.getString("Enroll_ID"),enrollObj.getString("Enroll_org_id"),enrollObj.getString("Enroll_Student_ID"),
                                             enrollObj.getString("Enroll_branch_ID"),enrollObj.getString("Enroll_batch_ID"),enrollObj.getString("Enroll_course_ID"),enrollObj.getString("Enroll_batch_start_Dt"),enrollObj.getString("Enroll_batch_end_Dt"),
-                                            enrollObj.getString("Enroll_Device_ID"),enrollObj.getString("Enroll_Date"),enrollObj.getString("Enroll_Status"));
+                                            enrollObj.getString("Enroll_Device_ID"),enrollObj.getString("Enroll_Date"),enrollObj.getString("Enroll_Status"),enrollObj.getString("enroll_Fee_Currency"),enrollObj.getString("enroll_Fee_Amount"),enrollObj.getString("enroll_Fee_tax_percentage"),
+                                            enrollObj.getString("enroll_Total_Amount"),enrollObj.getString("enroll_Activation_Key"),enrollObj.getString("enroll_Activation_Date"),enrollObj.getString("enroll_Request_Date"),enrollObj.getString("enroll_ActivatedBy"),
+                                            enrollObj.getString("enroll_Refdetails"),enrollObj.getString("remarks1"),enrollObj.getString("remarks2"));
                                     if(insertFlag>0){
                                         p++;
                                     }else {
@@ -292,6 +296,7 @@ public class DashBoardNavActivity extends AppCompatActivity implements Navigatio
                                             testObj.getString("lastAttemptDttm"),testObj.getDouble("lastAttemptScore"), testObj.getString("sptu_created_by"),testObj.getString("sptu_created_dttm"),testObj.getString("sptu_mod_by"),
                                             testObj.getString("sptu_mod_dttm"));
                                     if(insertFlag>0){
+                                        Log.e("INSERTEDTEST:---",""+testObj.getString("sptu_ID"));
                                         p++;
                                     }else {
                                         q++;
@@ -727,7 +732,7 @@ public class DashBoardNavActivity extends AppCompatActivity implements Navigatio
                             }
                         }catch (Exception e){
                             e.printStackTrace();
-                            Log.e("DashBoardNavActivity","  :  "+e.toString());
+                            Log.e("DashBoardNavActivity","  :  "+e.toString()+"lineno:--"+e.getStackTrace()[0].getLineNumber());
                         }
                     }
                 }).execute();
@@ -866,7 +871,7 @@ public class DashBoardNavActivity extends AppCompatActivity implements Navigatio
                                     Log.e("DBNActivity---","updated_flash_rec:--"+ja_flashIds.length());
                                     for(int i=0;i<ja_flashIds.length();i++){
                                         flashObj=ja_flashIds.getJSONObject(i);
-                                        long updateFlag=myhelper.updateFAttemptStatus(flashObj.getString("flashUID"),"Uploaded");
+                                        long updateFlag=myhelper.updateFAttemptStatus(studentid,flashObj.getString("flashUID"),"Uploaded");
                                         if(updateFlag>0){
                                             p++;
                                         }else{
@@ -904,7 +909,7 @@ public class DashBoardNavActivity extends AppCompatActivity implements Navigatio
     public  void syncAssesmentTestData(){
 
         JSONObject finalAssessmentObj=new JSONObject();
-        Cursor mycursor=myhelper.getAssessmentUploadData("NotUploaded");
+        Cursor mycursor=myhelper.getAssessmentUploadData(studentid,"NotUploaded");
         if(mycursor.getCount()>0){
             try{
                 JSONArray AssessmentList = new JSONArray();
@@ -959,7 +964,7 @@ public class DashBoardNavActivity extends AppCompatActivity implements Navigatio
                                     Log.e("DBNActivity---","updated_assesstestQ_rec:--"+ja_assessmentKeys.length());
                                     for(int i=0;i<ja_assessmentKeys.length();i++){
                                         assessmentObj=ja_assessmentKeys.getJSONObject(i);
-                                        long updateFlag=myhelper.updateAssessmentQStatus(assessmentObj.getString("assessmentKey"),"Uploaded");
+                                        long updateFlag=myhelper.updateAssessmentQStatus(studentid,assessmentObj.getString("assessmentKey"),"Uploaded");
                                         if(updateFlag>0){
                                             p++;
                                         }else{
@@ -978,7 +983,7 @@ public class DashBoardNavActivity extends AppCompatActivity implements Navigatio
 
                         }catch (Exception e){
                             e.printStackTrace();
-                            Log.e("DashBoardNavActivity","  :  "+e.toString());
+                            Log.e("DashBoardNavActivity","  :  "+e.toString()+"lineno:--"+e.getStackTrace()[0].getLineNumber());
                         }
                     }
                 }).execute();
