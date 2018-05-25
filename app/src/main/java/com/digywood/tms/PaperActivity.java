@@ -148,7 +148,7 @@ public class PaperActivity extends AppCompatActivity {
                     pprogress=0.0;
                 }
 
-                Cursor mycur1=myhelper.getFlashSummaryByPaper(paperidList.get(i));
+                Cursor mycur1=myhelper.getFlashSummaryByPaper(studentid,paperidList.get(i));
                 if(mycur1.getCount()>0){
                     while (mycur1.moveToNext()){
 

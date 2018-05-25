@@ -55,7 +55,18 @@ public class DBHelper extends SQLiteOpenHelper {
                 "  `Enroll_created_by` text DEFAULT NULL,\n" +
                 "  `Enroll_created_dttm` datetime DEFAULT NULL,\n" +
                 "  `Enroll_mod_by` text DEFAULT NULL,\n" +
-                "  `Enroll_mod_dttm` datetime DEFAULT NULL)";
+                "  `Enroll_mod_dttm` datetime DEFAULT NULL,\n " +
+                "  `enroll_Fee_Currency` text DEFAULT NULL,\n" +
+                "  `enroll_Fee_Amount` text DEFAULT NULL,\n" +
+                "  `enroll_Fee_tax_percentage` text DEFAULT NULL,\n" +
+                "  `enroll_Total_Amount` text DEFAULT NULL,\n" +
+                "  `enroll_Activation_Key` text DEFAULT NULL,\n" +
+                "  `enroll_Activation_Date` date DEFAULT NULL,\n" +
+                "  `enroll_Request_Date` date DEFAULT NULL,\n" +
+                "  `enroll_ActivatedBy` text DEFAULT NULL,\n" +
+                "  `enroll_Refdetails` text DEFAULT NULL,\n" +
+                "  `remarks1` text DEFAULT NULL,\n" +
+                "  `remarks2` text DEFAULT NULL)";
         db.execSQL(tbl_enrollments);
 
         String tbl_courses="CREATE TABLE `course_master` (\n" +
@@ -701,8 +712,8 @@ public class DBHelper extends SQLiteOpenHelper {
         return  deleteFlag;
     }
 
-    public Cursor getFlashTestData(String testId){
-        Cursor c =db.query("flashcard_attempt", new String[] {"attemptNumber,startDttm,attemptQCount,iknowCount,donknowCount,skipCount,percentageObtain"},"flashcardId='"+testId+"'", null, null, null,"startDttm DESC");
+    public Cursor getFlashTestData(String studentId,String testId){
+        Cursor c =db.query("flashcard_attempt", new String[] {"attemptNumber,startDttm,attemptQCount,iknowCount,donknowCount,skipCount,percentageObtain"},"studentId='"+studentId+"' and flashcardId='"+testId+"'", null, null, null,"startDttm DESC");
         return  c;
     }
 
@@ -712,27 +723,27 @@ public class DBHelper extends SQLiteOpenHelper {
         return  c;
     }
 
-    public int getFlashAttemptNum(String testId){
+    public int getFlashAttemptNum(String studentId,String testId){
         int count=0;
-        Cursor c =db.query("flashcard_attempt", new String[] {"attemptNumber,studentId,enrollmentId,courseId,subjectId,paperId"},"flashcardId='"+testId+"'", null, null, null,null);
+        Cursor c =db.query("flashcard_attempt", new String[] {"attemptNumber,studentId,enrollmentId,courseId,subjectId,paperId"},"studentId='"+studentId+"' and flashcardId='"+testId+"'", null, null, null,null);
         count=c.getCount();
         return count;
     }
 
-    public Cursor getFlashRawData(String testId){
-        String query ="SELECT COUNT(*) as attemptcount,MIN(percentageObtain) as minscore,MAX(percentageObtain) as maxscore,AVG(percentageObtain) as avgscore FROM "+" flashcard_attempt"+" WHERE flashcardId ='"+testId+"'";
+    public Cursor getFlashRawData(String studentId,String testId){
+        String query ="SELECT COUNT(*) as attemptcount,MIN(percentageObtain) as minscore,MAX(percentageObtain) as maxscore,AVG(percentageObtain) as avgscore FROM "+" flashcard_attempt  WHERE studentId='"+studentId+"' and flashcardId ='"+testId+"'";
         Cursor c=db.rawQuery(query,null);
         return c;
     }
 
-    public Cursor getFlashSummary(String enrollid){
-        String query ="SELECT count(distinct flashcardId) as attemptfcount,MIN(percentageObtain) as minscore,MAX(percentageObtain) as maxscore,AVG(percentageObtain) as avgscore FROM "+" flashcard_attempt"+" WHERE enrollmentId ='"+enrollid+"'";
+    public Cursor getFlashSummary(String studentId,String enrollid){
+        String query ="SELECT count(distinct flashcardId) as attemptfcount,MIN(percentageObtain) as minscore,MAX(percentageObtain) as maxscore,AVG(percentageObtain) as avgscore FROM "+" flashcard_attempt WHERE studentId='"+studentId+"' and enrollmentId ='"+enrollid+"'";
         Cursor c=db.rawQuery(query,null);
         return c;
     }
 
-    public Cursor getFlashSummaryByPaper(String paperid){
-        String query ="SELECT count(distinct flashcardId) as attemptfcount,MIN(percentageObtain) as minscore,MAX(percentageObtain) as maxscore,AVG(percentageObtain) as avgscore FROM "+" flashcard_attempt"+" WHERE paperId ='"+paperid+"'";
+    public Cursor getFlashSummaryByPaper(String studentId,String paperid){
+        String query ="SELECT count(distinct flashcardId) as attemptfcount,MIN(percentageObtain) as minscore,MAX(percentageObtain) as maxscore,AVG(percentageObtain) as avgscore FROM "+" flashcard_attempt WHERE studentId='"+studentId+"' and paperId ='"+paperid+"'";
         Cursor c=db.rawQuery(query,null);
         return c;
     }
@@ -804,11 +815,11 @@ public class DBHelper extends SQLiteOpenHelper {
         return updateFlag;
     }
 
-    public long updateFAttemptStatus(String fuid,String status){
+    public long updateFAttemptStatus(String studentId,String fuid,String status){
         long updateFlag=0;
         ContentValues cv = new ContentValues();
         cv.put("Status",status);
-        updateFlag = db.update("flashcard_attempt",cv,"flashUID='"+fuid+"'",null);
+        updateFlag = db.update("flashcard_attempt",cv,"studentId='"+studentId+"' and flashUID='"+fuid+"'",null);
         return updateFlag;
     }
 
@@ -874,7 +885,7 @@ public class DBHelper extends SQLiteOpenHelper {
         return c;
     }
 
-    public long insertEnrollment(int ekey,String eid,String eorg,String esid,String ebranchid,String ebid,String ecid,String ebstartdate,String ebenddate,String edevid,String edate,String estatus){
+    public long insertEnrollment(int ekey,String eid,String eorg,String esid,String ebranchid,String ebid,String ecid,String ebstartdate,String ebenddate,String edevid,String edate,String estatus,String feecurrency,String feeamt,String feetax,String totalfee,String activationkey,String activationdate,String reqdate,String activatedby,String refdetails,String remark1,String remark2){
         long insertFlag=0;
         ContentValues cv = new ContentValues();
         cv.put("Enroll_key",ekey);
@@ -889,11 +900,22 @@ public class DBHelper extends SQLiteOpenHelper {
         cv.put("Enroll_Device_ID",edevid);
         cv.put("Enroll_Date",edate);
         cv.put("Enroll_Status",estatus);
+        cv.put("enroll_Fee_Currency",feecurrency);
+        cv.put("enroll_Fee_Amount",feeamt);
+        cv.put("enroll_Fee_tax_percentage",feetax);
+        cv.put("enroll_Total_Amount",totalfee);
+        cv.put("enroll_Activation_Key",activationkey);
+        cv.put("enroll_Activation_Date",activationdate);
+        cv.put("enroll_Request_Date",reqdate);
+        cv.put("enroll_ActivatedBy",activatedby);
+        cv.put("enroll_Refdetails",refdetails);
+        cv.put("remarks1",remark1);
+        cv.put("remarks2",remark2);
         insertFlag = db.insert("enrollments",null, cv);
         return insertFlag;
     }
 
-    public long updateEnrollment(String eid,String eorg,String esid,String ebranchid,String ebid,String ecid,String ebstartdate,String ebenddate,String edevid,String edate,String estatus){
+    public long updateEnrollment(String eid,String eorg,String esid,String ebranchid,String ebid,String ecid,String ebstartdate,String ebenddate,String edevid,String edate,String estatus,String feecurrency,String feeamt,String feetax,String totalfee,String activationkey,String activationdate,String reqdate,String activatedby,String refdetails,String remark1,String remark2){
         long updateFlag=0;
         ContentValues cv = new ContentValues();
         cv.put("Enroll_org_id",eorg);
@@ -906,6 +928,18 @@ public class DBHelper extends SQLiteOpenHelper {
         cv.put("Enroll_Device_ID",edevid);
         cv.put("Enroll_Date",edate);
         cv.put("Enroll_Status",estatus);
+
+        cv.put("enroll_Fee_Currency",feecurrency);
+        cv.put("enroll_Fee_Amount",feeamt);
+        cv.put("enroll_Fee_tax_percentage",feetax);
+        cv.put("enroll_Total_Amount",totalfee);
+        cv.put("enroll_Activation_Key",activationkey);
+        cv.put("enroll_Activation_Date",activationdate);
+        cv.put("enroll_Request_Date",reqdate);
+        cv.put("enroll_ActivatedBy",activatedby);
+        cv.put("enroll_Refdetails",refdetails);
+        cv.put("remarks1",remark1);
+        cv.put("remarks2",remark2);
         updateFlag=db.update("enrollments", cv, "Enroll_ID='"+eid+"'",null);
         return updateFlag;
     }
@@ -2011,8 +2045,8 @@ public class DBHelper extends SQLiteOpenHelper {
         return  c;
     }
 
-    public Cursor getAssessmentUploadData(String status){
-        String query ="SELECT * FROM assessment_data WHERE Question_Upload_Status ='"+status+"'";
+    public Cursor getAssessmentUploadData(String studentId,String status){
+        String query ="SELECT * FROM assessment_data WHERE StudentId='"+studentId+"' and Question_Upload_Status ='"+status+"'";
         Cursor c=db.rawQuery(query,null);
         return  c;
     }
@@ -2130,8 +2164,9 @@ public class DBHelper extends SQLiteOpenHelper {
         return c;
     }
 
+    //String studentId,String testId,String instanceId
     public Cursor getAssessmentRawData(String testId){
-        String query ="SELECT COUNT(*) as assessmentcount,MIN(Assesment_Percentage) as minscore,MAX(Assesment_Percentage) as maxscore,AVG(Assesment_Percentage) as avgscore FROM "+" Assesment_list"+" WHERE Assesment_Test_ID='"+testId+"'";
+        String query ="SELECT COUNT(*) as assessmentcount,MIN(Assesment_Percentage) as minscore,MAX(Assesment_Percentage) as maxscore,AVG(Assesment_Percentage) as avgscore FROM "+" Assesment_list"+" WHERE Assesment_Test_ID='"+testId+"' and Assesment_Test_ID='"+testId+"' and Assesment_Test_ID='"+testId+"'";
         Cursor c=db.rawQuery(query,null);
         return c;
     }
@@ -2201,12 +2236,12 @@ public class DBHelper extends SQLiteOpenHelper {
         return updateFlag;
     }
 
-    public long updateAssessmentQStatus(String testQUID,String status){
+    public long updateAssessmentQStatus(String studentId,String testQUID,String status){
 
         long updateFlag=0;
         ContentValues cv = new ContentValues();
         cv.put("Question_Status",status );
-        updateFlag = db.update("assessment_data",cv,"Question_Key='"+testQUID+"'",null);
+        updateFlag = db.update("assessment_data",cv,"StudentId='"+studentId+"' and Question_Key='"+testQUID+"'",null);
         return updateFlag;
     }
 

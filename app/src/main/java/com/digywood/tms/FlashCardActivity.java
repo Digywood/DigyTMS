@@ -1017,7 +1017,7 @@ public class FlashCardActivity extends AppCompatActivity {
                 .setPositiveButton("Ok",new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
 
-                        int attemptnum=myhelper.getFlashAttemptNum(testId);
+                        int attemptnum=myhelper.getFlashAttemptNum(studentid,testId);
                         attemptnum=attemptnum+1;
                         Double kcount=Double.parseDouble(String.valueOf(knowcount));
                         Double percent=kcount/Qcount;
@@ -1032,7 +1032,7 @@ public class FlashCardActivity extends AppCompatActivity {
                             Log.e("FlashCardActivity----","Attempt Inserted");
 
                             Double minscore=0.0,maxscore=0.0,avgscore=0.0;
-                            Cursor mycursor=myhelper.getFlashRawData(testId);
+                            Cursor mycursor=myhelper.getFlashRawData(studentid,testId);
                             if(mycursor.getCount()>0){
                                 while (mycursor.moveToNext()){
                                     minscore=mycursor.getDouble(mycursor.getColumnIndex("minscore"));
@@ -1109,7 +1109,7 @@ public class FlashCardActivity extends AppCompatActivity {
                 .setPositiveButton("Ok",new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
 
-                        int attemptnum=myhelper.getFlashAttemptNum(testId);
+                        int attemptnum=myhelper.getFlashAttemptNum(studentid,testId);
                         attemptnum=attemptnum+1;
                         Double kcount=Double.parseDouble(String.valueOf(knowcount));
                         Double percent=kcount/Qcount;
@@ -1123,7 +1123,7 @@ public class FlashCardActivity extends AppCompatActivity {
                             Log.e("FlashCardActivity----","Attempt Inserted");
 
                             Double minscore=0.0,maxscore=0.0,avgscore=0.0;
-                            Cursor mycursor=myhelper.getFlashRawData(testId);
+                            Cursor mycursor=myhelper.getFlashRawData(studentid,testId);
                             if(mycursor.getCount()>0){
                                 while (mycursor.moveToNext()){
                                     minscore=mycursor.getDouble(mycursor.getColumnIndex("minscore"));

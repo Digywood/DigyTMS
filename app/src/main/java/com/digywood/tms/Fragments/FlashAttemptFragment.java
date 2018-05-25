@@ -121,7 +121,7 @@ public class FlashAttemptFragment extends Fragment {
         Double avgpercent=round(avgscore,2);
         tv_avgscore.setText(String.valueOf(avgpercent)+" %");
 
-        Cursor mycursor=myhelper.getFlashTestData(testId);
+        Cursor mycursor=myhelper.getFlashTestData(studentId,testId);
         if(mycursor.getCount()>0){
             while(mycursor.moveToNext()){
                 fattemptList.add(new SingleFlashAttempt(mycursor.getString(mycursor.getColumnIndex("startDttm")),mycursor.getInt(mycursor.getColumnIndex("attemptQCount")),mycursor.getInt(mycursor.getColumnIndex("iknowCount")),mycursor.getInt(mycursor.getColumnIndex("donknowCount")),mycursor.getInt(mycursor.getColumnIndex("skipCount")),mycursor.getDouble(mycursor.getColumnIndex("percentageObtain"))));
