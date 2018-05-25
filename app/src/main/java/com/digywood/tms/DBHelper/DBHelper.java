@@ -2172,7 +2172,7 @@ public class DBHelper extends SQLiteOpenHelper {
 
     //String studentId,String testId,String instanceId
     public Cursor getAssessmentRawData(String testId){
-        String query ="SELECT COUNT(*) as assessmentcount,MIN(Assesment_Percentage) as minscore,MAX(Assesment_Percentage) as maxscore,AVG(Assesment_Percentage) as avgscore FROM "+" Assesment_list"+" WHERE Assesment_Test_ID='"+testId+"' and Assesment_Test_ID='"+testId+"' and Assesment_Test_ID='"+testId+"'";
+        String query ="SELECT COUNT(*) as assessmentcount,MIN(Assessment_Percentage) as minscore,MAX(Assessment_Percentage) as maxscore,AVG(Assessment_Percentage) as avgscore FROM "+" Assessment_list"+" WHERE Assessment_Test_ID='"+testId+"'";
         Cursor c=db.rawQuery(query,null);
         return c;
     }
