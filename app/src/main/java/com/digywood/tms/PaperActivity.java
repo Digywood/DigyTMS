@@ -126,7 +126,7 @@ public class PaperActivity extends AppCompatActivity {
 
             for(int i=0;i<paperidList.size();i++){
 
-                ptestcount=myhelper.getTestsByPaper(studentid,paperidList.get(i));
+                ptestcount=myhelper.getTestsByPaper(studentid,enrollid,paperidList.get(i));
 
                 Cursor mycur=myhelper.getPractiseSummaryByPaper(studentid,paperidList.get(i));
                 if(mycur.getCount()>0){
@@ -148,7 +148,7 @@ public class PaperActivity extends AppCompatActivity {
                     pprogress=0.0;
                 }
 
-                Cursor mycur1=myhelper.getFlashSummaryByPaper(studentid,paperidList.get(i));
+                Cursor mycur1=myhelper.getFlashSummaryByPaper(studentid,enrollid,paperidList.get(i));
                 if(mycur1.getCount()>0){
                     while (mycur1.moveToNext()){
 

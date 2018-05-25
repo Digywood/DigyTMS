@@ -189,6 +189,7 @@ public class AssessmentFragment extends Fragment implements OnChartValueSelected
             public void onClick(View v) {
                 Intent i=new Intent(getActivity(), PaperDashActivity.class);
                 i.putExtra("studentid",studentid);
+                i.putExtra("enrollid",enrollid);
                 i.putExtra("courseid",courseid);
                 i.putExtra("testtype","ASSESSMENT");
                 startActivity(i);

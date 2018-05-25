@@ -174,6 +174,7 @@ public class PracticeFragment extends Fragment implements OnChartValueSelectedLi
             public void onClick(View v) {
                 Intent i=new Intent(getActivity(),PaperDashActivity.class);
                 i.putExtra("studentid",studentid);
+                i.putExtra("enrollid",enrollid);
                 i.putExtra("courseid",courseid);
                 i.putExtra("testtype","PRACTISE");
                 startActivity(i);
