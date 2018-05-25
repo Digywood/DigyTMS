@@ -49,7 +49,6 @@ public class DashBoardNavActivity extends AppCompatActivity implements Navigatio
     SharedPreferences restoredprefs;
     TextView tv_name,tv_email,tv_studentid;
     String studentid="",spersonname="",snumber="",email="";
-    HashMap<String,String> hmap=new HashMap<>();
     DBHelper myhelper;
 
     @Override
@@ -113,7 +112,7 @@ public class DashBoardNavActivity extends AppCompatActivity implements Navigatio
     }
 
     public void getStudentAllData(){
-        hmap.clear();
+        HashMap<String,String> hmap=new HashMap<>();
         Log.e("LearningActivity---",studentid);
         hmap.put("studentid",studentid);
         new BagroundTask(URLClass.hosturl +"getStudentFullData.php",hmap,DashBoardNavActivity.this,new IBagroundListener() {
@@ -252,19 +251,30 @@ public class DashBoardNavActivity extends AppCompatActivity implements Navigatio
                                 Cursor mycursor=myhelper.checkPractiseTest(studentid,testObj.getString("sptu_entroll_id"),testObj.getString("sptu_ID"));
                                 if(mycursor.getCount()>0){
                                     long updateFlag=myhelper.updatePractiseTestData(testObj.getString("sptu_org_id"),testObj.getString("sptu_entroll_id"),testObj.getString("sptu_student_ID"),
-                                            testObj.getString("sptu_batch"),testObj.getString("sptu_ID"),testObj.getString("sptu_paper_ID"),testObj.getString("sptu_subjet_ID"),
-                                            testObj.getString("sptu_course_id"),testObj.getString("sptu_start_date"),testObj.getString("sptu_end_date"),testObj.getString("sptu_dwnld_status"),
-                                            testObj.getInt("sptu_no_of_questions"),testObj.getDouble("sptu_tot_marks"),testObj.getDouble("stpu_min_marks"),testObj.getDouble("sptu_max_marks"));
+                                            testObj.getString("sptu_batch"),testObj.getString("sptu_ID"),testObj.getString("sptu_name"),testObj.getString("sptu_paper_ID"),testObj.getString("sptu_subjet_ID"),
+                                            testObj.getString("sptu_course_id"),testObj.getString("sptu_start_date"),testObj.getString("sptu_end_date"),testObj.getString("sptu_dwnld_start_dttm"),testObj.getString("sptu_dwnld_completed_dttm"),
+                                            testObj.getString("sptu_dwnld_status"),testObj.getString("sptu_status"),testObj.getInt("sptu_no_of_questions"),testObj.getDouble("sptu_tot_marks"),testObj.getDouble("stpu_min_marks"),
+                                            testObj.getDouble("sptu_max_marks"),testObj.getDouble("sptu_avg_marks"),testObj.getDouble("sptu_min_percent"), testObj.getDouble("sptu_max_percent"),testObj.getDouble("sptu_avg_percent"),
+                                            testObj.getInt("sptu_last_attempt_marks"),testObj.getDouble("sptu_last_attempt_percent"),testObj.getString("sptu_last_attempt_start_dttm"),testObj.getString("sptu_last_attempt_end_dttm"),
+                                            testObj.getInt("sptu_no_of_attempts"),testObj.getInt("sptuflash_attempts"),testObj.getDouble("min_flashScore"),testObj.getDouble("max_flashScore"),testObj.getDouble("avg_flashScore"),
+                                            testObj.getString("lastAttemptDttm"),testObj.getDouble("lastAttemptScore"), testObj.getString("sptu_created_by"),testObj.getString("sptu_created_dttm"),testObj.getString("sptu_mod_by"),
+                                            testObj.getString("sptu_mod_dttm"));
                                     if(updateFlag>0){
                                         r++;
                                     }else {
                                         s++;
                                     }
                                 }else{
+
                                     long insertFlag=myhelper.insertPractiseTest(testObj.getInt("sptu_key"),testObj.getString("sptu_org_id"),testObj.getString("sptu_entroll_id"),testObj.getString("sptu_student_ID"),
                                             testObj.getString("sptu_batch"),testObj.getString("sptu_ID"),testObj.getString("sptu_name"),testObj.getString("sptu_paper_ID"),testObj.getString("sptu_subjet_ID"),
-                                            testObj.getString("sptu_course_id"),testObj.getString("sptu_start_date"),testObj.getString("sptu_end_date"),testObj.getString("sptu_dwnld_status"),testObj.getString("sptu_status"),
-                                            testObj.getInt("sptu_no_of_questions"),testObj.getDouble("sptu_tot_marks"),testObj.getDouble("stpu_min_marks"),testObj.getDouble("sptu_max_marks"));
+                                            testObj.getString("sptu_course_id"),testObj.getString("sptu_start_date"),testObj.getString("sptu_end_date"),testObj.getString("sptu_dwnld_start_dttm"),testObj.getString("sptu_dwnld_completed_dttm"),
+                                            testObj.getString("sptu_dwnld_status"),testObj.getString("sptu_status"),testObj.getInt("sptu_no_of_questions"),testObj.getDouble("sptu_tot_marks"),testObj.getDouble("stpu_min_marks"),
+                                            testObj.getDouble("sptu_max_marks"),testObj.getDouble("sptu_avg_marks"),testObj.getDouble("sptu_min_percent"), testObj.getDouble("sptu_max_percent"),testObj.getDouble("sptu_avg_percent"),
+                                            testObj.getInt("sptu_last_attempt_marks"),testObj.getDouble("sptu_last_attempt_percent"),testObj.getString("sptu_last_attempt_start_dttm"),testObj.getString("sptu_last_attempt_end_dttm"),
+                                            testObj.getInt("sptu_no_of_attempts"),testObj.getInt("sptuflash_attempts"),testObj.getDouble("min_flashScore"),testObj.getDouble("max_flashScore"),testObj.getDouble("avg_flashScore"),
+                                            testObj.getString("lastAttemptDttm"),testObj.getDouble("lastAttemptScore"), testObj.getString("sptu_created_by"),testObj.getString("sptu_created_dttm"),testObj.getString("sptu_mod_by"),
+                                            testObj.getString("sptu_mod_dttm"));
                                     if(insertFlag>0){
                                         p++;
                                     }else {
@@ -687,7 +697,7 @@ public class DashBoardNavActivity extends AppCompatActivity implements Navigatio
                     mycur.close();
                 }
 
-                hmap.clear();
+                HashMap<String,String> hmap=new HashMap<>();
                 hmap.put("jsonstr",finalPractiseObj.toString());
                 new BagroundTask(finalUrl +"syncPractiseTestData.php", hmap,DashBoardNavActivity.this,new IBagroundListener() {
                     @Override
@@ -792,8 +802,7 @@ public class DashBoardNavActivity extends AppCompatActivity implements Navigatio
                     mycur.close();
                 }
 
-                hmap.clear();
-//                Log.e("GNGJSON:--",finalFlashObj.toString());
+                HashMap<String,String> hmap=new HashMap<>();
                 hmap.put("jsonstr",finalFlashObj.toString());
                 new BagroundTask(finalUrl+"syncFlashData.php", hmap,DashBoardNavActivity.this,new IBagroundListener() {
                     @Override
@@ -912,7 +921,7 @@ public class DashBoardNavActivity extends AppCompatActivity implements Navigatio
                 }
                 finalAssessmentObj.put("AssessmentTestData",AssessmentList);
 
-                hmap.clear();
+                HashMap<String,String> hmap=new HashMap<>();
                 hmap.put("jsonstr",finalAssessmentObj.toString());
                 new BagroundTask(finalUrl+"syncAssessmentTestData.php", hmap,DashBoardNavActivity.this,new IBagroundListener() {
                     @Override

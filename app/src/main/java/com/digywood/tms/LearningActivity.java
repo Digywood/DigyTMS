@@ -39,7 +39,6 @@ public class LearningActivity extends AppCompatActivity {
     Random random ;
     ArrayList<String> enrollids;
     ArrayList<String> enrollcourseids;
-    HashMap<String,String> hmap=new HashMap<>();
     ArrayList<SingleEnrollment> enrollList;
     LinearLayoutManager myLayoutManager;
     EnrollAdapter eAdp;
@@ -102,7 +101,7 @@ public class LearningActivity extends AppCompatActivity {
     }
 
     public void getEnrolls(){
-        hmap.clear();
+        HashMap<String,String> hmap=new HashMap<>();
         hmap.put("studentid",studentid);
         new BagroundTask(URLClass.hosturl + "getStudentEnrolls.php", hmap, LearningActivity.this,new IBagroundListener() {
             @Override

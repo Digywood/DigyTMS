@@ -35,7 +35,6 @@ import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
 
 public class ListofAssessmentTests extends AppCompatActivity {
 
-    HashMap<String,String> hmap=new HashMap<>();
     ArrayList<SingleAssessment> testidList;
     ArrayList<String> subjectIds;
     ArrayList<String> groupIds=new ArrayList<>();
@@ -124,7 +123,7 @@ public class ListofAssessmentTests extends AppCompatActivity {
     }
 
     public void getTestIds(){
-        hmap.clear();
+        HashMap<String,String> hmap=new HashMap<>();
         hmap.put("courseid",courseid);
         hmap.put("paperid",paperid);
         new BagroundTask(URLClass.hosturl+"getTestsByCourseandPaper.php", hmap, ListofAssessmentTests.this,new IBagroundListener() {

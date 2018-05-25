@@ -62,7 +62,6 @@ public class PractiseTestAdapter extends RecyclerView.Adapter<PractiseTestAdapte
     ArrayList<String> localPathList=new ArrayList();
     ArrayList<SingleDWDQues> missFileData=new ArrayList<>();
     ArrayList<SingleDWDQues> chapterFileList=new ArrayList<>();
-    HashMap<String,String> hmap=new HashMap<>();
     Context mycontext;
     DBHelper myhelper;
     Boolean value = false;
@@ -485,7 +484,7 @@ public class PractiseTestAdapter extends RecyclerView.Adapter<PractiseTestAdapte
                 finalNames.clear();
                 filedata="";
 
-                hmap.clear();
+                HashMap<String,String> hmap=new HashMap<>();
                 hmap.put("studentid",studentid);
                 hmap.put("enrollid",enrollid);
                 hmap.put("testid",singletest.getTestid());
@@ -499,7 +498,7 @@ public class PractiseTestAdapter extends RecyclerView.Adapter<PractiseTestAdapte
                             Log.e("UploadStatus---",json);
                             if(json.equalsIgnoreCase("Updated")){
 
-                                long updateFlag=myhelper.updatePTestStartStatus(studentid,singletest.getTestid(),"STARTED",startdttm);
+                                long updateFlag=myhelper.updatePTestStartStatus(studentid,enrollid,singletest.getTestid(),"STARTED",startdttm);
                                 if(updateFlag>0){
                                     Log.e("LocalStatusUpdate---","Updated Locally");
                                 }else{
@@ -536,103 +535,27 @@ public class PractiseTestAdapter extends RecyclerView.Adapter<PractiseTestAdapte
                                     localPathList.add(URLClass.mainpath+localpath);
                                 }
 
-                                new DownloadFileAsync(mycontext,localPathList,finalUrls,finalNames,new IDownloadStatus() {
-                                    @Override
-                                    public void downloadStatus(String status) {
+                                if(finalUrls.size()!=0){
+                                    new DownloadFileAsync(mycontext,localPathList,finalUrls,finalNames,new IDownloadStatus() {
+                                        @Override
+                                        public void downloadStatus(String status) {
 
-                                        try{
-                                            if(status.equalsIgnoreCase("Completed")){
-
-                                                finalUrls.clear();
-                                                finalNames.clear();
-                                                localPathList.clear();
-
-                                                filedata="";
-
-                                                try{
-                                                    BufferedReader br = new BufferedReader(new FileReader(URLClass.mainpath+localpath+singletest.getTestid()+".json"));
-                                                    StringBuilder sb = new StringBuilder();
-                                                    String line = br.readLine();
-
-                                                    while (line != null) {
-                                                        sb.append(line);
-                                                        sb.append("\n");
-                                                        line = br.readLine();
-                                                    }
-                                                    filedata=sb.toString();
-                                                    br.close();
-                                                }catch (Exception e){
-                                                    e.printStackTrace();
-                                                    Log.e("TestActivity1-----",e.toString());
-                                                }
-
-                                                parseJson(filedata);
-
-                                                getTestConfig(singletest.getTestid(),groupdata);
-
-                                                if(downloadfileList.size()!=0){
-
-                                                    for(int i=0;i<chapterFileList.size();i++){
-
-                                                        SingleDWDQues sdq=chapterFileList.get(i);
-
-                                                        File myFile1 = new File(URLClass.mainpath+enrollid+"/"+courseid+"/"+sdq.getSubjectId()+"/"+sdq.getPaperId()+"/"+sdq.getChapterId()+"/"+sdq.getFileName());
-                                                        if(myFile1.exists()){
-
-                                                        }else{
-
-                                                            String tPath=finalAssetUrl+"courses/"+courseid+"/"+sdq.getSubjectId()+"/"+sdq.getPaperId()+"/";
-                                                            finalUrls.add(tPath+sdq.getChapterId()+"/"+sdq.getFileName());
-                                                            finalNames.add(sdq.getFileName());
-                                                            localPathList.add(URLClass.mainpath+enrollid+"/"+courseid+"/"+sdq.getSubjectId()+"/"+sdq.getPaperId()+"/"+sdq.getChapterId()+"/");
-                                                        }
-                                                    }
-
+                                            try{
+                                                if(status.equalsIgnoreCase("Completed")){
+                                                    dwdImgFiles(singletest.getTestid());
                                                 }else{
-                                                    updatePTestEndStatus(singletest.getTestid(),"DOWNLOADED");
-                                                    Log.e("LearningActivity----","No Downloaded Images for test");
+                                                    Toast.makeText(mycontext,"Unable to download Base json file",Toast.LENGTH_SHORT).show();
                                                 }
+                                            }catch (Exception e){
 
-                                                if(finalNames.size()!=0){
-
-                                                    new DownloadFileAsync(mycontext,localPathList,finalUrls,finalNames,new IDownloadStatus() {
-                                                        @Override
-                                                        public void downloadStatus(String status) {
-
-                                                            try{
-                                                                if(status.equalsIgnoreCase("Completed")){
-
-                                                                    updatePTestEndStatus(singletest.getTestid(),"DOWNLOADED");
-
-                                                                }else{
-
-                                                                }
-
-                                                            }catch (Exception e){
-
-                                                                e.printStackTrace();
-                                                                Log.e("DownloadFile----",e.toString());
-                                                            }
-                                                        }
-                                                    }).execute();
-
-                                                }else{
-
-                                                    updatePTestEndStatus(singletest.getTestid(),"DOWNLOADED");
-                                                    Toast.makeText(mycontext,"All Downloaded",Toast.LENGTH_SHORT).show();
-
-                                                }
-
-                                            }else{
-
+                                                e.printStackTrace();
+                                                Log.e("DownloadFile----",e.toString());
                                             }
-                                        }catch (Exception e){
-
-                                            e.printStackTrace();
-                                            Log.e("DownloadFile----",e.toString());
                                         }
-                                    }
-                                }).execute();
+                                    }).execute();
+                                }else{
+                                    dwdImgFiles(singletest.getTestid());
+                                }
                             }else{
                                 Toast.makeText(mycontext,"Unable download test",Toast.LENGTH_SHORT).show();
                             }
@@ -701,7 +624,7 @@ public class PractiseTestAdapter extends RecyclerView.Adapter<PractiseTestAdapte
 
                         dialog.cancel();
                         JSONObject finalObj=JSONEncode(testId,missFileData);
-                        hmap.clear();
+                        HashMap<String,String> hmap=new HashMap<>();
                         hmap.put("MissingFiles",finalObj.toString());
                         try {
                             new BagroundTask(finalUrl+"insertmissingFileInfo.php",hmap,mycontext,new IBagroundListener() {
@@ -727,6 +650,88 @@ public class PractiseTestAdapter extends RecyclerView.Adapter<PractiseTestAdapte
         alert.setTitle("Alert!");
         alert.setIcon(R.drawable.warning);
         alert.show();
+    }
+
+    public void dwdImgFiles(final String testId){
+        finalUrls.clear();
+        finalNames.clear();
+        localPathList.clear();
+
+        filedata="";
+
+        try{
+            BufferedReader br = new BufferedReader(new FileReader(URLClass.mainpath+localpath+testId+".json"));
+            StringBuilder sb = new StringBuilder();
+            String line = br.readLine();
+
+            while (line != null) {
+                sb.append(line);
+                sb.append("\n");
+                line = br.readLine();
+            }
+            filedata=sb.toString();
+            br.close();
+        }catch (Exception e){
+            e.printStackTrace();
+            Log.e("TestActivity1-----",e.toString());
+        }
+
+        parseJson(filedata);
+
+        getTestConfig(testId,groupdata);
+
+        if(downloadfileList.size()!=0){
+
+            for(int i=0;i<chapterFileList.size();i++){
+
+                SingleDWDQues sdq=chapterFileList.get(i);
+
+                File myFile1 = new File(URLClass.mainpath+enrollid+"/"+courseid+"/"+sdq.getSubjectId()+"/"+sdq.getPaperId()+"/"+sdq.getChapterId()+"/"+sdq.getFileName());
+                if(myFile1.exists()){
+
+                }else{
+
+                    String tPath=finalAssetUrl+"courses/"+courseid+"/"+sdq.getSubjectId()+"/"+sdq.getPaperId()+"/";
+                    finalUrls.add(tPath+sdq.getChapterId()+"/"+sdq.getFileName());
+                    finalNames.add(sdq.getFileName());
+                    localPathList.add(URLClass.mainpath+enrollid+"/"+courseid+"/"+sdq.getSubjectId()+"/"+sdq.getPaperId()+"/"+sdq.getChapterId()+"/");
+                }
+            }
+
+        }else{
+            updatePTestEndStatus(testId,"DOWNLOADED");
+            Log.e("LearningActivity----","No Downloaded Images for test");
+        }
+
+        if(finalNames.size()!=0){
+
+            new DownloadFileAsync(mycontext,localPathList,finalUrls,finalNames,new IDownloadStatus() {
+                @Override
+                public void downloadStatus(String status) {
+
+                    try{
+                        if(status.equalsIgnoreCase("Completed")){
+
+                            updatePTestEndStatus(testId,"DOWNLOADED");
+
+                        }else{
+
+                        }
+
+                    }catch (Exception e){
+
+                        e.printStackTrace();
+                        Log.e("DownloadFile----",e.toString());
+                    }
+                }
+            }).execute();
+
+        }else{
+
+            updatePTestEndStatus(testId,"DOWNLOADED");
+            Toast.makeText(mycontext,"All Downloaded",Toast.LENGTH_SHORT).show();
+
+        }
     }
 
     private JSONObject JSONEncode(String testId,ArrayList<SingleDWDQues> finalList){
@@ -899,10 +904,10 @@ public class PractiseTestAdapter extends RecyclerView.Adapter<PractiseTestAdapte
 
     private void getTestConfig(final String testid,String groupidData){
 
-        hmap.clear();
+        HashMap<String,String> hmap=new HashMap<>();
         hmap.put("testId",testid);
         hmap.put("groupiddata",groupidData);
-        new BagroundTask(finalUrl+"getTestConfig.php",hmap,mycontext,new IBagroundListener() {
+        new BagroundTask(finalUrl+"test.php",hmap,mycontext,new IBagroundListener() {
             @Override
             public void bagroundData(String json) {
 
@@ -1109,7 +1114,7 @@ public class PractiseTestAdapter extends RecyclerView.Adapter<PractiseTestAdapte
     }
 
     public void updatePTestEndStatus(final String testId,final String status){
-        hmap.clear();
+        HashMap<String,String> hmap=new HashMap<>();
         hmap.put("studentid",studentid);
         hmap.put("enrollid",enrollid);
         hmap.put("testid",testId);
@@ -1123,7 +1128,7 @@ public class PractiseTestAdapter extends RecyclerView.Adapter<PractiseTestAdapte
 
                     Log.e("UploadStatus---",json);
                     if(json.equalsIgnoreCase("Updated")){
-                        long updateFlag=myhelper.updatePTestEndStatus(studentid,testId,status,endddtm);
+                        long updateFlag=myhelper.updatePTestEndStatus(studentid,enrollid,testId,status,endddtm);
                         if(updateFlag>0){
                             Log.e("LocalStatusUpdate---","Updated Locally");
                         }else{
