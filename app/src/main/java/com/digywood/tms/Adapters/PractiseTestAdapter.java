@@ -129,6 +129,8 @@ public class PractiseTestAdapter extends RecyclerView.Adapter<PractiseTestAdapte
             finalAssetUrl="http://"+serverId+URLClass.loc_downloadjson;
         }
 
+        Log.e("FINALURL:--",""+finalUrl);
+
     }
 
     @Override
@@ -907,7 +909,7 @@ public class PractiseTestAdapter extends RecyclerView.Adapter<PractiseTestAdapte
         HashMap<String,String> hmap=new HashMap<>();
         hmap.put("testId",testid);
         hmap.put("groupiddata",groupidData);
-        new BagroundTask(finalUrl+"test.php",hmap,mycontext,new IBagroundListener() {
+        new BagroundTask(finalUrl+"getTestConfig.php",hmap,mycontext,new IBagroundListener() {
             @Override
             public void bagroundData(String json) {
 

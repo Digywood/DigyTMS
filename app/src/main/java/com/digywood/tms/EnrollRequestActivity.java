@@ -1,11 +1,13 @@
 package com.digywood.tms;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.provider.Settings;
 import android.support.v7.app.ActionBar;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.DefaultItemAnimator;
@@ -487,40 +489,60 @@ public class EnrollRequestActivity extends AppCompatActivity {
 
     public void insertEnrollRequest(){
 
-        Log.e("BatchID:--",""+batchid);
-        HashMap<String,String> hmap=new HashMap<>();
-        hmap.put("StudentId",studentid);
-        hmap.put("OrgId",orgid);
-        hmap.put("CourseId",courseid);
-        hmap.put("BranchId",branchid);
-        hmap.put("BatchId",batchid);
-        hmap.put("startDate",startdate);
-        hmap.put("endDate",enddate);
-        String androidid= Settings.Secure.getString(getApplicationContext().getContentResolver(), Settings.Secure.ANDROID_ID);
-        String timeStamp = new java.text.SimpleDateFormat("yyyy-MM-dd").format(Calendar.getInstance(TimeZone.getDefault()).getTime());
-        hmap.put("DeviceId",androidid);
-        hmap.put("StartDate",timeStamp);
-        hmap.put("feetype","INR");
-        hmap.put("feeamount",feeamount);
-        hmap.put("feetax",feetax);
-        hmap.put("totalfee",totalfee);
-        hmap.put("activationkey",CreateRandomString(8));
-        new BagroundTask(URLClass.hosturl+"insertEnrollRequest.php",hmap,EnrollRequestActivity.this,new IBagroundListener() {
+        HashMap<String,String> hashmap=new HashMap<>();
+        hashmap.put("StudentId",studentid);
+        hashmap.put("CourseId",courseid);
+        hashmap.put("BatchId",batchid);
+        new BagroundTask(URLClass.hosturl +"checkEnrollment.php",hashmap,EnrollRequestActivity.this,new IBagroundListener() {
             @Override
             public void bagroundData(String json) {
                 try{
-                    Log.e("EnrollReqActivity---",json);
-                    if(json.equalsIgnoreCase("Inserted")){
-                        Toast.makeText(getApplicationContext(),"Request Generated Succesfully",Toast
-                        .LENGTH_SHORT).show();
-                        finish();
+                    Log.e("EnrollReqActivity----","json_comes:-"+json);
+                    if(json.equalsIgnoreCase("Enroll_Exist")){
+                        showAlert("Enrollment Already Exist with provided Branch and Course,Please Use Existing One");
                     }else{
-                        Toast.makeText(getApplicationContext(),"Request Generation Failed",Toast
-                                .LENGTH_SHORT).show();
+
+                        HashMap<String,String> hmap=new HashMap<>();
+                        hmap.put("StudentId",studentid);
+                        hmap.put("OrgId",orgid);
+                        hmap.put("CourseId",courseid);
+                        hmap.put("BranchId",branchid);
+                        hmap.put("BatchId",batchid);
+                        hmap.put("startDate",startdate);
+                        hmap.put("endDate",enddate);
+                        String androidid= Settings.Secure.getString(getApplicationContext().getContentResolver(), Settings.Secure.ANDROID_ID);
+                        String timeStamp = new java.text.SimpleDateFormat("yyyy-MM-dd").format(Calendar.getInstance(TimeZone.getDefault()).getTime());
+                        hmap.put("DeviceId",androidid);
+                        hmap.put("StartDate",timeStamp);
+                        hmap.put("feetype","INR");
+                        hmap.put("feeamount",feeamount);
+                        hmap.put("feetax",feetax);
+                        hmap.put("totalfee",totalfee);
+                        hmap.put("activationkey",CreateRandomString(8));
+                        new BagroundTask(URLClass.hosturl+"insertEnrollRequest.php",hmap,EnrollRequestActivity.this,new IBagroundListener() {
+                            @Override
+                            public void bagroundData(String json) {
+                                try{
+                                    Log.e("EnrollReqActivity---",json);
+                                    if(json.equalsIgnoreCase("Inserted")){
+                                        Toast.makeText(getApplicationContext(),"Request Generated Succesfully",Toast
+                                                .LENGTH_SHORT).show();
+                                        finish();
+                                    }else{
+                                        Toast.makeText(getApplicationContext(),"Request Generation Failed",Toast
+                                                .LENGTH_SHORT).show();
+                                    }
+                                }catch (Exception e){
+                                    e.printStackTrace();
+                                    Log.e("EnrollReqActivity--",e.toString());
+                                }
+                            }
+                        }).execute();
+
                     }
                 }catch (Exception e){
                     e.printStackTrace();
-                    Log.e("EnrollReqActivity--",e.toString());
+                    Log.e("EnrollReqActivity----",""+e.toString());
                 }
             }
         }).execute();
@@ -593,6 +615,24 @@ public class EnrollRequestActivity extends AppCompatActivity {
             i++ ;
         }
         return stringBuilder.toString();
+    }
+
+    public  void showAlert(String messege){
+        AlertDialog.Builder builder = new AlertDialog.Builder(EnrollRequestActivity.this);
+        builder.setMessage(messege)
+                .setCancelable(false)
+                .setPositiveButton("Ok",new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+
+                        dialog.cancel();
+
+                    }
+                });
+        AlertDialog alert = builder.create();
+        //Setting the title manually
+        alert.setTitle("Info!");
+        alert.setIcon(R.drawable.info);
+        alert.show();
     }
 
 }
