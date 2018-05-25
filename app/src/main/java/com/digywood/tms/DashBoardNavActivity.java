@@ -47,7 +47,7 @@ public class DashBoardNavActivity extends AppCompatActivity implements Navigatio
     Dialog mydialog;
     String testType="",restoredsname="",finalUrl="",serverId="";
     SharedPreferences restoredprefs;
-    TextView tv_name,tv_email,tv_studentid;
+    TextView tv_name,tv_email,tv_studentid,tv_connection;
     String studentid="",spersonname="",snumber="",email="";
     DBHelper myhelper;
 
@@ -57,8 +57,20 @@ public class DashBoardNavActivity extends AppCompatActivity implements Navigatio
         setContentView(R.layout.activity_dash_board);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         tv_studentid=toolbar.findViewById(R.id.tv_studentid);
+        tv_connection=toolbar.findViewById(R.id.tv_connection);
         setSupportActionBar(toolbar);
 
+        new AsyncCheckInternet(DashBoardNavActivity.this,new INetStatus() {
+            @Override
+            public void inetSatus(Boolean netStatus) {
+                if (netStatus) {
+                    tv_connection.setText("Central Host");
+                }
+                else{
+                    tv_connection.setText("Not Connected");
+                }
+            }
+        });
         myhelper=new DBHelper(this);
 
         restoredprefs = getSharedPreferences("SERVERPREF", MODE_PRIVATE);
@@ -81,6 +93,9 @@ public class DashBoardNavActivity extends AppCompatActivity implements Navigatio
             snumber=cmgintent.getStringExtra("number");
             email=cmgintent.getStringExtra("email");
             tv_studentid.setText(studentid);
+            if(cmgintent.getStringExtra("connection") != null){
+                tv_connection.setText(cmgintent.getStringExtra("connection"));
+            }
         }
 
         NavigationView navigationView =findViewById(R.id.nav_view);
@@ -309,7 +324,7 @@ public class DashBoardNavActivity extends AppCompatActivity implements Navigatio
                                 Cursor mycursor=myhelper.checkAssessmentTest(studentid,assesmentObj.getString("satu_entroll_id"),assesmentObj.getString("satu_ID"),assesmentObj.getString("satu_instace_id"));
 
                                 if(mycursor.getCount()>0){
-                                    long updateFlag=myhelper.updateAssesmentTest(assesmentObj.getString("satu_org_id"),assesmentObj.getString("satu_instace_id"),assesmentObj.getString("satu_entroll_id"),assesmentObj.getString("satu_student_id"),
+                                    long updateFlag=myhelper.updateAssessmentTest(assesmentObj.getString("satu_org_id"),assesmentObj.getString("satu_instace_id"),assesmentObj.getString("satu_entroll_id"),assesmentObj.getString("satu_student_id"),
                                             assesmentObj.getString("satu_batch"),assesmentObj.getString("satu_ID"),assesmentObj.getString("satu_name"),assesmentObj.getString("satu_paper_ID"),assesmentObj.getString("satu_subjet_ID"),
                                             assesmentObj.getString("satu_course_id"),assesmentObj.getString("satu_start_date"),assesmentObj.getString("satu_end_date"),assesmentObj.getString("satu_dwnld_status"),
                                             assesmentObj.getInt("satu_no_of_questions"),assesmentObj.getString("satu_file"),assesmentObj.getString("satu_exam_key"),assesmentObj.getDouble("satu_tot_marks"),
@@ -321,7 +336,7 @@ public class DashBoardNavActivity extends AppCompatActivity implements Navigatio
                                     }
                                 }else{
 
-                                    long insertFlag=myhelper.insertAssesmentTest(assesmentObj.getInt("satu_key"),assesmentObj.getString("satu_org_id"),assesmentObj.getString("satu_instace_id"),assesmentObj.getString("satu_entroll_id"),assesmentObj.getString("satu_student_id"),
+                                    long insertFlag=myhelper.insertAssessmentTest(assesmentObj.getInt("satu_key"),assesmentObj.getString("satu_org_id"),assesmentObj.getString("satu_instace_id"),assesmentObj.getString("satu_entroll_id"),assesmentObj.getString("satu_student_id"),
                                             assesmentObj.getString("satu_batch"),assesmentObj.getString("satu_ID"),assesmentObj.getString("satu_name"),assesmentObj.getString("satu_paper_ID"),assesmentObj.getString("satu_subjet_ID"),
                                             assesmentObj.getString("satu_course_id"),assesmentObj.getString("satu_start_date"),assesmentObj.getString("satu_end_date"),assesmentObj.getString("satu_dwnld_status"),
                                             assesmentObj.getInt("satu_no_of_questions"),assesmentObj.getString("satu_file"),assesmentObj.getString("satu_exam_key"),assesmentObj.getDouble("satu_tot_marks"),

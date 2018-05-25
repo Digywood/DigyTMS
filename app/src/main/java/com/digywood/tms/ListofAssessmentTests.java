@@ -107,7 +107,7 @@ public class ListofAssessmentTests extends AppCompatActivity {
     public void getTestIdsFromLocal(){
         testidList.clear();
         try {
-            Cursor mycursor=myhelper.getAssesmentTestsByEnroll(studentid,enrollid);
+            Cursor mycursor=myhelper.getAssessmentTestsByEnroll(studentid,enrollid);
             if(mycursor.getCount()>0){
                 while (mycursor.moveToNext()) {
                     testidList.add(new SingleAssessment(mycursor.getString(mycursor.getColumnIndex("satu_ID")),mycursor.getString(mycursor.getColumnIndex("satu_instace_id")),mycursor.getString(mycursor.getColumnIndex("satu_name")),mycursor.getString(mycursor.getColumnIndex("satu_subjet_ID")),mycursor.getString(mycursor.getColumnIndex("satu_dwnld_status"))));
