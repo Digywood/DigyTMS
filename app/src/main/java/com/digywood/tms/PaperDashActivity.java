@@ -158,7 +158,7 @@ public class PaperDashActivity extends AppCompatActivity {
             for(int i=0;i<paperids.size();i++){
                 int totaltestcount=myhelper.getTestsByPaper(studentid,paperids.get(i));
 
-                Cursor mycur=myhelper.getFlashSummaryByPaper(paperids.get(i));
+                Cursor mycur=myhelper.getFlashSummaryByPaper(studentid,paperids.get(i));
                 if(mycur.getCount()>0){
                     while (mycur.moveToNext()){
                         attemptcount=mycur.getInt(mycur.getColumnIndex("attemptfcount"));
