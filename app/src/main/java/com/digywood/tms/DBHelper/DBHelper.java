@@ -667,8 +667,8 @@ public class DBHelper extends SQLiteOpenHelper {
         return c;
     }
 
-    public Cursor getAssesmentTestsByEnroll(String studentId,String enrollId){
-        Cursor c =db.query("satu_student",new String[] {"satu_instace_id,satu_entroll_id,satu_student_id,satu_batch,satu_ID,satu_name,satu_paper_ID,satu_subjet_ID,satu_course_id,satu_start_date,satu_end_date,satu_dwnld_status"},"satu_student_id='"+studentId+"' and satu_entroll_id='"+enrollId+"'", null, null, null,null);
+    public Cursor getAssesmentTestsByEnroll(String studentId,String enrollId,String courseId,String paperId){
+        Cursor c =db.query("satu_student",new String[] {"satu_instace_id,satu_entroll_id,satu_student_id,satu_batch,satu_ID,satu_name,satu_paper_ID,satu_subjet_ID,satu_course_id,satu_start_date,satu_end_date,satu_dwnld_status"},"satu_student_id='"+studentId+"' and satu_entroll_id='"+enrollId+"' and satu_course_id='"+courseId+"' and satu_paper_ID='"+paperId+"'", null, null, null,null);
         return c;
     }
 
@@ -742,8 +742,8 @@ public class DBHelper extends SQLiteOpenHelper {
         return c;
     }
 
-    public Cursor getFlashSummaryByPaper(String studentId,String paperid){
-        String query ="SELECT count(distinct flashcardId) as attemptfcount,MIN(percentageObtain) as minscore,MAX(percentageObtain) as maxscore,AVG(percentageObtain) as avgscore FROM "+" flashcard_attempt WHERE studentId='"+studentId+"' and paperId ='"+paperid+"'";
+    public Cursor getFlashSummaryByPaper(String studentId,String enrollId,String paperid){
+        String query ="SELECT count(distinct flashcardId) as attemptfcount,MIN(percentageObtain) as minscore,MAX(percentageObtain) as maxscore,AVG(percentageObtain) as avgscore FROM "+" flashcard_attempt WHERE studentId='"+studentId+"' and enrollmentId='"+enrollId+"' and paperId ='"+paperid+"'";
         Cursor c=db.rawQuery(query,null);
         return c;
     }
@@ -1223,8 +1223,8 @@ public class DBHelper extends SQLiteOpenHelper {
         return c.getCount();
     }
 
-    public int getTestsByPaper(String studentId,String paperid){
-        Cursor c =db.query("sptu_student", new String[] {"sptu_entroll_id,sptu_student_ID,sptu_ID"},"sptu_student_ID='"+studentId+"' and sptu_paper_ID='"+paperid+"'", null, null, null,null);
+    public int getTestsByPaper(String studentId,String enrollId,String paperid){
+        Cursor c =db.query("sptu_student", new String[] {"sptu_entroll_id,sptu_student_ID,sptu_ID"},"sptu_student_ID='"+studentId+"' and sptu_entroll_id='"+enrollId+"' and sptu_paper_ID='"+paperid+"'", null, null, null,null);
         return c.getCount();
     }
 
@@ -2240,7 +2240,7 @@ public class DBHelper extends SQLiteOpenHelper {
 
         long updateFlag=0;
         ContentValues cv = new ContentValues();
-        cv.put("Question_Status",status );
+        cv.put("Question_Upload_Status",status );
         updateFlag = db.update("assessment_data",cv,"StudentId='"+studentId+"' and Question_Key='"+testQUID+"'",null);
         return updateFlag;
     }

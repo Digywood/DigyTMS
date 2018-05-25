@@ -24,7 +24,7 @@ public class PaperDashActivity extends AppCompatActivity {
     RecyclerView rv_ptests;
     TextView tv_emptyptests;
     DBHelper myhelper;
-    String studentid="",courseid="",testtype="";
+    String studentid="",enrollid="",courseid="",testtype="";
     PaperDashAdapter pdAdp;
     LinearLayoutManager myLayoutManager;
     ArrayList<SingleDashPaper> dashPaperList=new ArrayList<>();
@@ -54,6 +54,7 @@ public class PaperDashActivity extends AppCompatActivity {
         Intent cmgintent=getIntent();
         if(cmgintent!=null){
             studentid=cmgintent.getStringExtra("studentid");
+            enrollid=cmgintent.getStringExtra("enrollid");
             courseid=cmgintent.getStringExtra("courseid");
             testtype=cmgintent.getStringExtra("testtype");
         }
@@ -95,7 +96,7 @@ public class PaperDashActivity extends AppCompatActivity {
 
             for(int i=0;i<paperids.size();i++){
 
-                int totaltestcount=myhelper.getTestsByPaper(studentid,paperids.get(i));
+                int totaltestcount=myhelper.getTestsByPaper(studentid,enrollid,paperids.get(i));
 
                 Cursor mycur=myhelper.getPractiseSummaryByPaper(studentid,paperids.get(i));
                 if(mycur.getCount()>0){
@@ -156,9 +157,9 @@ public class PaperDashActivity extends AppCompatActivity {
             double min=0.0,max=0.0,avg=0.0,bmin=0.0,bmax=0.0,bavg=0.0;
 
             for(int i=0;i<paperids.size();i++){
-                int totaltestcount=myhelper.getTestsByPaper(studentid,paperids.get(i));
+                int totaltestcount=myhelper.getTestsByPaper(studentid,enrollid,paperids.get(i));
 
-                Cursor mycur=myhelper.getFlashSummaryByPaper(studentid,paperids.get(i));
+                Cursor mycur=myhelper.getFlashSummaryByPaper(studentid,enrollid,paperids.get(i));
                 if(mycur.getCount()>0){
                     while (mycur.moveToNext()){
                         attemptcount=mycur.getInt(mycur.getColumnIndex("attemptfcount"));

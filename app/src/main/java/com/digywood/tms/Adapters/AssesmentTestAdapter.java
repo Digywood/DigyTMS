@@ -100,6 +100,8 @@ public class AssesmentTestAdapter extends RecyclerView.Adapter<AssesmentTestAdap
             finalUrl="http://"+serverId+URLClass.loc_hosturl;
             finalAssetUrl="http://"+serverId+URLClass.loc_downloadjson;
         }
+
+        Log.e("FINALURL:--",""+finalUrl);
     }
 
     @Override

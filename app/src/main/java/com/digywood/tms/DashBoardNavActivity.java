@@ -70,7 +70,7 @@ public class DashBoardNavActivity extends AppCompatActivity implements Navigatio
 
         DrawerLayout drawer =findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-                this, drawer, toolbar, R.string.navigation_drawer_open,R.string.navigation_drawer_close);
+                this,drawer,toolbar,R.string.navigation_drawer_open,R.string.navigation_drawer_close);
         drawer.addDrawerListener(toggle);
         toggle.syncState();
 
@@ -716,7 +716,7 @@ public class DashBoardNavActivity extends AppCompatActivity implements Navigatio
                             }
                         }catch (Exception e){
                             e.printStackTrace();
-                            Log.e("DashBoardNavActivity","  :  "+e.toString());
+                            Log.e("DashBoardNavActivity","  :  "+e.toString()+"lineno:--"+e.getStackTrace()[0].getLineNumber());
                         }
                     }
                 }).execute();
@@ -967,7 +967,7 @@ public class DashBoardNavActivity extends AppCompatActivity implements Navigatio
 
                         }catch (Exception e){
                             e.printStackTrace();
-                            Log.e("DashBoardNavActivity","  :  "+e.toString());
+                            Log.e("DashBoardNavActivity","  :  "+e.toString()+"lineno:--"+e.getStackTrace()[0].getLineNumber());
                         }
                     }
                 }).execute();
