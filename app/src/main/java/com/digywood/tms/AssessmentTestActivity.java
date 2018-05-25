@@ -632,7 +632,7 @@ public class AssessmentTestActivity extends AppCompatActivity implements
                 batchid = cur.getColumnName(cur.getColumnIndex("satu_batch"));
             }
         }
-        buffer = attempt.getJSONArray("Sections").getJSONObject(pos).getJSONArray("Questions");
+//        buffer = attempt.getJSONArray("Sections").getJSONObject(pos).getJSONArray("Questions");
         storeSections();
     }
 
@@ -785,13 +785,13 @@ public class AssessmentTestActivity extends AppCompatActivity implements
             if (dataObj.AssessmentCheckQuestion(Id)) {
 
                 if (indx > -1) {
-                    result = dataObj.UpdateAssessmentQuestion(attempt.getString("atu_ID"),instanceId,generateUniqueId(Id),studentId, Id,orgid,null,batchid, attempt.getString("qbm_SequenceID"),attempt.getJSONArray("Sections").getJSONObject(pos).getString("atu_section_name"),questionobj.getString("qbm_ChapterName"),questionobj.getString("qbm_Sub_CategoryName"), Integer.valueOf(questionobj.getString("qbm_marks")), Double.valueOf(questionobj.getString("qbm_negative_mrk")), 0, 0, indx, listOfLists.get(pos).get(index).getQ_status(),"NotUploaded", opAdapter.getSelectedSequence(), opAdapter.getFlag());
+                    result = dataObj.UpdateAssessmentQuestion(attempt.getString("atu_ID"),instanceId,generateUniqueId(Id),studentId, Id,orgid,null,batchid, null,attempt.getJSONArray("Sections").getJSONObject(pos).getString("atu_section_name"),questionobj.getString("qbm_ChapterName"),questionobj.getString("qbm_Sub_CategoryName"), Integer.valueOf(questionobj.getString("qbm_marks")), Double.valueOf(questionobj.getString("qbm_negative_mrk")), 0, 0, indx, listOfLists.get(pos).get(index).getQ_status(),"NotUploaded", opAdapter.getSelectedSequence(), opAdapter.getFlag());
                 } else {
                     //if question is attempted and then the option is cleared store as skipped
-                    result = dataObj.UpdateAssessmentQuestion(attempt.getString("atu_ID"),instanceId,generateUniqueId(Id),studentId, Id,orgid,null,batchid, attempt.getString("qbm_SequenceID"),attempt.getJSONArray("Sections").getJSONObject(pos).getString("atu_section_name"),questionobj.getString("qbm_ChapterName"),questionobj.getString("qbm_Sub_CategoryName"), Integer.valueOf(questionobj.getString("qbm_marks")), Double.valueOf(questionobj.getString("qbm_negative_mrk")), 0, 0, indx, listOfLists.get(pos).get(index).getQ_status(),"NotUploaded", opAdapter.getSelectedSequence(), opAdapter.getFlag());
+                    result = dataObj.UpdateAssessmentQuestion(attempt.getString("atu_ID"),instanceId,generateUniqueId(Id),studentId, Id,orgid,null,batchid, null,attempt.getJSONArray("Sections").getJSONObject(pos).getString("atu_section_name"),questionobj.getString("qbm_ChapterName"),questionobj.getString("qbm_Sub_CategoryName"), Integer.valueOf(questionobj.getString("qbm_marks")), Double.valueOf(questionobj.getString("qbm_negative_mrk")), 0, 0, indx, listOfLists.get(pos).get(index).getQ_status(),"NotUploaded", opAdapter.getSelectedSequence(), opAdapter.getFlag());
                 }
                 if (result == 0) {
-                    dataObj.InsertAssessmentQuestion(attempt.getString("atu_ID"),instanceId,generateUniqueId(Id),studentId, Id,orgid,null,batchid, attempt.getString("qbm_SequenceID"),attempt.getJSONArray("Sections").getJSONObject(pos).getString("atu_section_name"),questionobj.getString("qbm_ChapterName"),questionobj.getString("qbm_Sub_CategoryName"), Integer.valueOf(questionobj.getString("qbm_marks")), Double.valueOf(questionobj.getString("qbm_negative_mrk")), 0, 0, indx, listOfLists.get(pos).get(index).getQ_status(),"NotUploaded", opAdapter.getSelectedSequence(), opAdapter.getFlag());
+                    dataObj.InsertAssessmentQuestion(attempt.getString("atu_ID"),instanceId,generateUniqueId(Id),studentId, Id,orgid,null,batchid, null,attempt.getJSONArray("Sections").getJSONObject(pos).getString("atu_section_name"),questionobj.getString("qbm_ChapterName"),questionobj.getString("qbm_Sub_CategoryName"), Integer.valueOf(questionobj.getString("qbm_marks")), Double.valueOf(questionobj.getString("qbm_negative_mrk")), 0, 0, indx, listOfLists.get(pos).get(index).getQ_status(),"NotUploaded", opAdapter.getSelectedSequence(), opAdapter.getFlag());
 
                 }
             }
@@ -806,7 +806,7 @@ public class AssessmentTestActivity extends AppCompatActivity implements
         try {
             buffer = attempt.getJSONArray("Sections");
             Id = buffer.getJSONObject(index).getString("qbm_ID");
-            Seq = buffer.getJSONObject(index).getString("qbm_SequenceID");
+            Seq = buffer.getJSONObject(index).getString("qbm_SequenceId");
             questionobj = buffer.getJSONObject(index);
             long value = dataObj.UpdateAssessmentQuestion(attempt.getString("atu_ID"),instanceId,generateUniqueId(Id),studentId, Id,orgid,null,batchid, Seq,attempt.getJSONArray("Sections").getJSONObject(pos).getString("atu_section_name"),questionobj.getString("qbm_Chapter_name"),questionobj.getString("qbm_Sub_CategoryName"), Integer.valueOf(questionobj.getString("qbm_marks")), Double.valueOf(questionobj.getString("qbm_negative_mrk")), dataObj.getAssessmentCorrectSum(), dataObj.getAssessmentWrongSum(), -1, listOfLists.get(pos).get(index).getQ_status(),"NotUploaded", opAdapter.getSelectedSequence(), opAdapter.getFlag());
             if(value > 0){
@@ -1088,8 +1088,8 @@ public class AssessmentTestActivity extends AppCompatActivity implements
 //                    Seq = array2.getJSONObject(j).getString("qbm_SequenceId");
                     questionobj = array2.getJSONObject(j);
                     qListObj = new SingleQuestionList(String.valueOf(j), notAttempted,not_confirmed);
-                    long value = dataObj.InsertAssessmentQuestion(attempt.getString("atu_ID"),instanceId,generateUniqueId(Id),studentId, Id, orgid,null,batchid,attempt.getString("qbm_SequenceID"),attempt.getJSONArray("Sections").getJSONObject(pos).getString("atu_section_name"),questionobj.getString("qbm_ChapterName"),questionobj.getString("qbm_Sub_CategoryName"), 0, 0, 0, 0, -1, notAttempted,"NotUploaded", "-1", "NO");
-                    Log.e("Insertion",""+instanceId);
+                    long value = dataObj.InsertAssessmentQuestion(attempt.getString("atu_ID"),instanceId,generateUniqueId(Id),studentId, Id, orgid,null,batchid,questionobj.getString("qbm_SequenceID"),attempt.getJSONArray("Sections").getJSONObject(pos).getString("atu_section_name"),questionobj.getString("qbm_ChapterName"),questionobj.getString("qbm_Sub_CategoryName"), 0, 0, 0, 0, -1, notAttempted,"NotUploaded", "-1", "NO");
+                    Log.e("Insertion Init",""+value);
                     questionOpList.add(qListObj);
                 }
                 listOfLists.add(questionOpList);
@@ -1130,7 +1130,7 @@ public class AssessmentTestActivity extends AppCompatActivity implements
     public  void syncAssesmentTestData() {
 
         JSONObject finalAssessmentObj=new JSONObject();
-        Cursor mycursor=dataObj.getAssessmentUploadData("NotUploaded");
+        Cursor mycursor=dataObj.getAssessmentUploadData(studentId,"NotUploaded");
         if(mycursor.getCount()>0){
             try{
                 Log.e("Upload Count",""+mycursor.getCount());
@@ -1185,7 +1185,7 @@ public class AssessmentTestActivity extends AppCompatActivity implements
                                     Log.e("DBNActivity---","updated_assesstestQ_rec:--"+ja_assessmentKeys.length());
                                     for(int i=0;i<ja_assessmentKeys.length();i++){
                                         assessmentObj=ja_assessmentKeys.getJSONObject(i);
-                                        long updateFlag=dataObj.updateAssessmentQStatus(assessmentObj.getString("assessmentKey"),"Uploaded");
+                                        long updateFlag=dataObj.updateAssessmentQStatus(studentId,assessmentObj.getString("assessmentKey"),"Uploaded");
                                         if(updateFlag>0){
                                             p++;
                                         }else{
@@ -1333,7 +1333,7 @@ public class AssessmentTestActivity extends AppCompatActivity implements
             Log.e("ItemSelected", "reached");
             mHideRunnable.run();
             pos = position;
-          
+
             //Instantiate grid adapter
             scrollAdapter = new ScrollGridAdapter(AssessmentTestActivity.this, attempt.getJSONArray("Sections").getJSONObject(pos).getJSONArray("Questions"), listOfLists.get(pos), getScreenSize());
             setScrollbar(pos);
