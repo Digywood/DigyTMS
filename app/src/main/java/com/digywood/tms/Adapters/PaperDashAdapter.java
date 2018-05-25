@@ -19,7 +19,7 @@ public class PaperDashAdapter extends RecyclerView.Adapter<PaperDashAdapter.MyVi
 
     private List<SingleDashPaper> paperdashList;
     Context mycontext;
-    String testtype="",studentid="";
+    String testtype="",studentid="",enrollid="";
     private ArrayList<String> chknumberList=new ArrayList<>();
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
@@ -44,10 +44,11 @@ public class PaperDashAdapter extends RecyclerView.Adapter<PaperDashAdapter.MyVi
     }
 
 
-    public PaperDashAdapter(List<SingleDashPaper> paperdashList, Context c,String studentId,String testtype) {
+    public PaperDashAdapter(List<SingleDashPaper> paperdashList, Context c,String studentId,String enrollId,String testtype) {
         this.paperdashList = paperdashList;
         this.mycontext=c;
         this.studentid=studentId;
+        this.enrollid=enrollId;
         this.testtype=testtype;
     }
 
@@ -90,6 +91,7 @@ public class PaperDashAdapter extends RecyclerView.Adapter<PaperDashAdapter.MyVi
 
                 Intent i=new Intent(mycontext, TestDashActivity.class);
                 i.putExtra("studentid",studentid);
+                i.putExtra("enrollid",enrollid);
                 i.putExtra("paperid",singleDashPaper.getPaperid());
                 i.putExtra("testtype",testtype);
                 mycontext.startActivity(i);

@@ -100,7 +100,7 @@ public class BagroundTask extends AsyncTask<Void, String, String> {
             HttpEntity entity = response.getEntity();
             InputStream is = entity.getContent();
             BufferedReader reader = new BufferedReader(
-                    new InputStreamReader(is, "iso-8859-1"), 8);
+                    new InputStreamReader(is, "iso-8859-1"),8);
             StringBuilder sb = new StringBuilder();
             String line;
             while ((line = reader.readLine()) != null) {

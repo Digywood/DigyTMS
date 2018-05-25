@@ -144,7 +144,7 @@ public class PractiseTestAdapter extends RecyclerView.Adapter<PractiseTestAdapte
     public void onBindViewHolder(final MyViewHolder holder, final int position) {
 
         final SingleTest singletest = testList.get(position);
-        Cursor mycursor=myhelper.getTestRawData(singletest.getTestid(),studentid);
+        Cursor mycursor=myhelper.getTestRawData(singletest.getTestid(),studentid,enrollid);
         if(mycursor.getCount()>0) {
             while (mycursor.moveToNext()) {
                 minscore = mycursor.getDouble(mycursor.getColumnIndex("minscore"));
@@ -156,11 +156,11 @@ public class PractiseTestAdapter extends RecyclerView.Adapter<PractiseTestAdapte
         List<PieEntry> yvalues = new ArrayList<PieEntry>();
 
         holder.tv_testAttempt.setText(String.valueOf(myhelper.getTestAttempCount(singletest.getTestid(),studentid)));
-        holder.tv_attempt_min.setText(String.format("%.1f", minscore));
-        holder.tv_attempt_max.setText(String.format("%.1f", maxscore));
-        holder.tv_attempt_avg.setText(String.format("%.1f", avgscore));
+        holder.tv_attempt_min.setText(String.format("%.1f",minscore));
+        holder.tv_attempt_max.setText(String.format("%.1f",maxscore));
+        holder.tv_attempt_avg.setText(String.format("%.1f",avgscore));
 
-        Cursor mycur=myhelper.getTestFlashSummary(singletest.getTestid(),studentid);
+        Cursor mycur=myhelper.getTestFlashSummary(singletest.getTestid(),studentid,enrollid);
         if(mycur.getCount()>0){
             while (mycur.moveToNext()){
                 fattemptcount=mycur.getInt(mycur.getColumnIndex("sptuflash_attempts"));
@@ -475,6 +475,7 @@ public class PractiseTestAdapter extends RecyclerView.Adapter<PractiseTestAdapte
                 Intent i = new Intent(mycontext, AttemptDataActivity.class);
                 i.putExtra("testId", singletest.getTestid());
                 i.putExtra("studentid", studentid);
+                i.putExtra("enrollid",enrollid);
                 mycontext.startActivity(i);
             }
         });

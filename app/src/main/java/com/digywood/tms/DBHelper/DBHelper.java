@@ -750,8 +750,8 @@ public class DBHelper extends SQLiteOpenHelper {
         return c;
     }
 
-    public Cursor getTestFlashSummary(String testId,String studentId){
-        String query ="SELECT sptuflash_attempts,max_flashScore,min_flashScore,avg_flashScore,lastAttemptDttm,lastAttemptScore FROM "+" sptu_student"+" WHERE sptu_ID='"+testId+"' and sptu_student_ID='"+studentId+"'";
+    public Cursor getTestFlashSummary(String testId,String studentId,String enrollId){
+        String query ="SELECT sptuflash_attempts,max_flashScore,min_flashScore,avg_flashScore,lastAttemptDttm,lastAttemptScore FROM "+" sptu_student"+" WHERE sptu_ID='"+testId+"' and sptu_student_ID='"+studentId+"' and sptu_entroll_id='"+enrollId+"'";
         Cursor c=db.rawQuery(query,null);
         return c;
     }
@@ -768,14 +768,46 @@ public class DBHelper extends SQLiteOpenHelper {
         return c;
     }
 
-    public Cursor getPractiseSummaryByPaper(String studentId,String paperId){
-        String query ="SELECT count(distinct Attempt_Test_ID) as attemptpcount,MIN(Attempt_Percentage) as minscore,MAX(Attempt_Percentage) as maxscore,AVG(Attempt_Percentage) as avgscore FROM "+"attempt_list"+" WHERE Attempt_studentId ='"+studentId+"' and Attempt_paperId ='"+paperId+"'";
+
+    String AssesmentTestList ="CREATE TABLE `Assesment_list` (\n"+
+            "   `Assesment_Test_ID` TEXT,\n"+
+            "   `Assesment_enrollId` TEXT DEFAULT NULL,\n"+
+            "   `Assesment_studentId` TEXT DEFAULT NULL,\n"+
+            "   `Assesment_courseId` TEXT DEFAULT NULL,\n"+
+            "   `Assesment_subjectId` TEXT DEFAULT NULL,\n"+
+            "   `Assesment_paperId` TEXT DEFAULT NULL,\n"+
+            "   `Assesment_Status` int(5) NOT NULL,\n"+
+            "   `Assesment_Started_dttm` datetime DEFAULT NULL,\n" +
+            "   `Assesment_RemainingTime` int(5) DEFAULT NULL,\n"+
+            "   `Assesment_LastQuestion` int(5) DEFAULT NULL,\n"+
+            "   `Assesment_LastSection` int(5) DEFAULT NULL,\n"+
+            "   `Assesment_Confirmed` int(5) DEFAULT NULL,\n"+
+            "   `Assesment_Skipped` int(5) DEFAULT NULL,\n"+
+            "   `Assesment_Bookmarked` int(5) DEFAULT NULL,\n"+
+            "   `Assesment_UnAttempted` int(5) DEFAULT NULL,\n"+
+            "   `Assesment_Score` double DEFAULT NULL,\n"+
+            "   `Assesment_Percentage` double DEFAULT NULL)";
+
+    public Cursor getAssessmentSummary(String studentId,String enrollId){
+        String query ="SELECT count(distinct Assesment_Test_ID) as attemptacount,MIN(Assesment_Percentage) as minscore,MAX(Assesment_Percentage) as maxscore,AVG(Assesment_Percentage) as avgscore FROM "+"Assesment_list"+" WHERE Assesment_studentId ='"+studentId+"' and Assesment_enrollId ='"+enrollId+"'";
+        Cursor c=db.rawQuery(query,null);
+        return c;
+    }
+
+    public Cursor getPractiseSummaryByPaper(String studentId,String enrollId,String paperId){
+        String query ="SELECT count(distinct Attempt_Test_ID) as attemptpcount,MIN(Attempt_Percentage) as minscore,MAX(Attempt_Percentage) as maxscore,AVG(Attempt_Percentage) as avgscore FROM "+"attempt_list"+" WHERE Attempt_studentId ='"+studentId+"' and Attempt_enrollId='"+enrollId+"' and Attempt_paperId ='"+paperId+"'";
         Cursor c=db.rawQuery(query,null);
         return c;
     }
 
     public Cursor getPractiseSummaryByTest(String studentId,String testId){
         String query ="SELECT count(distinct Attempt_Test_ID) as attemptpcount,MIN(Attempt_Percentage) as minscore,MAX(Attempt_Percentage) as maxscore,AVG(Attempt_Percentage) as avgscore FROM "+"attempt_list"+" WHERE Attempt_studentId ='"+studentId+"' and Attempt_Test_ID ='"+testId+"'";
+        Cursor c=db.rawQuery(query,null);
+        return c;
+    }
+
+    public Cursor getAssessmentSummaryByPaper(String studentId,String enrollId,String paperId){
+        String query ="SELECT count(distinct Assesment_Test_ID) as attemptacount,MIN(Assesment_Percentage) as minscore,MAX(Assesment_Percentage) as maxscore,AVG(Assesment_Percentage) as avgscore FROM "+"Assesment_list"+" WHERE Assesment_studentId ='"+studentId+"' and Assesment_enrollId ='"+enrollId+"' and Assesment_paperId ='"+paperId+"'";
         Cursor c=db.rawQuery(query,null);
         return c;
     }
@@ -2011,7 +2043,7 @@ public class DBHelper extends SQLiteOpenHelper {
     }
 
 
-    public Cursor getTestRawData(String testId,String studentId){
+    public Cursor getTestRawData(String testId,String studentId,String enrollId){
         String query ="SELECT COUNT(*) as attemptcount,MIN(Attempt_Percentage) as minscore,MAX(Attempt_Percentage) as maxscore,AVG(Attempt_Percentage) as avgscore FROM "+" attempt_list"+" WHERE Attempt_Test_ID ='"+testId+"' and Attempt_Status <> 1 and Attempt_studentId='"+studentId+"'";
         Cursor c=db.rawQuery(query,null);
         return c;

@@ -67,7 +67,7 @@ public class AssessmentFragment extends Fragment implements OnChartValueSelected
     Button btn_adetails;
     public PieChart mChart;
     public BarChart mChart1;
-    int totptestcount=0,attemptpcount=0;
+    int totptestcount=0,attemptacount=0;
     float attemptpercent=0.0f;
     Double min=0.0,max=0.0,avg=0.0;
     ArrayList<SingleEnrollment> enrollPojos=new ArrayList<>();
@@ -175,7 +175,7 @@ public class AssessmentFragment extends Fragment implements OnChartValueSelected
                 courseid=singleEnrollment.getDcourseid();
                 String cname=myhelper.getCoursenameById(courseid);
                 tv_coursename.setText(cname);
-                updateData(enrollid);
+                updateData();
             }
 
             @Override
@@ -196,8 +196,7 @@ public class AssessmentFragment extends Fragment implements OnChartValueSelected
             }
         });
 
-
-        attemptpercent=(Float.parseFloat(String.valueOf(attemptpcount))/totptestcount)*100;
+//        attemptpercent=(Float.parseFloat(String.valueOf(attemptacount))/totptestcount)*100;
 
         mChart.setUsePercentValues(true);
         mChart.getDescription().setEnabled(false);
@@ -451,27 +450,27 @@ public class AssessmentFragment extends Fragment implements OnChartValueSelected
         Log.i("PieChart", "nothing selected");
     }
 
-    public void updateData(String enrollId){
-        totptestcount=myhelper.getATestsCount(studentid,enrollId);
+    public void updateData(){
+        totptestcount=myhelper.getATestsCount(studentid,enrollid);
         tv_atottests.setText(""+totptestcount);
 
-//        Cursor mycur1=myhelper.getPractiseSummary(enrollId);
-//        if(mycur1.getCount()>0){
-//            while (mycur1.moveToNext()){
-//                attemptpcount=mycur1.getInt(mycur1.getColumnIndex("attemptpcount"));
-//                min=mycur1.getDouble(mycur1.getColumnIndex("minscore"));
-//                max=mycur1.getDouble(mycur1.getColumnIndex("maxscore"));
-//                avg=mycur1.getDouble(mycur1.getColumnIndex("avgscore"));
-//                tv_aattempted.setText(""+attemptpcount);
-//                tv_amax.setText(""+round(max,1));
-//                tv_amin.setText(""+round(min,1));
-//                tv_aavg.setText(""+round(avg,1));
-//            }
-//        }else{
-//            mycur1.close();
-//        }
+        Cursor mycur1=myhelper.getAssessmentSummary(studentid,enrollid);
+        if(mycur1.getCount()>0){
+            while (mycur1.moveToNext()){
+                attemptacount=mycur1.getInt(mycur1.getColumnIndex("attemptacount"));
+                min=mycur1.getDouble(mycur1.getColumnIndex("minscore"));
+                max=mycur1.getDouble(mycur1.getColumnIndex("maxscore"));
+                avg=mycur1.getDouble(mycur1.getColumnIndex("avgscore"));
+                tv_aattempted.setText(""+attemptacount);
+                tv_amax.setText(""+round(max,1));
+                tv_amin.setText(""+round(min,1));
+                tv_aavg.setText(""+round(avg,1));
+            }
+        }else{
+            mycur1.close();
+        }
 
-        attemptpercent=(Float.parseFloat(String.valueOf(attemptpcount))/totptestcount)*100;
+        attemptpercent=(Float.parseFloat(String.valueOf(attemptacount))/totptestcount)*100;
 
         mChart.animateXY(1400, 1400);
         setData(attemptpercent,100);

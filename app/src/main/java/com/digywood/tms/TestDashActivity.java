@@ -21,7 +21,7 @@ import java.util.ArrayList;
 
 public class TestDashActivity extends AppCompatActivity {
 
-    String studentid="",paperid="",testtype="";
+    String studentid="",enrollid="",paperid="",testtype="";
     RecyclerView rv_tests;
     TextView tv_emptytests;
     DBHelper myhelper;
@@ -55,6 +55,7 @@ public class TestDashActivity extends AppCompatActivity {
         Intent cmgintent=getIntent();
         if(cmgintent!=null){
             studentid=cmgintent.getStringExtra("studentid");
+            enrollid=cmgintent.getStringExtra("enrollid");
             paperid=cmgintent.getStringExtra("paperid");
             testtype=cmgintent.getStringExtra("testtype");
         }
@@ -159,7 +160,7 @@ public class TestDashActivity extends AppCompatActivity {
 
             for(int i=0;i<testids.size();i++){
 
-                Cursor mycur=myhelper.getTestFlashSummary(testids.get(i),studentid);
+                Cursor mycur=myhelper.getTestFlashSummary(testids.get(i),studentid,enrollid);
                 if(mycur.getCount()>0){
                     while (mycur.moveToNext()){
                         attemptcount=mycur.getInt(mycur.getColumnIndex("sptuflash_attempts"));
