@@ -44,7 +44,6 @@ public class CourseFragment extends Fragment {
     Random random ;
     ArrayList<String> enrollids;
     ArrayList<String> enrollcourseids;
-    HashMap<String,String> hmap=new HashMap<>();
     ArrayList<SingleEnrollment> enrollList;
     LinearLayoutManager myLayoutManager;
     EnrollAdapter eAdp;

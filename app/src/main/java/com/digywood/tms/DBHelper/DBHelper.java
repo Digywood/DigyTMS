@@ -1034,7 +1034,8 @@ public class DBHelper extends SQLiteOpenHelper {
         return  deleteFlag;
     }
 
-    public long insertPractiseTest(int tkey,String torgid,String tenrollid,String tstudentid,String tbatch,String tid,String testname,String tpid,String tsid,String tcid,String tstartdate,String tenddate,String tdwdstatus,String tstatus,int tnoofques,Double ttotalmarks,Double tminmarks,Double tmaxmarks){
+
+    public long insertPractiseTest(int tkey,String torgid,String tenrollid,String tstudentid,String tbatch,String tid,String testname,String tpid,String tsid,String tcid,String tstartdate,String tenddate,String tdwdstartdttm,String tdwdenddttm,String tdwdstatus,String tstatus,int tnoofques,double tptotalmarks,double tpminmarks,double tpmaxmarks,double tpavgmarks,double tpminpercent,double tpmaxpercent,double tpavgpercent,double tplastmarks,double tplastpercent,String tplaststartdttm,String tplastenddttm,int pnoofattempts,int fnoofattempts,double fminscore,double fmaxscore,double favgscore,String flastdttm,double flastscore,String createby,String cdttm,String modifiedby,String mdttm){
         long insertFlag=0;
         ContentValues cv = new ContentValues();
         cv.put("sptu_key",tkey);
@@ -1049,12 +1050,33 @@ public class DBHelper extends SQLiteOpenHelper {
         cv.put("sptu_course_id",tcid);
         cv.put("sptu_start_date",tstartdate);
         cv.put("sptu_end_date",tenddate);
+        cv.put("sptu_dwnld_start_dttm",tdwdstartdttm);
+        cv.put("sptu_dwnld_completed_dttm",tdwdenddttm);
         cv.put("sptu_dwnld_status",tdwdstatus);
         cv.put("sptu_status",tstatus);
         cv.put("sptu_no_of_questions",tnoofques);
-        cv.put("sptu_tot_marks",ttotalmarks);
-        cv.put("stpu_min_marks",tminmarks);
-        cv.put("sptu_max_marks",tmaxmarks);
+        cv.put("sptu_tot_marks",tptotalmarks);
+        cv.put("stpu_min_marks",tpminmarks);
+        cv.put("sptu_max_marks",tpmaxmarks);
+        cv.put("sptu_avg_marks",tpavgmarks);
+        cv.put("sptu_min_percent",tpminpercent);
+        cv.put("sptu_max_percent",tpmaxmarks);
+        cv.put("sptu_avg_percent",tpavgpercent);
+        cv.put("sptu_last_attempt_marks",tplastmarks);
+        cv.put("sptu_last_attempt_percent",tplastpercent);
+        cv.put("sptu_last_attempt_start_dttm",tplaststartdttm);
+        cv.put("sptu_last_attempt_end_dttm",tplastenddttm);
+        cv.put("sptu_no_of_attempts",pnoofattempts);
+        cv.put("sptuflash_attempts",fnoofattempts);
+        cv.put("min_flashScore",fminscore);
+        cv.put("max_flashScore",fmaxscore);
+        cv.put("avg_flashScore",favgscore);
+        cv.put("lastAttemptDttm",flastdttm);
+        cv.put("lastAttemptScore",flastscore);
+        cv.put("sptu_created_by",createby);
+        cv.put("sptu_created_dttm",cdttm);
+        cv.put("sptu_mod_by",modifiedby);
+        cv.put("sptu_mod_dttm",mdttm);
         insertFlag = db.insert("sptu_student",null, cv);
         return insertFlag;
     }
@@ -1083,7 +1105,7 @@ public class DBHelper extends SQLiteOpenHelper {
         return  c;
     }
 
-    public long updatePractiseTestData(String torgid,String tenrollid,String tstudentid,String tbatch,String tid,String tpid,String tsid,String tcid,String tstartdate,String tenddate,String tdwdstatus,int tnoofques,Double ttotalmarks,Double tminmarks,Double tmaxmarks){
+    public long updatePractiseTestData(String torgid,String tenrollid,String tstudentid,String tbatch,String tid,String testname,String tpid,String tsid,String tcid,String tstartdate,String tenddate,String tdwdstartdttm,String tdwdenddttm,String tdwdstatus,String tstatus,int tnoofques,double tptotalmarks,double tpminmarks,double tpmaxmarks,double tpavgmarks,double tpminpercent,double tpmaxpercent,double tpavgpercent,double tplastmarks,double tplastpercent,String tplaststartdttm,String tplastenddttm,int pnoofattempts,int fnoofattempts,double fminscore,double fmaxscore,double favgscore,String flastdttm,double flastscore,String createby,String cdttm,String modifiedby,String mdttm){
         long updateFlag=0;
         ContentValues cv = new ContentValues();
         cv.put("sptu_org_id",torgid);
@@ -1097,9 +1119,28 @@ public class DBHelper extends SQLiteOpenHelper {
         cv.put("sptu_end_date",tenddate);
         cv.put("sptu_dwnld_status",tdwdstatus);
         cv.put("sptu_no_of_questions",tnoofques);
-        cv.put("sptu_tot_marks",ttotalmarks);
-        cv.put("stpu_min_marks",tminmarks);
-        cv.put("sptu_max_marks",tmaxmarks);
+        cv.put("sptu_tot_marks",tptotalmarks);
+        cv.put("stpu_min_marks",tpminmarks);
+        cv.put("sptu_max_marks",tpmaxmarks);
+        cv.put("sptu_avg_marks",tpavgmarks);
+        cv.put("sptu_min_percent",tpminpercent);
+        cv.put("sptu_max_percent",tpmaxmarks);
+        cv.put("sptu_avg_percent",tpavgpercent);
+        cv.put("sptu_last_attempt_marks",tplastmarks);
+        cv.put("sptu_last_attempt_percent",tplastpercent);
+        cv.put("sptu_last_attempt_start_dttm",tplaststartdttm);
+        cv.put("sptu_last_attempt_end_dttm",tplastenddttm);
+        cv.put("sptu_no_of_attempts",pnoofattempts);
+        cv.put("sptuflash_attempts",fnoofattempts);
+        cv.put("min_flashScore",fminscore);
+        cv.put("max_flashScore",fmaxscore);
+        cv.put("avg_flashScore",favgscore);
+        cv.put("lastAttemptDttm",flastdttm);
+        cv.put("lastAttemptScore",flastscore);
+        cv.put("sptu_created_by",createby);
+        cv.put("sptu_created_dttm",cdttm);
+        cv.put("sptu_mod_by",modifiedby);
+        cv.put("sptu_mod_dttm",mdttm);
         updateFlag = db.update("sptu_student", cv,"sptu_ID='"+tid+"'",null);
         return updateFlag;
     }
@@ -1212,39 +1253,39 @@ public class DBHelper extends SQLiteOpenHelper {
         return  deleteFlag;
     }
 
-    public long updatePTestStartStatus(String studentId,String testid,String status,String startdttm){
+    public long updatePTestStartStatus(String studentId,String enrollId,String testid,String status,String startdttm){
         long updateFlag=0;
         ContentValues cv = new ContentValues();
+        cv.put("sptu_dwnld_start_dttm", startdttm);
         cv.put("sptu_dwnld_status", status);
-        cv.put("sptu_dwnld_status", status);
-        updateFlag=db.update("sptu_student",cv, "sptu_student_ID='"+studentId+"' and sptu_ID='"+testid+"'",null);
+        updateFlag=db.update("sptu_student",cv, "sptu_student_ID='"+studentId+"' and sptu_entroll_id='"+enrollId+"' and sptu_ID='"+testid+"'",null);
         return  updateFlag;
     }
 
-    public long updatePTestEndStatus(String studentId,String testid,String status,String enddttm){
+    public long updatePTestEndStatus(String studentId,String enrollId,String testid,String status,String enddttm){
         long updateFlag=0;
         ContentValues cv = new ContentValues();
+        cv.put("sptu_dwnld_completed_dttm", enddttm);
         cv.put("sptu_dwnld_status", status);
-        cv.put("sptu_dwnld_status", status);
-        updateFlag=db.update("sptu_student",cv, "sptu_student_ID='"+studentId+"' and sptu_ID='"+testid+"'",null);
+        updateFlag=db.update("sptu_student",cv, "sptu_student_ID='"+studentId+"' and sptu_entroll_id='"+enrollId+"' and sptu_ID='"+testid+"'",null);
         return  updateFlag;
     }
 
-    public long updateATestStartStatus(String studentId,String testid,String status,String startdttm){
+    public long updateATestStartStatus(String studentId,String enrollId,String instanceId,String status,String startdttm){
         long updateFlag=0;
         ContentValues cv = new ContentValues();
         cv.put("satu_dwnld_start_dttm",startdttm);
         cv.put("satu_dwnld_status", status);
-        updateFlag=db.update("satu_student",cv,"satu_student_id='"+studentId+"' and satu_ID='"+testid+"'",null);
+        updateFlag=db.update("satu_student",cv,"satu_student_id='"+studentId+"' and satu_entroll_id='"+enrollId+"' and satu_instace_id='"+instanceId+"'",null);
         return  updateFlag;
     }
 
-    public long updateATestEndStatus(String studentId,String testid,String status,String enddttm){
+    public long updateATestEndStatus(String studentId,String enrollId,String instanceId,String status,String enddttm){
         long updateFlag=0;
         ContentValues cv = new ContentValues();
         cv.put("satu_dwnld_completed_dttm",enddttm);
         cv.put("satu_dwnld_status", status);
-        updateFlag=db.update("satu_student",cv,"satu_student_id='"+studentId+"' and satu_ID='"+testid+"'",null);
+        updateFlag=db.update("satu_student",cv,"satu_student_id='"+studentId+"' and satu_entroll_id='"+enrollId+"' and satu_instace_id='"+instanceId+"'",null);
         return  updateFlag;
     }
 

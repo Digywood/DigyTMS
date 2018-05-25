@@ -45,7 +45,6 @@ public class PaperActivity extends AppCompatActivity {
     int clickpos=0;
     public static final int RequestPermissionCode = 1;
     String courseid="",enrollid="",studentid="";
-    HashMap<String,String> hmap=new HashMap<>();
     DBHelper myhelper;
     LinearLayoutManager myLayoutManager;
     PaperAdapter pAdp;
@@ -247,7 +246,7 @@ public class PaperActivity extends AppCompatActivity {
     }
 
     public void getPapersData(){
-        hmap.clear();
+        HashMap<String,String> hmap=new HashMap<>();
         hmap.put("courseid",courseid);
         new BagroundTask(URLClass.hosturl + "getPapersByCourseId.php",hmap,PaperActivity.this,new IBagroundListener() {
             @Override

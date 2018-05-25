@@ -34,7 +34,6 @@ public class MainActivity extends AppCompatActivity {
     JSONParser myparser;
     SharedPreferences mypreferences,myretrievepreferences;
     SharedPreferences.Editor editor;
-    HashMap<String,String> hmap=new HashMap<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -104,7 +103,7 @@ public class MainActivity extends AppCompatActivity {
                                 @Override
                                 public void inetSatus(Boolean netStatus) {
                                     if(netStatus){
-                                        hmap.clear();
+                                        HashMap<String,String> hmap=new HashMap<>();
                                         hmap.put("number",et_email.getText().toString());
                                         new BagroundTask(URLClass.hosturl +"checkUserExist.php",hmap,MainActivity.this, new IBagroundListener() {
                                             @Override

@@ -20,12 +20,10 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.digywood.tms.AssessmentTestActivity;
 import com.digywood.tms.AsynTasks.BagroundTask;
 import com.digywood.tms.AsynTasks.DownloadFileAsync;
 import com.digywood.tms.DBHelper.DBHelper;
-
 import com.digywood.tms.IBagroundListener;
 import com.digywood.tms.IDownloadStatus;
 import com.digywood.tms.JSONParser;
@@ -36,10 +34,8 @@ import com.digywood.tms.R;
 import com.digywood.tms.SaveJSONdataToFile;
 import com.digywood.tms.PracticeTestActivity;
 import com.digywood.tms.URLClass;
-
 import org.json.JSONArray;
 import org.json.JSONObject;
-
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
@@ -62,7 +58,6 @@ public class AssesmentTestAdapter extends RecyclerView.Adapter<AssesmentTestAdap
     ArrayList<String> chktestList = new ArrayList<>();
     ArrayList<String> finalUrls=new ArrayList<>();
     ArrayList<String> finalNames=new ArrayList<>();
-    HashMap<String,String> hmap=new HashMap<>();
     Context mycontext;
     DBHelper myhelper;
     Boolean value = false;
@@ -237,7 +232,7 @@ public class AssesmentTestAdapter extends RecyclerView.Adapter<AssesmentTestAdap
                 finalNames.clear();
                 filedata="";
 
-                hmap.clear();
+                HashMap<String,String> hmap=new HashMap<>();
                 hmap.put("studentid",studentid);
                 hmap.put("enrollid",enrollid);
                 hmap.put("instanceid",singletest.getInstanceId());
@@ -251,7 +246,7 @@ public class AssesmentTestAdapter extends RecyclerView.Adapter<AssesmentTestAdap
                             Log.e("UploadStatus---",json);
                             if(json.equalsIgnoreCase("Updated")){
 
-                                long updateFlag=myhelper.updateATestStartStatus(studentid,singletest.getTestid(),"STARTED",startdttm);
+                                long updateFlag=myhelper.updateATestStartStatus(studentid,enrollid,singletest.getInstanceId(),"STARTED",startdttm);
                                 if(updateFlag>0){
                                     Log.e("LocalStatusUpdate---","Updated Locally");
                                 }else{
@@ -549,7 +544,7 @@ public class AssesmentTestAdapter extends RecyclerView.Adapter<AssesmentTestAdap
     }
 
     public  void updateAssessmentTestStatus(final String instanceid,final String status){
-        hmap.clear();
+        HashMap<String,String> hmap=new HashMap<>();
         hmap.put("studentid",studentid);
         hmap.put("enrollid",enrollid);
         hmap.put("instanceid",instanceid);
@@ -563,7 +558,7 @@ public class AssesmentTestAdapter extends RecyclerView.Adapter<AssesmentTestAdap
 
                     Log.e("UploadStatus---",json);
                     if(json.equalsIgnoreCase("Updated")){
-                        long updateFlag=myhelper.updateATestEndStatus(studentid,testid,status,endddtm);
+                        long updateFlag=myhelper.updateATestEndStatus(studentid,enrollid,instanceid,status,endddtm);
                         if(updateFlag>0){
                             Log.e("LocalStatusUpdate---","Updated Locally");
                         }else{

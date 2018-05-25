@@ -35,7 +35,6 @@ public class RegistrationActivity extends AppCompatActivity {
     TextView tv_male,tv_female,tv_dob;
     int yyyy,mm,dd,qulifypos;
     String gender="M",dob="";
-    HashMap<String,String> hmap=new HashMap<>();
     Spinner sp_qualification;
     Button btn_calender,btn_submit;
 
@@ -118,7 +117,7 @@ public class RegistrationActivity extends AppCompatActivity {
             public void onClick(View v) {
 
                 if(validate()){
-                    hmap.clear();
+                    final HashMap<String,String> hmap=new HashMap<>();
                     hmap.put("name",et_name.getText().toString());
                     hmap.put("gender",gender);
                     hmap.put("education",String.valueOf(qulifypos));

@@ -40,7 +40,6 @@ public class RequestedEnrollsActivity extends AppCompatActivity {
     FloatingActionButton fab_enrollreq;
     EnrollRequestAdapter erAdp;
     LinearLayoutManager myLayoutManager;
-    HashMap<String,String> hmap=new HashMap<>();
     ArrayList<SingleEnrollRequest> enrollreqList=new ArrayList<>();
 
     @Override
@@ -109,7 +108,7 @@ public class RequestedEnrollsActivity extends AppCompatActivity {
                                     if(et_key.getText().toString().equals(singleEnrollRequest.getEnrollKey())){
                                         mydialog.cancel();
                                         Toast.makeText(getApplicationContext(),"Validated",Toast.LENGTH_SHORT).show();
-                                        hmap.clear();
+                                        HashMap<String,String> hmap=new HashMap<>();
                                         hmap.put("enrollId",singleEnrollRequest.getEnrollId());
                                         hmap.put("status","ACTIVATED");
                                         new BagroundTask(URLClass.hosturl +"updateStudentActiveStatus.php",hmap,RequestedEnrollsActivity.this,new IBagroundListener() {
@@ -203,7 +202,7 @@ public class RequestedEnrollsActivity extends AppCompatActivity {
     }
 
     public void getEnrollReqsFromServer(){
-        hmap.clear();
+        HashMap<String,String> hmap=new HashMap<>();
         hmap.put("studentid",studentid);
         new BagroundTask(URLClass.hosturl+"getStudentRequestedEnrollments.php",hmap,RequestedEnrollsActivity.this,new IBagroundListener() {
             @Override

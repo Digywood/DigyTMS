@@ -56,7 +56,6 @@ public class EnrollRequestActivity extends AppCompatActivity {
     String startdate="",enddate="",studentid="",batchid="";
     String orgid="",courseid="",branchid="",feeamount="",feetax="",totalfee="",RandomAudioFileName="ABCDEFGHIJKLMNOPQRSTUVWXYZ";
     ArrayAdapter<String> orgAdp,courseAdp,branchAdp,batchAdp;
-    HashMap<String,String> hashMap=new HashMap<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -290,8 +289,8 @@ public class EnrollRequestActivity extends AppCompatActivity {
     public void getOrganisations(){
         orgids.clear();
         orgnames.clear();
-        hashMap.clear();
-        new BagroundTask(URLClass.hosturl +"getAllOrgainsations.php", hashMap, EnrollRequestActivity.this,new IBagroundListener() {
+        HashMap<String,String> hmap=new HashMap<>();
+        new BagroundTask(URLClass.hosturl +"getAllOrgainsations.php", hmap, EnrollRequestActivity.this,new IBagroundListener() {
          @Override
          public void bagroundData(String json) {
              try{
@@ -326,9 +325,9 @@ public class EnrollRequestActivity extends AppCompatActivity {
         coursenames.clear();
         branchids.clear();
         branchnames.clear();
-        hashMap.clear();
-        hashMap.put("OrgId",orgid);
-        new BagroundTask(URLClass.hosturl +"getCoursesandBranchesByOrg.php",hashMap,EnrollRequestActivity.this, new IBagroundListener() {
+        HashMap<String,String> hmap=new HashMap<>();
+        hmap.put("OrgId",orgid);
+        new BagroundTask(URLClass.hosturl +"getCoursesandBranchesByOrg.php",hmap,EnrollRequestActivity.this, new IBagroundListener() {
             @Override
             public void bagroundData(String json) {
                 JSONObject courseObj,branchObj;
@@ -402,12 +401,12 @@ public class EnrollRequestActivity extends AppCompatActivity {
         batchnames.clear();
         batchList.clear();
         batchdataList.clear();
-        hashMap.clear();
-        hashMap.put("OrgId",orgid);
-        hashMap.put("CourseId",courseid);
-        hashMap.put("BranchId",branchid);
+        HashMap<String,String> hmap=new HashMap<>();
+        hmap.put("OrgId",orgid);
+        hmap.put("CourseId",courseid);
+        hmap.put("BranchId",branchid);
         Log.e("EnrollReqActivity---","ORG: "+orgid+"  CID: "+courseid+"  BID: "+branchid);
-        new BagroundTask(URLClass.hosturl+"getBatches.php",hashMap,EnrollRequestActivity.this,new IBagroundListener() {
+        new BagroundTask(URLClass.hosturl+"getBatches.php",hmap,EnrollRequestActivity.this,new IBagroundListener() {
             @Override
             public void bagroundData(String json) {
                 JSONArray ja_batch_table,ja_batchdata_table;
@@ -489,24 +488,24 @@ public class EnrollRequestActivity extends AppCompatActivity {
     public void insertEnrollRequest(){
 
         Log.e("BatchID:--",""+batchid);
-        hashMap.clear();
-        hashMap.put("StudentId",studentid);
-        hashMap.put("OrgId",orgid);
-        hashMap.put("CourseId",courseid);
-        hashMap.put("BranchId",branchid);
-        hashMap.put("BatchId",batchid);
-        hashMap.put("startDate",startdate);
-        hashMap.put("endDate",enddate);
+        HashMap<String,String> hmap=new HashMap<>();
+        hmap.put("StudentId",studentid);
+        hmap.put("OrgId",orgid);
+        hmap.put("CourseId",courseid);
+        hmap.put("BranchId",branchid);
+        hmap.put("BatchId",batchid);
+        hmap.put("startDate",startdate);
+        hmap.put("endDate",enddate);
         String androidid= Settings.Secure.getString(getApplicationContext().getContentResolver(), Settings.Secure.ANDROID_ID);
         String timeStamp = new java.text.SimpleDateFormat("yyyy-MM-dd").format(Calendar.getInstance(TimeZone.getDefault()).getTime());
-        hashMap.put("DeviceId",androidid);
-        hashMap.put("StartDate",timeStamp);
-        hashMap.put("feetype","INR");
-        hashMap.put("feeamount",feeamount);
-        hashMap.put("feetax",feetax);
-        hashMap.put("totalfee",totalfee);
-        hashMap.put("activationkey",CreateRandomString(8));
-        new BagroundTask(URLClass.hosturl+"insertEnrollRequest.php",hashMap,EnrollRequestActivity.this,new IBagroundListener() {
+        hmap.put("DeviceId",androidid);
+        hmap.put("StartDate",timeStamp);
+        hmap.put("feetype","INR");
+        hmap.put("feeamount",feeamount);
+        hmap.put("feetax",feetax);
+        hmap.put("totalfee",totalfee);
+        hmap.put("activationkey",CreateRandomString(8));
+        new BagroundTask(URLClass.hosturl+"insertEnrollRequest.php",hmap,EnrollRequestActivity.this,new IBagroundListener() {
             @Override
             public void bagroundData(String json) {
                 try{

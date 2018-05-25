@@ -38,7 +38,6 @@ import java.util.concurrent.ExecutionException;
 
 public class ListofServers extends AppCompatActivity {
 
-    HashMap<String,String> hmap=new HashMap<>();
     ArrayList<SingleServer> serverList=new ArrayList<>();
     LinearLayoutManager myLayoutManager;
     SharedPreferences.Editor editor;
@@ -191,7 +190,7 @@ public class ListofServers extends AppCompatActivity {
     }
 
     public void getLocalServersData(){
-        hmap.clear();
+        HashMap<String,String> hmap=new HashMap<>();
         hmap.put("studentId",studentid);
         new BagroundTask(URLClass.hosturl +"getAllLocalServers.php",hmap,ListofServers.this, new IBagroundListener() {
             @Override
