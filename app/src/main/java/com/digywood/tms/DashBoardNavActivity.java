@@ -60,17 +60,6 @@ public class DashBoardNavActivity extends AppCompatActivity implements Navigatio
         tv_connection=toolbar.findViewById(R.id.tv_connection);
         setSupportActionBar(toolbar);
 
-        new AsyncCheckInternet(DashBoardNavActivity.this,new INetStatus() {
-            @Override
-            public void inetSatus(Boolean netStatus) {
-                if (netStatus) {
-                    tv_connection.setText("Central Host");
-                }
-                else{
-                    tv_connection.setText("Not Connected");
-                }
-            }
-        });
         myhelper=new DBHelper(this);
 
         restoredprefs = getSharedPreferences("SERVERPREF", MODE_PRIVATE);
@@ -95,6 +84,18 @@ public class DashBoardNavActivity extends AppCompatActivity implements Navigatio
             tv_studentid.setText(studentid);
             if(cmgintent.getStringExtra("connection") != null){
                 tv_connection.setText(cmgintent.getStringExtra("connection"));
+            }else{
+                new AsyncCheckInternet(DashBoardNavActivity.this,new INetStatus() {
+                    @Override
+                    public void inetSatus(Boolean netStatus) {
+                        if (netStatus) {
+                            tv_connection.setText("Central Host");
+                        }
+                        else{
+                            tv_connection.setText("Not Connected");
+                        }
+                    }
+                }).execute();
             }
         }
 
@@ -354,7 +355,7 @@ public class DashBoardNavActivity extends AppCompatActivity implements Navigatio
                         }
                     }
                     else {
-                        Log.e("AssesmentTests--","No AssesmentTests: ");
+                        Log.e("AssessmentTests--","No AssessmentTests: ");
                     }
 
                     Object obj6=myObj.get("testdata");
