@@ -37,7 +37,7 @@ public class ScoreActivity extends AppCompatActivity {
     DBHelper dataObj;
     AlertDialog alertDialog;
     RelativeLayout rootLayout;
-    String studentId,enrollid,subjectid,courseid,paperid,testId,testType;
+    String instanceId,studentId,enrollid,subjectid,courseid,paperid,testId,testType;
     String sec_questions,sec_attempted,sec_skipped,sec_correct,sec_wrong,sec_percentage,subcat_questions,subcat_attempted,subcat_skipped,subcat_correct,subcat_percentage;
     TextView tv_test,tv_course,tv_subject,tv_attempted,tv_skipped,tv_bookmarked,tv_totalQuestions,tv_totalCorrect,tv_totalWrong,tv_totalNegative,tv_totalPositive,tv_totalScore,tv_totalPercentage;
     Button btn_save,btn_details;
@@ -78,6 +78,8 @@ public class ScoreActivity extends AppCompatActivity {
         testType = bundle.getString("Type");
         Intent intent = getIntent();
         studentId = intent.getStringExtra("studentid");
+        instanceId = intent.getStringExtra("instanceid");
+
         Log.e("stutest-->",studentId);
         rootLayout = findViewById(R.id.rootLayout);
 
@@ -168,7 +170,7 @@ public class ScoreActivity extends AppCompatActivity {
                     Percentage = (  TotalScore / MaxMarks )*100;
                 }
 
-                flag = dataObj.UpdateAssessment( attempt.getString("atu_ID"),enrollid,"",courseid,subjectid,paperid, 2,null,TotalScore, dataObj.getAssessmentQuestionAttempted(), dataObj.getAssessmentQuestionSkipped(), dataObj.getAssessmentQuestionBookmarked(), dataObj.getAssessmentQuestionNotAttempted(),Percentage , 0, 0, 0);
+                flag = dataObj.UpdateAssessment( attempt.getString("atu_ID"),instanceId,enrollid,"",courseid,subjectid,paperid, 2,null,TotalScore, dataObj.getAssessmentQuestionAttempted(), dataObj.getAssessmentQuestionSkipped(), dataObj.getAssessmentQuestionBookmarked(), dataObj.getAssessmentQuestionNotAttempted(),Percentage , 0, 0, 0);
                 Cursor mycursor=dataObj.getAssessmentRawData(testId);
                 if(mycursor.getCount()>0) {
                     while (mycursor.moveToNext()) {
@@ -191,7 +193,7 @@ public class ScoreActivity extends AppCompatActivity {
                     if (testType.equalsIgnoreCase("PRACTICE")) {
                         cursor = dataObj.getSections(testId);
                     }else{
-                        cursor = dataObj.getAssessmentSections();
+                        cursor = dataObj.getAssessmentSections(testId);
                     }
                     ArrayList<String> secList = new ArrayList<>();
                     if(cursor.getCount() > 0){

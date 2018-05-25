@@ -253,29 +253,31 @@ public class DBHelper extends SQLiteOpenHelper {
         db.execSQL(AttemptList);
 
         String AssesmentTestList ="CREATE TABLE `Assesment_list` (\n"+
-                "   `Assesment_Test_ID` TEXT,\n"+
-                "   `Assesment_enrollId` TEXT DEFAULT NULL,\n"+
-                "   `Assesment_studentId` TEXT DEFAULT NULL,\n"+
-                "   `Assesment_courseId` TEXT DEFAULT NULL,\n"+
-                "   `Assesment_subjectId` TEXT DEFAULT NULL,\n"+
-                "   `Assesment_paperId` TEXT DEFAULT NULL,\n"+
-                "   `Assesment_Status` int(5) NOT NULL,\n"+
-                "   `Assesment_Started_dttm` datetime DEFAULT NULL,\n" +
-                "   `Assesment_RemainingTime` int(5) DEFAULT NULL,\n"+
-                "   `Assesment_LastQuestion` int(5) DEFAULT NULL,\n"+
-                "   `Assesment_LastSection` int(5) DEFAULT NULL,\n"+
-                "   `Assesment_Confirmed` int(5) DEFAULT NULL,\n"+
-                "   `Assesment_Skipped` int(5) DEFAULT NULL,\n"+
-                "   `Assesment_Bookmarked` int(5) DEFAULT NULL,\n"+
-                "   `Assesment_UnAttempted` int(5) DEFAULT NULL,\n"+
-                "   `Assesment_Score` double DEFAULT NULL,\n"+
-                "   `Assesment_Percentage` double DEFAULT NULL)";
+                "   `Assessment_Test_ID` TEXT,\n"+
+                "   `Assessment_Instance_ID` TEXT,\n"+
+                "   `Assessment_enrollId` TEXT DEFAULT NULL,\n"+
+                "   `Assessment_studentId` TEXT DEFAULT NULL,\n"+
+                "   `Assessment_courseId` TEXT DEFAULT NULL,\n"+
+                "   `Assessment_subjectId` TEXT DEFAULT NULL,\n"+
+                "   `Assessment_paperId` TEXT DEFAULT NULL,\n"+
+                "   `Assessment_Status` int(5) NOT NULL,\n"+
+                "   `Assessment_Started_dttm` datetime DEFAULT NULL,\n" +
+                "   `Assessment_RemainingTime` int(5) DEFAULT NULL,\n"+
+                "   `Assessment_LastQuestion` int(5) DEFAULT NULL,\n"+
+                "   `Assessment_LastSection` int(5) DEFAULT NULL,\n"+
+                "   `Assessment_Confirmed` int(5) DEFAULT NULL,\n"+
+                "   `Assessment_Skipped` int(5) DEFAULT NULL,\n"+
+                "   `Assessment_Bookmarked` int(5) DEFAULT NULL,\n"+
+                "   `Assessment_UnAttempted` int(5) DEFAULT NULL,\n"+
+                "   `Assessment_Score` double DEFAULT NULL,\n"+
+                "   `Assessment_Percentage` double DEFAULT NULL)";
         db.execSQL(AssesmentTestList);
 
 
         String AttemptData=" CREATE TABLE `attempt_data` (\n"+
                 "   `Test_ID` varchar(15),\n" +
                 "   `Attempt_ID` TEXT,\n"+
+                "   `Student_ID` TEXT,\n"+
                 "   `Question_ID` varchar(15),\n" +
                 "   `Question_Seq_No` varchar(15) DEFAULT NULL,\n" +
                 "   `Question_Section` varchar(15) DEFAULT NULL,\n" +
@@ -1532,13 +1534,14 @@ public class DBHelper extends SQLiteOpenHelper {
         }
         return AdvtprefList;
     }
-    public long InsertQuestion(String testId,String attemptId,String qId,String qSeq,String qSec,String cat,String subcat, double maxMarks,double negMarks,double marksObtained,double negApplied, int option,String status,String oSeq,String flag){
+    public long InsertQuestion(String testId,String attemptId,String stuId,String qId,String qSeq,String qSec,String cat,String subcat, double maxMarks,double negMarks,double marksObtained,double negApplied, int option,String status,String oSeq,String flag){
 
         long insertFlag=0;
 
         ContentValues cv = new ContentValues();
         cv.put("Test_ID", testId);
         cv.put("Attempt_ID", attemptId);
+        cv.put("Student_ID", stuId);
         cv.put("Question_ID", qId);
         cv.put("Question_Seq_No", qSeq);
         cv.put("Question_Section", qSec);
@@ -1559,13 +1562,14 @@ public class DBHelper extends SQLiteOpenHelper {
         return insertFlag;
     }
 
-    public long UpdateQuestion(String testId,String attemptId,String qId,String qSeq,String qSec,String cat,String subcat, double maxMarks,double negMarks,double marksObtained,double negApplied, int option,String status,String oSeq,String flag){
+    public long UpdateQuestion(String testId,String attemptId,String stuId,String qId,String qSeq,String qSec,String cat,String subcat, double maxMarks,double negMarks,double marksObtained,double negApplied, int option,String status,String oSeq,String flag){
 
         long updateFlag=0;
 
         ContentValues cv = new ContentValues();
         cv.put("Test_ID", testId);
         cv.put("Attempt_ID", attemptId);
+        cv.put("Student_ID", stuId);
         cv.put("Question_ID", qId);
         cv.put("Question_Seq_No", qSeq);
         cv.put("Question_Section", qSec);
@@ -2074,12 +2078,13 @@ public class DBHelper extends SQLiteOpenHelper {
         return c;
     }
 
-    public long InsertAssessment( String testID,String eid,String sid,String cid,String subid,String pid,int status,String dateTime, double aScore, int attempted, int skipped, int bookmarked, int unattempted, double aperc,long aTime,int index,int pos){
+    public long InsertAssessment( String testID,String instID,String eid,String sid,String cid,String subid,String pid,int status,String dateTime, double aScore, int attempted, int skipped, int bookmarked, int unattempted, double aperc,long aTime,int index,int pos){
 
         long insertFlag=0;
 
         ContentValues cv = new ContentValues();
         cv.put("Assesment_Test_ID", testID);
+        cv.put("Assessment_Instance_ID", instID);
         cv.put("Assesment_enrollId", eid);
         cv.put("Assesment_studentId", sid);
         cv.put("Assesment_courseId", cid);
@@ -2100,11 +2105,12 @@ public class DBHelper extends SQLiteOpenHelper {
         return insertFlag;
     }
 
-    public long UpdateAssessment(String testID,String eid,String sid,String cid,String subid,String pid,int status,String dateTime, Double aScore, int attempted, int skipped, int bookmarked, int unattempted, double aperc,long aTime,int index,int pos){
+    public long UpdateAssessment(String testID,String instID, String eid,String sid,String cid,String subid,String pid,int status,String dateTime, Double aScore, int attempted, int skipped, int bookmarked, int unattempted, double aperc,long aTime,int index,int pos){
 
         long updateFlag=0;
 
         ContentValues cv = new ContentValues();
+        cv.put("Assessment_Instance_ID", instID);
         cv.put("Assesment_enrollId", eid);
         cv.put("Assesment_studentId", sid);
         cv.put("Assesment_courseId", cid);
@@ -2210,8 +2216,8 @@ public class DBHelper extends SQLiteOpenHelper {
         return updateFlag;
     }
 
-    public Cursor getAssessmentSections(){
-        String query ="SELECT DISTINCT Question_Section FROM assessment_data";
+    public Cursor getAssessmentSections(String testId){
+        String query ="SELECT DISTINCT Question_Section FROM assessment_data WHERE Assessment_Test_ID = '"+testId+"'";
         Cursor c=db.rawQuery(query,null);
         return c;
     }

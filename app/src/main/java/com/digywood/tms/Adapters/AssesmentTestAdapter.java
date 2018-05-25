@@ -158,6 +158,7 @@ public class AssesmentTestAdapter extends RecyclerView.Adapter<AssesmentTestAdap
 
                             Intent i = new Intent(mycontext, AssessmentTestActivity.class);
                             i.putExtra("studentid", studentid);
+                            i.putExtra("instanceid", singletest.getInstanceId());
                             i.putExtra("JSON", assessment);
                             i.putExtra("enrollid",enrollid);
                             i.putExtra("test", testid);
