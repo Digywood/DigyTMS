@@ -297,7 +297,7 @@ public class DashBoardNavActivity extends AppCompatActivity implements Navigatio
                                             testObj.getString("lastAttemptDttm"),testObj.getDouble("lastAttemptScore"), testObj.getString("sptu_created_by"),testObj.getString("sptu_created_dttm"),testObj.getString("sptu_mod_by"),
                                             testObj.getString("sptu_mod_dttm"));
                                     if(insertFlag>0){
-                                        Log.e("INSERTEDTEST:---",""+testObj.getString("sptu_ID"));
+//                                        Log.e("INSERTEDTEST:---","sid:--"+testObj.getString("sptu_student_ID")+"  eid:--"+testObj.getString("sptu_entroll_id")+"  tid:--"+testObj.getString("sptu_ID"));
                                         p++;
                                     }else {
                                         q++;
@@ -378,7 +378,7 @@ public class DashBoardNavActivity extends AppCompatActivity implements Navigatio
 
                                 testdataObj=ja_tdata.getJSONObject(i);
 
-                                Cursor mycursor=myhelper.checkTestAggrigateData(testdataObj.getString("testId"),testdataObj.getString("testType"));
+                                Cursor mycursor=myhelper.checkTestAggrigateData(testdataObj.getString("testId"),testdataObj.getString("test_batchId"),testdataObj.getString("testType"));
 
                                 if(mycursor.getCount()>0){
 
@@ -1046,6 +1046,12 @@ public class DashBoardNavActivity extends AppCompatActivity implements Navigatio
                                     Log.e("DBNActivity---","updated_assesstestQ_rec:--"+ja_assessmentKeys.length());
                                     for(int i=0;i<ja_assessmentKeys.length();i++){
                                         assessmentObj=ja_assessmentKeys.getJSONObject(i);
+//                                        int loc_upldflag=myhelper.checkAQUPLDStatus(studentid,assessmentObj.getString("assessmentKey"),"NotUploaded");
+//                                        if(loc_upldflag>0){
+//
+//                                        }else{
+//
+//                                        }
                                         long updateFlag=myhelper.updateAssessmentQStatus(studentid,assessmentObj.getString("assessmentKey"),"Uploaded");
                                         if(updateFlag>0){
                                             p++;

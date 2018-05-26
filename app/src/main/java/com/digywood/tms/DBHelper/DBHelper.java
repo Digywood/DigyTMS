@@ -492,7 +492,6 @@ public class DBHelper extends SQLiteOpenHelper {
         long updateFlag=0;
         ContentValues cv = new ContentValues();
         cv.put("test_OrgId",torgid);
-        cv.put("test_batchId",tbatchid);
         cv.put("test_courseId",tcourseid);
         cv.put("test_paperId",tpaperid);
         cv.put("test_subjectId",tsubjectid);
@@ -507,12 +506,12 @@ public class DBHelper extends SQLiteOpenHelper {
         cv.put("createdDttm",cdttm);
         cv.put("modifiedBy",modifiedby);
         cv.put("modifiedDttm",mdttm);
-        updateFlag=db.update("test_main", cv, "testId='"+tid+"' and testType='"+testtype+"'",null);
+        updateFlag=db.update("test_main", cv, "testId='"+tid+"' and test_batchId='"+tbatchid+"' and testType='"+testtype+"'",null);
         return updateFlag;
     }
 
-    public Cursor checkTestAggrigateData(String testId,String testType){
-        Cursor c =db.query("test_main", new String[] {"testId,test_courseId,test_paperId,test_subjectId"},"testId='"+testId+"' and testType='"+testType+"'", null, null, null,null);
+    public Cursor checkTestAggrigateData(String testId,String batchId,String testType){
+        Cursor c =db.query("test_main", new String[] {"testId,test_courseId,test_paperId,test_subjectId"},"testId='"+testId+"' and test_batchId='"+batchId+"' and testType='"+testType+"'", null, null, null,null);
         return c;
     }
 
@@ -757,7 +756,7 @@ public class DBHelper extends SQLiteOpenHelper {
     }
 
     public Cursor getAssessmentTestSummary(String studentId,String enrollId,String testId){
-        String query ="SELECT count(*) as satu_attempts,MIN(Attempt_Percentage) as minscore,MAX(Attempt_Percentage) as maxscore,AVG(Attempt_Percentage) as avgscore FROM "+" sptu_student"+" WHERE sptu_ID='"+testId+"' and sptu_student_ID='"+studentId+"' and sptu_entroll_id='"+enrollId+"'";
+        String query ="SELECT count(*) as satu_attempts,MIN(satu_min_percent) as min_AScore,MAX(satu_max_percent) as max_AScore,AVG(satu_avg_percent) as avg_AScore,MAX(satu_last_attempt_end_dttm) as lastAttemptDttm FROM "+" satu_student"+" WHERE satu_student_id='"+studentId+"' and satu_entroll_id='"+enrollId+"' and satu_ID='"+testId+"'";
         Cursor c=db.rawQuery(query,null);
         return c;
     }
@@ -1170,8 +1169,6 @@ public class DBHelper extends SQLiteOpenHelper {
         long updateFlag=0;
         ContentValues cv = new ContentValues();
         cv.put("sptu_org_id",torgid);
-        cv.put("sptu_entroll_id",tenrollid);
-        cv.put("sptu_student_ID",tstudentid);
         cv.put("sptu_batch",tbatch);
         cv.put("sptu_paper_ID",tpid);
         cv.put("sptu_subjet_ID",tsid);
@@ -1202,7 +1199,7 @@ public class DBHelper extends SQLiteOpenHelper {
         cv.put("sptu_created_dttm",cdttm);
         cv.put("sptu_mod_by",modifiedby);
         cv.put("sptu_mod_dttm",mdttm);
-        updateFlag = db.update("sptu_student", cv,"sptu_ID='"+tid+"'",null);
+        updateFlag = db.update("sptu_student", cv,"sptu_ID='"+tid+"' and sptu_entroll_id='"+tenrollid+"' and sptu_student_ID='"+tstudentid+"'",null);
         return updateFlag;
     }
 
@@ -1256,12 +1253,12 @@ public class DBHelper extends SQLiteOpenHelper {
     }
 
     public Cursor getTestDataByPaper(String studentId,String enrollId,String paperid){
-        Cursor c =db.query("sptu_student", new String[] {"sptu_entroll_id,sptu_student_ID,sptu_ID,sptu_name"},"sptu_student_ID='"+studentId+"' and sptu_entroll_id="+enrollId+"' and sptu_paper_ID='"+paperid+"'", null, null, null,null);
+        Cursor c =db.query("sptu_student", new String[] {"sptu_entroll_id,sptu_student_ID,sptu_ID,sptu_name"},"sptu_student_ID='"+studentId+"' and sptu_entroll_id='"+enrollId+"' and sptu_paper_ID='"+paperid+"'", null, null, null,null);
         return c;
     }
 
     public Cursor getATestDataByPaper(String studentId,String enrollId,String paperid){
-        Cursor c =db.query("sptu_student", new String[] {"satu_org_id,satu_instace_id,satu_ID,satu_name"},"satu_student_id='"+studentId+"' and satu_entroll_id="+enrollId+"' and satu_paper_ID='"+paperid+"'", null, null, null,null);
+        Cursor c =db.query("satu_student", new String[] {"satu_org_id,satu_instace_id,satu_ID,satu_name"},"satu_student_id='"+studentId+"' and satu_entroll_id='"+enrollId+"' and satu_paper_ID='"+paperid+"'", null, null, null,null);
         return c;
     }
 
@@ -2281,6 +2278,11 @@ public class DBHelper extends SQLiteOpenHelper {
         cv.put("Question_Upload_Status",status );
         updateFlag = db.update("assessment_data",cv,"StudentId='"+studentId+"' and Question_Key='"+testQUID+"'",null);
         return updateFlag;
+    }
+
+    public int checkAQUPLDStatus(String studentId,String testQUID,String status){
+        Cursor c =db.query("assessment_data", new String[] {"StudentId,Question_Upload_Status"},"StudentId='"+studentId+"' and Question_Key='"+testQUID+"' and Question_Upload_Status='"+status+"'", null, null, null,null);
+        return c.getCount();
     }
 
     public Cursor getAssessmentSections(String testId){

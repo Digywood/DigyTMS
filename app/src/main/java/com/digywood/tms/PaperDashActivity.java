@@ -286,7 +286,7 @@ public class PaperDashActivity extends AppCompatActivity {
         if (dashPaperList.size() != 0) {
             Log.e("Advtlist.size()", "comes:" + dashPaperList.size());
             tv_emptyptests.setVisibility(View.GONE);
-            pdAdp = new PaperDashAdapter(dashPaperList,PaperDashActivity.this,studentid,enrollid,"FLASH");
+            pdAdp = new PaperDashAdapter(dashPaperList,PaperDashActivity.this,studentid,enrollid,"ASSESSMENT");
             myLayoutManager = new LinearLayoutManager(PaperDashActivity.this,LinearLayoutManager.VERTICAL,false);
             rv_ptests.setLayoutManager(myLayoutManager);
             rv_ptests.setItemAnimator(new DefaultItemAnimator());
