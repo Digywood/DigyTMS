@@ -466,7 +466,7 @@ public class AssessmentTestActivity extends AppCompatActivity implements
                                                         Log.e("Insertion",""+instanceId);
                                                     }
                                                     SaveJSONdataToFile.objectToFile(URLClass.mainpath + path + testid + ".json", attempt.toString());
-                                                    syncAssesmentTestData();
+//                                                    syncAssesmentTestData();
                                                 } catch (JSONException|IOException e) {
                                                     e.printStackTrace();
                                                 }
@@ -867,7 +867,7 @@ public class AssessmentTestActivity extends AppCompatActivity implements
                                         Log.e("Insertion",""+instanceId);
                                     }
                                     SaveJSONdataToFile.objectToFile(URLClass.mainpath + path + testid + ".json", attempt.toString());
-                                    syncAssesmentTestData();
+//                                    syncAssesmentTestData();
                                 ActivityOptionsCompat options = ActivityOptionsCompat.
                                         makeSceneTransitionAnimation(AssessmentTestActivity.this, finish_view, "transition");
                                 int revealX = (int) (finish_view.getX() + finish_view.getWidth() / 2);
@@ -1127,98 +1127,98 @@ public class AssessmentTestActivity extends AppCompatActivity implements
         }
     }
 
-    public  void syncAssesmentTestData() {
-
-        JSONObject finalAssessmentObj=new JSONObject();
-        Cursor mycursor=dataObj.getAssessmentUploadData(studentId,"NotUploaded");
-        if(mycursor.getCount()>0){
-            try{
-                Log.e("Upload Count",""+mycursor.getCount());
-                JSONArray AssessmentList = new JSONArray();
-                JSONObject AssessmentTestQues;
-                while (mycursor.moveToNext()){
-                    AssessmentTestQues = new JSONObject();
-                    AssessmentTestQues.put("StudentId",mycursor.getString(mycursor.getColumnIndex("StudentId")));
-                    AssessmentTestQues.put("Org_ID",mycursor.getString(mycursor.getColumnIndex("Org_ID")));
-                    AssessmentTestQues.put("Branch_ID",mycursor.getString(mycursor.getColumnIndex("Branch_ID")));
-                    AssessmentTestQues.put("Batch_ID",mycursor.getString(mycursor.getColumnIndex("Batch_ID")));
-                    AssessmentTestQues.put("Test_ID",mycursor.getString(mycursor.getColumnIndex("Test_ID")));
-                    AssessmentTestQues.put("Assessment_Instance_ID",mycursor.getString(mycursor.getColumnIndex("Assessment_Instance_ID")));
-                    AssessmentTestQues.put("Question_Key",mycursor.getString(mycursor.getColumnIndex("Question_Key")));
-                    AssessmentTestQues.put("Question_ID",mycursor.getString(mycursor.getColumnIndex("Question_ID")));
-                    AssessmentTestQues.put("Question_Seq_No",mycursor.getString(mycursor.getColumnIndex("Question_Seq_No")));
-                    AssessmentTestQues.put("Question_Section",mycursor.getString(mycursor.getColumnIndex("Question_Section")));
-                    AssessmentTestQues.put("Question_Category",mycursor.getString(mycursor.getColumnIndex("Question_Category")));
-                    AssessmentTestQues.put("Question_SubCategory",mycursor.getString(mycursor.getColumnIndex("Question_SubCategory")));
-                    AssessmentTestQues.put("Question_Max_Marks",mycursor.getInt(mycursor.getColumnIndex("Question_Max_Marks")));
-                    AssessmentTestQues.put("Question_Negative_Marks",mycursor.getString(mycursor.getColumnIndex("Question_Negative_Marks")));
-                    AssessmentTestQues.put("Question_Marks_Obtained",mycursor.getString(mycursor.getColumnIndex("Question_Marks_Obtained")));
-                    AssessmentTestQues.put("Question_Negative_Applied",mycursor.getInt(mycursor.getColumnIndex("Question_Negative_Applied")));
-                    AssessmentTestQues.put("Question_Option",mycursor.getInt(mycursor.getColumnIndex("Question_Option")));
-                    AssessmentTestQues.put("Question_OptionCount",mycursor.getInt(mycursor.getColumnIndex("Question_OptionCount")));
-                    AssessmentTestQues.put("Question_Status",mycursor.getInt(mycursor.getColumnIndex("Question_Status")));
-                    AssessmentTestQues.put("Question_Upload_Status",mycursor.getInt(mycursor.getColumnIndex("Question_Upload_Status")));
-                    AssessmentTestQues.put("Question_Option_Sequence",mycursor.getDouble(mycursor.getColumnIndex("Question_Option_Sequence")));
-                    AssessmentTestQues.put("Option_Answer_Flag",mycursor.getInt(mycursor.getColumnIndex("Option_Answer_Flag")));
-                    AssessmentList.put(AssessmentTestQues);
-                }
-                finalAssessmentObj.put("AssessmentTestData",AssessmentList);
-                HashMap<String,String> hmap=new HashMap<>();
-                hmap.put("jsonstr",finalAssessmentObj.toString());
-                new BagroundTask(URLClass.hosturl+"syncAssessmentTestData.php", hmap,AssessmentTestActivity.this,new IBagroundListener() {
-                    @Override
-                    public void bagroundData(String json) {
-                        try{
-                            JSONArray ja_assessmentKeys;
-                            JSONObject assessmentObj;
-                            Log.e("json"," comes :  "+json);
-
-                            JSONObject mainObj=new JSONObject(json);
-
-                            Object obj1=mainObj.get("assessmentIds");
-
-                            if (obj1 instanceof JSONArray)
-                            {
-                                ja_assessmentKeys=mainObj.getJSONArray("assessmentIds");
-                                if(ja_assessmentKeys!=null && ja_assessmentKeys.length()>0){
-                                    int p=0,q=0;
-                                    Log.e("DBNActivity---","updated_assesstestQ_rec:--"+ja_assessmentKeys.length());
-                                    for(int i=0;i<ja_assessmentKeys.length();i++){
-                                        assessmentObj=ja_assessmentKeys.getJSONObject(i);
-                                        long updateFlag=dataObj.updateAssessmentQStatus(studentId,assessmentObj.getString("assessmentKey"),"Uploaded");
-                                        if(updateFlag>0){
-                                            p++;
-                                        }else{
-                                            q++;
-                                        }
-                                    }
-                                    Log.e("DBNActivity---","AQUpdated:--"+p);
-                                }else{
-                                    Log.e("ATESTQUPLDData--","Null Assessment Ques Json Array: ");
-                                }
-
-                            }
-                            else {
-                                Log.e("ATESTQUPLDData--","No Assessment Ques Uploaded: ");
-                            }
-
-                        }catch (Exception e){
-                            e.printStackTrace();
-                            Log.e("DashBoardNavActivity","  :  "+e.toString());
-                        }
-                    }
-                }).execute();
-
-            }catch (Exception e){
-                e.printStackTrace();
-                Log.e("DashNavActivity-----",e.toString());
-            }
-        }else{
-            mycursor.close();
-            Toast.makeText(getApplicationContext(),"No Assessment Ques Data to Upload",Toast.LENGTH_SHORT).show();
-        }
-
-    }
+//    public  void syncAssesmentTestData() {
+////instanceId
+//        JSONObject finalAssessmentObj=new JSONObject();
+//        Cursor mycursor=dataObj.getAssessmentUploadData(studentId,"NotUploaded");
+//        if(mycursor.getCount()>0){
+//            try{
+//                Log.e("Upload Count",""+mycursor.getCount());
+//                JSONArray AssessmentList = new JSONArray();
+//                JSONObject AssessmentTestQues;
+//                while (mycursor.moveToNext()){
+//                    AssessmentTestQues = new JSONObject();
+//                    AssessmentTestQues.put("StudentId",mycursor.getString(mycursor.getColumnIndex("StudentId")));
+//                    AssessmentTestQues.put("Org_ID",mycursor.getString(mycursor.getColumnIndex("Org_ID")));
+//                    AssessmentTestQues.put("Branch_ID",mycursor.getString(mycursor.getColumnIndex("Branch_ID")));
+//                    AssessmentTestQues.put("Batch_ID",mycursor.getString(mycursor.getColumnIndex("Batch_ID")));
+//                    AssessmentTestQues.put("Test_ID",mycursor.getString(mycursor.getColumnIndex("Test_ID")));
+//                    AssessmentTestQues.put("Assessment_Instance_ID",mycursor.getString(mycursor.getColumnIndex("Assessment_Instance_ID")));
+//                    AssessmentTestQues.put("Question_Key",mycursor.getString(mycursor.getColumnIndex("Question_Key")));
+//                    AssessmentTestQues.put("Question_ID",mycursor.getString(mycursor.getColumnIndex("Question_ID")));
+//                    AssessmentTestQues.put("Question_Seq_No",mycursor.getString(mycursor.getColumnIndex("Question_Seq_No")));
+//                    AssessmentTestQues.put("Question_Section",mycursor.getString(mycursor.getColumnIndex("Question_Section")));
+//                    AssessmentTestQues.put("Question_Category",mycursor.getString(mycursor.getColumnIndex("Question_Category")));
+//                    AssessmentTestQues.put("Question_SubCategory",mycursor.getString(mycursor.getColumnIndex("Question_SubCategory")));
+//                    AssessmentTestQues.put("Question_Max_Marks",mycursor.getInt(mycursor.getColumnIndex("Question_Max_Marks")));
+//                    AssessmentTestQues.put("Question_Negative_Marks",mycursor.getString(mycursor.getColumnIndex("Question_Negative_Marks")));
+//                    AssessmentTestQues.put("Question_Marks_Obtained",mycursor.getString(mycursor.getColumnIndex("Question_Marks_Obtained")));
+//                    AssessmentTestQues.put("Question_Negative_Applied",mycursor.getInt(mycursor.getColumnIndex("Question_Negative_Applied")));
+//                    AssessmentTestQues.put("Question_Option",mycursor.getInt(mycursor.getColumnIndex("Question_Option")));
+//                    AssessmentTestQues.put("Question_OptionCount",mycursor.getInt(mycursor.getColumnIndex("Question_OptionCount")));
+//                    AssessmentTestQues.put("Question_Status",mycursor.getInt(mycursor.getColumnIndex("Question_Status")));
+//                    AssessmentTestQues.put("Question_Upload_Status",mycursor.getInt(mycursor.getColumnIndex("Question_Upload_Status")));
+//                    AssessmentTestQues.put("Question_Option_Sequence",mycursor.getDouble(mycursor.getColumnIndex("Question_Option_Sequence")));
+//                    AssessmentTestQues.put("Option_Answer_Flag",mycursor.getInt(mycursor.getColumnIndex("Option_Answer_Flag")));
+//                    AssessmentList.put(AssessmentTestQues);
+//                }
+//                finalAssessmentObj.put("AssessmentTestData",AssessmentList);
+//                HashMap<String,String> hmap=new HashMap<>();
+//                hmap.put("jsonstr",finalAssessmentObj.toString());
+//                new BagroundTask(URLClass.hosturl+"syncAssessmentTestData.php", hmap,AssessmentTestActivity.this,new IBagroundListener() {
+//                    @Override
+//                    public void bagroundData(String json) {
+//                        try{
+//                            JSONArray ja_assessmentKeys;
+//                            JSONObject assessmentObj;
+//                            Log.e("json"," comes :  "+json);
+//
+//                            JSONObject mainObj=new JSONObject(json);
+//
+//                            Object obj1=mainObj.get("assessmentIds");
+//
+//                            if (obj1 instanceof JSONArray)
+//                            {
+//                                ja_assessmentKeys=mainObj.getJSONArray("assessmentIds");
+//                                if(ja_assessmentKeys!=null && ja_assessmentKeys.length()>0){
+//                                    int p=0,q=0;
+//                                    Log.e("DBNActivity---","updated_assesstestQ_rec:--"+ja_assessmentKeys.length());
+//                                    for(int i=0;i<ja_assessmentKeys.length();i++){
+//                                        assessmentObj=ja_assessmentKeys.getJSONObject(i);
+//                                        long updateFlag=dataObj.updateAssessmentQStatus(studentId,assessmentObj.getString("assessmentKey"),"Uploaded");
+//                                        if(updateFlag>0){
+//                                            p++;
+//                                        }else{
+//                                            q++;
+//                                        }
+//                                    }
+//                                    Log.e("DBNActivity---","AQUpdated:--"+p);
+//                                }else{
+//                                    Log.e("ATESTQUPLDData--","Null Assessment Ques Json Array: ");
+//                                }
+//
+//                            }
+//                            else {
+//                                Log.e("ATESTQUPLDData--","No Assessment Ques Uploaded: ");
+//                            }
+//
+//                        }catch (Exception e){
+//                            e.printStackTrace();
+//                            Log.e("DashBoardNavActivity","  :  "+e.toString());
+//                        }
+//                    }
+//                }).execute();
+//
+//            }catch (Exception e){
+//                e.printStackTrace();
+//                Log.e("DashNavActivity-----",e.toString());
+//            }
+//        }else{
+//            mycursor.close();
+//            Toast.makeText(getApplicationContext(),"No Assessment Ques Data to Upload",Toast.LENGTH_SHORT).show();
+//        }
+//
+//    }
 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
