@@ -231,7 +231,10 @@ public class TestDashActivity extends AppCompatActivity {
                         min=mycur.getDouble(mycur.getColumnIndex("min_AScore"));
                         max=mycur.getDouble(mycur.getColumnIndex("max_AScore"));
                         avg=mycur.getDouble(mycur.getColumnIndex("avg_AScore"));
-                        lastscore=mycur.getDouble(mycur.getColumnIndex("lastAttemptScore"));
+//                        lastscore=mycur.getDouble(mycur.getColumnIndex("lastAttemptScore"));
+//                        lastdate=mycur.getString(mycur.getColumnIndex("lastAttemptDttm"));
+
+                        lastscore=0.0;
                         lastdate=mycur.getString(mycur.getColumnIndex("lastAttemptDttm"));
                     }
                 }else{
