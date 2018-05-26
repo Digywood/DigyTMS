@@ -774,7 +774,7 @@ public class DBHelper extends SQLiteOpenHelper {
     }
 
     public Cursor getAssessmentSummary(String studentId,String enrollId){
-        String query ="SELECT count(distinct Assesment_Test_ID) as attemptacount,MIN(Assesment_Percentage) as minscore,MAX(Assesment_Percentage) as maxscore,AVG(Assesment_Percentage) as avgscore FROM "+"Assesment_list"+" WHERE Assesment_studentId ='"+studentId+"' and Assesment_enrollId ='"+enrollId+"'";
+        String query ="SELECT count(distinct Assessment_Test_ID) as attemptacount,MIN(Assessment_Percentage) as minscore,MAX(Assessment_Percentage) as maxscore,AVG(Assessment_Percentage) as avgscore FROM "+"Assessment_list"+" WHERE Assessment_studentId ='"+studentId+"' and Assessment_enrollId ='"+enrollId+"'";
         Cursor c=db.rawQuery(query,null);
         return c;
     }
@@ -792,7 +792,7 @@ public class DBHelper extends SQLiteOpenHelper {
     }
 
     public Cursor getAssessmentSummaryByPaper(String studentId,String enrollId,String paperId){
-        String query ="SELECT count(distinct Assesment_Test_ID) as attemptacount,MIN(Assesment_Percentage) as minscore,MAX(Assesment_Percentage) as maxscore,AVG(Assesment_Percentage) as avgscore FROM "+"Assesment_list"+" WHERE Assesment_studentId ='"+studentId+"' and Assesment_enrollId ='"+enrollId+"' and Assesment_paperId ='"+paperId+"'";
+        String query ="SELECT count(distinct Assessment_Test_ID) as attemptacount,MIN(Assessment_Percentage) as minscore,MAX(Assessment_Percentage) as maxscore,AVG(Assessment_Percentage) as avgscore FROM "+"Assessment_list"+" WHERE Assessment_studentId ='"+studentId+"' and Assessment_enrollId ='"+enrollId+"' and Assessment_paperId ='"+paperId+"'";
         Cursor c=db.rawQuery(query,null);
         return c;
     }
@@ -2077,6 +2077,12 @@ public class DBHelper extends SQLiteOpenHelper {
     }
 
     public Cursor getAssessmentUploadData(String studentId,String status){
+        String query ="SELECT * FROM assessment_data WHERE StudentId='"+studentId+"' and Question_Upload_Status ='"+status+"'";
+        Cursor c=db.rawQuery(query,null);
+        return  c;
+    }
+
+    public Cursor getATestwiseUploadData(String studentId,String instanceId,String status){
         String query ="SELECT * FROM assessment_data WHERE StudentId='"+studentId+"' and Question_Upload_Status ='"+status+"'";
         Cursor c=db.rawQuery(query,null);
         return  c;
