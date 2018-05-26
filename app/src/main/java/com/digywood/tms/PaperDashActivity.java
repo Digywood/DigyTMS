@@ -64,13 +64,15 @@ public class PaperDashActivity extends AppCompatActivity {
         tv_emptyptests=findViewById(R.id.tv_pfemptydata);
 
         if(testtype.equalsIgnoreCase("PRACTISE")){
-            getPapersByCourseP(courseid);
-        }else{
-            getPapersByCourseF(courseid);
+            getPapersByCourseP();
+        }else if(testtype.equalsIgnoreCase("FLASH")){
+            getPapersByCourseF();
+        }else if(testtype.equalsIgnoreCase("ASSESSMENT")){
+            getPapersByCourseA();
         }
     }
 
-    public void getPapersByCourseP(String courseid){
+    public void getPapersByCourseP(){
 
         paperids.clear();
         papernames.clear();
@@ -132,7 +134,7 @@ public class PaperDashActivity extends AppCompatActivity {
         setDataP();
     }
 
-    public void getPapersByCourseF(String courseid){
+    public void getPapersByCourseF(){
 
         paperids.clear();
         papernames.clear();
@@ -191,6 +193,65 @@ public class PaperDashActivity extends AppCompatActivity {
         setDataF();
     }
 
+    public void getPapersByCourseA(){
+
+        paperids.clear();
+        papernames.clear();
+        Cursor mycursor=myhelper.getPapersByCourse(courseid);
+        if(mycursor.getCount()>0){
+            while (mycursor.moveToNext()){
+                String paperid=mycursor.getString(mycursor.getColumnIndex("Paper_ID"));
+                String papername=mycursor.getString(mycursor.getColumnIndex("Paper_Name"));
+                paperids.add(paperid);
+                papernames.add(papername);
+            }
+            Log.e("PaperActivity----",""+paperids.size());
+            mycursor.close();
+        }else{
+            mycursor.close();
+        }
+
+        if(paperids.size()>0){
+
+            dashPaperList.clear();
+            int attemptcount=0;
+            double min=0.0,max=0.0,avg=0.0,bmin=0.0,bmax=0.0,bavg=0.0;
+
+            for(int i=0;i<paperids.size();i++){
+                int totaltestcount=myhelper.getAssessmentTestsByPaper(studentid,enrollid,paperids.get(i));
+
+                Cursor mycur=myhelper.getAssessmentSummaryByPaper(studentid,enrollid,paperids.get(i));
+                if(mycur.getCount()>0){
+                    while (mycur.moveToNext()){
+                        attemptcount=mycur.getInt(mycur.getColumnIndex("attemptacount"));
+                        min=mycur.getDouble(mycur.getColumnIndex("minscore"));
+                        max=mycur.getDouble(mycur.getColumnIndex("maxscore"));
+                        avg=mycur.getDouble(mycur.getColumnIndex("avgscore"));
+                    }
+                }else{
+                    mycur.close();
+                }
+
+                Cursor mycur1=myhelper.getPaperAggrigateData(paperids.get(i),"ASSESSMENT");
+                Log.e("PaperDashActivity--",""+mycur1.getCount());
+                if(mycur1.getCount()>0){
+                    while (mycur1.moveToNext()){
+                        bmin=mycur1.getDouble(mycur1.getColumnIndex("minscore"));
+                        bmax=mycur1.getDouble(mycur1.getColumnIndex("maxscore"));
+                        bavg=mycur1.getDouble(mycur1.getColumnIndex("avgscore"));
+                    }
+                }else{
+                    mycur1.close();
+                }
+
+                dashPaperList.add(new SingleDashPaper(paperids.get(i),papernames.get(i),totaltestcount,attemptcount,max,min,avg,bmin,bmax,bavg));
+
+            }
+        }
+
+        setDataA();
+    }
+
     public void setDataP(){
         if (dashPaperList.size() != 0) {
             Log.e("Advtlist.size()", "comes:" + dashPaperList.size());
@@ -201,7 +262,7 @@ public class PaperDashActivity extends AppCompatActivity {
             rv_ptests.setItemAnimator(new DefaultItemAnimator());
             rv_ptests.setAdapter(pdAdp);
         } else {
-            tv_emptyptests.setText("No Tests Attempt History");
+            tv_emptyptests.setText("No Practise Tests Attempt History");
             tv_emptyptests.setVisibility(View.VISIBLE);
         }
     }
@@ -216,7 +277,22 @@ public class PaperDashActivity extends AppCompatActivity {
             rv_ptests.setItemAnimator(new DefaultItemAnimator());
             rv_ptests.setAdapter(pdAdp);
         } else {
-            tv_emptyptests.setText("No Tests Attempt History");
+            tv_emptyptests.setText("No Flash Tests Attempt History");
+            tv_emptyptests.setVisibility(View.VISIBLE);
+        }
+    }
+
+    public void setDataA(){
+        if (dashPaperList.size() != 0) {
+            Log.e("Advtlist.size()", "comes:" + dashPaperList.size());
+            tv_emptyptests.setVisibility(View.GONE);
+            pdAdp = new PaperDashAdapter(dashPaperList,PaperDashActivity.this,studentid,enrollid,"FLASH");
+            myLayoutManager = new LinearLayoutManager(PaperDashActivity.this,LinearLayoutManager.VERTICAL,false);
+            rv_ptests.setLayoutManager(myLayoutManager);
+            rv_ptests.setItemAnimator(new DefaultItemAnimator());
+            rv_ptests.setAdapter(pdAdp);
+        } else {
+            tv_emptyptests.setText("No Assessment Tests Attempt History");
             tv_emptyptests.setVisibility(View.VISIBLE);
         }
     }

@@ -67,7 +67,7 @@ public class AssessmentFragment extends Fragment implements OnChartValueSelected
     Button btn_adetails;
     public PieChart mChart;
     public BarChart mChart1;
-    int totptestcount=0,attemptacount=0;
+    int totatestcount=0,attemptacount=0;
     float attemptpercent=0.0f;
     Double min=0.0,max=0.0,avg=0.0;
     ArrayList<SingleEnrollment> enrollPojos=new ArrayList<>();
@@ -451,8 +451,8 @@ public class AssessmentFragment extends Fragment implements OnChartValueSelected
     }
 
     public void updateData(){
-        totptestcount=myhelper.getATestsCount(studentid,enrollid);
-        tv_atottests.setText(""+totptestcount);
+        totatestcount=myhelper.getATestsCount(studentid,enrollid);
+        tv_atottests.setText(""+totatestcount);
 
         Cursor mycur1=myhelper.getAssessmentSummary(studentid,enrollid);
         if(mycur1.getCount()>0){
@@ -470,7 +470,7 @@ public class AssessmentFragment extends Fragment implements OnChartValueSelected
             mycur1.close();
         }
 
-        attemptpercent=(Float.parseFloat(String.valueOf(attemptacount))/totptestcount)*100;
+        attemptpercent=(Float.parseFloat(String.valueOf(attemptacount))/totatestcount)*100;
 
         mChart.animateXY(1400, 1400);
         setData(attemptpercent,100);
