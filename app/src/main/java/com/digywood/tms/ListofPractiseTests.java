@@ -27,9 +27,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 import org.json.JSONArray;
 import org.json.JSONObject;
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
 import java.util.ArrayList;
 import java.util.HashMap;
 import com.digywood.tms.Adapters.PractiseTestAdapter;
@@ -110,8 +107,6 @@ public class ListofPractiseTests extends AppCompatActivity {
             paperid=cmgintent.getStringExtra("paperid");
         }
 
-        Log.e("Test:--","Eid:---"+enrollid+"  Cid:---"+courseid+"  Pid:----"+paperid);
-
         getTestIdsFromLocal();
 
     }
@@ -119,7 +114,7 @@ public class ListofPractiseTests extends AppCompatActivity {
     public void getTestIdsFromLocal(){
         testidList.clear();
         try {
-            Cursor mycursor=myhelper.getStudentTests(studentid,enrollid,courseid,paperid,"A");
+            Cursor mycursor=myhelper.getStudentTests(studentid,enrollid,paperid,"A");
             if(mycursor.getCount()>0){
                 while (mycursor.moveToNext()) {
                     // only 1 test for enrollment EAA0000010

@@ -65,17 +65,19 @@ public class TestDashActivity extends AppCompatActivity {
         tv_emptytests=findViewById(R.id.tv_emptytestdata);
 
         if(testtype.equalsIgnoreCase("PRACTISE")){
-            getTestsByPaperP(paperid);
-        }else{
-            getTestsByPaperF(paperid);
+            getTestsByPaperP();
+        }else if(testtype.equalsIgnoreCase("FLASH")){
+            getTestsByPaperF();
+        }else if(testtype.equalsIgnoreCase("ASSESSMENT")){
+            getTestsByPaperA();
         }
 
     }
 
-    public void getTestsByPaperP(String paperid){
+    public void getTestsByPaperP(){
 
         testids.clear();
-        Cursor mycursor=myhelper.getTestDataByPaper(studentid,paperid);
+        Cursor mycursor=myhelper.getTestDataByPaper(studentid,enrollid,paperid);
         if(mycursor.getCount()>0){
             while (mycursor.moveToNext()){
                 String testid=mycursor.getString(mycursor.getColumnIndex("sptu_ID"));
@@ -98,7 +100,7 @@ public class TestDashActivity extends AppCompatActivity {
 
             for(int i=0;i<testids.size();i++){
 
-                Cursor mycur=myhelper.getTestPractiseSummary(testids.get(i),studentid);
+                Cursor mycur=myhelper.getTestPractiseSummary(testids.get(i),studentid,enrollid);
                 if(mycur.getCount()>0){
                     while (mycur.moveToNext()){
                         attemptcount=mycur.getInt(mycur.getColumnIndex("sptu_no_of_attempts"));
@@ -134,10 +136,10 @@ public class TestDashActivity extends AppCompatActivity {
         setDataP();
     }
 
-    public void getTestsByPaperF(String paperId){
+    public void getTestsByPaperF(){
 
         testids.clear();
-        Cursor mycursor=myhelper.getTestDataByPaper(studentid,paperId);
+        Cursor mycursor=myhelper.getTestDataByPaper(studentid,enrollid,paperid);
         if(mycursor.getCount()>0){
             while (mycursor.moveToNext()){
                 String testid=mycursor.getString(mycursor.getColumnIndex("sptu_ID"));
@@ -196,6 +198,68 @@ public class TestDashActivity extends AppCompatActivity {
         setDataF();
     }
 
+    public void getTestsByPaperA(){
+
+        testids.clear();
+        Cursor mycursor=myhelper.getATestDataByPaper(studentid,enrollid,paperid);
+        if(mycursor.getCount()>0){
+            while (mycursor.moveToNext()){
+                String testid=mycursor.getString(mycursor.getColumnIndex("satu_ID"));
+                String testname=mycursor.getString(mycursor.getColumnIndex("satu_name"));
+                testids.add(testid);
+                testnames.add(testname);
+            }
+            Log.e("PaperActivity----",""+testids.size());
+            mycursor.close();
+        }else{
+            mycursor.close();
+        }
+
+        if(testids.size()>0){
+
+            dashTestList.clear();
+            int attemptcount=0,minattempts=0,maxattepts=0,avgattempts=0;
+            double lastscore=0.0,min=0.0,max=0.0,avg=0.0,bmin=0.0,bmax=0.0,bavg=0.0;
+            String lastdate="";
+
+            for(int i=0;i<testids.size();i++){
+
+                Cursor mycur=myhelper.getAssessmentTestSummary(studentid,enrollid,testids.get(i));
+                if(mycur.getCount()>0){
+                    while (mycur.moveToNext()){
+                        attemptcount=mycur.getInt(mycur.getColumnIndex("satu_attempts"));
+                        min=mycur.getDouble(mycur.getColumnIndex("min_AScore"));
+                        max=mycur.getDouble(mycur.getColumnIndex("max_AScore"));
+                        avg=mycur.getDouble(mycur.getColumnIndex("avg_AScore"));
+                        lastscore=mycur.getDouble(mycur.getColumnIndex("lastAttemptScore"));
+                        lastdate=mycur.getString(mycur.getColumnIndex("lastAttemptDttm"));
+                    }
+                }else{
+                    mycur.close();
+                }
+
+                Cursor mycur1=myhelper.getTestAggrigateData(testids.get(i),"ASSESSMENT");
+                if(mycur1.getCount()>0){
+                    while (mycur1.moveToNext()){
+                        minattempts=mycur1.getInt(mycur1.getColumnIndex("minAttempts"));
+                        maxattepts=mycur1.getInt(mycur1.getColumnIndex("maxAttempts"));
+                        avgattempts=mycur1.getInt(mycur1.getColumnIndex("avgAttempts"));
+                        bmin=mycur1.getDouble(mycur1.getColumnIndex("minPercentage"));
+                        bmax=mycur1.getDouble(mycur1.getColumnIndex("maxPercentage"));
+                        bavg=mycur1.getDouble(mycur1.getColumnIndex("avgPercentage"));
+                    }
+                }else{
+                    mycur1.close();
+                }
+
+                dashTestList.add(new SingleDashTest(testids.get(i),testnames.get(i),attemptcount,lastdate,lastscore,"2018-05-04",min,max,avg,bmin,bmax,bavg,avgattempts,maxattepts,minattempts));
+
+            }
+        }
+
+        setDataA();
+    }
+
     public void setDataP(){
         if (dashTestList.size() != 0) {
             Log.e("testlist.size()", "comes:" + dashTestList.size());
@@ -206,7 +270,7 @@ public class TestDashActivity extends AppCompatActivity {
             rv_tests.setItemAnimator(new DefaultItemAnimator());
             rv_tests.setAdapter(tdAdp);
         } else {
-            tv_emptytests.setText("No Tests Attempt History");
+            tv_emptytests.setText("No Practise Tests Attempt History");
             tv_emptytests.setVisibility(View.VISIBLE);
         }
     }
@@ -221,7 +285,22 @@ public class TestDashActivity extends AppCompatActivity {
             rv_tests.setItemAnimator(new DefaultItemAnimator());
             rv_tests.setAdapter(tdAdp);
         } else {
-            tv_emptytests.setText("No Tests Attempt History");
+            tv_emptytests.setText("No Flash Tests Attempt History");
+            tv_emptytests.setVisibility(View.VISIBLE);
+        }
+    }
+
+    public void setDataA(){
+        if (dashTestList.size() != 0) {
+            Log.e("testlist.size()", "comes:" + dashTestList.size());
+            tv_emptytests.setVisibility(View.GONE);
+            tdAdp = new TestDashAdapter(dashTestList,TestDashActivity.this);
+            myLayoutManager = new LinearLayoutManager(TestDashActivity.this,LinearLayoutManager.VERTICAL,false);
+            rv_tests.setLayoutManager(myLayoutManager);
+            rv_tests.setItemAnimator(new DefaultItemAnimator());
+            rv_tests.setAdapter(tdAdp);
+        } else {
+            tv_emptytests.setText("No Assessment Tests Attempt History");
             tv_emptytests.setVisibility(View.VISIBLE);
         }
     }

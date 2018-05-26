@@ -45,6 +45,7 @@ public class DashBoardNavActivity extends AppCompatActivity implements Navigatio
 
     View header;
     Dialog mydialog;
+    int loc_count=0,serv_count=0;
     String testType="",restoredsname="",finalUrl="",serverId="";
     SharedPreferences restoredprefs;
     TextView tv_name,tv_email,tv_studentid,tv_connection;
@@ -646,6 +647,8 @@ public class DashBoardNavActivity extends AppCompatActivity implements Navigatio
 
     public  void syncPractiseTestData(){
 
+        loc_count=0;
+        serv_count=0;
         JSONObject finalPractiseObj=new JSONObject();
         Cursor mycursor=myhelper.getPractiseUploadData(studentid,"NotUploaded");
         if(mycursor.getCount()>0){
@@ -672,6 +675,7 @@ public class DashBoardNavActivity extends AppCompatActivity implements Navigatio
                     PractiseTest.put("Attempt_Score",mycursor.getDouble(mycursor.getColumnIndex("Attempt_Score")));
                     PrcatiseList.put(PractiseTest);
                 }
+                loc_count=PrcatiseList.length();
                 finalPractiseObj.put("PractiseData",PrcatiseList);
 
                 Cursor mycur=myhelper.getAllPTestData(studentid,"NotUploaded");
@@ -709,6 +713,7 @@ public class DashBoardNavActivity extends AppCompatActivity implements Navigatio
                             TestList.put(TestData);
                         }
                         Log.e("TestListSize:--",""+TestList.length());
+                        loc_count=loc_count+TestList.length();
                         finalPractiseObj.put("TestData",TestList);
                     }catch (Exception e){
                         e.printStackTrace();
@@ -724,12 +729,73 @@ public class DashBoardNavActivity extends AppCompatActivity implements Navigatio
                     @Override
                     public void bagroundData(String json) {
                         try{
+                            JSONArray ja_testIds,ja_practiseIds;
+                            JSONObject testObj=null,practiseObj=null;
                             Log.e("json"," comes :  "+json);
-                            if(json.equalsIgnoreCase("Inserted")){
-                                Toast.makeText(getApplicationContext(),"Practise Test Info Syncronised",Toast.LENGTH_SHORT).show();
-                            }else{
-                                Toast.makeText(getApplicationContext(),"Sorry,Try Again Later",Toast.LENGTH_SHORT).show();
+                            JSONObject mainObj=new JSONObject(json);
+
+                            Object obj1=mainObj.get("testIds");
+
+                            if (obj1 instanceof JSONArray)
+                            {
+                                ja_testIds=mainObj.getJSONArray("testIds");
+                                if(ja_testIds!=null && ja_testIds.length()>0){
+                                    int p=0,q=0;
+                                    serv_count=ja_testIds.length();
+                                    Log.e("DBNActivity---","updated_test_rec:--"+ja_testIds.length());
+                                    for(int i=0;i<ja_testIds.length();i++){
+                                        testObj=ja_testIds.getJSONObject(i);
+                                        long updateFlag=myhelper.updatePTestUPLDStatus(studentid,testObj.getString("testId"),"Uploaded");
+                                        if(updateFlag>0){
+                                            p++;
+                                        }else{
+                                            q++;
+                                        }
+                                    }
+                                    Log.e("DBNActivity---","TUpdated:--"+p);
+                                }else{
+                                    Log.e("TestUPLDData--","Null Tests Json Array: ");
+                                }
+
                             }
+                            else {
+                                Log.e("TestUPLDData--","No Tests Uploaded: ");
+                            }
+
+                            Object obj2=mainObj.get("practiseIds");
+
+                            if (obj2 instanceof JSONArray)
+                            {
+                                ja_practiseIds=mainObj.getJSONArray("practiseIds");
+                                if(ja_practiseIds.length()>0 && ja_practiseIds!=null){
+                                    int p=0,q=0;
+                                    serv_count=serv_count+ja_practiseIds.length();
+                                    Log.e("DBNActivity---","updated_prcatise_rec:--"+ja_practiseIds.length());
+                                    for(int i=0;i<ja_practiseIds.length();i++){
+                                        practiseObj=ja_practiseIds.getJSONObject(i);
+                                        long updateFlag=myhelper.updatePAttemptStatus(studentid,practiseObj.getString("Attempt_ID"),"Uploaded");
+                                        if(updateFlag>0){
+                                            p++;
+                                        }else{
+                                            q++;
+                                        }
+                                    }
+                                    Log.e("DBNActivity---","FUpdated:--"+p);
+                                }else{
+                                    Log.e("PrcatiseUPLDData--","Null Prcatise Tests Json Array: ");
+                                }
+
+                            }
+                            else {
+                                Log.e("PrcatiseUPLDData--","No Prcatise Tests Uploaded: ");
+                            }
+
+                            if(loc_count==serv_count){
+                                Toast.makeText(getApplicationContext(),"Syncronised",Toast.LENGTH_SHORT).show();
+                            }else {
+                                Toast.makeText(getApplicationContext(),"Sync Failed,Try Again Later",Toast.LENGTH_SHORT).show();
+                            }
+
                         }catch (Exception e){
                             e.printStackTrace();
                             Log.e("DashBoardNavActivity","  :  "+e.toString()+"lineno:--"+e.getStackTrace()[0].getLineNumber());
@@ -750,6 +816,8 @@ public class DashBoardNavActivity extends AppCompatActivity implements Navigatio
 
     public  void syncFlashCardData(){
 
+        loc_count=0;
+        serv_count=0;
         JSONObject finalFlashObj=new JSONObject();
 
         Cursor mycursor=myhelper.getFlashUploadData(studentid,"NotUploaded");
@@ -777,6 +845,7 @@ public class DashBoardNavActivity extends AppCompatActivity implements Navigatio
                     FlashList.put(FlashData);
                 }
 
+                loc_count=FlashList.length();
                 finalFlashObj.put("FlashData",FlashList);
 
                 Cursor mycur=myhelper.getAllPTestData(studentid,"NotUploaded");
@@ -814,6 +883,7 @@ public class DashBoardNavActivity extends AppCompatActivity implements Navigatio
                             TestList.put(TestData);
                         }
                         Log.e("TestListSize:--",""+TestList.length());
+                        loc_count=loc_count+TestList.length();
                         finalFlashObj.put("TestData",TestList);
                     }catch (Exception e){
                         e.printStackTrace();
@@ -841,6 +911,7 @@ public class DashBoardNavActivity extends AppCompatActivity implements Navigatio
                                 ja_testIds=mainObj.getJSONArray("testIds");
                                 if(ja_testIds!=null && ja_testIds.length()>0){
                                     int p=0,q=0;
+                                    serv_count=ja_testIds.length();
                                     Log.e("DBNActivity---","updated_test_rec:--"+ja_testIds.length());
                                     for(int i=0;i<ja_testIds.length();i++){
                                         testObj=ja_testIds.getJSONObject(i);
@@ -868,6 +939,7 @@ public class DashBoardNavActivity extends AppCompatActivity implements Navigatio
                                 ja_flashIds=mainObj.getJSONArray("flashIds");
                                 if(ja_flashIds.length()>0 && ja_flashIds!=null){
                                     int p=0,q=0;
+                                    serv_count=serv_count+ja_flashIds.length();
                                     Log.e("DBNActivity---","updated_flash_rec:--"+ja_flashIds.length());
                                     for(int i=0;i<ja_flashIds.length();i++){
                                         flashObj=ja_flashIds.getJSONObject(i);
@@ -886,6 +958,12 @@ public class DashBoardNavActivity extends AppCompatActivity implements Navigatio
                             }
                             else {
                                 Log.e("FlashUPLDData--","No Flash Tests Uploaded: ");
+                            }
+
+                            if(loc_count==serv_count){
+                                Toast.makeText(getApplicationContext(),"Syncronised",Toast.LENGTH_SHORT).show();
+                            }else {
+                                Toast.makeText(getApplicationContext(),"Sync Failed,Try Again Later",Toast.LENGTH_SHORT).show();
                             }
 
                         }catch (Exception e){
@@ -908,6 +986,8 @@ public class DashBoardNavActivity extends AppCompatActivity implements Navigatio
 
     public  void syncAssesmentTestData(){
 
+        loc_count=0;
+        serv_count=0;
         JSONObject finalAssessmentObj=new JSONObject();
         Cursor mycursor=myhelper.getAssessmentUploadData(studentid,"NotUploaded");
         if(mycursor.getCount()>0){
@@ -940,6 +1020,7 @@ public class DashBoardNavActivity extends AppCompatActivity implements Navigatio
                     AssessmentTestQues.put("Option_Answer_Flag",mycursor.getInt(mycursor.getColumnIndex("Option_Answer_Flag")));
                     AssessmentList.put(AssessmentTestQues);
                 }
+                loc_count=AssessmentList.length();
                 finalAssessmentObj.put("AssessmentTestData",AssessmentList);
 
                 HashMap<String,String> hmap=new HashMap<>();
@@ -961,6 +1042,7 @@ public class DashBoardNavActivity extends AppCompatActivity implements Navigatio
                                 ja_assessmentKeys=mainObj.getJSONArray("assessmentIds");
                                 if(ja_assessmentKeys!=null && ja_assessmentKeys.length()>0){
                                     int p=0,q=0;
+                                    serv_count=ja_assessmentKeys.length();
                                     Log.e("DBNActivity---","updated_assesstestQ_rec:--"+ja_assessmentKeys.length());
                                     for(int i=0;i<ja_assessmentKeys.length();i++){
                                         assessmentObj=ja_assessmentKeys.getJSONObject(i);
@@ -972,6 +1054,11 @@ public class DashBoardNavActivity extends AppCompatActivity implements Navigatio
                                         }
                                     }
                                     Log.e("DBNActivity---","AQUpdated:--"+p);
+                                    if(loc_count==serv_count){
+                                        Toast.makeText(getApplicationContext(),"Syncronised",Toast.LENGTH_SHORT).show();
+                                    }else {
+                                        Toast.makeText(getApplicationContext(),"Sync Failed,Try Again Later",Toast.LENGTH_SHORT).show();
+                                    }
                                 }else{
                                     Log.e("ATESTQUPLDData--","Null Assessment Ques Json Array: ");
                                 }
