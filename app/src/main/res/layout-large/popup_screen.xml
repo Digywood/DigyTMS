@@ -31,7 +31,7 @@
         android:layout_height="50dp"
         android:layout_alignParentBottom="true">
 
-        <Button android:id="@+id/close_button"
+        <Button android:id="@+id/pop_close_button"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:drawablePadding="3sp"

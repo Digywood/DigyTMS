@@ -182,6 +182,7 @@ public class DBHelper extends SQLiteOpenHelper {
         String tbl_satu_student="CREATE TABLE IF NOT EXISTS `satu_student` (\n" +
                 "  `satu_key` integer PRIMARY KEY,\n" +
                 "  `satu_org_id` text DEFAULT NULL,\n" +
+                "  `satu_branch_id` text DEFAULT NULL,\n" +
                 "  `satu_instace_id` varchar(25) DEFAULT NULL,\n" +
                 "  `satu_entroll_id` text DEFAULT NULL,\n" +
                 "  `satu_student_id` text DEFAULT NULL,\n" +
@@ -592,11 +593,12 @@ public class DBHelper extends SQLiteOpenHelper {
         return serverid;
     }
 
-    public long insertAssessmentTest(int tkey,String torgid,String tinstanceid,String tenrollid,String tstudentid,String tbatch,String tid,String tname,String tpid,String tsid,String tcid,String tstartdate,String tenddate,String tdwdstatus,int tnoofques,String testfilename,String testKey,Double ttotalmarks,Double tminmarks,Double tmaxmarks){
+    public long insertAssessmentTest(int tkey,String torgid,String branchid,String tinstanceid,String tenrollid,String tstudentid,String tbatch,String tid,String tname,String tpid,String tsid,String tcid,String tstartdate,String tenddate,String tdwdstatus,int tnoofques,String testfilename,String testKey,Double ttotalmarks,Double tminmarks,Double tmaxmarks){
         long insertFlag=0;
         ContentValues cv = new ContentValues();
         cv.put("satu_key",tkey);
         cv.put("satu_org_id",torgid);
+        cv.put("satu_branch_id",branchid);
         cv.put("satu_instace_id",tinstanceid);
         cv.put("satu_entroll_id",tenrollid);
         cv.put("satu_student_id",tstudentid);
@@ -619,10 +621,11 @@ public class DBHelper extends SQLiteOpenHelper {
         return insertFlag;
     }
 
-    public long updateAssessmentTest(String torgid,String tinstanceid,String tenrollid,String tstudentid,String tbatch,String tid,String tname,String tpid,String tsid,String tcid,String tstartdate,String tenddate,String tdwdstatus,int tnoofques,String testfilename,String testKey,Double ttotalmarks,Double tminmarks,Double tmaxmarks){
+    public long updateAssessmentTest(String torgid,String branchid,String tinstanceid,String tenrollid,String tstudentid,String tbatch,String tid,String tname,String tpid,String tsid,String tcid,String tstartdate,String tenddate,String tdwdstatus,int tnoofques,String testfilename,String testKey,Double ttotalmarks,Double tminmarks,Double tmaxmarks){
         long updateFlag=0;
         ContentValues cv = new ContentValues();
         cv.put("satu_org_id",torgid);
+        cv.put("satu_branch_id",branchid);
         cv.put("satu_batch",tbatch);
         cv.put("satu_name",tname);
         cv.put("satu_paper_ID",tpid);
@@ -663,8 +666,8 @@ public class DBHelper extends SQLiteOpenHelper {
         return c.getCount();
     }
 
-    public Cursor getAssessmentTestData(String testId){
-        Cursor c =db.query("satu_student", new String[] {"satu_course_id,satu_subjet_ID,satu_paper_ID,satu_entroll_id,satu_student_id,satu_batch,satu_org_id"},"satu_ID='"+testId+"'", null, null, null,null);
+    public Cursor getAssessmentTestData(String testId,String instanceId,String studentId,String enrollId){
+        Cursor c =db.query("satu_student", new String[] {"satu_course_id,satu_subjet_ID,satu_paper_ID,satu_entroll_id,satu_student_id,satu_batch,satu_org_id,satu_branch_id"},"satu_ID = '"+testId+"' and satu_entroll_id='"+enrollId+"' and satu_student_id='"+studentId+"' and satu_instace_id='"+instanceId+"'", null, null, null,null);
         return c;
     }
 
@@ -2082,6 +2085,12 @@ public class DBHelper extends SQLiteOpenHelper {
         return  c;
     }
 
+    public Cursor getAssessmentQuestionToBeUploadData(String studentId,String testId,String instanceId,String status){
+        String query ="SELECT * FROM assessment_data WHERE StudentId='"+studentId+"' and Question_Upload_Status ='"+status+"' and Test_ID ='"+testId+"' and Assessment_Instance_ID ='"+instanceId+"'";
+        Cursor c=db.rawQuery(query,null);
+        return  c;
+    }
+
     public Cursor getATestwiseUploadData(String studentId,String instanceId,String status){
         String query ="SELECT * FROM assessment_data WHERE StudentId='"+studentId+"' and Question_Upload_Status ='"+status+"'";
         Cursor c=db.rawQuery(query,null);
@@ -2286,6 +2295,14 @@ public class DBHelper extends SQLiteOpenHelper {
         return updateFlag;
     }
 
+    public long updateAssessmentQStatusFromServer(String studentId,String testId,String instanceId,String testQUID,String status){
+
+        long updateFlag=0;
+        ContentValues cv = new ContentValues();
+        cv.put("Question_Upload_Status",status );
+        updateFlag = db.update("assessment_data",cv,"StudentId='"+studentId+"' and Question_Key='"+testQUID+"' and Test_ID ='"+testId+"' and Assessment_Instance_ID ='"+instanceId+"'",null);
+        return updateFlag;
+    }
     public int checkAQUPLDStatus(String studentId,String testQUID,String status){
         Cursor c =db.query("assessment_data", new String[] {"StudentId,Question_Upload_Status"},"StudentId='"+studentId+"' and Question_Key='"+testQUID+"' and Question_Upload_Status='"+status+"'", null, null, null,null);
         return c.getCount();

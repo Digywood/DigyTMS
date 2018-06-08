@@ -14,6 +14,7 @@ import android.view.animation.AnimationUtils;
 import android.view.animation.LayoutAnimationController;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RelativeLayout;
 
@@ -32,7 +33,7 @@ public class OptionsCheckAdapter extends RecyclerView.Adapter<OptionsCheckAdapte
     RecyclerView rv;
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
-        public RelativeLayout option_layout;
+        public LinearLayout option_layout;
         public FrameLayout img_wrapper;
         public ImageView iv_opmedia;
         public RadioButton rb_option;

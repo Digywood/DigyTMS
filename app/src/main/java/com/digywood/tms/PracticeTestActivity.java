@@ -229,8 +229,7 @@ public class PracticeTestActivity extends AppCompatActivity implements
         }else{
             requestPermission();
         }
-        photoPath = URLClass.mainpath + path;
-        jsonPath = URLClass.mainpath + path + "Attempt/" + testid + ".json";
+
 
         Cursor cursor = dataObj.checkPractiseTest(studentId,testid);
         if (cursor.getCount() > 0) {
@@ -250,7 +249,8 @@ public class PracticeTestActivity extends AppCompatActivity implements
         save = new SaveJSONdataToFile();
         path = enrollid + "/" + courseid + "/" + subjectId + "/" + paperid + "/" + testid + "/";
         imgPath=URLClass.mainpath+enrollid+"/"+courseid+"/";
-
+        photoPath = URLClass.mainpath + path;
+        jsonPath = URLClass.mainpath + path + "Attempt/" + testid + ".json";
 
 //        imgPath=URLClass.mainpath+enrollid+"/"+courseid+"/";
 
@@ -403,7 +403,7 @@ public class PracticeTestActivity extends AppCompatActivity implements
                     String cid=questionobj.getString("qbm_ChapterID");
                     String sid=questionobj.getString("qbm_SubjectID");
                     b = BitmapFactory.decodeFile(imgPath+sid+"/"+pid+"/"+cid+"/"+questionobj.getString("qbm_image_file"));
-                    bitmap = BitmapFactory.decodeFile(imgPath+sid+"/"+pid+"/"+cid+"/"+questionobj.getString("qbm_qimage_file"));
+                    bitmap = BitmapFactory.decodeFile(imgPath+sid+"/"+pid+"/"+cid+"/"+questionobj.getString("qbm_QAdditional_Image"));
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -508,6 +508,7 @@ public class PracticeTestActivity extends AppCompatActivity implements
                                                 bundle.putString("Type","PRACTICE");
                                                 intent.putExtra("JSON", attempt.toString());
                                                 intent.putExtra("studentid",studentId);
+                                                intent.putExtra("testid",testid);
                                                 intent.putExtra("BUNDLE", bundle);
                                                 intent.putExtra("Xreveal", revealX);
                                                 intent.putExtra("Yreveal", revealY);
@@ -860,6 +861,7 @@ public class PracticeTestActivity extends AppCompatActivity implements
         finish.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                alertDialog.cancel();
                 AlertDialog alertbox = new AlertDialog.Builder(PracticeTestActivity.this)
                         .setMessage("Do you want to finish Test?" + " " + dataObj.getQuestionCount(testid))
                         .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
@@ -889,6 +891,7 @@ public class PracticeTestActivity extends AppCompatActivity implements
                                     intent.putExtra("JSON", attempt.toString());
                                     intent.putExtra("studentid",studentId);
                                     intent.putExtra("BUNDLE", bundle);
+                                    intent.putExtra("testid",testid);
                                     intent.putExtra("Xreveal", revealX);
                                     intent.putExtra("Yreveal", revealY);
                                     ActivityCompat.startActivity(PracticeTestActivity.this, intent, options.toBundle());
@@ -902,21 +905,15 @@ public class PracticeTestActivity extends AppCompatActivity implements
                             // do something when the button is clicked
                             public void onClick(DialogInterface arg0, int arg1) {
                                 toggle();
+                                alertDialog.show();
                                 btn_next.setText("Next");
                             }
                         })
                         .show();
-                alertbox.setOnCancelListener(new DialogInterface.OnCancelListener() {
-                    @Override
-                    public void onCancel(DialogInterface dialog) {
-                        toggle();
-                        btn_next.setText("Next");
-                    }
-                });
             }
         });
         Button cancelButton = layout.findViewById(R.id.close_button);
-        final AlertDialog alertDialog = dialogBuilder.create();
+        alertDialog = dialogBuilder.create();
         alertDialog.show();
         cancelButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -971,7 +968,7 @@ public class PracticeTestActivity extends AppCompatActivity implements
         ImageView cancel = layout.findViewById(R.id.iv_close);
         alertDialog = dialogBuilder.create();
         alertDialog.show();
-        alertDialog.getWindow().setLayout(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.MATCH_PARENT);
+        alertDialog.getWindow().setLayout(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.MATCH_PARENT);
         alertDialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
             @Override
             public void onCancel(DialogInterface dialog) {
@@ -1007,7 +1004,7 @@ public class PracticeTestActivity extends AppCompatActivity implements
         }
         qAdapter.setPointer(index);
         questionobj = array.getJSONObject(index);
-/*        if (questionobj.getString("qbm_QAdditional_Flag").equals("YES")) {
+        if (questionobj.getString("qbm_QAdditional_Flag").equalsIgnoreCase("YES")) {
             btn_qadditional.setEnabled(true);
             btn_qadditional.setClickable(true);
             btn_qadditional.setBackgroundColor(getResources().getColor(R.color.dull_yellow));
@@ -1015,7 +1012,7 @@ public class PracticeTestActivity extends AppCompatActivity implements
             btn_qadditional.setEnabled(false);
             btn_qadditional.setClickable(false);
             btn_qadditional.setBackgroundColor(0);
-        }*/
+        }
         if(listOfLists.get(pos).get(index).getQ_status().equalsIgnoreCase("ATTEMPTED")){
             btn_confirm.setBackgroundColor(Color.GREEN);
         }else{
@@ -1033,6 +1030,7 @@ public class PracticeTestActivity extends AppCompatActivity implements
         Bitmap b = BitmapFactory.decodeFile(imgPath+sid+"/"+pid+"/"+cid+"/"+questionobj.getString("qbm_image_file"));
         Log.e("qimage", photoPath + questionobj.getString("qbm_image_file"));
         question_img.setImageBitmap(b);
+        hide();
 /*        Animation fadeimage = AnimationUtils.loadAnimation(PracticeTestActivity.this, R.anim.fade_in);
         question_img.startAnimation(fadeimage);*/
 /*        question_img.setOnTouchListener(new View.OnTouchListener() {

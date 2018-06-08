@@ -331,11 +331,12 @@ public class DashBoardNavActivity extends AppCompatActivity implements Navigatio
                                 Cursor mycursor=myhelper.checkAssessmentTest(studentid,assesmentObj.getString("satu_entroll_id"),assesmentObj.getString("satu_ID"),assesmentObj.getString("satu_instace_id"));
 
                                 if(mycursor.getCount()>0){
-                                    long updateFlag=myhelper.updateAssessmentTest(assesmentObj.getString("satu_org_id"),assesmentObj.getString("satu_instace_id"),assesmentObj.getString("satu_entroll_id"),assesmentObj.getString("satu_student_id"),
+                                    long updateFlag=myhelper.updateAssessmentTest(assesmentObj.getString("satu_org_id"),assesmentObj.getString("satu_branch_id"),assesmentObj.getString("satu_instace_id"),assesmentObj.getString("satu_entroll_id"),assesmentObj.getString("satu_student_id"),
                                             assesmentObj.getString("satu_batch"),assesmentObj.getString("satu_ID"),assesmentObj.getString("satu_name"),assesmentObj.getString("satu_paper_ID"),assesmentObj.getString("satu_subjet_ID"),
                                             assesmentObj.getString("satu_course_id"),assesmentObj.getString("satu_start_date"),assesmentObj.getString("satu_end_date"),assesmentObj.getString("satu_dwnld_status"),
                                             assesmentObj.getInt("satu_no_of_questions"),assesmentObj.getString("satu_file"),assesmentObj.getString("satu_exam_key"),assesmentObj.getDouble("satu_tot_marks"),
                                             assesmentObj.getDouble("satu_min_marks"),assesmentObj.getDouble("satu_max_marks"));
+                                    Log.e("DBNav","orgid:"+assesmentObj.getString("satu_org_id")+",batchid:"+assesmentObj.getString("satu_batch")+",branchid:"+assesmentObj.getString("satu_branch_id"));
                                     if(updateFlag>0){
                                         r++;
                                     }else {
@@ -343,11 +344,12 @@ public class DashBoardNavActivity extends AppCompatActivity implements Navigatio
                                     }
                                 }else{
 
-                                    long insertFlag=myhelper.insertAssessmentTest(assesmentObj.getInt("satu_key"),assesmentObj.getString("satu_org_id"),assesmentObj.getString("satu_instace_id"),assesmentObj.getString("satu_entroll_id"),assesmentObj.getString("satu_student_id"),
+                                    long insertFlag=myhelper.insertAssessmentTest(assesmentObj.getInt("satu_key"),assesmentObj.getString("satu_org_id"),assesmentObj.getString("satu_branch_id"),assesmentObj.getString("satu_instace_id"),assesmentObj.getString("satu_entroll_id"),assesmentObj.getString("satu_student_id"),
                                             assesmentObj.getString("satu_batch"),assesmentObj.getString("satu_ID"),assesmentObj.getString("satu_name"),assesmentObj.getString("satu_paper_ID"),assesmentObj.getString("satu_subjet_ID"),
                                             assesmentObj.getString("satu_course_id"),assesmentObj.getString("satu_start_date"),assesmentObj.getString("satu_end_date"),assesmentObj.getString("satu_dwnld_status"),
                                             assesmentObj.getInt("satu_no_of_questions"),assesmentObj.getString("satu_file"),assesmentObj.getString("satu_exam_key"),assesmentObj.getDouble("satu_tot_marks"),
                                             assesmentObj.getDouble("satu_min_marks"),assesmentObj.getDouble("satu_max_marks"));
+                                    Log.e("DBNav","orgid:"+assesmentObj.getString("satu_org_id")+",batchid:"+assesmentObj.getString("satu_batch")+",branchid:"+assesmentObj.getString("satu_branch_id"));
                                     if(insertFlag>0){
                                         p++;
                                     }else {

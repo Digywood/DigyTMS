@@ -192,7 +192,7 @@ public class DownloadFileAsync extends AsyncTask<Void,String, String> {
     protected void onPostExecute(String filename)
     {
         super.onPostExecute(filename);
-        //((MainActivity)context). playCommertialAdds();
+
         if(mProgressDialog.isShowing() && mProgressDialog!=null){
             mProgressDialog.dismiss();
         }

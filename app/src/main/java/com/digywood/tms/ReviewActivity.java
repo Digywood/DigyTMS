@@ -326,7 +326,7 @@ public class ReviewActivity extends AppCompatActivity implements
                     String cid=questionobj.getString("qbm_ChapterID");
                     String sid=questionobj.getString("qbm_SubjectID");
                     b = BitmapFactory.decodeFile(imgPath+sid+"/"+pid+"/"+cid+"/"+questionobj.getString("qbm_image_file"));
-                    bitmap = BitmapFactory.decodeFile(imgPath+sid+"/"+pid+"/"+cid+"/"+questionobj.getString("qbm_qimage_file"));
+                    bitmap = BitmapFactory.decodeFile(imgPath+sid+"/"+pid+"/"+cid+"/"+questionobj.getString("qbm_QAdditional_Image"));
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -399,6 +399,7 @@ public class ReviewActivity extends AppCompatActivity implements
                                                 intent.putExtra("courseid", courseid);
                                                 intent.putExtra("subjectid", subjectId);
                                                 intent.putExtra("paperid",paperid);
+                                                intent.putExtra("testid",testid);
                                                 startActivity(intent);
                                             }
                                         })
@@ -651,13 +652,38 @@ public class ReviewActivity extends AppCompatActivity implements
         finish_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                exitByBackKey();
+                alertDialog.cancel();
+                AlertDialog alertbox = new AlertDialog.Builder(ReviewActivity.this)
+                        .setMessage("Do you want to finish Review?")
+                        .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+
+                            // do something when the button is clicked
+                            public void onClick(DialogInterface arg0, int arg1) {
+
+                                Intent intent = new Intent(ReviewActivity.this, ListofPractiseTests.class);
+                                intent.putExtra("studentid", studentId);
+                                intent.putExtra("enrollid",enrollid);
+                                intent.putExtra("courseid", courseid);
+                                intent.putExtra("subjectid", subjectId);
+                                intent.putExtra("paperid",paperid);
+                                intent.putExtra("testid",testid);
+                                startActivity(intent);
+                            }
+                        })
+                        .setNegativeButton("No", new DialogInterface.OnClickListener() {
+
+                            // do something when the button is clicked
+                            public void onClick(DialogInterface arg0, int arg1) {
+                                alertDialog.show();
+                                mHideRunnable.run();
+                            }
+                        }).show();
             }
         });
 
         Button cancelButton = layout.findViewById(R.id.close_button);
         cancelButton.setText("ScoreCard");
-        final AlertDialog alertDialog = dialogBuilder.create();
+        alertDialog = dialogBuilder.create();
         alertDialog.show();
         cancelButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -682,6 +708,7 @@ public class ReviewActivity extends AppCompatActivity implements
                 intent.putExtra("BUNDLE", bundle);
                 intent.putExtra("Xreveal", revealX);
                 intent.putExtra("Yreveal", revealY);
+                intent.putExtra("testid",testid);
                 ActivityCompat.startActivity(ReviewActivity.this, intent, options.toBundle());
 
             }
@@ -731,7 +758,7 @@ public class ReviewActivity extends AppCompatActivity implements
         ImageView cancel = layout.findViewById(R.id.iv_close);
         alertDialog = dialogBuilder.create();
         alertDialog.show();
-        alertDialog.getWindow().setLayout(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.MATCH_PARENT);
+        alertDialog.getWindow().setLayout(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.MATCH_PARENT);
         alertDialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
             @Override
             public void onCancel(DialogInterface dialog) {
@@ -977,7 +1004,7 @@ public class ReviewActivity extends AppCompatActivity implements
         }
         qAdapter.setPointer(index);
         questionobj = array.getJSONObject(index);
-        /*if (questionobj.getString("qbm_qimage_flag").equals("YES")) {
+        if (questionobj.getString("qbm_QAdditional_Flag").equals("YES")) {
             btn_qadditional.setEnabled(true);
             btn_qadditional.setClickable(true);
             btn_qadditional.setBackgroundColor(getResources().getColor(R.color.dull_yellow));
@@ -986,7 +1013,7 @@ public class ReviewActivity extends AppCompatActivity implements
             btn_qadditional.setClickable(false);
             btn_qadditional.setBackgroundColor(0);
 
-        }*/
+        }
 
         if (!edit) {
             Log.e("QuestionImage", questionobj.getString("qbm_image_file"));
@@ -1106,6 +1133,7 @@ public class ReviewActivity extends AppCompatActivity implements
                         intent.putExtra("courseid", courseid);
                         intent.putExtra("subjectid", subjectId);
                         intent.putExtra("paperid",paperid);
+                        intent.putExtra("testid",testid);
                         startActivity(intent);
                     }
                 })

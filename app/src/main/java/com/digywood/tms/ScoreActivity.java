@@ -30,6 +30,7 @@ import com.digywood.tms.DBHelper.DBHelper;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.IOException;
 import java.util.ArrayList;
 
 public class ScoreActivity extends AppCompatActivity {
@@ -37,17 +38,17 @@ public class ScoreActivity extends AppCompatActivity {
     DBHelper dataObj;
     AlertDialog alertDialog;
     RelativeLayout rootLayout;
-    String instanceId,studentId,enrollid,subjectid,courseid,paperid,testId,testType;
-    String sec_questions,sec_attempted,sec_skipped,sec_correct,sec_wrong,sec_percentage,subcat_questions,subcat_attempted,subcat_skipped,subcat_correct,subcat_percentage;
-    TextView tv_test,tv_course,tv_subject,tv_attempted,tv_skipped,tv_bookmarked,tv_totalQuestions,tv_totalCorrect,tv_totalWrong,tv_totalNegative,tv_totalPositive,tv_totalScore,tv_totalPercentage;
-    Button btn_save,btn_details;
+    String instanceId, studentId, enrollid, subjectid, courseid, paperid, testId, testType;
+    String jsonPath, path, sec_questions, sec_attempted, sec_skipped, sec_correct, sec_wrong, sec_percentage, subcat_questions, subcat_attempted, subcat_skipped, subcat_correct, subcat_percentage;
+    TextView tv_test, tv_course, tv_subject, tv_attempted, tv_skipped, tv_bookmarked, tv_totalQuestions, tv_totalCorrect, tv_totalWrong, tv_totalNegative, tv_totalPositive, tv_totalScore, tv_totalPercentage;
+    Button btn_save, btn_details;
     TableLayout tbl1;
     JSONObject attempt;
     Bundle bundle;
     Cursor cursor;
-    Double minscore = 0.0,maxscore = 0.0,avgscore = 0.0;
-    int CorrectCount = 0,WrongCount = 0,TotalCount = 0,revealX,revealY;
-    Double Percentage=0.0,TotalPositive = 0.0,TotalScore = 0.0,MaxMarks= 0.0 ,TotalNegative = 0.0;
+    Double minscore = 0.0, maxscore = 0.0, avgscore = 0.0;
+    int CorrectCount = 0, WrongCount = 0, TotalCount = 0, revealX, revealY;
+    Double Percentage = 0.0, TotalPositive = 0.0, TotalScore = 0.0, MaxMarks = 0.0, TotalNegative = 0.0;
     ArrayList<Integer> OptionsList = new ArrayList<>();
     ArrayList<String> catList;
 
@@ -65,12 +66,7 @@ public class ScoreActivity extends AppCompatActivity {
             AssessmentTestActivity.Aactivity.finish();
         }
 
-        try {
-            attempt = new JSONObject(getIntent().getStringExtra("JSON"));
-            Log.e("AssessmentScore",attempt.toString());
-        } catch (JSONException|NullPointerException e) {
-            e.printStackTrace();
-        }
+
         enrollid = bundle.getString("enrollid");
         subjectid = bundle.getString("subjectid");
         courseid = bundle.getString("courseid");
@@ -79,8 +75,27 @@ public class ScoreActivity extends AppCompatActivity {
         Intent intent = getIntent();
         studentId = intent.getStringExtra("studentid");
         instanceId = intent.getStringExtra("instanceid");
+        testId = intent.getStringExtra("testid");
+        path = enrollid + "/" + courseid + "/" + subjectid + "/" + paperid + "/" + testId + "/";
 
-        Log.e("stutest-->",studentId);
+        if(testType.equalsIgnoreCase("PRACTICE")) {
+            jsonPath = URLClass.mainpath + path + "Attempt/" + testId + ".json";
+        }
+        else
+        {
+            jsonPath = URLClass.mainpath + path + testId + ".json";
+        }
+        try {
+            Log.e("ScoreActivity","JsonPAth:"+jsonPath);
+            Log.e("ScoreActivity","instanceid:"+instanceId);
+            Log.e("ScoreActivity","testid:"+testId);
+            String json = new String(SaveJSONdataToFile.bytesFromFile(jsonPath), "UTF-8");
+            attempt = new JSONObject(json);
+        } catch (JSONException | ClassNotFoundException | IOException e) {
+            e.printStackTrace();
+        }
+
+        Log.e("stutest-->", studentId);
         rootLayout = findViewById(R.id.rootLayout);
 
         if (savedInstanceState == null && Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP &&
@@ -125,24 +140,22 @@ public class ScoreActivity extends AppCompatActivity {
         try {
             long flag = 0;
             if (testType.equalsIgnoreCase("PRACTICE")) {
-                testId = attempt.getString("ptu_test_ID");
-
                 CorrectCount = dataObj.getCorrectOptionsCount(testId);
-                TotalCount = dataObj.getQuestionAttempted(testId)+dataObj.getQuestionBookmarked(testId);
+                TotalCount = dataObj.getQuestionAttempted(testId) + dataObj.getQuestionBookmarked(testId);
                 WrongCount = dataObj.getWrongOptionsCount(testId);
 
                 TotalPositive = Double.valueOf(attempt.getString("ptu_positive_marks")) * CorrectCount;
 
-                TotalNegative = Double.valueOf(attempt.getString("ptu_negative_marks"))* WrongCount;
-                Log.e("negative_score",attempt.getString("ptu_negative_marks"));
+                TotalNegative = Double.valueOf(attempt.getString("ptu_negative_marks")) * WrongCount;
+                Log.e("negative_score", attempt.getString("ptu_negative_marks"));
                 MaxMarks = Double.valueOf(attempt.getString("ptu_positive_marks")) * dataObj.getTestQuestionCount(testId);
                 TotalScore = TotalPositive - TotalNegative;
-                Percentage = (  Double.valueOf(TotalScore) / MaxMarks )*100;
+                Percentage = (Double.valueOf(TotalScore) / MaxMarks) * 100;
 
 
-                flag = dataObj.UpdateAttempt(dataObj.getLastTestAttempt(testId,studentId), attempt.getString("ptu_test_ID"), 2,"NotUploaded",TotalScore,dataObj.getTestQuestionAttempted(testId),dataObj.getTestQuestionSkipped(testId),dataObj.getTestQuestionBookmarked(testId),dataObj.getTestQuestionNotAttempted(testId),Percentage , 0, 0, 0);
-                Cursor mycursor=dataObj.getTestRawData(testId,studentId,enrollid);
-                if(mycursor.getCount()>0) {
+                flag = dataObj.UpdateAttempt(dataObj.getLastTestAttempt(testId, studentId), attempt.getString("ptu_test_ID"), 2, "NotUploaded", TotalScore, dataObj.getTestQuestionAttempted(testId), dataObj.getTestQuestionSkipped(testId), dataObj.getTestQuestionBookmarked(testId), dataObj.getTestQuestionNotAttempted(testId), Percentage, 0, 0, 0);
+                Cursor mycursor = dataObj.getTestRawData(testId, studentId, enrollid);
+                if (mycursor.getCount() > 0) {
                     while (mycursor.moveToNext()) {
                         minscore = mycursor.getDouble(mycursor.getColumnIndex("minscore"));
                         maxscore = mycursor.getDouble(mycursor.getColumnIndex("maxscore"));
@@ -150,29 +163,26 @@ public class ScoreActivity extends AppCompatActivity {
                     }
                 }
 
-            }
-            else {
+            } else {
                 testId = attempt.getString("atu_ID");
                 CorrectCount = dataObj.getAssessmentCorrectOptionsCount();
-                TotalCount = dataObj.getAssessmentQuestionAttempted()+dataObj.getAssessmentQuestionBookmarked();
+                TotalCount = dataObj.getAssessmentQuestionAttempted() + dataObj.getAssessmentQuestionBookmarked();
 
                 WrongCount = dataObj.getAssessmentWrongOptionsCount();
-                if(dataObj.getAssessmentQuestionAttempted() == 0){
+                if (dataObj.getAssessmentQuestionAttempted() == 0) {
                     TotalPositive = 0.0;
                     TotalNegative = 0.0;
-                }
-                else
-                {
+                } else {
                     TotalPositive = Double.valueOf(attempt.getString("atu_marks")) * CorrectCount;
-                    TotalNegative = Double.valueOf(attempt.getString("atu_negative_mrk"))* WrongCount;
+                    TotalNegative = Double.valueOf(attempt.getString("atu_negative_mrk")) * WrongCount;
                     MaxMarks = Double.valueOf(attempt.getString("atu_marks")) * dataObj.getAssessmentQuestionCount(testId);
                     TotalScore = TotalPositive - TotalNegative;
-                    Percentage = (  TotalScore / MaxMarks )*100;
+                    Percentage = (TotalScore / MaxMarks) * 100;
                 }
 
-                flag = dataObj.UpdateAssessment( attempt.getString("atu_ID"),instanceId,enrollid,"",courseid,subjectid,paperid, 2,null,TotalScore, dataObj.getAssessmentQuestionAttempted(), dataObj.getAssessmentQuestionSkipped(), dataObj.getAssessmentQuestionBookmarked(), dataObj.getAssessmentQuestionNotAttempted(),Percentage , 0, 0, 0);
-                Cursor mycursor=dataObj.getAssessmentRawData(testId);
-                if(mycursor.getCount()>0) {
+                flag = dataObj.UpdateAssessment(attempt.getString("atu_ID"), instanceId, enrollid, "", courseid, subjectid, paperid, 2, null, TotalScore, dataObj.getAssessmentQuestionAttempted(), dataObj.getAssessmentQuestionSkipped(), dataObj.getAssessmentQuestionBookmarked(), dataObj.getAssessmentQuestionNotAttempted(), Percentage, 0, 0, 0);
+                Cursor mycursor = dataObj.getAssessmentRawData(testId);
+                if (mycursor.getCount() > 0) {
                     while (mycursor.moveToNext()) {
                         minscore = mycursor.getDouble(mycursor.getColumnIndex("minscore"));
                         maxscore = mycursor.getDouble(mycursor.getColumnIndex("maxscore"));
@@ -181,155 +191,155 @@ public class ScoreActivity extends AppCompatActivity {
                 }
             }
             long qflag = 0;
-            if(flag > 0){
+            if (flag > 0) {
                 if (testType.equalsIgnoreCase("PRACTICE")) {
-                    qflag = dataObj.updateTest(testId,subjectid,courseid,dataObj.getQuestionCount(testId),MaxMarks,minscore,maxscore,avgscore,minscore,maxscore,avgscore,"NotUploaded");
-                } else{
-                    qflag = dataObj.updateAssessmentTestRecord(testId,subjectid,courseid,dataObj.getQuestionCount(testId),MaxMarks,minscore,maxscore,avgscore,minscore,maxscore,avgscore);
+                    qflag = dataObj.updateTest(testId, subjectid, courseid, dataObj.getQuestionCount(testId), MaxMarks, minscore, maxscore, avgscore, minscore, maxscore, avgscore, "NotUploaded");
+                } else {
+                    qflag = dataObj.updateAssessmentTestRecord(testId, subjectid, courseid, dataObj.getQuestionCount(testId), MaxMarks, minscore, maxscore, avgscore, minscore, maxscore, avgscore);
 
                 }
-                if(qflag > 0){
+                if (qflag > 0) {
                     //only if the data is inserted into the table, it should be displayed on screen
                     if (testType.equalsIgnoreCase("PRACTICE")) {
                         cursor = dataObj.getSections(testId);
-                    }else{
+                    } else {
                         cursor = dataObj.getAssessmentSections(testId);
                     }
                     ArrayList<String> secList = new ArrayList<>();
-                    if(cursor.getCount() > 0){
-                        while(cursor.moveToNext()){
+                    if (cursor.getCount() > 0) {
+                        while (cursor.moveToNext()) {
                             secList.add(cursor.getString(cursor.getColumnIndex("Question_Section")));
                         }
                     }
 
                     int count = cursor.getCount();
                     TableRow tr = null;
-                    for(int i=0;i< count; i++){
-                        Double percent = 0.0,score = 0.0;
+                    for (int i = 0; i < count; i++) {
+                        Double percent = 0.0, score = 0.0;
                         //new row
                         if (testType.equalsIgnoreCase("PRACTICE")) {
-                            sec_questions = String.valueOf(dataObj.getSectionQuestions(secList.get(i),testId));
-                            sec_attempted = String.valueOf(dataObj.getSectionQuesAns(secList.get(i),testId));
-                            sec_skipped = String.valueOf(dataObj.getSectionQuesSkip(secList.get(i),testId));
-                            sec_correct = String.valueOf(dataObj.getSectionQuesCorrect(secList.get(i),testId));
-                            Log.e("SectionData",secList.get(i));
-                            sec_wrong = String.valueOf(dataObj.getSectionQuesWrong(secList.get(i),testId));
-                            score = (Double.valueOf(sec_correct)*Double.valueOf(attempt.getString("ptu_positive_marks")) - Double.valueOf(sec_wrong)*Double.valueOf(attempt.getString("ptu_negative_marks")));
-                            percent = ( Double.valueOf(score) / Double.valueOf(sec_questions) )*100;
+                            sec_questions = String.valueOf(dataObj.getSectionQuestions(secList.get(i), testId));
+                            sec_attempted = String.valueOf(dataObj.getSectionQuesAns(secList.get(i), testId));
+                            sec_skipped = String.valueOf(dataObj.getSectionQuesSkip(secList.get(i), testId));
+                            sec_correct = String.valueOf(dataObj.getSectionQuesCorrect(secList.get(i), testId));
+                            Log.e("SectionData", secList.get(i));
+                            sec_wrong = String.valueOf(dataObj.getSectionQuesWrong(secList.get(i), testId));
+                            score = (Double.valueOf(sec_correct) * Double.valueOf(attempt.getString("ptu_positive_marks")) - Double.valueOf(sec_wrong) * Double.valueOf(attempt.getString("ptu_negative_marks")));
+                            percent = (Double.valueOf(score) / Double.valueOf(sec_questions)) * 100;
                             sec_percentage = String.format("%.2f", percent);
-                            Log.e("sectionquestions",sec_questions);
-                            Log.e("sectionattempted",sec_attempted);
-                            Log.e("seccorrect",sec_correct);
-                        }
-                        else{
+                            Log.e("sectionquestions", sec_questions);
+                            Log.e("sectionattempted", sec_attempted);
+                            Log.e("seccorrect", sec_correct);
+                        } else {
                             sec_questions = String.valueOf(dataObj.getAssessmentSectionQuestions(secList.get(i)));
                             sec_attempted = String.valueOf(dataObj.getAssessmentSectionQuesAns(secList.get(i)));
                             sec_skipped = String.valueOf(dataObj.getAssessmentSectionQuesSkip(secList.get(i)));
                             sec_correct = String.valueOf(dataObj.getAssessmentSectionQuesCorrect(secList.get(i)));
                             sec_wrong = String.valueOf(dataObj.getAssessmentSectionQuesWrong(secList.get(i)));
-                            score = (Double.valueOf(sec_correct)*Double.valueOf(attempt.getString("atu_marks")) - Double.valueOf(sec_wrong)*Double.valueOf(attempt.getString("atu_negative_mrk")));
-                            percent = ( Double.valueOf(score) / Double.valueOf(sec_questions) )*100;
+                            score = (Double.valueOf(sec_correct) * Double.valueOf(attempt.getString("atu_marks")) - Double.valueOf(sec_wrong) * Double.valueOf(attempt.getString("atu_negative_mrk")));
+                            percent = (Double.valueOf(score) / Double.valueOf(sec_questions)) * 100;
                             sec_percentage = String.format("%.2f", percent);
-                            Log.e("sectionquestions",sec_questions);
-                            Log.e("sectionattempted",sec_attempted);
-                            Log.e("seccorrect",sec_correct);
+                            Log.e("sectionquestions", sec_questions);
+                            Log.e("sectionattempted", sec_attempted);
+                            Log.e("seccorrect", sec_correct);
                         }
                         tr = new TableRow(this);
                         TableRow.LayoutParams lp = new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT);
                         tr.setLayoutParams(lp);
                         tr.setWeightSum(7f);
                         //category name
-                        TextView tv_category  = new TextView(this);
+                        TextView tv_category = new TextView(this);
                         tv_category.setText(secList.get(i));
                         TableRow.LayoutParams params = new TableRow.LayoutParams(0, TableLayout.LayoutParams.WRAP_CONTENT, 1f);
                         tv_category.setLayoutParams(params);
 //                        tv_category.setGravity(Gravity.CENTER);
-                        Log.d("sections",secList.get(i));
+                        Log.d("sections", secList.get(i));
                         tv_category.setTextSize(20f);
                         tv_category.setGravity(Gravity.CENTER);
                         tv_category.setTextColor(Color.BLACK);
                         tv_category.setBackground(getResources().getDrawable(R.drawable.spin_bg));
                         tr.addView(tv_category);
                         //Number of Questions
-                        TextView tv_noOfQuestions  = new TextView(this);
+                        TextView tv_noOfQuestions = new TextView(this);
                         tv_noOfQuestions.setText(sec_questions);
                         params = new TableRow.LayoutParams(0, TableLayout.LayoutParams.WRAP_CONTENT, 1f);
                         tv_noOfQuestions.setLayoutParams(params);
 //                        tv_noOfQuestions.setGravity(Gravity.CENTER);
-                        Log.d("number",sec_questions);
+                        Log.d("number", sec_questions);
                         tv_noOfQuestions.setTextSize(20f);
                         tv_noOfQuestions.setGravity(Gravity.CENTER);
                         tv_noOfQuestions.setTextColor(Color.BLACK);
                         tv_noOfQuestions.setBackground(getResources().getDrawable(R.drawable.spin_bg));
                         tr.addView(tv_noOfQuestions);
                         //Number of Questions Attempted
-                        TextView tv_subCatattempted  = new TextView(this);
+                        TextView tv_subCatattempted = new TextView(this);
                         tv_subCatattempted.setText(sec_attempted);
                         params = new TableRow.LayoutParams(0, TableLayout.LayoutParams.WRAP_CONTENT, 1f);
                         tv_subCatattempted.setLayoutParams(params);
 //                        tv_subCatattempted.setGravity(Gravity.CENTER);
-                        Log.d("attempt",sec_attempted);
+                        Log.d("attempt", sec_attempted);
                         tv_subCatattempted.setTextSize(20f);
                         tv_subCatattempted.setGravity(Gravity.CENTER);
                         tv_subCatattempted.setTextColor(Color.BLACK);
                         tv_subCatattempted.setBackground(getResources().getDrawable(R.drawable.spin_bg));
                         tr.addView(tv_subCatattempted);
                         //Number of Questions Skipped
-                        TextView tv_subCatskipped  = new TextView(this);
+                        TextView tv_subCatskipped = new TextView(this);
                         tv_subCatskipped.setText(sec_skipped);
                         params = new TableRow.LayoutParams(0, TableLayout.LayoutParams.WRAP_CONTENT, 1f);
                         tv_subCatskipped.setLayoutParams(params);
 //                        tv_subCatskipped.setGravity(Gravity.CENTER);
-                        Log.d("skip",sec_skipped);
+                        Log.d("skip", sec_skipped);
                         tv_subCatskipped.setTextSize(20f);
                         tv_subCatskipped.setGravity(Gravity.CENTER);
                         tv_subCatskipped.setTextColor(Color.BLACK);
                         tv_subCatskipped.setBackground(getResources().getDrawable(R.drawable.spin_bg));
                         tr.addView(tv_subCatskipped);
                         //Number of Questions Correct
-                        TextView tv_subCatCorrect  = new TextView(this);
+                        TextView tv_subCatCorrect = new TextView(this);
                         tv_subCatCorrect.setText(sec_correct);
                         params = new TableRow.LayoutParams(0, TableLayout.LayoutParams.WRAP_CONTENT, 1f);
                         tv_subCatCorrect.setLayoutParams(params);
 //                        tv_subCatCorrect.setGravity(Gravity.CENTER);
-                        Log.d("correct",sec_correct);
+                        Log.d("correct", sec_correct);
                         tv_subCatCorrect.setTextSize(20f);
                         tv_subCatCorrect.setGravity(Gravity.CENTER);
                         tv_subCatCorrect.setTextColor(Color.BLACK);
                         tv_subCatCorrect.setBackground(getResources().getDrawable(R.drawable.spin_bg));
                         tr.addView(tv_subCatCorrect);
                         //Number of Questions Wrong
-                        TextView tv_subCatWrong  = new TextView(this);
+                        TextView tv_subCatWrong = new TextView(this);
                         tv_subCatWrong.setText(sec_wrong);
                         params = new TableRow.LayoutParams(0, TableLayout.LayoutParams.WRAP_CONTENT, 1f);
                         tv_subCatWrong.setLayoutParams(params);
 //                        tv_subCatCorrect.setGravity(Gravity.CENTER);
-                        Log.d("wrong",sec_wrong);
+                        Log.d("wrong", sec_wrong);
                         tv_subCatWrong.setTextSize(20f);
                         tv_subCatWrong.setGravity(Gravity.CENTER);
                         tv_subCatWrong.setTextColor(Color.BLACK);
                         tv_subCatWrong.setBackground(getResources().getDrawable(R.drawable.spin_bg));
                         tr.addView(tv_subCatWrong);
                         //Percentage Score
-                        TextView tv_percentage  = new TextView(this);
+                        TextView tv_percentage = new TextView(this);
                         tv_percentage.setText(sec_percentage);
                         params = new TableRow.LayoutParams(0, TableLayout.LayoutParams.WRAP_CONTENT, 1f);
                         tv_percentage.setLayoutParams(params);
 //                        tv_percentage.setGravity(Gravity.CENTER);
-                        Log.d("%",sec_percentage);
+                        Log.d("%", sec_percentage);
                         tv_percentage.setTextSize(20f);
                         tv_percentage.setGravity(Gravity.CENTER);
                         tv_percentage.setTextColor(Color.BLACK);
                         tv_percentage.setBackground(getResources().getDrawable(R.drawable.spin_bg));
                         tr.addView(tv_percentage);
 
-                        tbl1.addView(tr);}
+                        tbl1.addView(tr);
+                    }
 
                 }
             }
 
             tv_test.setText(testId);
-        } catch (JSONException|NumberFormatException e) {
+        } catch (JSONException | NumberFormatException e) {
             e.printStackTrace();
         }
 
@@ -343,15 +353,15 @@ public class ScoreActivity extends AppCompatActivity {
             tv_totalCorrect.setText(String.valueOf(dataObj.getTestCorrectOptionsCount(testId)));
         } else {
             tv_attempted.setText(String.valueOf(dataObj.getAssessmentQuestionAttempted()));
-            Log.e("AssmntAttempted",String.valueOf(dataObj.getAssessmentQuestionAttempted()));
+            Log.e("AssmntAttempted", String.valueOf(dataObj.getAssessmentQuestionAttempted()));
             tv_skipped.setText(String.valueOf(dataObj.getAssessmentQuestionSkipped()));
-            Log.e("AssmntSkippd",String.valueOf(dataObj.getAssessmentQuestionSkipped()));
+            Log.e("AssmntSkippd", String.valueOf(dataObj.getAssessmentQuestionSkipped()));
             tv_bookmarked.setText(String.valueOf(dataObj.getAssessmentQuestionBookmarked()));
-            Log.e("AssmntMarked",String.valueOf(dataObj.getAssessmentQuestionBookmarked()));
+            Log.e("AssmntMarked", String.valueOf(dataObj.getAssessmentQuestionBookmarked()));
             tv_totalQuestions.setText(String.valueOf(dataObj.getAssessmentQuestionCount(testId)));
-            Log.e("AssmntnoOfQs",String.valueOf(dataObj.getAssessmentQuestionCount(testId)));
+            Log.e("AssmntnoOfQs", String.valueOf(dataObj.getAssessmentQuestionCount(testId)));
             tv_totalCorrect.setText(String.valueOf(dataObj.getAssessmentCorrectOptionsCount()));
-            Log.e("AssmntCorrect",String.valueOf(dataObj.getAssessmentCorrectOptionsCount()));
+            Log.e("AssmntCorrect", String.valueOf(dataObj.getAssessmentCorrectOptionsCount()));
         }
         tv_totalWrong.setText(String.valueOf(WrongCount));
         tv_totalPositive.setText(String.valueOf(TotalPositive));
@@ -371,7 +381,7 @@ public class ScoreActivity extends AppCompatActivity {
                     intent.putExtra("paperid", paperid);
                     startActivity(intent);
                     finish();
-                }else{
+                } else {
                     Intent intent = new Intent(ScoreActivity.this, ListofAssessmentTests.class);
                     intent.putExtra("studentid", studentId);
                     intent.putExtra("enrollid", enrollid);
@@ -387,22 +397,24 @@ public class ScoreActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Cursor cursor;
                 if (testType.equalsIgnoreCase("PRACTICE")) {
-                    cursor= dataObj.getTestSubcategories(testId);
-                }else{
+                    cursor = dataObj.getTestSubcategories(testId);
+                } else {
                     cursor = dataObj.getAssessmentSubcategories();
                 }
                 catList = new ArrayList<>();
-                Log.e("ScoreCount",""+cursor.getCount());
-                if(cursor.getCount()>0) {
+                Log.e("ScoreCount", "" + cursor.getCount());
+                if (cursor.getCount() > 0) {
 //                    Log.e("subcat",""+ cursor.getString(0));
                     while (cursor.moveToNext()) {
                         catList.add(cursor.getString(0));
                     }
-                }initiateFullScreenWindow();
+                }
+                initiateFullScreenWindow();
             }
         });
 
     }
+
     protected void revealActivity(int x, int y) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             float finalRadius = (float) (Math.max(rootLayout.getWidth(), rootLayout.getHeight()) * 1.1);
@@ -443,33 +455,32 @@ public class ScoreActivity extends AppCompatActivity {
         ImageView close = layout.findViewById(R.id.iv_close);
         TableLayout tbl = layout.findViewById(R.id.tbl_score_details);
         TableRow tr1 = null;
-        Log.e("SubcatQuestions","data:"+catList.size());
-        for(int i=0;i< catList.size(); i++){
+        Log.e("SubcatQuestions", "data:" + catList.size());
+        for (int i = 0; i < catList.size(); i++) {
             //new row
             Double percent = 0.0;
             if (testType.equalsIgnoreCase("PRACTICE")) {
-                subcat_questions = String.valueOf(dataObj.getSubCatQuestions(catList.get(i),testId));
-                subcat_attempted = String.valueOf(dataObj.getSubCatQuesAns(catList.get(i),testId));
-                subcat_skipped = String.valueOf(dataObj.getSubCatQuesSkip(catList.get(i),testId));
-                subcat_correct = String.valueOf(dataObj.getSubCatQuesCorrect(catList.get(i),testId));
-                percent = ( Double.valueOf(subcat_correct) / Double.valueOf(subcat_questions) )*100;
-                subcat_percentage = String.format("%.1f",percent);
-            }
-            else{
+                subcat_questions = String.valueOf(dataObj.getSubCatQuestions(catList.get(i), testId));
+                subcat_attempted = String.valueOf(dataObj.getSubCatQuesAns(catList.get(i), testId));
+                subcat_skipped = String.valueOf(dataObj.getSubCatQuesSkip(catList.get(i), testId));
+                subcat_correct = String.valueOf(dataObj.getSubCatQuesCorrect(catList.get(i), testId));
+                percent = (Double.valueOf(subcat_correct) / Double.valueOf(subcat_questions)) * 100;
+                subcat_percentage = String.format("%.1f", percent);
+            } else {
 
                 subcat_questions = String.valueOf(dataObj.getAssessmentSubCatQuestions(catList.get(i)));
                 subcat_attempted = String.valueOf(dataObj.getAssessmentSubCatQuesAns(catList.get(i)));
                 subcat_skipped = String.valueOf(dataObj.getAssessmentSubCatQuesSkip(catList.get(i)));
                 subcat_correct = String.valueOf(dataObj.getAssessmentSubCatQuesCorrect(catList.get(i)));
-                percent = ( Double.valueOf(subcat_correct) / Double.valueOf(subcat_questions) )*100;
-                subcat_percentage = String.format("%.1f",percent);
+                percent = (Double.valueOf(subcat_correct) / Double.valueOf(subcat_questions)) * 100;
+                subcat_percentage = String.format("%.1f", percent);
 
             }
             tr1 = new TableRow(this);
             TableRow.LayoutParams lp = new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT);
             tr1.setLayoutParams(lp);
             //category name
-            TextView tv_category  = new TextView(this);
+            TextView tv_category = new TextView(this);
             tv_category.setText(catList.get(i));
             TableRow.LayoutParams params = new TableRow.LayoutParams(0, TableLayout.LayoutParams.WRAP_CONTENT, 1f);
             tv_category.setLayoutParams(params);
@@ -478,7 +489,7 @@ public class ScoreActivity extends AppCompatActivity {
             tv_category.setBackground(getResources().getDrawable(R.drawable.spin_bg));
             tr1.addView(tv_category);
             //subcategory name
-            TextView tv_subcat  = new TextView(this);
+            TextView tv_subcat = new TextView(this);
             tv_subcat.setText(catList.get(i));
             params = new TableRow.LayoutParams(0, TableLayout.LayoutParams.WRAP_CONTENT, 1f);
             tv_subcat.setLayoutParams(params);
@@ -487,7 +498,7 @@ public class ScoreActivity extends AppCompatActivity {
             tv_subcat.setBackground(getResources().getDrawable(R.drawable.spin_bg));
             tr1.addView(tv_subcat);
             //Number of Questions
-            TextView tv_noOfQuestions  = new TextView(this);
+            TextView tv_noOfQuestions = new TextView(this);
             tv_noOfQuestions.setText(subcat_questions);
             params = new TableRow.LayoutParams(0, TableLayout.LayoutParams.WRAP_CONTENT, 1f);
             tv_noOfQuestions.setLayoutParams(params);
@@ -496,7 +507,7 @@ public class ScoreActivity extends AppCompatActivity {
             tv_noOfQuestions.setBackground(getResources().getDrawable(R.drawable.spin_bg));
             tr1.addView(tv_noOfQuestions);
             //Number of Questions Attempted
-            TextView tv_subCatattempted  = new TextView(this);
+            TextView tv_subCatattempted = new TextView(this);
             tv_subCatattempted.setText(subcat_attempted);
             params = new TableRow.LayoutParams(0, TableLayout.LayoutParams.WRAP_CONTENT, 1f);
             tv_subCatattempted.setLayoutParams(params);
@@ -505,7 +516,7 @@ public class ScoreActivity extends AppCompatActivity {
             tv_subCatattempted.setBackground(getResources().getDrawable(R.drawable.spin_bg));
             tr1.addView(tv_subCatattempted);
             //Number of Questions Skipped
-            TextView tv_subCatskipped  = new TextView(this);
+            TextView tv_subCatskipped = new TextView(this);
             tv_subCatskipped.setText(subcat_skipped);
             params = new TableRow.LayoutParams(0, TableLayout.LayoutParams.WRAP_CONTENT, 1f);
             tv_subCatskipped.setLayoutParams(params);
@@ -514,7 +525,7 @@ public class ScoreActivity extends AppCompatActivity {
             tv_subCatskipped.setBackground(getResources().getDrawable(R.drawable.spin_bg));
             tr1.addView(tv_subCatskipped);
             //Number of Questions Correct
-            TextView tv_subCatCorrect  = new TextView(this);
+            TextView tv_subCatCorrect = new TextView(this);
             tv_subCatCorrect.setText(subcat_correct);
             params = new TableRow.LayoutParams(0, TableLayout.LayoutParams.WRAP_CONTENT, 1f);
             tv_subCatCorrect.setLayoutParams(params);
@@ -523,7 +534,7 @@ public class ScoreActivity extends AppCompatActivity {
             tv_subCatCorrect.setBackground(getResources().getDrawable(R.drawable.spin_bg));
             tr1.addView(tv_subCatCorrect);
             //Percentage Score
-            TextView tv_percentage  = new TextView(this);
+            TextView tv_percentage = new TextView(this);
             tv_percentage.setText(subcat_percentage);
             params = new TableRow.LayoutParams(0, TableLayout.LayoutParams.WRAP_CONTENT, 1f);
             tv_percentage.setLayoutParams(params);

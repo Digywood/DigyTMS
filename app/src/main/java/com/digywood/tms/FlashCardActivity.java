@@ -995,7 +995,7 @@ public class FlashCardActivity extends AppCompatActivity {
                 pw.setElevation(10);
             }
 //            TextView mResultText = (TextView) layout.findViewById(R.id.server_status_text);
-            Button cancelButton = (Button) view.findViewById(R.id.close_button);
+            Button cancelButton = (Button) view.findViewById(R.id.pop_close_button);
             cancelButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {

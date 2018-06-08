@@ -840,6 +840,13 @@ public class PractiseTestAdapter extends RecyclerView.Adapter<PractiseTestAdapte
                         chapterFileList.add(new SingleDWDQues(chapterid,paperid,subid,singlequesObj.getString("qbm_image_file")));
                     }
 
+                    if(downloadfileList.contains(singlequesObj.getString("qbm_QAdditional_Image"))){
+
+                    }else{
+                        downloadfileList.add(singlequesObj.getString("qbm_QAdditional_Image"));
+                        chapterFileList.add(new SingleDWDQues(chapterid,paperid,subid,singlequesObj.getString("qbm_QAdditional_Image")));
+                    }
+
                     if(downloadfileList.contains(singlequesObj.getString("qbm_Review_Images"))){
 
                     }else{

@@ -3,6 +3,7 @@ package com.digywood.tms.Adapters;
 import android.content.Context;
 import android.content.res.Configuration;
 import android.graphics.Color;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
@@ -58,6 +59,8 @@ public class ScrollGridAdapter extends BaseAdapter{
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         textView = new TextView(c);
+        Log.e("ScrollGridAdapter","q_List Size:"+q_List.size());
+        Log.e("ScrollGridAdapter","samplequestion:"+samplequestion.toString());
         try {
             textView.setText(samplequestion.getJSONObject(position).getString("qbm_SequenceId"));
         } catch (JSONException e) {
