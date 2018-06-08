@@ -325,7 +325,7 @@ public class JSONParser {
                             quesObj=ja_questions.getJSONObject(q);
                             cquesObj=new JSONObject();
                                 cquesObj.put("qbm_ID",quesObj.get("qbm_ID"));
-                                cquesObj.put("qbm_SequenceId",seqno);
+                                cquesObj.put("qbm_SequenceID",seqno);
                                 cquesObj.put("qbm_ReferenceID",quesObj.get("qbm_ReferenceID"));
                                 cquesObj.put("qbm_Description",quesObj.get("qbm_Description"));
                                 cquesObj.put("qbm_SubjectID",quesObj.get("qbm_SubjectID"));

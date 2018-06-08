@@ -18,6 +18,7 @@ import android.view.Window;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 import com.digywood.tms.AssessmentTestActivity;
@@ -27,10 +28,12 @@ import com.digywood.tms.DBHelper.DBHelper;
 import com.digywood.tms.IBagroundListener;
 import com.digywood.tms.IDownloadStatus;
 import com.digywood.tms.JSONParser;
+import com.digywood.tms.ListofPractiseTests;
 import com.digywood.tms.Pojo.SingleAssessment;
 import com.digywood.tms.Pojo.SingleDWDQues;
 import com.digywood.tms.Pojo.SingleTest;
 import com.digywood.tms.R;
+import com.digywood.tms.ReviewActivity;
 import com.digywood.tms.SaveJSONdataToFile;
 import com.digywood.tms.PracticeTestActivity;
 import com.digywood.tms.URLClass;
@@ -72,6 +75,8 @@ public class AssesmentTestAdapter extends RecyclerView.Adapter<AssesmentTestAdap
 
         public TextView tv_testid, tv_teststatus;
         public ImageView iv_start, iv_resume,btn_fstart,iv_download;
+        LinearLayout ll_start,  ll_review;
+
 
         public MyViewHolder(View view) {
             super(view);
@@ -80,6 +85,9 @@ public class AssesmentTestAdapter extends RecyclerView.Adapter<AssesmentTestAdap
             iv_start = view.findViewById(R.id.iv_start);
             iv_resume = view.findViewById(R.id.iv_resume);
             iv_download = view.findViewById(R.id.iv_atestdownload);
+            ll_start = view.findViewById(R.id.l1_1_start);
+            ll_review = view.findViewById(R.id.l1_1_review);
+
         }
     }
 
@@ -116,7 +124,7 @@ public class AssesmentTestAdapter extends RecyclerView.Adapter<AssesmentTestAdap
         holder.tv_testid.setText(singletest.getTestName()+" ("+singletest.getTestid()+")");
         holder.tv_teststatus.setText(singletest.getStatus());
 
-        holder.iv_start.setOnClickListener(new View.OnClickListener() {
+        holder.ll_start.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 mydialog = new Dialog(mycontext);
@@ -171,6 +179,42 @@ public class AssesmentTestAdapter extends RecyclerView.Adapter<AssesmentTestAdap
                     }
                 });
 
+            }
+        });
+
+        holder.ll_review.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                DBHelper dataObj = new DBHelper(mycontext);
+                testid = singletest.getTestid();
+                Cursor cursor = dataObj.getSingleAssessmentTests(studentid,enrollid,testid);
+
+                if (cursor.getCount() > 0) {
+                    while (cursor.moveToNext()) {
+                        courseid = cursor.getString(cursor.getColumnIndex("satu_course_id"));
+                        subjectId = cursor.getString(cursor.getColumnIndex("satu_subjet_ID"));
+                        paperid = cursor.getString(cursor.getColumnIndex("satu_paper_ID"));
+                    }
+                }
+
+                Log.e("path_vars", enrollid + " " + courseid + " " + subjectId + " " + paperid + " " + testid);
+                path = enrollid + "/" + courseid + "/" + subjectId + "/" + paperid + "/" + testid + "/";
+                photoPath = URLClass.mainpath + path;
+                assessmentPath = URLClass.mainpath + path + testid +".json";
+                try {
+                    String assessment_json = new String(SaveJSONdataToFile.bytesFromFile(assessmentPath), "UTF-8");
+                    Log.e("Exec","Review,"+assessment_json);
+                    Intent i = new Intent(mycontext, ReviewActivity.class);
+                    i.putExtra("test", testid);
+                    i.putExtra("studentid", studentid);
+                    i.putExtra("enrollid", enrollid);
+                    i.putExtra("instanceid",singletest.getInstanceId());
+                    i.putExtra("json", assessment_json);
+                    i.putExtra("TYPE", "ASSESSMENT_TEST");
+                    mycontext.startActivity(i);
+                } catch (IOException | ClassNotFoundException e) {
+                    e.printStackTrace();
+                }
             }
         });
 

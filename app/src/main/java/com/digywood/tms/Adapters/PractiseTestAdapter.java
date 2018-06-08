@@ -216,13 +216,15 @@ public class PractiseTestAdapter extends RecyclerView.Adapter<PractiseTestAdapte
                     public void onClick(View v) {
 //                        holder.ll_review.setBackground(mycontext.getResources().getDrawable(R.drawable.layout_press_custom));
                         try {
-                            ((ListofPractiseTests)mycontext).finish();
+                            //((ListofPractiseTests)mycontext).finish();
                             Log.e("Exec","Review,");
                             attempt = new String(SaveJSONdataToFile.bytesFromFile(getExternalPath(mycontext, singletest, "ATTEMPT") + testid + ".json"), "UTF-8");
                             Intent i = new Intent(mycontext, ReviewActivity.class);
                             i.putExtra("test", testid);
                             i.putExtra("studentid", studentid);
+                            i.putExtra("enrollid", enrollid);
                             i.putExtra("json", attempt);
+                            i.putExtra("TYPE", "PRACTISE_TEST");
                             mycontext.startActivity(i);
                         } catch (IOException | ClassNotFoundException e) {
                             e.printStackTrace();

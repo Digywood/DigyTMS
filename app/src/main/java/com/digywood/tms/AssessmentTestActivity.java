@@ -770,18 +770,16 @@ public class AssessmentTestActivity extends AppCompatActivity implements Adapter
     public void initiatePopupWindow(View v) {
         try {
             //We need to get the instance of the LayoutInflater, use the context of this activity
-            LayoutInflater inflater = (LayoutInflater) AssessmentTestActivity.this
-                    .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            LayoutInflater inflater = (LayoutInflater) AssessmentTestActivity.this.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             //Inflate the view from a predefined XML layout
-            View view = inflater.inflate(R.layout.popup_screen,
-                    (ViewGroup) findViewById(R.id.popup_element));
+            View view = inflater.inflate(R.layout.popup_screen,(ViewGroup) findViewById(R.id.popup_element));
             //Initialise an dialogbuilder to create an alertdialog
             AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);
             //Set the layout to the alertDialog
             dialogBuilder.setView(view);
             final AlertDialog alertDialog = dialogBuilder.create();
             alertDialog.show();
-            final Button cancelButton = (Button) view.findViewById(R.id.close_button);
+            final Button cancelButton = (Button) view.findViewById(R.id.pop_close_button);
             alertDialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
                 @Override
                 public void onCancel(DialogInterface dialog) {

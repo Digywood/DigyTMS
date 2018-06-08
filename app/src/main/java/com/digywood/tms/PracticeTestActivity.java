@@ -733,7 +733,7 @@ public class PracticeTestActivity extends AppCompatActivity implements
             dialogBuilder.setView(view);
             final AlertDialog alertDialog = dialogBuilder.create();
             alertDialog.show();
-            final Button cancelButton = (Button) view.findViewById(R.id.close_button);
+            final Button cancelButton = (Button) view.findViewById(R.id.pop_close_button);
             alertDialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
                 @Override
                 public void onCancel(DialogInterface dialog) {
@@ -790,7 +790,7 @@ public class PracticeTestActivity extends AppCompatActivity implements
             long result = -1;
             buffer = attempt.getJSONArray("Sections").getJSONObject(pos).getJSONArray("Questions");
             Id = buffer.getJSONObject(index).getString("qbm_ID");
-            Seq = buffer.getJSONObject(index).getString("qbm_SequenceId");
+            Seq = buffer.getJSONObject(index).getString("qbm_SequenceID");
             questionobj = buffer.getJSONObject(index);
             scrollAdapter.updateList(listOfLists.get(pos));
             if (dataObj.CheckQuestion(Id,testid)) {
@@ -817,7 +817,7 @@ public class PracticeTestActivity extends AppCompatActivity implements
         try {
             buffer = attempt.getJSONArray("Sections");
             Id = buffer.getJSONObject(index).getString("qbm_ID");
-            Seq = buffer.getJSONObject(index).getString("qbm_SequenceId");
+            Seq = buffer.getJSONObject(index).getString("qbm_SequenceID");
             questionobj = buffer.getJSONObject(index);
             long value = dataObj.UpdateQuestion(attempt.getString("ptu_test_ID"), dataObj.getLastAttempt(studentId),studentId, Id, Seq,attempt.getJSONArray("Sections").getJSONObject(pos).getString("ptu_section_name"),questionobj.getString("qbm_Chapter_name"),questionobj.getString("qbm_Sub_CategoryName"), Integer.valueOf(questionobj.getString("qbm_marks")), Double.valueOf(questionobj.getString("qbm_negative_mrk")), dataObj.getCorrectSum(testid), dataObj.getWrongSum(testid), -1, listOfLists.get(pos).get(index).getQ_status(), opAdapter.getSelectedSequence(), opAdapter.getFlag());
             if(value > 0){
@@ -1087,10 +1087,10 @@ public class PracticeTestActivity extends AppCompatActivity implements
                 questionOpList = new ArrayList<>();
                 for (int j = 0; j < array2.length(); j++) {
                     Id = array2.getJSONObject(j).getString("qbm_ID");
-                    Seq = array2.getJSONObject(j).getString("qbm_SequenceId");
+                    Seq = array2.getJSONObject(j).getString("qbm_SequenceID");
                     questionobj = array2.getJSONObject(j);
                     Log.e("sequence", Seq);
-                    qListObj = new SingleQuestionList(array2.getJSONObject(j).getString("qbm_SequenceId"), notAttempted,not_confirmed);
+                    qListObj = new SingleQuestionList(array2.getJSONObject(j).getString("qbm_SequenceID"), notAttempted,not_confirmed);
                     dataObj.InsertQuestion(attempt.getString("ptu_test_ID"), generateUniqueId(0),studentId, Id, Seq,attempt.getJSONArray("Sections").getJSONObject(pos).getString("ptu_section_name"),questionobj.getString("qbm_Chapter_name"),questionobj.getString("qbm_Sub_CategoryName"), 0, 0, 0, 0, -1, "NOT_ATTEMPTED", "-1", "NO");
                     questionOpList.add(qListObj);
                 }
@@ -1117,7 +1117,7 @@ public class PracticeTestActivity extends AppCompatActivity implements
                 Log.e("array2", "" + array2.length());
                 for (int j = 0; j < array2.length(); j++) {
                     if (statusList.get(i) != null) {
-                        qListObj = new SingleQuestionList(array2.getJSONObject(j).getString("qbm_SequenceId"), statusList.get(max),not_confirmed);
+                        qListObj = new SingleQuestionList(array2.getJSONObject(j).getString("qbm_SequenceID"), statusList.get(max),not_confirmed);
                     }
                     max++;
                     questionOpList.add(qListObj);

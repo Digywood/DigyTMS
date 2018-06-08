@@ -3,7 +3,6 @@ package com.digywood.tms.Adapters;
 import android.content.Context;
 import android.content.res.Configuration;
 import android.graphics.Color;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,6 +25,7 @@ public class ScrollGridAdapter extends BaseAdapter{
     Context c;
     private int size;
     JSONArray samplequestion;
+
     ArrayList<SingleQuestionList> q_List;
     public ScrollGridAdapter(Context c, JSONArray samplequestion , ArrayList<SingleQuestionList> q_List,int size){
 
@@ -33,6 +33,7 @@ public class ScrollGridAdapter extends BaseAdapter{
         this.samplequestion = samplequestion;
         this.q_List = q_List;
         this.size = size;
+
     }
 
     @Override
@@ -59,10 +60,8 @@ public class ScrollGridAdapter extends BaseAdapter{
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         textView = new TextView(c);
-        Log.e("ScrollGridAdapter","q_List Size:"+q_List.size());
-        Log.e("ScrollGridAdapter","samplequestion:"+samplequestion.toString());
         try {
-            textView.setText(samplequestion.getJSONObject(position).getString("qbm_SequenceId"));
+                textView.setText(samplequestion.getJSONObject(position).getString("qbm_SequenceID"));
         } catch (JSONException e) {
             e.printStackTrace();
         }

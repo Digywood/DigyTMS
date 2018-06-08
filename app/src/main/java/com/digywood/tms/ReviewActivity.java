@@ -71,7 +71,7 @@ public class ReviewActivity extends AppCompatActivity implements
     private PopupWindow pw;
     GridView gridView;
     Spinner sections;
-    String jsonPath,imgPath, photoPath, Seq, Id, path, enrollid, courseid, subjectId, paperid, testid, groupId,studentId="";
+    String jsonPath,imgPath, photoPath, Seq, Id, path, enrollid, courseid, subjectId, paperid, testid, groupId,studentId="",enrollment_Id="",instance_Id="",test_type="";
     final String notAttempted = "NOT_ATTEMPTED", attempted = "ATTEMPTED", skipped = "SKIPPED", bookmarked = "BOOKMARKED",not_confirmed = "NOT_CONFIRMED",confirmed = "CONFIRMED";
     RecyclerView question_scroll;
     ScrollGridAdapter scrollAdapter;
@@ -101,7 +101,7 @@ public class ReviewActivity extends AppCompatActivity implements
     static int index = 0, pos = 0, op = 0, grp = 0, size,last;
     JSONObject sectionobj, groupobj, questionobj, temp;
     public static JSONObject attempt;
-    JSONArray array, optionsArray, review, groupArray, sectionArray, attemptsectionarray, buffer;
+    JSONArray array, optionsArray, review, groupArray, sectionArray, ja_questions;
     SingleQuestion question = new SingleQuestion();
     SingleGroup group = new SingleGroup();
     SingleSections section = new SingleSections();
@@ -213,14 +213,32 @@ public class ReviewActivity extends AppCompatActivity implements
 
         testid = getIntent().getStringExtra("test");
         studentId = getIntent().getStringExtra("studentid");
-        Cursor cursor = dataObj.checkPractiseTest(studentId,testid);
-        if (cursor.getCount() > 0) {
-            while (cursor.moveToNext()) {
-                if (cursor.getString(cursor.getColumnIndex("sptu_ID")).equals(testid)) {
-                    enrollid = cursor.getString(cursor.getColumnIndex("sptu_entroll_id"));
-                    courseid = cursor.getString(cursor.getColumnIndex("sptu_course_id"));
-                    subjectId = cursor.getString(cursor.getColumnIndex("sptu_subjet_ID"));
-                    paperid = cursor.getString(cursor.getColumnIndex("sptu_paper_ID"));
+        enrollment_Id = getIntent().getStringExtra("enrollid");
+        instance_Id = getIntent().getStringExtra("instanceid");
+        test_type=getIntent().getStringExtra("TYPE");
+        if(test_type.equalsIgnoreCase("PRACTISE_TEST")) {
+            Cursor cursor = dataObj.checkPractiseTest(studentId, testid);
+            if (cursor.getCount() > 0) {
+                while (cursor.moveToNext()) {
+                    if (cursor.getString(cursor.getColumnIndex("sptu_ID")).equals(testid)) {
+                        enrollid = cursor.getString(cursor.getColumnIndex("sptu_entroll_id"));
+                        courseid = cursor.getString(cursor.getColumnIndex("sptu_course_id"));
+                        subjectId = cursor.getString(cursor.getColumnIndex("sptu_subjet_ID"));
+                        paperid = cursor.getString(cursor.getColumnIndex("sptu_paper_ID"));
+                    }
+                }
+            }
+        }
+        else{
+            Cursor cursor = dataObj.checkAssessmentTest(studentId, testid,enrollment_Id,instance_Id);
+            if (cursor.getCount() > 0) {
+                while (cursor.moveToNext()) {
+                    if (cursor.getString(cursor.getColumnIndex("satu_ID")).equals(testid)) {
+                        enrollid = cursor.getString(cursor.getColumnIndex("satu_entroll_id"));
+                        courseid = cursor.getString(cursor.getColumnIndex("satu_course_id"));
+                        subjectId = cursor.getString(cursor.getColumnIndex("satu_subjet_ID"));
+                        paperid = cursor.getString(cursor.getColumnIndex("satu_paper_ID"));
+                    }
                 }
             }
         }
@@ -269,10 +287,16 @@ public class ReviewActivity extends AppCompatActivity implements
                 c.moveToLast();
                 if (c.getInt(c.getColumnIndex("Attempt_Status")) == 2) {
                     try {
-                        String json = new String(SaveJSONdataToFile.bytesFromFile(URLClass.mainpath + path + "Attempt/"+ testid + ".json"), "UTF-8");
+                        String json;
+                        if(test_type.equalsIgnoreCase("PRACTISE_TEST")) {
+                           json = new String(SaveJSONdataToFile.bytesFromFile(URLClass.mainpath + path + "Attempt/" + testid + ".json"), "UTF-8");
+                        }
+                        else {
+                            json = new String(SaveJSONdataToFile.bytesFromFile(URLClass.mainpath + path +  testid + ".json"), "UTF-8");
+                        }
                         attempt = new JSONObject(json);
-                        parseJson(attempt);
-                        buffer = generateArray(attempt.getJSONArray("Sections").getJSONObject(pos));
+                        //parseJson(attempt);
+                        ja_questions=attempt.getJSONArray("Sections").getJSONObject(pos).getJSONArray("Questions");
                         Log.e("Resume-cursor",""+attempt.toString());
                         restoreSections(dataObj.getQuestionStatus(testid),attempt);
                         CorrectOptions = dataObj.getCorrectOptions(testid);
@@ -372,15 +396,15 @@ public class ReviewActivity extends AppCompatActivity implements
             public void onClick(View v) {
                 try {
                     flag = true;
-                    buffer = attempt.getJSONArray("Sections").getJSONObject(pos).getJSONArray("Questions");
-                    if (index <= buffer.length()) {
-                        if (index < buffer.length() - 1) {
+                    ja_questions = attempt.getJSONArray("Sections").getJSONObject(pos).getJSONArray("Questions");
+                    if (index <= ja_questions.length()) {
+                        if (index < ja_questions.length() - 1) {
                             setQBackground(pos,index);
                             index++;
                             setQuestion(pos, index, edit);
 
                             checkRadio();
-                        } else if (index == buffer.length() - 1) {
+                        } else if (index == ja_questions.length() - 1) {
                             //Change button once last question of test is reached
                             setQBackground(pos,index);
                             if (pos == listOfLists.size() - 1) {
@@ -415,7 +439,7 @@ public class ReviewActivity extends AppCompatActivity implements
                                 qAdapter.setData(index);
                                 pos = pos + 1;
                                 Log.e("ValuesElse--->", "" + pos + "," + index);
-                                buffer = attempt.getJSONArray("Sections").getJSONObject(pos).getJSONArray("Questions");
+                                ja_questions = attempt.getJSONArray("Sections").getJSONObject(pos).getJSONArray("Questions");
                                 sections.setSelection(pos);
                                 setScrollbar(pos);
                                 scrollAdapter.updateList(listOfLists.get(pos));
@@ -528,9 +552,9 @@ public class ReviewActivity extends AppCompatActivity implements
 
             index = in;
             setQuestion(pos,index,edit);
-            buffer = attempt.getJSONArray("Sections").getJSONObject(pos).getJSONArray("Questions");
-            Id = buffer.getJSONObject(index).getString("qbm_ID");
-            if(index == buffer.length() -1)
+            ja_questions = attempt.getJSONArray("Sections").getJSONObject(pos).getJSONArray("Questions");
+            Id = ja_questions.getJSONObject(index).getString("qbm_ID");
+            if(index == ja_questions.length() -1)
                 checkRadio();
         } catch (JSONException e) {
             e.printStackTrace();
@@ -571,7 +595,7 @@ public class ReviewActivity extends AppCompatActivity implements
             dialogBuilder.setView(view);
             final AlertDialog alertDialog = dialogBuilder.create();
             alertDialog.show();
-            final Button cancelButton = (Button) view.findViewById(R.id.close_button);
+            final Button cancelButton = (Button) view.findViewById(R.id.pop_close_button);
             alertDialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
                 @Override
                 public void onCancel(DialogInterface dialog) {
@@ -604,8 +628,8 @@ public class ReviewActivity extends AppCompatActivity implements
     //method to check the radiobutton based on its position in the group
     public void checkRadio() {
         try {
-            buffer = attempt.getJSONArray("Sections").getJSONObject(pos).getJSONArray("Questions");
-            Id = buffer.getJSONObject(index).getString("qbm_ID");
+            ja_questions = attempt.getJSONArray("Sections").getJSONObject(pos).getJSONArray("Questions");
+            Id = ja_questions.getJSONObject(index).getString("qbm_ID");
             if (dataObj.getPosition(Id,testid) > -1) {
                 opAdapter.setOptionsList(dataObj.getPosition(Id,testid));
                 opAdapter.notifyDataSetChanged();
@@ -622,9 +646,9 @@ public class ReviewActivity extends AppCompatActivity implements
     public void writeOption(int indx) {
 //        RadioButton random = findViewById(group.getCheckedRadioButtonId());
         try {
-            buffer = attempt.getJSONArray("Sections").getJSONObject(pos).getJSONArray("Questions");
-            Id = buffer.getJSONObject(index).getString("qbm_ID");
-            Seq = buffer.getJSONObject(index).getString("qbm_sequence");
+            ja_questions = attempt.getJSONArray("Sections").getJSONObject(pos).getJSONArray("Questions");
+            Id = ja_questions.getJSONObject(index).getString("qbm_ID");
+            Seq = ja_questions.getJSONObject(index).getString("qbm_sequence");
             if (dataObj.CheckQuestion(Id)) {
                 if (indx > -1) {
                     dataObj.UpdateQuestion(Id, Seq, Integer.valueOf(questionobj.getString("qbm_marks")), indx, listOfLists.get(pos).get(index).getQ_status(),opAdapter.getSelectedSequence(),opAdapter.getFlag());
@@ -967,14 +991,19 @@ public class ReviewActivity extends AppCompatActivity implements
             listOfLists = new ArrayList<>();
             int max = 0;
             for (int i = 0; i < attempt.getJSONArray("Sections").length(); i++) {
-                categories.add(attempt.getJSONArray("Sections").getJSONObject(i).getString("ptu_section_name"));
+                if(test_type.equalsIgnoreCase("PRACTISE_TEST")) {
+                    categories.add(attempt.getJSONArray("Sections").getJSONObject(i).getString("ptu_section_name"));
+                }else
+                {
+                    categories.add(attempt.getJSONArray("Sections").getJSONObject(i).getString("atu_section_name"));
+                }
                 JSONArray array2 = attempt.getJSONArray("Sections").getJSONObject(i).getJSONArray("Questions");
                 questionOpList = new ArrayList<>();
 
                 Log.e("Review_array2",""+array2.length());
                 for (int j = 0; j < array2.length(); j++) {
                     if(statusList.get(j) != null) {
-                        qListObj = new SingleQuestionList(array2.getJSONObject(j).getString("qbm_SequenceId"), statusList.get(max),not_confirmed);
+                        qListObj = new SingleQuestionList(array2.getJSONObject(j).getString("qbm_SequenceID"), statusList.get(max),not_confirmed);
                     }
                     max++;
                     questionOpList.add(qListObj);

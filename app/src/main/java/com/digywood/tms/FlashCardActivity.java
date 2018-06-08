@@ -828,7 +828,7 @@ public class FlashCardActivity extends AppCompatActivity {
                 gja_questions=secObj.getJSONArray("Questions");
                 for(int j=0;j<gja_questions.length();j++){
                     Qcount++;
-                    tempList.add(new SingleFlashQuestion(gja_questions.getJSONObject(j).getString("qbm_ID"),gja_questions.getJSONObject(j).getString("qbm_SequenceId"),"NOT_ATTEMPTED"));
+                    tempList.add(new SingleFlashQuestion(gja_questions.getJSONObject(j).getString("qbm_ID"),gja_questions.getJSONObject(j).getString("qbm_SequenceID"),"NOT_ATTEMPTED"));
                 }
 
                 baseQList.add(tempList);
