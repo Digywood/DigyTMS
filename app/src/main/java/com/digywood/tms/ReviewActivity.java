@@ -213,7 +213,7 @@ public class ReviewActivity extends AppCompatActivity implements
 
         testid = getIntent().getStringExtra("test");
         studentId = getIntent().getStringExtra("studentid");
-        enrollment_Id = getIntent().getStringExtra("enrollid");
+        enrollid = getIntent().getStringExtra("enrollid");
         instance_Id = getIntent().getStringExtra("instanceid");
         test_type=getIntent().getStringExtra("TYPE");
         if(test_type.equalsIgnoreCase("PRACTISE_TEST")) {
@@ -230,14 +230,14 @@ public class ReviewActivity extends AppCompatActivity implements
             }
         }
         else{
-            Cursor cursor = dataObj.checkAssessmentTest(studentId, testid,enrollment_Id,instance_Id);
+            courseid = getIntent().getStringExtra("courseid");
+            paperid = getIntent().getStringExtra("paperid");
+            Cursor cursor = dataObj.checkAssessmentTest(studentId, testid,enrollid,instance_Id);
             if (cursor.getCount() > 0) {
                 while (cursor.moveToNext()) {
                     if (cursor.getString(cursor.getColumnIndex("satu_ID")).equals(testid)) {
-                        enrollid = cursor.getString(cursor.getColumnIndex("satu_entroll_id"));
-                        courseid = cursor.getString(cursor.getColumnIndex("satu_course_id"));
                         subjectId = cursor.getString(cursor.getColumnIndex("satu_subjet_ID"));
-                        paperid = cursor.getString(cursor.getColumnIndex("satu_paper_ID"));
+//                        paperid = cursor.getString(cursor.getColumnIndex("satu_paper_ID"));
                     }
                 }
             }
@@ -280,37 +280,54 @@ public class ReviewActivity extends AppCompatActivity implements
         });
 
         try {
-            count = dataObj.getAttempCount(studentId)-1 ;
-            Cursor c = dataObj.getAttempt(dataObj.getLastTestAttempt(testid,studentId));
-            //if cursor has values then the test is being resumed and data is retrieved from database
-            if(c.getCount()> 0) {
+            attempt = new JSONObject(getIntent().getStringExtra("json"));
+            count = dataObj.getAttempCount(studentId) - 1;
+            Cursor c = null;
+            if (test_type.equalsIgnoreCase("PRACTISE_TEST")) {
+                c = dataObj.getAttempt(dataObj.getLastTestAttempt(testid, studentId));
                 c.moveToLast();
                 if (c.getInt(c.getColumnIndex("Attempt_Status")) == 2) {
-                    try {
-                        String json;
-                        if(test_type.equalsIgnoreCase("PRACTISE_TEST")) {
-                           json = new String(SaveJSONdataToFile.bytesFromFile(URLClass.mainpath + path + "Attempt/" + testid + ".json"), "UTF-8");
-                        }
-                        else {
-                            json = new String(SaveJSONdataToFile.bytesFromFile(URLClass.mainpath + path +  testid + ".json"), "UTF-8");
-                        }
-                        attempt = new JSONObject(json);
+//                        String json = new String(SaveJSONdataToFile.bytesFromFile(URLClass.mainpath + path + "Attempt/" + testid + ".json"), "UTF-8");
+//                        attempt = new JSONObject(json);
                         //parseJson(attempt);
-                        ja_questions=attempt.getJSONArray("Sections").getJSONObject(pos).getJSONArray("Questions");
-                        Log.e("Resume-cursor",""+attempt.toString());
+                        Log.e("Resume-cursor","reached");
+//                        ja_questions=attempt.getJSONArray("Sections").getJSONObject(pos).getJSONArray("Questions");
+
                         restoreSections(dataObj.getQuestionStatus(testid),attempt);
-                        CorrectOptions = dataObj.getCorrectOptions(testid);
+//                        CorrectOptions = dataObj.getCorrectOptions(testid);
                         statusList = dataObj.getQuestionStatus(testid);
                         setScrollbar(pos);
                         setQuestion(pos,index,edit);
                         scrollAdapter = new ScrollGridAdapter(ReviewActivity.this, attempt.getJSONArray("Sections").getJSONObject(pos).getJSONArray("Questions"),listOfLists.get(pos),getScreenSize());
                         scrollAdapter.updateList(listOfLists.get(pos));
-                    }catch (IOException| ClassNotFoundException e ){
+                    /*catch (IOException| ClassNotFoundException e ){
                         e.printStackTrace();
-                    }
+                    }*/
 
                 }
+            } else {
+//                c = dataObj.getAssessment(studentId, instance_Id);
+////                json = new String(SaveJSONdataToFile.bytesFromFile(URLClass.mainpath + path +  testid + ".json"), "UTF-8");
+//                c.moveToFirst();
+//                        String json = new String(SaveJSONdataToFile.bytesFromFile(URLClass.mainpath + path +  testid + ".json"), "UTF-8");
+
+                        //parseJson(attempt);
+                        Log.e("Resume-cursor","reached");
+//                        ja_questions=attempt.getJSONArray("Sections").getJSONObject(pos).getJSONArray("Questions");
+                        restoreSections(dataObj.getAssessmentQuestionStatus(testid),attempt);
+//                        CorrectOptions = dataObj.getCorrectOptions(testid);
+                        statusList = dataObj.getAssessmentQuestionStatus(testid);
+                        setScrollbar(pos);
+                        setQuestion(pos,index,edit);
+                        scrollAdapter = new ScrollGridAdapter(ReviewActivity.this, attempt.getJSONArray("Sections").getJSONObject(pos).getJSONArray("Questions"),listOfLists.get(pos),getScreenSize());
+                        scrollAdapter.updateList(listOfLists.get(pos));
+
+
             }
+//            //if cursor has values then the test is being resumed and data is retrieved from database
+//            if(c.getCount()> 0) {
+//
+//            }
 
         } catch (JSONException e) {
             e.printStackTrace();
@@ -399,14 +416,14 @@ public class ReviewActivity extends AppCompatActivity implements
                     ja_questions = attempt.getJSONArray("Sections").getJSONObject(pos).getJSONArray("Questions");
                     if (index <= ja_questions.length()) {
                         if (index < ja_questions.length() - 1) {
-                            setQBackground(pos,index);
+//                            setQBackground(pos,index);
                             index++;
                             setQuestion(pos, index, edit);
 
                             checkRadio();
                         } else if (index == ja_questions.length() - 1) {
                             //Change button once last question of test is reached
-                            setQBackground(pos,index);
+//                            setQBackground(pos,index);
                             if (pos == listOfLists.size() - 1) {
                                 btn_next.setText("Finish");
 //                                writeOption(opAdapter.getSelectedItem());
@@ -417,13 +434,20 @@ public class ReviewActivity extends AppCompatActivity implements
                                             public void onClick(DialogInterface arg0, int arg1) {
 //                                            q_list.clear();
                                                 finish();
-                                                Intent intent = new Intent(ReviewActivity.this, ListofPractiseTests.class);
+                                                Intent intent;
+                                                if (test_type.equalsIgnoreCase("PRACTISE_TEST")) {
+                                                    intent = new Intent(ReviewActivity.this, ListofPractiseTests.class);
+                                                }else
+                                                {
+                                                    intent = new Intent(ReviewActivity.this, ListofAssessmentTests.class);
+                                                }
                                                 intent.putExtra("studentid",studentId);
                                                 intent.putExtra("enrollid",enrollid);
                                                 intent.putExtra("courseid", courseid);
                                                 intent.putExtra("subjectid", subjectId);
                                                 intent.putExtra("paperid",paperid);
                                                 intent.putExtra("testid",testid);
+                                                Log.e("ReviewActivity","stu"+studentId+" pap"+paperid+" enr"+enrollid+" cour"+courseid);
                                                 startActivity(intent);
                                             }
                                         })
@@ -457,7 +481,7 @@ public class ReviewActivity extends AppCompatActivity implements
             @Override
             public void onClick(View v) {
                 try {
-                    setQBackground(pos,index);
+//                    setQBackground(pos,index);
                     questionobj = array.getJSONObject(index);
                     if (index > 0) {
                         index--;
@@ -547,7 +571,7 @@ public class ReviewActivity extends AppCompatActivity implements
     //method to display selected question
     public void gotoQuestion(int in){
         try {
-            setQBackground(pos,index);
+//            setQBackground(pos,index);
 //            writeOption(opAdapter.getSelectedItem());
 
             index = in;
@@ -684,13 +708,20 @@ public class ReviewActivity extends AppCompatActivity implements
                             // do something when the button is clicked
                             public void onClick(DialogInterface arg0, int arg1) {
 
-                                Intent intent = new Intent(ReviewActivity.this, ListofPractiseTests.class);
+                                Intent intent;
+                                if (test_type.equalsIgnoreCase("PRACTISE_TEST")) {
+                                    intent = new Intent(ReviewActivity.this, ListofPractiseTests.class);
+                                }else
+                                {
+                                    intent = new Intent(ReviewActivity.this, ListofAssessmentTests.class);
+                                }
                                 intent.putExtra("studentid", studentId);
                                 intent.putExtra("enrollid",enrollid);
                                 intent.putExtra("courseid", courseid);
                                 intent.putExtra("subjectid", subjectId);
                                 intent.putExtra("paperid",paperid);
                                 intent.putExtra("testid",testid);
+                                Log.e("ReviewActivity","stu"+studentId+" pap"+paperid+" enr"+enrollid+" cour"+courseid);
                                 startActivity(intent);
                             }
                         })
@@ -1156,13 +1187,21 @@ public class ReviewActivity extends AppCompatActivity implements
                     // do something when the button is clicked
                     public void onClick(DialogInterface arg0, int arg1) {
 
-                        Intent intent = new Intent(ReviewActivity.this, ListofPractiseTests.class);
+                        Intent intent;
+                        if (test_type.equalsIgnoreCase("PRACTISE_TEST")) {
+                            intent = new Intent(ReviewActivity.this, ListofPractiseTests.class);
+                        }else
+                        {
+                            intent = new Intent(ReviewActivity.this, ListofAssessmentTests.class);
+                        }
                         intent.putExtra("studentid", studentId);
                         intent.putExtra("enrollid",enrollid);
                         intent.putExtra("courseid", courseid);
                         intent.putExtra("subjectid", subjectId);
                         intent.putExtra("paperid",paperid);
                         intent.putExtra("testid",testid);
+                        Log.e("ReviewActivity","stu"+studentId+" pap"+paperid+" enr"+enrollid+" cour"+courseid);
+
                         startActivity(intent);
                     }
                 })
@@ -1243,7 +1282,7 @@ public class ReviewActivity extends AppCompatActivity implements
         try {
             mHideRunnable.run();
             pos = position;
-            CorrectOptions = dataObj.getCorrectOptions(testid);
+//            CorrectOptions = dataObj.getCorrectOptions(testid);
             statusList = dataObj.getQuestionStatus(testid);
             Log.e("Size",""+listOfLists.size());
             scrollAdapter = new ScrollGridAdapter(ReviewActivity.this, attempt.getJSONArray("Sections").getJSONObject(pos).getJSONArray("Questions"),listOfLists.get(pos),getScreenSize());
