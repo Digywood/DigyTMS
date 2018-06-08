@@ -2281,7 +2281,7 @@ public class DBHelper extends SQLiteOpenHelper {
         cv.put("Question_Option_Sequence",oSeq );
         cv.put("Option_Answer_Flag",flag );
         Log.e("DB_Update:",status);
-        updateFlag = db.update("assessment_data",cv,"Question_ID='"+qId+"'",null);
+        updateFlag = db.update("assessment_data",cv,"Question_ID='"+qId+"' AND Assessment_Instance_ID='"+instID+"'",null);
 
         return updateFlag;
     }
@@ -2306,6 +2306,24 @@ public class DBHelper extends SQLiteOpenHelper {
     public int checkAQUPLDStatus(String studentId,String testQUID,String status){
         Cursor c =db.query("assessment_data", new String[] {"StudentId,Question_Upload_Status"},"StudentId='"+studentId+"' and Question_Key='"+testQUID+"' and Question_Upload_Status='"+status+"'", null, null, null,null);
         return c.getCount();
+    }
+
+    public ArrayList<String> getAssessmentQuestionStatus(String testId){
+        ArrayList<String> StatusList = new ArrayList<>();
+        Cursor c =db.query("assessment_data", new String[] {"Question_ID,Question_Seq_No,Question_Max_Marks,Question_Option,Question_Status,Question_Option_Sequence,Option_Answer_Flag"},"Test_ID = '"+testId+"'", null, null, null,null);
+        if(c.getCount()!=0)
+        {
+            while (c.moveToNext()) {
+                StatusList.add(c.getString(c.getColumnIndex("Question_Status")));
+            }
+        }
+        c.close();
+        return StatusList;
+    }
+    public Cursor getAssessment( String studentid, String instanceid){
+        String query ="SELECT * FROM assessment_data WHERE StudentId='"+studentid+"' AND  Assessment_Instance_ID='"+instanceid+"'";
+        Cursor c=db.rawQuery(query,null);
+        return c;
     }
 
     public Cursor getAssessmentSections(String testId){

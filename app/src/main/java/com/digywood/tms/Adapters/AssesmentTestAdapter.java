@@ -208,6 +208,8 @@ public class AssesmentTestAdapter extends RecyclerView.Adapter<AssesmentTestAdap
                     i.putExtra("test", testid);
                     i.putExtra("studentid", studentid);
                     i.putExtra("enrollid", enrollid);
+                    i.putExtra("courseid", courseid);
+                    i.putExtra("paperid", paperid);
                     i.putExtra("instanceid",singletest.getInstanceId());
                     i.putExtra("json", assessment_json);
                     i.putExtra("TYPE", "ASSESSMENT_TEST");

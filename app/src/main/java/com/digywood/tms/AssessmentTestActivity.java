@@ -355,6 +355,7 @@ public class AssessmentTestActivity extends AppCompatActivity implements Adapter
                 opAdapter.notifyDataSetChanged();
                 clearOptions();
                 setQBackground(pos,index);
+//                writeOption(opAdapter.getSelectedItem());
                 btn_confirm.setBackgroundColor(getResources().getColor(R.color.dull_yellow));
             }
         });
@@ -366,7 +367,7 @@ public class AssessmentTestActivity extends AppCompatActivity implements Adapter
                 if (opAdapter.getSelectedItem() > -1) {
                     listOfLists.get(pos).get(index).setQ_status(bookmarked);
                     listOfLists.get(pos).get(index).setQ_check(confirmed);
-                    writeOption(opAdapter.getSelectedItem());
+//                    writeOption(opAdapter.getSelectedItem());
                     setQBackground(pos,index);
 //                    index++;
 //                    gotoQuestion(index);
@@ -382,6 +383,7 @@ public class AssessmentTestActivity extends AppCompatActivity implements Adapter
                 if (opAdapter.getSelectedItem() > -1) {
                     listOfLists.get(pos).get(index).setQ_status(attempted);
                     listOfLists.get(pos).get(index).setQ_check(confirmed);
+//                    writeOption(opAdapter.getSelectedItem());
                     setQBackground(pos, index);
                     btn_confirm.setBackgroundColor(Color.GREEN);
                 } else
@@ -837,7 +839,7 @@ public class AssessmentTestActivity extends AppCompatActivity implements Adapter
             long result = -1;
             buffer = attempt.getJSONArray("Sections").getJSONObject(pos).getJSONArray("Questions");
             Id = buffer.getJSONObject(index).getString("qbm_ID");
-            Log.e("writeOption--->",""+Id);
+//            Log.e("writeOption--->",""+Id);
 //            Seq = buffer.getJSONObject(index).getString("qbm_SequenceID");
             questionobj = buffer.getJSONObject(index);
             scrollAdapter.updateList(listOfLists.get(pos));
@@ -853,6 +855,8 @@ public class AssessmentTestActivity extends AppCompatActivity implements Adapter
                 if (result == 0) {
                     dataObj.InsertAssessmentQuestion(attempt.getString("atu_ID"),instanceId,generateUniqueId(Id),studentId, Id,orgid,branchid,batchid, questionobj.getString("qbm_SequenceID"),attempt.getJSONArray("Sections").getJSONObject(pos).getString("atu_section_name"),questionobj.getString("qbm_ChapterName"),questionobj.getString("qbm_Sub_CategoryName"), Integer.valueOf(questionobj.getString("qbm_marks")), Double.valueOf(questionobj.getString("qbm_negative_mrk")), 0, 0, indx, listOfLists.get(pos).get(index).getQ_status(),"NotUploaded", opAdapter.getSelectedSequence(), opAdapter.getFlag());
                 }
+
+                Log.e("Selected_option","ID: "+indx);
             }
 
         } catch (JSONException e) {
