@@ -73,7 +73,7 @@ public class AssesmentTestAdapter extends RecyclerView.Adapter<AssesmentTestAdap
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
 
-        public TextView tv_testid, tv_teststatus;
+        public TextView tv_testid,tv_noOfQues, tv_teststatus;
         public ImageView iv_start, iv_resume,btn_fstart,iv_download;
         LinearLayout ll_start,  ll_review;
 
@@ -81,6 +81,7 @@ public class AssesmentTestAdapter extends RecyclerView.Adapter<AssesmentTestAdap
         public MyViewHolder(View view) {
             super(view);
             tv_testid = view.findViewById(R.id.tv_atestid);
+            tv_noOfQues = view.findViewById(R.id.tv_noOfQues);
             tv_teststatus = view.findViewById(R.id.tv_ateststatus);
             iv_start = view.findViewById(R.id.iv_start);
             iv_resume = view.findViewById(R.id.iv_resume);
@@ -124,6 +125,9 @@ public class AssesmentTestAdapter extends RecyclerView.Adapter<AssesmentTestAdap
         holder.tv_testid.setText(singletest.getTestName()+" ("+singletest.getTestid()+")");
         holder.tv_teststatus.setText(singletest.getStatus());
 
+        int nqus=myhelper.getAtuTestNumberOfQuestions(singletest.getTestid(),singletest.getInstanceId(),studentid,enrollid);
+        holder.tv_noOfQues.setText("No.Ques: "+nqus);
+        Log.e("AssesmentTestAdapter","No.Ques: "+nqus +",testId:"+singletest.getTestid()+",InstanceId:"+singletest.getInstanceId());
         holder.ll_start.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -209,6 +213,7 @@ public class AssesmentTestAdapter extends RecyclerView.Adapter<AssesmentTestAdap
                     i.putExtra("studentid", studentid);
                     i.putExtra("enrollid", enrollid);
                     i.putExtra("courseid", courseid);
+                    i.putExtra("subjectid", subjectId);
                     i.putExtra("paperid", paperid);
                     i.putExtra("instanceid",singletest.getInstanceId());
                     i.putExtra("json", assessment_json);

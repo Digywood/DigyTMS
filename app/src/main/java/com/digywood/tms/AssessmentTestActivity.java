@@ -856,6 +856,26 @@ public class AssessmentTestActivity extends AppCompatActivity implements Adapter
                     dataObj.InsertAssessmentQuestion(attempt.getString("atu_ID"),instanceId,generateUniqueId(Id),studentId, Id,orgid,branchid,batchid, questionobj.getString("qbm_SequenceID"),attempt.getJSONArray("Sections").getJSONObject(pos).getString("atu_section_name"),questionobj.getString("qbm_ChapterName"),questionobj.getString("qbm_Sub_CategoryName"), Integer.valueOf(questionobj.getString("qbm_marks")), Double.valueOf(questionobj.getString("qbm_negative_mrk")), 0, 0, indx, listOfLists.get(pos).get(index).getQ_status(),"NotUploaded", opAdapter.getSelectedSequence(), opAdapter.getFlag());
                 }
 
+                Log.e("AssessmenttestActivity","writeOption"+attempt.getString("atu_ID"));
+                Log.e("AssessmenttestActivity","writeOption"+instanceId);
+                Log.e("AssessmenttestActivity","writeOption"+generateUniqueId(Id));
+                Log.e("AssessmenttestActivity","writeOption"+studentId);
+                Log.e("AssessmenttestActivity","writeOption"+Id);
+                Log.e("AssessmenttestActivity","writeOption"+orgid);
+                Log.e("AssessmenttestActivity","writeOption"+branchid);
+                Log.e("AssessmenttestActivity","writeOption"+batchid);
+                Log.e("AssessmenttestActivity","writeOption"+questionobj.getString("qbm_SequenceID"));
+                Log.e("AssessmenttestActivity","writeOption"+attempt.getJSONArray("Sections").getJSONObject(pos).getString("atu_section_name"));
+                Log.e("AssessmenttestActivity","writeOption"+questionobj.getString("qbm_ChapterName"));
+                Log.e("AssessmenttestActivity","writeOption"+questionobj.getString("qbm_Sub_CategoryName"));
+                Log.e("AssessmenttestActivity","writeOption"+Integer.valueOf(questionobj.getString("qbm_marks")));
+                Log.e("AssessmenttestActivity","writeOption"+Double.valueOf(questionobj.getString("qbm_negative_mrk")));
+                Log.e("AssessmenttestActivity","writeOption"+indx);
+                Log.e("AssessmenttestActivity","writeOption"+listOfLists.get(pos).get(index).getQ_status());
+                Log.e("AssessmenttestActivity","writeOption"+"NotUploaded");
+                Log.e("AssessmenttestActivity","writeOption"+opAdapter.getSelectedSequence());
+                Log.e("AssessmenttestActivity","writeOption"+opAdapter.getFlag());
+
                 Log.e("Selected_option","ID: "+indx);
             }
 
@@ -1219,6 +1239,7 @@ public class AssessmentTestActivity extends AppCompatActivity implements Adapter
 
                         stopRepeatingTask();       //stop the baground task for uploading assessment data to server
 
+                        finish();
                         Intent intent = new Intent(AssessmentTestActivity.this, ListofAssessmentTests.class);
                         intent.putExtra("enrollid",enrollid);
                         intent.putExtra("courseid", courseid);

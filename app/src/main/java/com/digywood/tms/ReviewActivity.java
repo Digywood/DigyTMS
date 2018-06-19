@@ -109,7 +109,7 @@ public class ReviewActivity extends AppCompatActivity implements
     PracticeTestActivity testObj;
     SingleQuestionList qListObj;
     OptionsCheckAdapter opAdapter;
-    SaveJSONdataToFile save;
+    //SaveJSONdataToFile save;
     DBHelper dataObj;
     GestureDetector gd;
 
@@ -213,10 +213,13 @@ public class ReviewActivity extends AppCompatActivity implements
 
         testid = getIntent().getStringExtra("test");
         studentId = getIntent().getStringExtra("studentid");
+        courseid = getIntent().getStringExtra("courseid");
+        subjectId = getIntent().getStringExtra("subjectid");
+        paperid = getIntent().getStringExtra("paperid");
         enrollid = getIntent().getStringExtra("enrollid");
         instance_Id = getIntent().getStringExtra("instanceid");
         test_type=getIntent().getStringExtra("TYPE");
-        if(test_type.equalsIgnoreCase("PRACTISE_TEST")) {
+         /*if(test_type.equalsIgnoreCase("PRACTISE_TEST")) {
             Cursor cursor = dataObj.checkPractiseTest(studentId, testid);
             if (cursor.getCount() > 0) {
                 while (cursor.moveToNext()) {
@@ -230,9 +233,9 @@ public class ReviewActivity extends AppCompatActivity implements
             }
         }
         else{
-            courseid = getIntent().getStringExtra("courseid");
-            paperid = getIntent().getStringExtra("paperid");
-            Cursor cursor = dataObj.checkAssessmentTest(studentId, testid,enrollid,instance_Id);
+
+
+           Cursor cursor = dataObj.checkAssessmentTest(studentId, testid,enrollid,instance_Id);
             if (cursor.getCount() > 0) {
                 while (cursor.moveToNext()) {
                     if (cursor.getString(cursor.getColumnIndex("satu_ID")).equals(testid)) {
@@ -241,8 +244,8 @@ public class ReviewActivity extends AppCompatActivity implements
                     }
                 }
             }
-        }
-        save = new SaveJSONdataToFile();
+        }*/
+        //save = new SaveJSONdataToFile();
 
         path = enrollid + "/" + courseid + "/" + subjectId + "/" + paperid + "/" + testid + "/";
         photoPath = URLClass.mainpath + path;
@@ -758,8 +761,14 @@ public class ReviewActivity extends AppCompatActivity implements
                 bundle.putString("courseid", courseid);
                 bundle.putString("subjectid", subjectId);
                 bundle.putString("paperid",paperid);
-                bundle.putString("Type","PRACTICE");
+                if(test_type.equalsIgnoreCase("PRACTISE_TEST")) {
+                    bundle.putString("Type","PRACTICE" );
+                }else
+                {
+                    bundle.putString("Type","ASSESSMENT" );
+                }
                 intent.putExtra("studentid", studentId);
+                intent.putExtra("instanceid", instance_Id);
                 intent.putExtra("BUNDLE", bundle);
                 intent.putExtra("Xreveal", revealX);
                 intent.putExtra("Yreveal", revealY);

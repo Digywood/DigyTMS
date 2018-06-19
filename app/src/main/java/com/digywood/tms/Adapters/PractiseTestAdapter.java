@@ -76,7 +76,7 @@ public class PractiseTestAdapter extends RecyclerView.Adapter<PractiseTestAdapte
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
 
-        public TextView tv_testid, tv_teststatus,tv_testAttempt,tv_attempt_min,tv_attempt_max,tv_flashAttempt,tv_attempt_avg;
+        public TextView tv_testid,tv_noOfQues, tv_teststatus,tv_testAttempt,tv_attempt_min,tv_attempt_max,tv_flashAttempt,tv_attempt_avg;
         public  TextView tv_flash_avg,tv_flash_max,tv_flash_min;
         ImageView iv_start,iv_resume,iv_review,iv_fstart;
         ImageView iv_history,iv_download;
@@ -86,6 +86,7 @@ public class PractiseTestAdapter extends RecyclerView.Adapter<PractiseTestAdapte
         public MyViewHolder(View view) {
             super(view);
             tv_testid = view.findViewById(R.id.tv_testid);
+            tv_noOfQues = view.findViewById(R.id.tv_NoOfQues);
             tv_teststatus = view.findViewById(R.id.tv_teststatus);
             iv_start = view.findViewById(R.id.iv_start);
             iv_resume = view.findViewById(R.id.iv_resume);
@@ -172,6 +173,9 @@ public class PractiseTestAdapter extends RecyclerView.Adapter<PractiseTestAdapte
             mycur.close();
         }
 
+        int nqus=myhelper.getNumberOfQuestions(singletest.getTestid());
+        holder.tv_noOfQues.setText("No.Ques: "+nqus);
+
         holder.tv_flashAttempt.setText(""+fattemptcount);
         holder.tv_flash_max.setText(""+round(fmaxscore,1));
         holder.tv_flash_min.setText(""+round(fminscore,1));
@@ -223,6 +227,9 @@ public class PractiseTestAdapter extends RecyclerView.Adapter<PractiseTestAdapte
                             i.putExtra("test", testid);
                             i.putExtra("studentid", studentid);
                             i.putExtra("enrollid", enrollid);
+                            i.putExtra("courseid", courseid);
+                            i.putExtra("subjectid", subjectId);
+                            i.putExtra("paperid", paperid);
                             i.putExtra("json", attempt);
                             i.putExtra("TYPE", "PRACTISE_TEST");
                             mycontext.startActivity(i);

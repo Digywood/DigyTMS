@@ -20,7 +20,7 @@ public class JSONParser {
     ArrayList<String> quesIdList=new ArrayList<>();
     ArrayList<String> allQIdList=new ArrayList<>();
     ArrayList<String> groupList=new ArrayList<>();
-    ArrayList<String> groupcompList=new ArrayList<>();
+    ArrayList<String> groupTypeList=new ArrayList<>();
     ArrayList<String> groupcloseList=new ArrayList<>();
     ArrayList<String> subcatList=new ArrayList<>();
     ArrayList<String> gquesList=new ArrayList<>();
@@ -81,7 +81,7 @@ public class JSONParser {
                 groupConfigList.clear();
                 allQIdList.clear();
 //                groupList.clear();
-                groupcompList.clear();
+                groupTypeList.clear();
                 groupcloseList.clear();
                 quesIdList.clear();
                 testQuesList.clear();
@@ -119,13 +119,20 @@ public class JSONParser {
                     }else {
                         groupQuesIdList.add(quesObj.getString("qbm_ID"));
 
-                        String grouptype=quesObj.getString("gbg_type");
-                        if(grouptype.equalsIgnoreCase("COMPREHENSION")){
-                            if(groupcompList.contains(quesObj.getString("gbg_id"))){
+                        String group_type=quesObj.getString("gbg_type");
+                        if(groupTypeList.contains(quesObj.getString("gbg_id"))){
+
+                        }else {
+                            groupConfigList.add(new SingleGroupConfig(testid, sectionid, group_type, 1));
+                            groupTypeList.add(quesObj.getString("gbg_id"));
+                        }
+
+                        /*if(grouptype.equalsIgnoreCase("COMPREHENSION")){
+                            if(groupTypeList.contains(quesObj.getString("gbg_id"))){
 
                             }else{
                                 groupConfigList.add(new SingleGroupConfig(testid,sectionid,grouptype,1));
-                                groupcompList.add(quesObj.getString("gbg_id"));
+                                groupTypeList.add(quesObj.getString("gbg_id"));
                             }
                         }else{
                             if(groupcloseList.contains(quesObj.getString("gbg_id"))){
@@ -134,7 +141,7 @@ public class JSONParser {
                                 groupConfigList.add(new SingleGroupConfig(testid,sectionid,grouptype,1));
                                 groupcloseList.add(quesObj.getString("gbg_id"));
                             }
-                        }
+                        }*/
 
                         groupmainList.add(new GroupQues(quesObj.getString("gbg_id"),quesObj.getString("qbm_ID")));
                     }
@@ -143,11 +150,11 @@ public class JSONParser {
 
 
                 finalgroupList.clear();
-                if(groupcompList.size()>0){
+                if(groupTypeList.size()>0){
 
-                    int finalcompgroupcount=myhelper.getCompGroupCount(testid,sectionid,"COMPREHENTION");
+                    int finalcompgroupcount=myhelper.getCompGroupCount(testid,sectionid);
 
-                    finalgroupList=getFinalGroups(groupcompList,finalcompgroupcount);
+                    finalgroupList=getFinalGroups(groupTypeList,finalcompgroupcount);
                     if(finalgroupList.size()>0){
                         for(int d=0;d<finalgroupList.size();d++){
 
@@ -182,14 +189,14 @@ public class JSONParser {
 
                         }
                     }else{
-                        Log.e("GroupConfigIn: --","Empty Comprehention Groups");
+                        Log.e("GroupConfigIn: --","Empty  Groups");
                     }
                 }else{
-                    Log.e("GroupConfigOut: --","Empty Comprehention Groups");
+                    Log.e("GroupConfigOut: --","Empty  Groups");
                 }
 
 
-                finalgroupList.clear();
+                /*finalgroupList.clear();
                 if(groupcloseList.size()>0){
                     int finalclosegroupcount=myhelper.getCloseGroupCount(testid,sectionid,"CLOSURE");
                     finalgroupList=getFinalGroups(groupcloseList,finalclosegroupcount);
@@ -233,7 +240,7 @@ public class JSONParser {
                     }
                 }else{
                     Log.e("GroupConfigOut: --","Empty Closure Groups");
-                }
+                }*/
 
 
                 //SubCategory Wise Questions Scheduling.....

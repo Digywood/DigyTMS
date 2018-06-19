@@ -1525,9 +1525,9 @@ public class DBHelper extends SQLiteOpenHelper {
         return  deleteFlag;
     }
 
-    public int getCompGroupCount(String testId,String sectionId,String type){
+    public int getCompGroupCount(String testId,String sectionId){
         int count=0;
-        Cursor c =db.query("groupques_config", new String[] {"grouppickup_count"},"testId='"+testId+"' and sectionId='"+sectionId+"' and groupType='"+type+"'", null, null, null,null);
+        Cursor c =db.query("groupques_config", new String[] {"grouppickup_count"},"testId='"+testId+"' and sectionId='"+sectionId+"'", null, null, null,null);
         while (c.moveToNext()) {
             count=c.getInt(c.getColumnIndex("grouppickup_count"));
         }
@@ -1887,14 +1887,37 @@ public class DBHelper extends SQLiteOpenHelper {
 
     public int getQuestionCount(String testId){
         int count=0;
-        String countQuery = "select * from attempt_data";
+        String countQuery = "select * from attempt_data where Test_ID='"+testId+"'";
         Cursor c = db.rawQuery(countQuery, null);
         count=c.getCount();
         c.close();
         return count;
 
     }
+    public int getNumberOfQuestions(String testId){
+        int count=0;
+        String countQuery = "select avail_count from ques_config where testId ='"+testId+"'";
+        Cursor c = db.rawQuery(countQuery, null);
+        c.moveToLast();
+        if (c.getCount() >0) {
+            count = c.getInt(c.getColumnIndex("avail_count"));
+        }
+        c.close();
+        return count;
 
+    }
+    public int getAtuTestNumberOfQuestions(String testId, String instanceId, String studentid, String enrollid){
+        int count=0;
+        String countQuery = "select satu_no_of_questions from satu_student where satu_ID ='"+testId+"' and satu_instace_id='"+instanceId+"' and  satu_entroll_id='"+enrollid+"' and satu_student_id='"+studentid+"'";
+        Cursor c = db.rawQuery(countQuery, null);
+        c.moveToLast();
+        if (c.getCount() >0) {
+            count = c.getInt(c.getColumnIndex("satu_no_of_questions"));
+        }
+        c.close();
+        return count;
+
+    }
     public int getQuestionAttempted(String testId){
         int count=0;
         String query ="SELECT  Question_Status FROM "+" attempt_data"+" WHERE Question_Status = 'ATTEMPTED' and Test_ID = '"+testId+"'";

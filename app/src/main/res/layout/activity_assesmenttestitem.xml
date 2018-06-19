@@ -17,9 +17,21 @@
         card:contentPadding="8dp">
 
         <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:orientation="horizontal">
+            <TextView
+                android:id="@+id/tv_noOfQues"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:hint="No.Ques:"
+                android:textSize="16sp"
+                android:textStyle="bold" />
 
             <TextView
                 android:id="@+id/tv_atestid"
@@ -31,6 +43,7 @@
                 android:textColor="@color/green"
                 android:layout_weight="1"
                 android:textSize="16sp"/>
+        </LinearLayout>
 
             <View
                 android:layout_width="match_parent"

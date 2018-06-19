@@ -21,16 +21,30 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-            <TextView
-                android:id="@+id/tv_atestid"
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="testid"
-                android:layout_gravity="center_vertical"
-                android:textStyle="bold|italic"
-                android:textColor="@color/green"
-                android:layout_weight="1"
-                android:textSize="16sp"/>
+                android:orientation="horizontal">
+                <TextView
+                    android:id="@+id/tv_noOfQues"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:hint="No.Ques:"
+                    android:textSize="20sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/tv_atestid"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="testid"
+                    android:gravity="center_vertical|center_horizontal"
+                    android:textStyle="bold|italic"
+                    android:textColor="@color/green"
+                    android:layout_weight="1"
+                    android:textSize="20sp"/>
+            </LinearLayout>
 
             <View
                 android:layout_width="match_parent"
