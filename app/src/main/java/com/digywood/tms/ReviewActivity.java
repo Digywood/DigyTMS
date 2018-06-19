@@ -293,7 +293,7 @@ public class ReviewActivity extends AppCompatActivity implements
 //                        String json = new String(SaveJSONdataToFile.bytesFromFile(URLClass.mainpath + path + "Attempt/" + testid + ".json"), "UTF-8");
 //                        attempt = new JSONObject(json);
                         //parseJson(attempt);
-                        Log.e("Resume-cursor","reached");
+//                        Log.e("Resume-cursor","reached");
 //                        ja_questions=attempt.getJSONArray("Sections").getJSONObject(pos).getJSONArray("Questions");
 
                         restoreSections(dataObj.getQuestionStatus(testid),attempt);
@@ -315,13 +315,13 @@ public class ReviewActivity extends AppCompatActivity implements
 //                        String json = new String(SaveJSONdataToFile.bytesFromFile(URLClass.mainpath + path +  testid + ".json"), "UTF-8");
 
                         //parseJson(attempt);
-                        Log.e("Resume-cursor","reached");
 //                        ja_questions=attempt.getJSONArray("Sections").getJSONObject(pos).getJSONArray("Questions");
                         restoreSections(dataObj.getAssessmentQuestionStatus(testid),attempt);
 //                        CorrectOptions = dataObj.getCorrectOptions(testid);
                         statusList = dataObj.getAssessmentQuestionStatus(testid);
                         setScrollbar(pos);
                         setQuestion(pos,index,edit);
+
                         scrollAdapter = new ScrollGridAdapter(ReviewActivity.this, attempt.getJSONArray("Sections").getJSONObject(pos).getJSONArray("Questions"),listOfLists.get(pos),getScreenSize());
                         scrollAdapter.updateList(listOfLists.get(pos));
 
@@ -422,8 +422,6 @@ public class ReviewActivity extends AppCompatActivity implements
 //                            setQBackground(pos,index);
                             index++;
                             setQuestion(pos, index, edit);
-
-                            checkRadio();
                         } else if (index == ja_questions.length() - 1) {
                             //Change button once last question of test is reached
 //                            setQBackground(pos,index);
@@ -499,7 +497,6 @@ public class ReviewActivity extends AppCompatActivity implements
                         scrollAdapter.updateList(listOfLists.get(pos));
 
                     }
-                    checkRadio();
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -581,8 +578,7 @@ public class ReviewActivity extends AppCompatActivity implements
             setQuestion(pos,index,edit);
             ja_questions = attempt.getJSONArray("Sections").getJSONObject(pos).getJSONArray("Questions");
             Id = ja_questions.getJSONObject(index).getString("qbm_ID");
-            if(index == ja_questions.length() -1)
-                checkRadio();
+
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -657,10 +653,19 @@ public class ReviewActivity extends AppCompatActivity implements
         try {
             ja_questions = attempt.getJSONArray("Sections").getJSONObject(pos).getJSONArray("Questions");
             Id = ja_questions.getJSONObject(index).getString("qbm_ID");
-            if (dataObj.getPosition(Id,testid) > -1) {
-                opAdapter.setOptionsList(dataObj.getPosition(Id,testid));
-                opAdapter.notifyDataSetChanged();
-                ((SimpleItemAnimator) rv_option.getItemAnimator()).setSupportsChangeAnimations(false);
+            Log.e("CheckPos:",""+dataObj.getPosition(Id, testid));
+            if(test_type.equalsIgnoreCase("PRACTISE_TEST")) {
+                if (dataObj.getPosition(Id, testid) > -1) {
+                    opAdapter.setOptionsList(dataObj.getPosition(Id, testid));
+                    opAdapter.notifyDataSetChanged();
+                    ((SimpleItemAnimator) rv_option.getItemAnimator()).setSupportsChangeAnimations(false);
+                }
+            }else{
+                if (dataObj.getAssessmentPosition(Id, testid) > -1) {
+                    opAdapter.setOptionsList(dataObj.getAssessmentPosition(Id, testid));
+                    opAdapter.notifyDataSetChanged();
+                    ((SimpleItemAnimator) rv_option.getItemAnimator()).setSupportsChangeAnimations(false);
+                }
             }
 
         } catch (JSONException | NullPointerException e) {
@@ -1118,6 +1123,7 @@ public class ReviewActivity extends AppCompatActivity implements
             option.setQbo_answer_flag(optionsArray.getJSONObject(i).getString(("qbo_answer_flag")));
             optionsList.add(option);
         }
+
         try {
             opAdapter = new OptionsCheckAdapter(optionsList, ReviewActivity.this, photoPath,rv_option);
             RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
@@ -1126,6 +1132,7 @@ public class ReviewActivity extends AppCompatActivity implements
             rv_option.setAdapter(opAdapter);
             opAdapter.setOptionsEditable(edit);
             testObj.runLayoutAnimation(rv_option);
+            checkRadio();
         } catch (NullPointerException e) {
             e.printStackTrace();
         }
@@ -1197,6 +1204,7 @@ public class ReviewActivity extends AppCompatActivity implements
                     public void onClick(DialogInterface arg0, int arg1) {
 
                         Intent intent;
+                        finish();
                         if (test_type.equalsIgnoreCase("PRACTISE_TEST")) {
                             intent = new Intent(ReviewActivity.this, ListofPractiseTests.class);
                         }else
@@ -1293,7 +1301,7 @@ public class ReviewActivity extends AppCompatActivity implements
             pos = position;
 //            CorrectOptions = dataObj.getCorrectOptions(testid);
             statusList = dataObj.getQuestionStatus(testid);
-            Log.e("Size",""+listOfLists.size());
+//            Log.e("Size",""+listOfLists.size());
             scrollAdapter = new ScrollGridAdapter(ReviewActivity.this, attempt.getJSONArray("Sections").getJSONObject(pos).getJSONArray("Questions"),listOfLists.get(pos),getScreenSize());
             setScrollbar(pos);
             if (flag) {
@@ -1318,26 +1326,21 @@ public class ReviewActivity extends AppCompatActivity implements
     }
 
     @Override public void onStart() {
-        Log.d(TAG, "onStart:");
         if (!checkPermission()) {
             requestPermission();
         }
         super.onStart();
     }
     @Override public void onResume() {
-        Log.d(TAG, "onResume:");
         super.onResume();
     }
     @Override public void onPause() {
-        Log.d(TAG, "onPause:");
         super.onPause();
     }
     @Override public void onStop() {
-        Log.d(TAG, "onStop:");
         super.onStop();
     }
     @Override public void onDestroy() {
-        Log.d(TAG, "onDestroy:");
         super.onDestroy();
     }
 }

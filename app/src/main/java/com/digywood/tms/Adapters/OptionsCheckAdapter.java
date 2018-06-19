@@ -18,6 +18,7 @@ import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RelativeLayout;
 
+import com.digywood.tms.DBHelper.DBHelper;
 import com.digywood.tms.Pojo.SingleOptions;
 import com.digywood.tms.R;
 
@@ -67,7 +68,7 @@ public class OptionsCheckAdapter extends RecyclerView.Adapter<OptionsCheckAdapte
             if (!medit){
                 rb_option.setOnClickListener(null);
                 option_layout.setOnClickListener(null);
-                rb_option.setEnabled(false);
+//                rb_option.setEnabled(false);
             }
         }
 
@@ -105,39 +106,40 @@ public class OptionsCheckAdapter extends RecyclerView.Adapter<OptionsCheckAdapte
     public void onBindViewHolder(final OptionsCheckAdapter.MyViewHolder holder,int position) {
         SingleOptions option = optionsList.get(position);
         Log.e("Option image--->",option.getQbo_media_file());
-            holder.iv_opmedia.setImageBitmap(getOptionImage(option.getQbo_media_file()));
-            holder.iv_opmedia.setScaleType(ImageView.ScaleType.FIT_XY);
-            holder.rb_option.setChecked(position == mSelectedItem);
-            flag = optionsList.get(position).getQbo_answer_flag();
+        holder.iv_opmedia.setImageBitmap(getOptionImage(option.getQbo_media_file()));
+        holder.iv_opmedia.setScaleType(ImageView.ScaleType.FIT_XY);
+        holder.rb_option.setChecked(position == mSelectedItem);
+        flag = optionsList.get(position).getQbo_answer_flag();
 
+        if(flag.equals("YES")){
+            mCorrectItem = position;
+        }
+        if(!medit){
+            holder.rb_option.setEnabled(false);
+            if(position == mCorrectItem){
+                holder.option_layout.setBackgroundColor(mycontext.getResources().getColor(R.color.transp_green));
+                holder.img_wrapper.setForeground(mycontext.getDrawable(R.drawable.image_correct_overlay));
+            }
+
+        }
+        if(mSelectedItem > -1){
+            sequence = optionsList.get(mSelectedItem).getQbo_seq_no();
+            flag = optionsList.get(mSelectedItem).getQbo_answer_flag();
             if(flag.equals("YES")){
-                mCorrectItem = position;
+                mCorrectItem = mSelectedItem;
             }
             if(!medit){
-                if(position == mCorrectItem){
-                    holder.option_layout.setBackgroundColor(mycontext.getResources().getColor(R.color.transp_green));
-                    holder.img_wrapper.setForeground(mycontext.getDrawable(R.drawable.image_correct_overlay));
-                }
-
-            }
-            if(mSelectedItem > -1){
-                sequence = optionsList.get(mSelectedItem).getQbo_seq_no();
-                flag = optionsList.get(mSelectedItem).getQbo_answer_flag();
-                if(flag.equals("YES")){
-                    mCorrectItem = mSelectedItem;
-                }
-                if(!medit){
-                    if(position == mSelectedItem){
-                        if(position == mCorrectItem){
-                            holder.option_layout.setBackgroundColor(mycontext.getResources().getColor(R.color.transp_green));
-                            holder.img_wrapper.setForeground(mycontext.getDrawable(R.drawable.image_correct_overlay));
-                        }else {
-                            holder.option_layout.setBackgroundColor(mycontext.getResources().getColor(R.color.transp_red));
-                            holder.img_wrapper.setForeground(mycontext.getDrawable(R.drawable.image_wrong_overlay));
-                        }
+                if(position == mSelectedItem){
+                    if(position == mCorrectItem){
+                        holder.option_layout.setBackgroundColor(mycontext.getResources().getColor(R.color.transp_green));
+                        holder.img_wrapper.setForeground(mycontext.getDrawable(R.drawable.image_correct_overlay));
+                    }else {
+                        holder.option_layout.setBackgroundColor(mycontext.getResources().getColor(R.color.transp_red));
+                        holder.img_wrapper.setForeground(mycontext.getDrawable(R.drawable.image_wrong_overlay));
                     }
                 }
             }
+        }
 
     }
 
