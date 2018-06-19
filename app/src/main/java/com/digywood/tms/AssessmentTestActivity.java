@@ -495,6 +495,7 @@ public class AssessmentTestActivity extends AppCompatActivity implements Adapter
 
                                                 Intent intent = new Intent(AssessmentTestActivity.this, ScoreActivity.class);
                                                 bundle = new Bundle();
+
 //                                                bundle.putString("JSON", attempt.toString());
 //                                                Log.e("testAssessment",attempt.toString());
                                                 bundle.putString("enrollid",enrollid);
@@ -1233,6 +1234,7 @@ public class AssessmentTestActivity extends AppCompatActivity implements Adapter
                             long value = dataObj.UpdateAssessment(attempt.getString("atu_ID"),instanceId,enrollid,studentId,courseid,subjectId,paperid,1,"", 0.0,dataObj.getAssessmentQuestionAttempted(),dataObj.getAssessmentQuestionSkipped(),dataObj.getAssessmentQuestionBookmarked(),dataObj.getAssessmentQuestionNotAttempted(), 0.0, millisRemaining, index, pos);
                             Log.e("Update",""+instanceId);
                             SaveJSONdataToFile.objectToFile(URLClass.mainpath + path + testid + ".json", attempt.toString());
+//                            syncAssesmentTestData();
                         } catch (JSONException|IOException e) {
                             e.printStackTrace();
                         }
@@ -1406,7 +1408,11 @@ public class AssessmentTestActivity extends AppCompatActivity implements Adapter
         @Override
         public void run() {
 
-            syncAssesmentTestData();
+            try {
+                syncAssesmentTestData();
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
             Log.e("AssessmentTestActivity","thread in run() Intervel.."+INTERVAL);
 
             mHandler.postDelayed(mHandlerTask, INTERVAL);
@@ -1429,10 +1435,11 @@ public class AssessmentTestActivity extends AppCompatActivity implements Adapter
         }
     }
 
-    public  void syncAssesmentTestData(){
-
+    public  void syncAssesmentTestData()throws JSONException{
 
         JSONObject finalAssessmentObj=new JSONObject();
+        int count =0;
+        array = attempt.getJSONArray("Sections").getJSONObject(pos).getJSONArray("Questions");
         Cursor mycursor=dataObj.getAssessmentQuestionToBeUploadData(studentId,testid,instanceId,"NotUploaded");
         if(mycursor.getCount()>0){
             try{
@@ -1452,17 +1459,40 @@ public class AssessmentTestActivity extends AppCompatActivity implements Adapter
                     AssessmentTestQues.put("Question_Section",mycursor.getString(mycursor.getColumnIndex("Question_Section")));
                     AssessmentTestQues.put("Question_Category",mycursor.getString(mycursor.getColumnIndex("Question_Category")));
                     AssessmentTestQues.put("Question_SubCategory",mycursor.getString(mycursor.getColumnIndex("Question_SubCategory")));
-                    AssessmentTestQues.put("Question_Max_Marks",mycursor.getInt(mycursor.getColumnIndex("Question_Max_Marks")));
-                    AssessmentTestQues.put("Question_Negative_Marks",mycursor.getString(mycursor.getColumnIndex("Question_Negative_Marks")));
+                    AssessmentTestQues.put("Question_Max_Marks",array.getJSONObject(count).getString("qbm_marks"));
+                    AssessmentTestQues.put("Question_Negative_Marks",array.getJSONObject(count).getDouble("qbm_negative_mrk"));
                     AssessmentTestQues.put("Question_Marks_Obtained",mycursor.getString(mycursor.getColumnIndex("Question_Marks_Obtained")));
                     AssessmentTestQues.put("Question_Negative_Applied",mycursor.getInt(mycursor.getColumnIndex("Question_Negative_Applied")));
                     AssessmentTestQues.put("Question_Option",mycursor.getInt(mycursor.getColumnIndex("Question_Option")));
                     AssessmentTestQues.put("Question_OptionCount",mycursor.getInt(mycursor.getColumnIndex("Question_OptionCount")));
-                    AssessmentTestQues.put("Question_Status",mycursor.getInt(mycursor.getColumnIndex("Question_Status")));
-                    AssessmentTestQues.put("Question_Upload_Status",mycursor.getInt(mycursor.getColumnIndex("Question_Upload_Status")));
+                    AssessmentTestQues.put("Question_Status",mycursor.getString(mycursor.getColumnIndex("Question_Status")));
+                    AssessmentTestQues.put("Question_Upload_Status",mycursor.getString(mycursor.getColumnIndex("Question_Upload_Status")));
                     AssessmentTestQues.put("Question_Option_Sequence",mycursor.getDouble(mycursor.getColumnIndex("Question_Option_Sequence")));
-                    AssessmentTestQues.put("Option_Answer_Flag",mycursor.getInt(mycursor.getColumnIndex("Option_Answer_Flag")));
+                    if(array.getJSONObject(count).getString("qbm_ID").equalsIgnoreCase(mycursor.getString(mycursor.getColumnIndex("Question_ID")))){
+                        Log.e("QID",array.getJSONObject(count).getString("qbm_ID"));
+                        JSONArray optArray = array.getJSONObject(count).getJSONArray("Options");
+                        String value="";
+                        Double total = 0.0;
+                        AssessmentTestQues.put("Question_OptionCount",optArray.length());
+                        for(int i = 0;i< optArray.length();i++){
+                            if(optArray.getJSONObject(i).getString("qbo_answer_flag").equalsIgnoreCase("YES")){
+                                Log.e("opSeq",optArray.getJSONObject(i).getString("qbo_seq_no"));
+                                AssessmentTestQues.put("Option_Answer_Flag",optArray.getJSONObject(i).getString("qbo_seq_no"));
+                                value = optArray.getJSONObject(i).getString("qbo_seq_no");
+                            }
+                        }
+                        for(int j =0;j<optArray.length();j++){
+                            if(mycursor.getDouble(mycursor.getColumnIndex("Question_Option_Sequence")) != Double.valueOf(value)){
+                                total = 0.0 - Double.valueOf(array.getJSONObject(count).getDouble("qbm_negative_mrk"));
+                            }else{
+                                total = Double.valueOf(array.getJSONObject(count).getString("qbm_marks"));
+                            }
+                            AssessmentTestQues.put("Question_Marks_Obtained",total);
+                        }
+                    }
+//                    AssessmentTestQues.put("Option_Answer_Flag",mycursor.getInt(mycursor.getColumnIndex("Option_Answer_Flag")));
                     AssessmentList.put(AssessmentTestQues);
+                    count++;
                 }
                 loc_count=AssessmentList.length();
                 finalAssessmentObj.put("AssessmentTestData",AssessmentList);
