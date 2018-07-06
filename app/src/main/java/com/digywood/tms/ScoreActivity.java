@@ -165,11 +165,13 @@ public class ScoreActivity extends AppCompatActivity {
 
             } else {
                 testId = attempt.getString("atu_ID");
-                CorrectCount = dataObj.getAssessmentCorrectOptionsCount();
-                TotalCount = dataObj.getAssessmentQuestionAttempted() + dataObj.getAssessmentQuestionBookmarked();
+                CorrectCount = dataObj.getAssessmentCorrectOptionsCount(testId,instanceId,studentId);
+                int qes_atmt=dataObj.getAssessmentQuestionAttempted(testId,instanceId,studentId);
+                int qes_bookMarked=dataObj.getAssessmentQuestionBookmarked(testId,instanceId,studentId);
+                TotalCount = qes_atmt + qes_bookMarked;
 
-                WrongCount = dataObj.getAssessmentWrongOptionsCount();
-                if (dataObj.getAssessmentQuestionAttempted() == 0) {
+                WrongCount = dataObj.getAssessmentWrongOptionsCount(testId,instanceId,studentId);
+                if (qes_atmt == 0) {
                     TotalPositive = 0.0;
                     TotalNegative = 0.0;
                 } else {
@@ -180,7 +182,7 @@ public class ScoreActivity extends AppCompatActivity {
                     Percentage = (TotalScore / MaxMarks) * 100;
                 }
 
-                flag = dataObj.UpdateAssessment(attempt.getString("atu_ID"), instanceId, enrollid, "", courseid, subjectid, paperid, 2, null, TotalScore, dataObj.getAssessmentQuestionAttempted(), dataObj.getAssessmentQuestionSkipped(), dataObj.getAssessmentQuestionBookmarked(), dataObj.getAssessmentQuestionNotAttempted(), Percentage, 0, 0, 0);
+                flag = dataObj.UpdateAssessment(attempt.getString("atu_ID"), instanceId, enrollid, "", courseid, subjectid, paperid, 2, null, TotalScore,qes_atmt, dataObj.getAssessmentQuestionSkipped(testId,instanceId,studentId), qes_bookMarked, dataObj.getAssessmentQuestionNotAttempted(testId,instanceId,studentId), Percentage, 0, 0, 0);
                 Cursor mycursor = dataObj.getAssessmentRawData(testId);
                 if (mycursor.getCount() > 0) {
                     while (mycursor.moveToNext()) {
@@ -231,11 +233,11 @@ public class ScoreActivity extends AppCompatActivity {
                             Log.e("sectionattempted", sec_attempted);
                             Log.e("seccorrect", sec_correct);
                         } else {
-                            sec_questions = String.valueOf(dataObj.getAssessmentSectionQuestions(secList.get(i)));
-                            sec_attempted = String.valueOf(dataObj.getAssessmentSectionQuesAns(secList.get(i)));
-                            sec_skipped = String.valueOf(dataObj.getAssessmentSectionQuesSkip(secList.get(i)));
-                            sec_correct = String.valueOf(dataObj.getAssessmentSectionQuesCorrect(secList.get(i)));
-                            sec_wrong = String.valueOf(dataObj.getAssessmentSectionQuesWrong(secList.get(i)));
+                            sec_questions = String.valueOf(dataObj.getAssessmentSectionQuestions(secList.get(i),testId,instanceId,studentId));
+                            sec_attempted = String.valueOf(dataObj.getAssessmentSectionQuesAns(secList.get(i),testId,instanceId,studentId));
+                            sec_skipped = String.valueOf(dataObj.getAssessmentSectionQuesSkip(secList.get(i),testId,instanceId,studentId));
+                            sec_correct = String.valueOf(dataObj.getAssessmentSectionQuesCorrect(secList.get(i),testId,instanceId,studentId));
+                            sec_wrong = String.valueOf(dataObj.getAssessmentSectionQuesWrong(secList.get(i),testId,instanceId,studentId));
                             score = (Double.valueOf(sec_correct) * Double.valueOf(attempt.getString("atu_marks")) - Double.valueOf(sec_wrong) * Double.valueOf(attempt.getString("atu_negative_mrk")));
                             percent = (Double.valueOf(score) / Double.valueOf(sec_questions)) * 100;
                             sec_percentage = String.format("%.2f", percent);
@@ -352,16 +354,16 @@ public class ScoreActivity extends AppCompatActivity {
             tv_totalQuestions.setText(String.valueOf(dataObj.getTestQuestionCount(testId)));
             tv_totalCorrect.setText(String.valueOf(dataObj.getTestCorrectOptionsCount(testId)));
         } else {
-            tv_attempted.setText(String.valueOf(dataObj.getAssessmentQuestionAttempted()));
-            Log.e("AssmntAttempted", String.valueOf(dataObj.getAssessmentQuestionAttempted()));
-            tv_skipped.setText(String.valueOf(dataObj.getAssessmentQuestionSkipped()));
-            Log.e("AssmntSkippd", String.valueOf(dataObj.getAssessmentQuestionSkipped()));
-            tv_bookmarked.setText(String.valueOf(dataObj.getAssessmentQuestionBookmarked()));
-            Log.e("AssmntMarked", String.valueOf(dataObj.getAssessmentQuestionBookmarked()));
+            tv_attempted.setText(String.valueOf(dataObj.getAssessmentQuestionAttempted(testId, instanceId, studentId)));
+            Log.e("AssmntAttempted", String.valueOf(dataObj.getAssessmentQuestionAttempted(testId, instanceId, studentId)));
+            tv_skipped.setText(String.valueOf(dataObj.getAssessmentQuestionSkipped(testId,instanceId,studentId)));
+            Log.e("AssmntSkippd", String.valueOf(dataObj.getAssessmentQuestionSkipped(testId,instanceId,studentId)));
+            tv_bookmarked.setText(String.valueOf(dataObj.getAssessmentQuestionBookmarked(testId, instanceId, studentId)));
+            Log.e("AssmntMarked", String.valueOf(dataObj.getAssessmentQuestionBookmarked(testId, instanceId, studentId)));
             tv_totalQuestions.setText(String.valueOf(dataObj.getAssessmentQuestionCount(testId)));
             Log.e("AssmntnoOfQs", String.valueOf(dataObj.getAssessmentQuestionCount(testId)));
-            tv_totalCorrect.setText(String.valueOf(dataObj.getAssessmentCorrectOptionsCount()));
-            Log.e("AssmntCorrect", String.valueOf(dataObj.getAssessmentCorrectOptionsCount()));
+            tv_totalCorrect.setText(String.valueOf(dataObj.getAssessmentCorrectOptionsCount(testId, instanceId, studentId)));
+            Log.e("AssmntCorrect", String.valueOf(dataObj.getAssessmentCorrectOptionsCount(testId, instanceId, studentId)));
         }
         tv_totalWrong.setText(String.valueOf(WrongCount));
         tv_totalPositive.setText(String.valueOf(TotalPositive));
@@ -468,10 +470,10 @@ public class ScoreActivity extends AppCompatActivity {
                 subcat_percentage = String.format("%.1f", percent);
             } else {
 
-                subcat_questions = String.valueOf(dataObj.getAssessmentSubCatQuestions(catList.get(i)));
-                subcat_attempted = String.valueOf(dataObj.getAssessmentSubCatQuesAns(catList.get(i)));
-                subcat_skipped = String.valueOf(dataObj.getAssessmentSubCatQuesSkip(catList.get(i)));
-                subcat_correct = String.valueOf(dataObj.getAssessmentSubCatQuesCorrect(catList.get(i)));
+                subcat_questions = String.valueOf(dataObj.getAssessmentSubCatQuestions(catList.get(i),testId,instanceId,studentId));
+                subcat_attempted = String.valueOf(dataObj.getAssessmentSubCatQuesAns(catList.get(i),testId,instanceId,studentId));
+                subcat_skipped = String.valueOf(dataObj.getAssessmentSubCatQuesSkip(catList.get(i),testId,instanceId,studentId));
+                subcat_correct = String.valueOf(dataObj.getAssessmentSubCatQuesCorrect(catList.get(i),testId,instanceId,studentId));
                 percent = (Double.valueOf(subcat_correct) / Double.valueOf(subcat_questions)) * 100;
                 subcat_percentage = String.format("%.1f", percent);
 

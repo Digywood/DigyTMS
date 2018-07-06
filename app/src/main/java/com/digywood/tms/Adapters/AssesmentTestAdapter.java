@@ -376,15 +376,15 @@ public class AssesmentTestAdapter extends RecyclerView.Adapter<AssesmentTestAdap
 
                                                         Log.e("AssessmentAdp:--",""+sdq.getSubjectId());
 
-                                                        File myFile1 = new File(URLClass.mainpath+enrollid+"/"+courseid+"/"+sdq.getSubjectId()+"/"+sdq.getPaperId()+"/"+sdq.getChapterId()+"/"+sdq.getFileName());
+                                                        File myFile1 = new File(URLClass.mainpath+enrollid+"/"+courseid+"/"+sdq.getSubjectId()+"/"+sdq.getPaperId()+"/"+sdq.getChapterId()+"/ENC/"+sdq.getFileName());
                                                         if(myFile1.exists()){
 
                                                         }else{
 
                                                             String tPath=finalAssetUrl+"courses/"+courseid+"/"+sdq.getSubjectId()+"/"+sdq.getPaperId()+"/";
-                                                            finalUrls.add(tPath+sdq.getChapterId()+"/"+sdq.getFileName());
+                                                            finalUrls.add(tPath+sdq.getChapterId()+"/ENC/"+sdq.getFileName());
                                                             finalNames.add(sdq.getFileName());
-                                                            localPathList.add(URLClass.mainpath+enrollid+"/"+courseid+"/"+sdq.getSubjectId()+"/"+sdq.getPaperId()+"/"+sdq.getChapterId()+"/");
+                                                            localPathList.add(URLClass.mainpath+enrollid+"/"+courseid+"/"+sdq.getSubjectId()+"/"+sdq.getPaperId()+"/"+sdq.getChapterId()+"/ENC/");
                                                         }
                                                     }
 

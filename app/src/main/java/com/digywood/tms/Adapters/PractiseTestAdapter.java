@@ -173,8 +173,8 @@ public class PractiseTestAdapter extends RecyclerView.Adapter<PractiseTestAdapte
             mycur.close();
         }
 
-        int nqus=myhelper.getNumberOfQuestions(singletest.getTestid());
-        holder.tv_noOfQues.setText("No.Ques: "+nqus);
+        String nqus=myhelper.getNumberOfQuestions(singletest.getTestid());
+        holder.tv_noOfQues.setText(nqus);
 
         holder.tv_flashAttempt.setText(""+fattemptcount);
         holder.tv_flash_max.setText(""+round(fmaxscore,1));
@@ -434,7 +434,7 @@ public class PractiseTestAdapter extends RecyclerView.Adapter<PractiseTestAdapte
 
                                     SingleDWDQues sdq=chapterFileList.get(i);
 
-                                    File myFile1 = new File(URLClass.mainpath+enrollid+"/"+courseid+"/"+sdq.getSubjectId()+"/"+sdq.getPaperId()+"/"+sdq.getChapterId()+"/"+sdq.getFileName());
+                                    File myFile1 = new File(URLClass.mainpath+enrollid+"/"+courseid+"/"+sdq.getSubjectId()+"/"+sdq.getPaperId()+"/"+sdq.getChapterId()+"/ENC/"+sdq.getFileName());
                                     if(myFile1.exists()){
 
                                     }else{
@@ -528,6 +528,7 @@ public class PractiseTestAdapter extends RecyclerView.Adapter<PractiseTestAdapte
                                     }
                                 }else{
                                     mycursor.close();
+                                    Log.e("PracticeTestAdapter","Test Is Not Available in Table..");
                                 }
 
                                 path=courseid+"/"+subjectId+"/"+paperid+"/"+singletest.getTestid()+"/";
@@ -540,7 +541,7 @@ public class PractiseTestAdapter extends RecyclerView.Adapter<PractiseTestAdapte
 
                                 File myFile1 = new File(URLClass.mainpath+localpath+singletest.getTestid()+".json");
                                 if(myFile1.exists()){
-
+                                    Log.e("PracticeTestAdapter","Json File is Not Available, Please download it..");
                                 }else{
                                     finalUrls.add(downloadjsonpath);
                                     finalNames.add(singletest.getTestid()+".json");
@@ -569,11 +570,11 @@ public class PractiseTestAdapter extends RecyclerView.Adapter<PractiseTestAdapte
                                     dwdImgFiles(singletest.getTestid());
                                 }
                             }else{
-                                Toast.makeText(mycontext,"Unable download test",Toast.LENGTH_SHORT).show();
+                                Toast.makeText(mycontext,"Test Status is not updated...",Toast.LENGTH_SHORT).show();
                             }
                         }catch (Exception e){
                             e.printStackTrace();
-                            Log.e("ListofPractiseTests----",e.toString());
+                            Log.e("PracticeTestAdapter",e.toString());
                         }
 
                     }
@@ -698,15 +699,15 @@ public class PractiseTestAdapter extends RecyclerView.Adapter<PractiseTestAdapte
 
                 SingleDWDQues sdq=chapterFileList.get(i);
 
-                File myFile1 = new File(URLClass.mainpath+enrollid+"/"+courseid+"/"+sdq.getSubjectId()+"/"+sdq.getPaperId()+"/"+sdq.getChapterId()+"/"+sdq.getFileName());
+                File myFile1 = new File(URLClass.mainpath+enrollid+"/"+courseid+"/"+sdq.getSubjectId()+"/"+sdq.getPaperId()+"/"+sdq.getChapterId()+"/ENC/"+sdq.getFileName());
                 if(myFile1.exists()){
 
                 }else{
 
                     String tPath=finalAssetUrl+"courses/"+courseid+"/"+sdq.getSubjectId()+"/"+sdq.getPaperId()+"/";
-                    finalUrls.add(tPath+sdq.getChapterId()+"/"+sdq.getFileName());
+                    finalUrls.add(tPath+sdq.getChapterId()+"/ENC/"+sdq.getFileName());
                     finalNames.add(sdq.getFileName());
-                    localPathList.add(URLClass.mainpath+enrollid+"/"+courseid+"/"+sdq.getSubjectId()+"/"+sdq.getPaperId()+"/"+sdq.getChapterId()+"/");
+                    localPathList.add(URLClass.mainpath+enrollid+"/"+courseid+"/"+sdq.getSubjectId()+"/"+sdq.getPaperId()+"/"+sdq.getChapterId()+"/ENC/");
                 }
             }
 

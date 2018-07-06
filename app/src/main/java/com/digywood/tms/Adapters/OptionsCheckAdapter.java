@@ -19,9 +19,12 @@ import android.widget.RadioButton;
 import android.widget.RelativeLayout;
 
 import com.digywood.tms.DBHelper.DBHelper;
+import com.digywood.tms.EncryptDecrypt;
 import com.digywood.tms.Pojo.SingleOptions;
 import com.digywood.tms.R;
 
+import java.io.File;
+import java.io.FileInputStream;
 import java.util.ArrayList;
 
 public class OptionsCheckAdapter extends RecyclerView.Adapter<OptionsCheckAdapter.MyViewHolder>{
@@ -172,7 +175,8 @@ public class OptionsCheckAdapter extends RecyclerView.Adapter<OptionsCheckAdapte
     }
 
     public Bitmap getOptionImage(String file){
-        Bitmap b =  BitmapFactory.decodeFile(file);
+        //Bitmap b =  BitmapFactory.decodeFile(file);
+        Bitmap b =  getTheEncriptedImage(file);
         return b ;
     }
 
@@ -186,5 +190,23 @@ public class OptionsCheckAdapter extends RecyclerView.Adapter<OptionsCheckAdapte
         recyclerView.scheduleLayoutAnimation();
     }*/
 
+    private Bitmap getTheEncriptedImage(String qbm_image_file) {
+        Bitmap bp=null;
+        try {
+            File f=new File(qbm_image_file);
+            if(f.exists()) {
+               bp= EncryptDecrypt.decrypt(new FileInputStream(f));
+            }else
+            {
+                Log.e("AssessmentTestActivity","file is not found:"+qbm_image_file);
+            }
+        }catch (Exception e)
+        {
+            e.printStackTrace();
+        } catch (Throwable throwable) {
+            throwable.printStackTrace();
+        }
 
+        return bp;
+    }
 }

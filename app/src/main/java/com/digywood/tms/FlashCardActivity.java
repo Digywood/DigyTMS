@@ -50,6 +50,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.util.ArrayList;
@@ -266,7 +267,9 @@ public class FlashCardActivity extends AppCompatActivity {
                     String sid=qObj.getString("qbm_SubjectID");
                     String pid=qObj.getString("qbm_Paper_ID");
                     String cid=qObj.getString("qbm_ChapterID");
-                    Bitmap bmp = BitmapFactory.decodeFile(imgPath+sid+"/"+pid+"/"+cid+"/"+imagefile);
+                    Bitmap bmp = getTheEncriptedImage(imgPath+sid+"/"+pid+"/"+cid+"/ENC/"+imagefile);
+
+                    //Bitmap bmp = BitmapFactory.decodeFile(imgPath+sid+"/"+pid+"/"+cid+"/"+imagefile);
                     iv_quesimg.setImageBitmap(bmp);
                     tv_Qid.setText(qObj.getString("qbm_ID"));
                     Animation rotateimage = AnimationUtils.loadAnimation(FlashCardActivity.this,R.anim.fade_in);
@@ -331,7 +334,9 @@ public class FlashCardActivity extends AppCompatActivity {
                     String sid=qObj.getString("qbm_SubjectID");
                     String pid=qObj.getString("qbm_Paper_ID");
                     String cid=qObj.getString("qbm_ChapterID");
-                    Bitmap bmp = BitmapFactory.decodeFile(imgPath+sid+"/"+pid+"/"+cid+"/"+imagefile);
+                    Bitmap bmp = getTheEncriptedImage(imgPath+sid+"/"+pid+"/"+cid+"/ENC/"+imagefile);
+
+                    //Bitmap bmp = BitmapFactory.decodeFile(imgPath+sid+"/"+pid+"/"+cid+"/"+imagefile);
                     iv_quesimg.setImageBitmap(bmp);
                     tv_Qid.setText(qObj.getString("qbm_ID"));
                     Animation rotateimage = AnimationUtils.loadAnimation(FlashCardActivity.this, R.anim.fade_in);
@@ -408,7 +413,9 @@ public class FlashCardActivity extends AppCompatActivity {
                     String sid=gja_questions.getJSONObject(d).getString("qbm_SubjectID");
                     String pid=gja_questions.getJSONObject(d).getString("qbm_Paper_ID");
                     String cid=gja_questions.getJSONObject(d).getString("qbm_ChapterID");
-                    Bitmap bmp = BitmapFactory.decodeFile(imgPath+sid+"/"+pid+"/"+cid+"/"+filename);
+                    Bitmap bmp = getTheEncriptedImage(imgPath+sid+"/"+pid+"/"+cid+"/ENC/"+filename);
+
+                    //Bitmap bmp = BitmapFactory.decodeFile(imgPath+sid+"/"+pid+"/"+cid+"/"+filename);
                     iv_answerimg.setImageBitmap(bmp);
                     cAdp.setPoiner(d);
                 }catch (Exception e){
@@ -462,7 +469,9 @@ public class FlashCardActivity extends AppCompatActivity {
                         String sid=gja_questions.getJSONObject(d).getString("qbm_SubjectID");
                         String pid=gja_questions.getJSONObject(d).getString("qbm_Paper_ID");
                         String cid=gja_questions.getJSONObject(d).getString("qbm_ChapterID");
-                        Bitmap bmp = BitmapFactory.decodeFile(imgPath+sid+"/"+pid+"/"+cid+"/"+rfilename);
+                        Bitmap bmp = getTheEncriptedImage(imgPath+sid+"/"+pid+"/"+cid+"/ENC/"+rfilename);
+
+                        //Bitmap bmp = BitmapFactory.decodeFile(imgPath+sid+"/"+pid+"/"+cid+"/"+rfilename);
                         iv_answerimg.setImageBitmap(bmp);
                     }else{
                         Toast.makeText(getApplicationContext(),"No Review Images",Toast.LENGTH_SHORT).show();
@@ -494,7 +503,9 @@ public class FlashCardActivity extends AppCompatActivity {
                                 String sid=gja_questions.getJSONObject(d).getString("qbm_SubjectID");
                                 String pid=gja_questions.getJSONObject(d).getString("qbm_Paper_ID");
                                 String cid=gja_questions.getJSONObject(d).getString("qbm_ChapterID");
-                                Bitmap bmp = BitmapFactory.decodeFile(imgPath+sid+"/"+pid+"/"+cid+"/"+rfilename);
+                                Bitmap bmp = getTheEncriptedImage(imgPath+sid+"/"+pid+"/"+cid+"/ENC/"+rfilename);
+
+                                //Bitmap bmp = BitmapFactory.decodeFile(imgPath+sid+"/"+pid+"/"+cid+"/"+rfilename);
                                 iv_answerimg.setImageBitmap(bmp);
                             }
                         }catch (Exception e){
@@ -518,7 +529,9 @@ public class FlashCardActivity extends AppCompatActivity {
                                 String sid=gja_questions.getJSONObject(d).getString("qbm_SubjectID");
                                 String pid=gja_questions.getJSONObject(d).getString("qbm_Paper_ID");
                                 String cid=gja_questions.getJSONObject(d).getString("qbm_ChapterID");
-                                Bitmap bmp = BitmapFactory.decodeFile(imgPath+sid+"/"+pid+"/"+cid+"/"+rfilename);
+                                Bitmap bmp = getTheEncriptedImage(imgPath+sid+"/"+pid+"/"+cid+"/ENC/"+rfilename);
+
+                                //Bitmap bmp = BitmapFactory.decodeFile(imgPath+sid+"/"+pid+"/"+cid+"/"+rfilename);
                                 iv_answerimg.setImageBitmap(bmp);
                             }
                         }catch (Exception e){
@@ -555,7 +568,9 @@ public class FlashCardActivity extends AppCompatActivity {
                         String sid=gja_questions.getJSONObject(d).getString("qbm_SubjectID");
                         String pid=gja_questions.getJSONObject(d).getString("qbm_Paper_ID");
                         String cid=gja_questions.getJSONObject(d).getString("qbm_ChapterID");
-                        Bitmap bmp = BitmapFactory.decodeFile(imgPath+sid+"/"+pid+"/"+cid+"/"+filename);
+                        Bitmap bmp = getTheEncriptedImage(imgPath+sid+"/"+pid+"/"+cid+"/ENC/"+filename);
+
+                        //Bitmap bmp = BitmapFactory.decodeFile(imgPath+sid+"/"+pid+"/"+cid+"/"+filename);
                         iv_quesimg.setImageBitmap(bmp);
 
                         tv_Qid.setText(gja_questions.getJSONObject(d).getString("qbm_ID"));
@@ -588,6 +603,8 @@ public class FlashCardActivity extends AppCompatActivity {
 //                            String sid=gja_questions.getJSONObject(d).getString("qbm_SubjectID");
 //                            String pid=gja_questions.getJSONObject(d).getString("qbm_Paper_ID");
 //                            String cid=gja_questions.getJSONObject(d).getString("qbm_ChapterID");
+//                            Bitmap bmp = getTheEncriptedImage(imgPath+sid+"/"+pid+"/"+cid+"/ENC/"+filename);
+//
 //                            Bitmap bmp = BitmapFactory.decodeFile(imgPath+sid+"/"+pid+"/"+cid+"/"+filename);
 //                            iv_quesimg.setImageBitmap(bmp);
 //                            tv_Qid.setText(gja_questions.getJSONObject(d).getString("qbm_ID"));
@@ -643,7 +660,9 @@ public class FlashCardActivity extends AppCompatActivity {
                             String sid=gja_questions.getJSONObject(d).getString("qbm_SubjectID");
                             String pid=gja_questions.getJSONObject(d).getString("qbm_Paper_ID");
                             String cid=gja_questions.getJSONObject(d).getString("qbm_ChapterID");
-                            Bitmap bmp = BitmapFactory.decodeFile(imgPath+sid+"/"+pid+"/"+cid+"/"+filename);
+                            Bitmap bmp = getTheEncriptedImage(imgPath+sid+"/"+pid+"/"+cid+"/ENC/"+filename);
+
+                            //Bitmap bmp = BitmapFactory.decodeFile(imgPath+sid+"/"+pid+"/"+cid+"/"+filename);
                             iv_quesimg.setImageBitmap(bmp);
                             tv_Qid.setText(gja_questions.getJSONObject(d).getString("qbm_ID"));
 
@@ -676,7 +695,9 @@ public class FlashCardActivity extends AppCompatActivity {
                         String sid=gja_questions.getJSONObject(d).getString("qbm_SubjectID");
                         String pid=gja_questions.getJSONObject(d).getString("qbm_Paper_ID");
                         String cid=gja_questions.getJSONObject(d).getString("qbm_ChapterID");
-                        Bitmap bmp = BitmapFactory.decodeFile(imgPath+sid+"/"+pid+"/"+cid+"/"+filename);
+                        Bitmap bmp = getTheEncriptedImage(imgPath+sid+"/"+pid+"/"+cid+"/ENC/"+filename);
+
+                        //Bitmap bmp = BitmapFactory.decodeFile(imgPath+sid+"/"+pid+"/"+cid+"/"+filename);
                         iv_quesimg.setImageBitmap(bmp);
                         tv_Qid.setText(gja_questions.getJSONObject(d).getString("qbm_ID"));
 
@@ -1195,4 +1216,23 @@ public class FlashCardActivity extends AppCompatActivity {
         return (double) tmp / factor;
     }
 
+    private Bitmap getTheEncriptedImage(String qbm_image_file) {
+        Bitmap bp=null;
+        try {
+            File f=new File(qbm_image_file);
+            if(f.exists()) {
+                bp= EncryptDecrypt.decrypt(new FileInputStream(f));
+            }else
+            {
+                Log.e("AssessmentTestActivity","file is not found:"+qbm_image_file);
+            }
+        }catch (Exception e)
+        {
+            e.printStackTrace();
+        } catch (Throwable throwable) {
+            throwable.printStackTrace();
+        }
+
+        return bp;
+    }
 }

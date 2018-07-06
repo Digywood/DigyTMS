@@ -45,6 +45,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 
@@ -369,8 +370,11 @@ public class ReviewActivity extends AppCompatActivity implements
                     String pid=questionobj.getString("qbm_Paper_ID");
                     String cid=questionobj.getString("qbm_ChapterID");
                     String sid=questionobj.getString("qbm_SubjectID");
-                    b = BitmapFactory.decodeFile(imgPath+sid+"/"+pid+"/"+cid+"/"+questionobj.getString("qbm_image_file"));
-                    bitmap = BitmapFactory.decodeFile(imgPath+sid+"/"+pid+"/"+cid+"/"+questionobj.getString("qbm_QAdditional_Image"));
+                    b =getTheEncriptedImage(imgPath+sid+"/"+pid+"/"+cid+"/ENC/"+questionobj.getString("qbm_image_file"));
+                    bitmap =getTheEncriptedImage(imgPath+sid+"/"+pid+"/"+cid+"/ENC/"+questionobj.getString("qbm_QAdditional_Image"));
+
+                    /*b = BitmapFactory.decodeFile(imgPath+sid+"/"+pid+"/"+cid+"/"+questionobj.getString("qbm_image_file"));
+                    bitmap = BitmapFactory.decodeFile(imgPath+sid+"/"+pid+"/"+cid+"/"+questionobj.getString("qbm_QAdditional_Image"));  */
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -387,7 +391,10 @@ public class ReviewActivity extends AppCompatActivity implements
                         String pid=questionobj.getString("qbm_Paper_ID");
                         String cid=questionobj.getString("qbm_ChapterID");
                         String sid=questionobj.getString("qbm_SubjectID");
-                        g = BitmapFactory.decodeFile(imgPath+sid+"/"+pid+"/"+cid+"/"+questionobj.getString("gbg_media_file"));                    }
+//                        g = BitmapFactory.decodeFile(imgPath+sid+"/"+pid+"/"+cid+"/"+questionobj.getString("gbg_media_file"));
+                        g =getTheEncriptedImage(imgPath+sid+"/"+pid+"/"+cid+"/ENC/"+questionobj.getString("gbg_media_file"));
+
+                    }
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -857,7 +864,8 @@ public class ReviewActivity extends AppCompatActivity implements
             final String pid=questionobj.getString("qbm_Paper_ID");
             final String cid=questionobj.getString("qbm_ChapterID");
             final String sid=questionobj.getString("qbm_SubjectID");
-            Bitmap rev = BitmapFactory.decodeFile(imgPath+sid+"/"+pid+"/"+cid+"/"+review.getJSONObject(last).getString("qba_media_file"));
+//            Bitmap rev = BitmapFactory.decodeFile(imgPath+sid+"/"+pid+"/"+cid+"/"+review.getJSONObject(last).getString("qba_media_file"));
+            Bitmap rev =getTheEncriptedImage(imgPath+sid+"/"+pid+"/"+cid+"/ENC/"+review.getJSONObject(last).getString("qba_media_file"));
             limg.setImageBitmap(rev);
             Log.e("Review_Image","reached");
 
@@ -889,7 +897,9 @@ public class ReviewActivity extends AppCompatActivity implements
                                 right.setVisibility(View.INVISIBLE);
                             else
                                 right.setVisibility(View.VISIBLE);
-                            Bitmap rev = BitmapFactory.decodeFile(imgPath+pid+"/"+cid+"/"+review.getJSONObject(last).getString("qba_media_file"));
+//                            Bitmap rev = BitmapFactory.decodeFile(imgPath+pid+"/"+cid+"/"+review.getJSONObject(last).getString("qba_media_file"));
+                            Bitmap rev =getTheEncriptedImage(imgPath+sid+"/"+pid+"/"+cid+"/ENC/"+review.getJSONObject(last).getString("qba_media_file"));
+
                             limg.setImageBitmap(rev);
                         }
                     } catch (JSONException e) {
@@ -912,7 +922,9 @@ public class ReviewActivity extends AppCompatActivity implements
                                 right.setVisibility(View.INVISIBLE);
                             else
                                 right.setVisibility(View.VISIBLE);
-                            Bitmap rev = BitmapFactory.decodeFile(imgPath+pid+"/"+cid+"/"+review.getJSONObject(last).getString("qba_media_file"));
+//                            Bitmap rev = BitmapFactory.decodeFile(imgPath+pid+"/"+cid+"/"+review.getJSONObject(last).getString("qba_media_file"));
+                            Bitmap rev =getTheEncriptedImage(imgPath+sid+"/"+pid+"/"+cid+"/ENC/"+review.getJSONObject(last).getString("qba_media_file"));
+
                             limg.setImageBitmap(rev);
                         }
                     } catch (JSONException e) {
@@ -1104,7 +1116,9 @@ public class ReviewActivity extends AppCompatActivity implements
         String pid=questionobj.getString("qbm_Paper_ID");
         String cid=questionobj.getString("qbm_ChapterID");
         String sid=questionobj.getString("qbm_SubjectID");
-        Bitmap b = BitmapFactory.decodeFile(imgPath+sid+"/"+pid+"/"+cid+"/"+questionobj.getString("qbm_image_file"));
+//        Bitmap b = BitmapFactory.decodeFile(imgPath+sid+"/"+pid+"/"+cid+"/"+questionobj.getString("qbm_image_file"));
+        Bitmap b =getTheEncriptedImage(imgPath+sid+"/"+pid+"/"+cid+"/ENC/"+questionobj.getString("qbm_image_file"));
+
         question_img.setImageBitmap(b);
         question_img.setOnTouchListener(new View.OnTouchListener() {
             @Override
@@ -1118,7 +1132,7 @@ public class ReviewActivity extends AppCompatActivity implements
         for (int i = 0; i < optionsArray.length(); i++) {
             option = new SingleOptions();
             option.setQbo_id(optionsArray.getJSONObject(i).getString("qbo_id"));
-            option.setQbo_media_file(imgPath+sid+"/"+pid+"/"+cid+"/"+optionsArray.getJSONObject(i).getString("qbo_media_file"));
+            option.setQbo_media_file(imgPath+sid+"/"+pid+"/"+cid+"/ENC/"+optionsArray.getJSONObject(i).getString("qbo_media_file"));
             option.setQbo_seq_no(optionsArray.getJSONObject(i).getString("qbo_seq_no"));
             option.setQbo_answer_flag(optionsArray.getJSONObject(i).getString(("qbo_answer_flag")));
             optionsList.add(option);
@@ -1342,6 +1356,26 @@ public class ReviewActivity extends AppCompatActivity implements
     }
     @Override public void onDestroy() {
         super.onDestroy();
+    }
+
+    private Bitmap getTheEncriptedImage(String qbm_image_file) {
+        Bitmap bp=null;
+        try {
+            File f=new File(qbm_image_file);
+            if(f.exists()) {
+                bp= EncryptDecrypt.decrypt(new FileInputStream(f));
+            }else
+            {
+                Log.e("AssessmentTestActivity","file is not found:"+qbm_image_file);
+            }
+        }catch (Exception e)
+        {
+            e.printStackTrace();
+        } catch (Throwable throwable) {
+            throwable.printStackTrace();
+        }
+
+        return bp;
     }
 }
 
