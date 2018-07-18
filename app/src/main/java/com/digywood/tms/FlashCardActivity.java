@@ -53,6 +53,8 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.FileReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.TimeZone;
@@ -223,7 +225,8 @@ public class FlashCardActivity extends AppCompatActivity {
         startDttm= new java.text.SimpleDateFormat("yyyy-MM-dd kk:mm:ss").format(Calendar.getInstance(TimeZone.getDefault()).getTime());
 
         try{
-            BufferedReader br = new BufferedReader(new FileReader(testPath+"flashAttempts/"+testId+"_01.json"));
+            BufferedReader br = new BufferedReader(new InputStreamReader(getTheDecriptedJson(testPath+"flashAttempts/"+testId+"_01.json")));
+//            BufferedReader br = new BufferedReader(new FileReader(testPath+"flashAttempts/"+testId+"_01.json"));
             StringBuilder sb = new StringBuilder();
             String line = br.readLine();
 
@@ -1235,4 +1238,25 @@ public class FlashCardActivity extends AppCompatActivity {
 
         return bp;
     }
+
+    private InputStream getTheDecriptedJson(String json_file_path) {
+        InputStream is=null;
+        try {
+            File f=new File(json_file_path);
+            if(f.exists()) {
+                is= EncryptDecrypt.decryptJson(new FileInputStream(f));
+            }else
+            {
+                Log.e("PracticeTestAdapter","file is not found:"+json_file_path);
+            }
+        }catch (Exception e)
+        {
+            e.printStackTrace();
+        } catch (Throwable throwable) {
+            throwable.printStackTrace();
+        }
+
+        return is;
+    }
+
 }

@@ -5,6 +5,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
+import android.graphics.Bitmap;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.RecyclerView;
 import android.text.Html;
@@ -19,6 +20,7 @@ import android.widget.Toast;
 import com.digywood.tms.AsynTasks.BagroundTask;
 import com.digywood.tms.AsynTasks.DownloadFileAsync;
 import com.digywood.tms.AttemptDataActivity;
+import com.digywood.tms.EncryptDecrypt;
 import com.digywood.tms.FlashCardActivity;
 import com.digywood.tms.IBagroundListener;
 import com.digywood.tms.IDownloadStatus;
@@ -38,8 +40,11 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
@@ -71,7 +76,7 @@ public class PractiseTestAdapter extends RecyclerView.Adapter<PractiseTestAdapte
     Double minscore,maxscore,avgscore,fminscore,favgscore,fmaxscore;
     public static final int RequestPermissionCode = 1;
     String filedata = "", path, jsonPath, attemptPath, photoPath, enrollid="", courseid,groupdata="",startdttm="",endddtm="";
-    String studentid="",subjectId, paperid, testid, fullTest, attempt,json,downloadjsonpath="",tfiledwdpath="",localpath="";
+    String studentid="",subjectId, paperid, testid, fullTest, attempt,json,downloadjsonpath=""/*,tfiledwdpath=""*/,localpath="";
     String restoredsname="",serverId="",finalUrl="",finalAssetUrl="";
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
@@ -289,13 +294,14 @@ public class PractiseTestAdapter extends RecyclerView.Adapter<PractiseTestAdapte
                 }
 
                 try {
-                    String tPath = URLClass.mainpath+enrollid +"/"+courseid+"/"+subjectId+"/"+paperid+"/"+singletest.getTestid()+"/";
+                    String tPath = URLClass.mainpath+enrollid +"/"+courseid+"/"+subjectId+"/"+paperid+"/"+singletest.getTestid()+"/ENC/";
 
                     File file = new File(tPath +singletest.getTestid() + ".json");
                     if (!file.exists()) {
                         showAlert("Main JSON file for test " + singletest.getTestid() + " is not found! \n Please download test data if not ");
                     } else {
-                        BufferedReader br = new BufferedReader(new FileReader(tPath + singletest.getTestid() + ".json"));
+                        BufferedReader br = new BufferedReader(new InputStreamReader(getTheDecriptedJson(tPath + singletest.getTestid() + ".json")));
+//                        BufferedReader br = new BufferedReader(new FileReader(tPath + singletest.getTestid() + ".json"));
                         StringBuilder sb = new StringBuilder();
                         String line = br.readLine();
 
@@ -319,7 +325,7 @@ public class PractiseTestAdapter extends RecyclerView.Adapter<PractiseTestAdapte
 
                                     SingleDWDQues sdq=chapterFileList.get(i);
 
-                                    File myFile1 = new File(URLClass.mainpath+enrollid+"/"+courseid+"/"+sdq.getSubjectId()+"/"+sdq.getPaperId()+"/"+sdq.getChapterId()+"/"+sdq.getFileName());
+                                    File myFile1 = new File(URLClass.mainpath+enrollid+"/"+courseid+"/"+sdq.getSubjectId()+"/"+sdq.getPaperId()+"/"+sdq.getChapterId()+"/ENC/"+sdq.getFileName());
                                     if(myFile1.exists()){
 
                                     }else{
@@ -404,13 +410,14 @@ public class PractiseTestAdapter extends RecyclerView.Adapter<PractiseTestAdapte
                 }
 
                 try {
-                    String tPath = URLClass.mainpath+enrollid +"/"+courseid+"/"+subjectId+"/"+paperid+"/"+singletest.getTestid()+"/";
+                    String tPath = URLClass.mainpath+enrollid +"/"+courseid+"/"+subjectId+"/"+paperid+"/"+singletest.getTestid()+"/ENC/";
 
                     File file = new File(tPath +singletest.getTestid() + ".json");
                     if (!file.exists()) {
                         showAlert("Main JSON file for test " + singletest.getTestid() + " is not found! \n Please download test data if not ");
                     } else {
-                        BufferedReader br = new BufferedReader(new FileReader(tPath + singletest.getTestid() + ".json"));
+                        BufferedReader br = new BufferedReader(new InputStreamReader(getTheDecriptedJson(tPath + singletest.getTestid() + ".json")));
+//                        BufferedReader br = new BufferedReader(new FileReader(tPath + singletest.getTestid() + ".json"));
                         StringBuilder sb = new StringBuilder();
                         String line = br.readLine();
 
@@ -433,11 +440,12 @@ public class PractiseTestAdapter extends RecyclerView.Adapter<PractiseTestAdapte
                                 for(int i=0;i<chapterFileList.size();i++){
 
                                     SingleDWDQues sdq=chapterFileList.get(i);
-
+                                    Log.e("FILES_EXIST",""+URLClass.mainpath+enrollid+"/"+courseid+"/"+sdq.getSubjectId()+"/"+sdq.getPaperId()+"/"+sdq.getChapterId()+"/ENC/"+sdq.getFileName());
                                     File myFile1 = new File(URLClass.mainpath+enrollid+"/"+courseid+"/"+sdq.getSubjectId()+"/"+sdq.getPaperId()+"/"+sdq.getChapterId()+"/ENC/"+sdq.getFileName());
                                     if(myFile1.exists()){
 
                                     }else{
+                                        Log.e("FILES_NOT_EXIST","**************************"+URLClass.mainpath+enrollid+"/"+courseid+"/"+sdq.getSubjectId()+"/"+sdq.getPaperId()+"/"+sdq.getChapterId()+"/ENC/"+sdq.getFileName());
                                         missingfList.add(downloadfileList.get(i));
                                         missFileData.add(sdq);
                                     }
@@ -531,13 +539,13 @@ public class PractiseTestAdapter extends RecyclerView.Adapter<PractiseTestAdapte
                                     Log.e("PracticeTestAdapter","Test Is Not Available in Table..");
                                 }
 
-                                path=courseid+"/"+subjectId+"/"+paperid+"/"+singletest.getTestid()+"/";
+                                path=courseid+"/"+subjectId+"/"+paperid+"/"+singletest.getTestid()+"/ENC/";
 
                                 downloadjsonpath=finalAssetUrl+"courses/"+path+singletest.getTestid()+".json";
 
-                                tfiledwdpath=finalAssetUrl+"courses/"+path;
+                                //tfiledwdpath=finalAssetUrl+"courses/"+path;
 
-                                localpath=enrollid+"/"+courseid+"/"+subjectId+"/"+paperid+"/"+singletest.getTestid()+"/";
+                                localpath=enrollid+"/"+courseid+"/"+subjectId+"/"+paperid+"/"+singletest.getTestid()+"/ENC/";
 
                                 File myFile1 = new File(URLClass.mainpath+localpath+singletest.getTestid()+".json");
                                 if(myFile1.exists()){
@@ -673,7 +681,8 @@ public class PractiseTestAdapter extends RecyclerView.Adapter<PractiseTestAdapte
         filedata="";
 
         try{
-            BufferedReader br = new BufferedReader(new FileReader(URLClass.mainpath+localpath+testId+".json"));
+            BufferedReader br = new BufferedReader(new InputStreamReader(getTheDecriptedJson(URLClass.mainpath+localpath+testId+".json")));
+//            BufferedReader br = new BufferedReader(new FileReader(URLClass.mainpath+localpath+testId+".json"));
             StringBuilder sb = new StringBuilder();
             String line = br.readLine();
 
@@ -787,7 +796,7 @@ public class PractiseTestAdapter extends RecyclerView.Adapter<PractiseTestAdapte
         }
 
         Log.e("path_vars", enrollid + " " + courseid + " " + subjectId + " " + paperid + " " + testid);
-        path = enrollid + "/" + courseid + "/" + subjectId + "/" + paperid + "/" + testid + "/";
+        path = enrollid + "/" + courseid + "/" + subjectId + "/" + paperid + "/" + testid + "/ENC/";
         photoPath = URLClass.mainpath + path;
         attemptPath = URLClass.mainpath + path + "Attempt/";
         jsonPath = URLClass.mainpath + path;
@@ -861,7 +870,7 @@ public class PractiseTestAdapter extends RecyclerView.Adapter<PractiseTestAdapte
 
                     }else{
                         downloadfileList.add(singlequesObj.getString("qbm_Review_Images"));
-                        chapterFileList.add(new SingleDWDQues(chapterid,paperid,subid,singlequesObj.getString("qbm_Review_Images")));
+                        chapterFileList.add(new SingleDWDQues(chapterid  ,paperid,subid,singlequesObj.getString("qbm_Review_Images")));
                     }
 
                     if(downloadfileList.contains(singlequesObj.getString("qbm_flash_image"))){
@@ -1271,4 +1280,25 @@ public class PractiseTestAdapter extends RecyclerView.Adapter<PractiseTestAdapte
         long tmp = Math.round(value);
         return (double) tmp / factor;
     }
+
+    private InputStream getTheDecriptedJson(String json_file_path) {
+        InputStream is=null;
+        try {
+            File f=new File(json_file_path);
+            if(f.exists()) {
+                is= EncryptDecrypt.decryptJson(new FileInputStream(f));
+            }else
+            {
+                Log.e("PracticeTestAdapter","file is not found:"+json_file_path);
+            }
+        }catch (Exception e)
+        {
+            e.printStackTrace();
+        } catch (Throwable throwable) {
+            throwable.printStackTrace();
+        }
+
+        return is;
+    }
+
 }

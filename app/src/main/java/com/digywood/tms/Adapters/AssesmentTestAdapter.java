@@ -25,6 +25,7 @@ import com.digywood.tms.AssessmentTestActivity;
 import com.digywood.tms.AsynTasks.BagroundTask;
 import com.digywood.tms.AsynTasks.DownloadFileAsync;
 import com.digywood.tms.DBHelper.DBHelper;
+import com.digywood.tms.EncryptDecrypt;
 import com.digywood.tms.IBagroundListener;
 import com.digywood.tms.IDownloadStatus;
 import com.digywood.tms.JSONParser;
@@ -41,8 +42,11 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
@@ -202,7 +206,7 @@ public class AssesmentTestAdapter extends RecyclerView.Adapter<AssesmentTestAdap
                 }
 
                 Log.e("path_vars", enrollid + " " + courseid + " " + subjectId + " " + paperid + " " + testid);
-                path = enrollid + "/" + courseid + "/" + subjectId + "/" + paperid + "/" + testid + "/";
+                path = enrollid + "/" + courseid + "/" + subjectId + "/" + paperid + "/" + testid + "/ENC/";
                 photoPath = URLClass.mainpath + path;
                 assessmentPath = URLClass.mainpath + path + testid +".json";
                 try {
@@ -319,13 +323,13 @@ public class AssesmentTestAdapter extends RecyclerView.Adapter<AssesmentTestAdap
                                     mycursor.close();
                                 }
 
-                                path=courseid+"/"+subjectId+"/"+paperid+"/"+singletest.getTestid()+"/";
+                                path=courseid+"/"+subjectId+"/"+paperid+"/"+singletest.getTestid()+"/ENC/";
 
                                 downloadjsonpath=finalAssetUrl+"courses/"+path+singletest.getTestid()+".json";
 
                                 tfiledwdpath=finalAssetUrl+"courses/"+path;
 
-                                localpath=enrollid+"/"+courseid+"/"+subjectId+"/"+paperid+"/"+singletest.getTestid()+"/";
+                                localpath=enrollid+"/"+courseid+"/"+subjectId+"/"+paperid+"/"+singletest.getTestid()+"/ENC/";
 
                                 File myFile1 = new File(URLClass.mainpath+localpath+singletest.getTestid()+".json");
                                 if(myFile1.exists()){
@@ -350,7 +354,8 @@ public class AssesmentTestAdapter extends RecyclerView.Adapter<AssesmentTestAdap
                                                 filedata="";
 
                                                 try{
-                                                    BufferedReader br = new BufferedReader(new FileReader(URLClass.mainpath+localpath+singletest.getTestid()+".json"));
+                                                    BufferedReader br = new BufferedReader(new InputStreamReader(getTheDecriptedJson(URLClass.mainpath+localpath+singletest.getTestid()+".json")));
+                                  //                  BufferedReader br = new BufferedReader(new FileReader(URLClass.mainpath+localpath+singletest.getTestid()+".json"));
                                                     StringBuilder sb = new StringBuilder();
                                                     String line = br.readLine();
 
@@ -492,7 +497,7 @@ public class AssesmentTestAdapter extends RecyclerView.Adapter<AssesmentTestAdap
         }
 
         Log.e("path_vars", enrollid + " " + courseid + " " + subjectId + " " + paperid + " " + testid);
-        path = enrollid + "/" + courseid + "/" + subjectId + "/" + paperid + "/" + testid + "/";
+        path = enrollid + "/" + courseid + "/" + subjectId + "/" + paperid + "/" + testid + "/ENC/";
         photoPath = URLClass.mainpath + path;
         assessmentPath = URLClass.mainpath + path + testid +".json";
         jsonPath = URLClass.mainpath + path;
@@ -637,6 +642,26 @@ public class AssesmentTestAdapter extends RecyclerView.Adapter<AssesmentTestAdap
                 }
             }
         }).execute();
+    }
+
+    private InputStream getTheDecriptedJson(String json_file_path) {
+        InputStream is=null;
+        try {
+            File f=new File(json_file_path);
+            if(f.exists()) {
+                is= EncryptDecrypt.decryptJson(new FileInputStream(f));
+            }else
+            {
+                Log.e("PracticeTestAdapter","file is not found:"+json_file_path);
+            }
+        }catch (Exception e)
+        {
+            e.printStackTrace();
+        } catch (Throwable throwable) {
+            throwable.printStackTrace();
+        }
+
+        return is;
     }
 
 }

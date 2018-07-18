@@ -83,7 +83,7 @@ public class AssessmentTestActivity extends AppCompatActivity implements Adapter
     ImageView fullscreen;
     GridView gridView;
     Spinner sections;
-    String jsonPath,imgPath, photoPath, Seq, Id, path,instanceId,enrollid,courseid,subjectId,paperid,studentId,testid,groupId,orgid,branchid,batchid;
+    String /*jsonPath,*/imgPath, photoPath, Seq, Id, path,instanceId,enrollid,courseid,subjectId,paperid,studentId,testid,groupId,orgid,branchid,batchid;
     final String notAttempted = "NOT_ATTEMPTED", attempted = "ATTEMPTED", skipped = "SKIPPED", bookmarked = "BOOKMARKED",not_confirmed = "NOT_CONFIRMED",confirmed = "CONFIRMED";
     EncryptDecrypt encObj;
     RecyclerView question_scroll;
@@ -263,9 +263,9 @@ public class AssessmentTestActivity extends AppCompatActivity implements Adapter
         }
         Log.e("InstanceData",instanceId);
         save = new SaveJSONdataToFile();
-        path = enrollid + "/" + courseid + "/" + subjectId + "/" + paperid + "/" + testid + "/";
+        path = enrollid + "/" + courseid + "/" + subjectId + "/" + paperid + "/" + testid + "/ENC/";
         photoPath = URLClass.mainpath + path;
-        jsonPath = URLClass.mainpath + path + testid + ".json";
+        //jsonPath = URLClass.mainpath + path + testid + ".json";
         imgPath=URLClass.mainpath+enrollid+"/"+courseid+"/";
 
         temp = new JSONObject();

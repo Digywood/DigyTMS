@@ -49,6 +49,7 @@ import org.json.JSONObject;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Locale;
 import java.util.concurrent.TimeUnit;
@@ -74,9 +75,9 @@ public class PracticeTestActivity extends AppCompatActivity implements
     ImageView fullscreen;
     GridView gridView;
     Spinner sections;
-    String jsonPath,imgPath, photoPath, Seq, Id, path,enrollid,courseid,subjectId,paperid,testid,groupId,studentId;
+    String /*jsonPath,*/imgPath, photoPath, Seq, Id, path,enrollid,courseid,subjectId,paperid,testid,groupId,studentId;
     final String notAttempted = "NOT_ATTEMPTED", attempted = "ATTEMPTED", skipped = "SKIPPED", bookmarked = "BOOKMARKED",not_confirmed = "NOT_CONFIRMED",confirmed = "CONFIRMED";
-    EncryptDecrypt encObj;
+    //EncryptDecrypt encObj;
     RecyclerView question_scroll;
     ScrollGridAdapter scrollAdapter;
     QuestionListAdapter qAdapter;
@@ -251,7 +252,7 @@ public class PracticeTestActivity extends AppCompatActivity implements
         path = enrollid + "/" + courseid + "/" + subjectId + "/" + paperid + "/" + testid + "/";
         imgPath=URLClass.mainpath+enrollid+"/"+courseid+"/";
         photoPath = URLClass.mainpath + path;
-        jsonPath = URLClass.mainpath + path + "Attempt/" + testid + ".json";
+        //jsonPath = URLClass.mainpath + path + "Attempt/" + testid + ".json";
 
 //        imgPath=URLClass.mainpath+enrollid+"/"+courseid+"/";
 
@@ -644,7 +645,7 @@ public class PracticeTestActivity extends AppCompatActivity implements
     public void newTest() throws JSONException {
         millisStart = 3600000;
         obj = new JSONObject(getIntent().getStringExtra("json"));
-        encObj = new EncryptDecrypt();
+        //encObj = new EncryptDecrypt();
         attemptsectionarray = new JSONArray();
         max = 1;
         attempt = new JSONObject(getIntent().getStringExtra("json"));
@@ -1382,12 +1383,32 @@ public class PracticeTestActivity extends AppCompatActivity implements
                 Log.e("AssessmentTestActivity","file is not found:"+qbm_image_file);
             }
         }catch (Exception e)
+    {
+        e.printStackTrace();
+    } catch (Throwable throwable) {
+        throwable.printStackTrace();
+    }
+
+        return bp;
+    }
+
+    private InputStream getTheDecriptedJson(String json_file_path) {
+        InputStream is=null;
+        try {
+            File f=new File(json_file_path);
+            if(f.exists()) {
+                is= EncryptDecrypt.decryptJson(new FileInputStream(f));
+            }else
+            {
+                Log.e("PracticeTestAdapter","file is not found:"+json_file_path);
+            }
+        }catch (Exception e)
         {
             e.printStackTrace();
         } catch (Throwable throwable) {
             throwable.printStackTrace();
         }
 
-        return bp;
+        return is;
     }
 }

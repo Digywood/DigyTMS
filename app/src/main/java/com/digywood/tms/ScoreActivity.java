@@ -76,7 +76,7 @@ public class ScoreActivity extends AppCompatActivity {
         studentId = intent.getStringExtra("studentid");
         instanceId = intent.getStringExtra("instanceid");
         testId = intent.getStringExtra("testid");
-        path = enrollid + "/" + courseid + "/" + subjectid + "/" + paperid + "/" + testId + "/";
+        path = enrollid + "/" + courseid + "/" + subjectid + "/" + paperid + "/" + testId + "/ENC/";
 
         if(testType.equalsIgnoreCase("PRACTICE")) {
             jsonPath = URLClass.mainpath + path + "Attempt/" + testId + ".json";

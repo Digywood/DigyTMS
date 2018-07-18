@@ -10,6 +10,7 @@ import com.digywood.tms.Pojo.SingleSubcatConfig;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -724,6 +725,25 @@ public class JSONParser {
                 FileOutputStream out = new FileOutputStream(file);
                 out.write(bytes);
                 out.close();
+
+                try {
+                    File enc_file = new File(dwdpath+testid+"_01.json");
+                    if (enc_file.exists()) {
+                        byte[] enc_bytes=EncryptDecrypt.encrypt(new FileInputStream(enc_file));
+                        if(enc_file.delete()) {
+                            enc_file.createNewFile();
+                            FileOutputStream enc_out = new FileOutputStream(dwdpath+testid+"_01.json");
+                            enc_out.write(enc_bytes);
+                            enc_out.close();
+                        }
+                    }
+                }catch (Exception e)
+                {
+                    e.printStackTrace();
+                } catch (Throwable throwable) {
+                    throwable.printStackTrace();
+                }
+
             }else {
 
                 File folder = new File(dwdpath);
@@ -739,6 +759,25 @@ public class JSONParser {
                 FileOutputStream out = new FileOutputStream(dwdpath + testid + ".json");
                 out.write(bytes);
                 out.close();
+
+                try {
+                    File enc_file = new File(dwdpath + testid + ".json");
+                    if (enc_file.exists()) {
+                        byte[] enc_bytes=EncryptDecrypt.encrypt(new FileInputStream(enc_file));
+                        if(enc_file.delete()) {
+                            enc_file.createNewFile();
+                            FileOutputStream enc_out = new FileOutputStream(dwdpath + testid + ".json");
+                            enc_out.write(enc_bytes);
+                            enc_out.close();
+                        }
+                    }
+                }catch (Exception e)
+                {
+                    e.printStackTrace();
+                } catch (Throwable throwable) {
+                    throwable.printStackTrace();
+                }
+
             }
             Log.e("TestQSize---",""+testqcount);
 

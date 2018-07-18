@@ -36,6 +36,25 @@ public class EncryptDecrypt {
         return bitmap;
     }
 
+    public static InputStream decryptJson(InputStream is) throws Throwable {
+        DESKeySpec dks = new DESKeySpec(key.getBytes());
+        SecretKeyFactory skf = SecretKeyFactory.getInstance("DES");
+        SecretKey desKey = skf.generateSecret(dks);
+
+        Cipher cipher = Cipher.getInstance("DES"); // DES/ECB/PKCS5Padding for SunJCE
+        cipher.init(Cipher.DECRYPT_MODE, desKey);
+        CipherInputStream cos = new CipherInputStream(is, cipher);
+
+        return cos;
+    }
+
+    public static byte[] encrypt(InputStream is) throws Throwable {
+        byte[] bytes = encryptOrDecrypt(Cipher.ENCRYPT_MODE, is);
+
+        return bytes;
+    }
+
+
     public static byte[] encryptOrDecrypt(int mode, InputStream is) throws Throwable {
 
 
@@ -44,6 +63,13 @@ public class EncryptDecrypt {
         SecretKey desKey = skf.generateSecret(dks);
         byte[] bytes = new byte[1024];
         Cipher cipher = Cipher.getInstance("DES"); // DES/ECB/PKCS5Padding for SunJCE
+
+        if (mode == Cipher.ENCRYPT_MODE) {
+            cipher.init(Cipher.ENCRYPT_MODE, desKey);
+            CipherInputStream cos = new CipherInputStream(is, cipher);
+
+            bytes = doCopy(cos);
+        }
 
         if (mode == Cipher.DECRYPT_MODE) {
             cipher.init(Cipher.DECRYPT_MODE, desKey);
