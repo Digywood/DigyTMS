@@ -415,7 +415,8 @@ public class DBHelper extends SQLiteOpenHelper {
                 "  `Ptu_section_name` text DEFAULT NULL)";
         db.execSQL(tblptusections);
 
-        String tblatusections="CREATE TABLE `atu_sections` (\n" +
+
+        /*String tblatusections="CREATE TABLE `atu_sections` (\n" +
                 "  `atu_section_key` integer PRIMARY KEY,\n" +
                 "  `atu_ID` text DEFAULT NULL,\n" +
                 "  `atu_section_sequence` text DEFAULT NULL,\n" +
@@ -429,8 +430,7 @@ public class DBHelper extends SQLiteOpenHelper {
                 "  `atu_sec_no_groups` int(5) DEFAULT NULL,\n" +
                 "  `atu_section_status` text DEFAULT NULL,\n" +
                 "  `atu_section_name` text DEFAULT NULL)";
-        db.execSQL(tblatusections);
-
+        db.execSQL(tblatusections);*/
         String tbl_localservers="CREATE TABLE `local_servers` (\n" +
                 "  `serverKey` integer PRIMARY KEY,\n" +
                 "  `orgId` text DEFAULT NULL,\n" +
@@ -1271,7 +1271,7 @@ public class DBHelper extends SQLiteOpenHelper {
     }
 
     public Cursor getStudentTests(String studentId,String enrollId,String paperId,String status){
-        Cursor c =db.query("sptu_student", new String[] {"sptu_entroll_id,sptu_student_ID,sptu_ID,sptu_name,sptu_paper_ID,sptu_subjet_ID,sptu_course_id,sptu_dwnld_status"},"sptu_student_ID='"+studentId+"' and sptu_entroll_id='"+enrollId+"' and sptu_paper_ID='"+paperId+"' and sptu_status='"+status+"'", null, null, null,null);
+        Cursor c =db.query("sptu_student", new String[] {"sptu_entroll_id,sptu_student_ID,sptu_ID,sptu_name,sptu_paper_ID,sptu_subjet_ID,sptu_course_id,sptu_dwnld_status"},"sptu_student_ID='"+studentId+"' and sptu_entroll_id='"+enrollId+"' and sptu_paper_ID='"+paperId+"' and sptu_status='"+status+"' ORDER BY `sptu_ID` ASC", null, null, null,null);
         return c;
     }
 
@@ -1631,10 +1631,10 @@ public class DBHelper extends SQLiteOpenHelper {
         long updateFlag=0;
 
         ContentValues cv = new ContentValues();
-        cv.put("Test_ID", testId);
+        /*cv.put("Test_ID", testId);
         cv.put("Attempt_ID", attemptId);
         cv.put("Student_ID", stuId);
-        cv.put("Question_ID", qId);
+        cv.put("Question_ID", qId);*/
         cv.put("Question_Seq_No", qSeq);
         cv.put("Question_Section", qSec);
         cv.put("Question_Category", cat);
@@ -1648,7 +1648,7 @@ public class DBHelper extends SQLiteOpenHelper {
         cv.put("Question_Option_Sequence",oSeq );
         cv.put("Option_Answer_Flag",flag );
         Log.e("DB_Update:",status);
-        updateFlag = db.update("attempt_data",cv,"Question_ID='"+qId+"'",null);
+        updateFlag = db.update("attempt_data",cv,"Question_ID='"+qId+"' and Attempt_ID='"+attemptId+"' and Test_ID='"+testId+"' and Student_ID='"+stuId+"'",null);
 
         return updateFlag;
     }

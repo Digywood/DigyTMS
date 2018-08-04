@@ -803,14 +803,17 @@ public class PracticeTestActivity extends AppCompatActivity implements
             if (dataObj.CheckQuestion(Id,testid)) {
                 Log.e("Option_Status", listOfLists.get(pos).get(index).getQ_status());
                 if (indx > -1) {
-                    result = dataObj.UpdateQuestion(attempt.getString("ptu_test_ID"), generateUniqueId(0),studentId, Id, Seq,attempt.getJSONArray("Sections").getJSONObject(pos).getString("ptu_section_name"),questionobj.getString("qbm_Chapter_name"),questionobj.getString("qbm_Sub_CategoryName"), Integer.valueOf(questionobj.getString("qbm_marks")), Double.valueOf(questionobj.getString("qbm_negative_mrk")), 0, 0, indx, listOfLists.get(pos).get(index).getQ_status(), opAdapter.getSelectedSequence(), opAdapter.getFlag());
+                    result = dataObj.UpdateQuestion(attempt.getString("ptu_test_ID"), generateUniqueId(0),studentId, Id, Seq,attempt.getJSONArray("Sections").getJSONObject(pos).getString("ptu_section_name"),questionobj.getString("qbm_CategoryName"),questionobj.getString("qbm_Sub_CategoryName"), Integer.valueOf(questionobj.getString("qbm_marks")), Double.valueOf(questionobj.getString("qbm_negative_mrk")), 0, 0, indx, listOfLists.get(pos).get(index).getQ_status(), opAdapter.getSelectedSequence(), opAdapter.getFlag());
                 } else {
                     //if question is attempted and then the option is cleared store as skipped
-                    result = dataObj.UpdateQuestion(attempt.getString("ptu_test_ID"), generateUniqueId(0),studentId, Id, Seq,attempt.getJSONArray("Sections").getJSONObject(pos).getString("ptu_section_name"),questionobj.getString("qbm_Chapter_name"),questionobj.getString("qbm_Sub_CategoryName"), Integer.valueOf(questionobj.getString("qbm_marks")), Double.valueOf(questionobj.getString("qbm_negative_mrk")), 0, 0, indx, listOfLists.get(pos).get(index).getQ_status(), opAdapter.getSelectedSequence(), opAdapter.getFlag());
+                    result = dataObj.UpdateQuestion(attempt.getString("ptu_test_ID"), generateUniqueId(0),studentId, Id, Seq,attempt.getJSONArray("Sections").getJSONObject(pos).getString("ptu_section_name"),questionobj.getString("qbm_CategoryName"),questionobj.getString("qbm_Sub_CategoryName"), Integer.valueOf(questionobj.getString("qbm_marks")), Double.valueOf(questionobj.getString("qbm_negative_mrk")), 0, 0, indx, listOfLists.get(pos).get(index).getQ_status(), opAdapter.getSelectedSequence(), opAdapter.getFlag());
                 }
                 if (result == 0) {
-                    dataObj.InsertQuestion(attempt.getString("ptu_test_ID"), generateUniqueId(0),studentId, Id, Seq,attempt.getJSONArray("Sections").getJSONObject(pos).getString("ptu_section_name"),questionobj.getString("qbm_Chapter_name"),questionobj.getString("qbm_Sub_CategoryName"), Integer.valueOf(questionobj.getString("qbm_marks")), Double.valueOf(questionobj.getString("qbm_negative_mrk")), 0, 0, indx, listOfLists.get(pos).get(index).getQ_status(), opAdapter.getSelectedSequence(), opAdapter.getFlag());
+                    dataObj.InsertQuestion(attempt.getString("ptu_test_ID"), generateUniqueId(0),studentId, Id, Seq,attempt.getJSONArray("Sections").getJSONObject(pos).getString("ptu_section_name"),questionobj.getString("qbm_CategoryName"),questionobj.getString("qbm_Sub_CategoryName"), Integer.valueOf(questionobj.getString("qbm_marks")), Double.valueOf(questionobj.getString("qbm_negative_mrk")), 0, 0, indx, listOfLists.get(pos).get(index).getQ_status(), opAdapter.getSelectedSequence(), opAdapter.getFlag());
                 }
+                Log.e("PracticeTestActivity", "attempt" + attempt.toString());
+                Log.e("PracticeTestActivity", "questionobj" + questionobj.toString());
+                Log.e("PracticeTestActivity","CatName:"+questionobj.getString("qbm_Chapter_name")+", SubCatNAme"+questionobj.getString("qbm_Sub_CategoryName"));
                 Log.e("CurrentStatus", "" + dataObj.getPosition(Id,testid));
             }
 

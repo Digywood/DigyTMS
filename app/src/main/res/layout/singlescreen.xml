@@ -1,29 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
 
     <ScrollView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
-
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal"
+            android:weightSum="1">
         <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="700dp"
+            android:layout_height="400dp"
             android:id="@+id/layout_img"
             android:scaleType="fitXY"
             />
-
+        </LinearLayout>
     </ScrollView>
+
     <ImageView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:src="@drawable/ic_close"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true"
         android:layout_marginBottom="10dp"
         android:layout_marginEnd="10dp"
-        android:contentDescription="@string/dummy_content"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentBottom="true"
+        android:src="@drawable/ic_close"
         android:id="@+id/iv_close" />
 </RelativeLayout>

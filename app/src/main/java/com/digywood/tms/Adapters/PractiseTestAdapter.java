@@ -76,7 +76,7 @@ public class PractiseTestAdapter extends RecyclerView.Adapter<PractiseTestAdapte
     Double minscore,maxscore,avgscore,fminscore,favgscore,fmaxscore;
     public static final int RequestPermissionCode = 1;
     String filedata = "", path, jsonPath, attemptPath, photoPath, enrollid="", courseid,groupdata="",startdttm="",endddtm="";
-    String studentid="",subjectId, paperid, testid, fullTest, attempt,json,downloadjsonpath=""/*,tfiledwdpath=""*/,localpath="";
+    String studentid="",subjectId, paperid, testid, fullTest, attempt=null,json,downloadjsonpath=""/*,tfiledwdpath=""*/,localpath="";
     String restoredsname="",serverId="",finalUrl="",finalAssetUrl="";
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
@@ -206,12 +206,20 @@ public class PractiseTestAdapter extends RecyclerView.Adapter<PractiseTestAdapte
 //                            holder.ll_resume.setBackground(mycontext.getResources().getDrawable(R.drawable.layout_press_custom));
                             try {
                                 ((ListofPractiseTests)mycontext).finish();
-                                attempt = new String(SaveJSONdataToFile.bytesFromFile(getExternalPath(mycontext, singletest, "ATTEMPT") + testid + ".json"), "UTF-8");
+                                String path=getExternalPath(mycontext, singletest, "ATTEMPT") + testid + ".json";
+                                File file = new File(path);
+                                if(file.exists()){
+                                attempt = new String(SaveJSONdataToFile.bytesFromFile(path), "UTF-8");
                                 Intent i = new Intent(mycontext, PracticeTestActivity.class);
                                 i.putExtra("json", attempt);
                                 i.putExtra("test", testid);
+                                i.putExtra("studentid", studentid);
+                                i.putExtra("enrollid", enrollid);
+                                i.putExtra("courseid", courseid);
+                                i.putExtra("subjectid", subjectId);
+                                i.putExtra("paperid", paperid);
                                 i.putExtra("status", "RESUME");
-                                mycontext.startActivity(i);
+                                mycontext.startActivity(i);}
                             } catch (IOException | ClassNotFoundException | NullPointerException e) {
                                 e.printStackTrace();
                             }
@@ -227,17 +235,21 @@ public class PractiseTestAdapter extends RecyclerView.Adapter<PractiseTestAdapte
                         try {
                             //((ListofPractiseTests)mycontext).finish();
                             Log.e("Exec","Review,");
-                            attempt = new String(SaveJSONdataToFile.bytesFromFile(getExternalPath(mycontext, singletest, "ATTEMPT") + testid + ".json"), "UTF-8");
-                            Intent i = new Intent(mycontext, ReviewActivity.class);
-                            i.putExtra("test", testid);
-                            i.putExtra("studentid", studentid);
-                            i.putExtra("enrollid", enrollid);
-                            i.putExtra("courseid", courseid);
-                            i.putExtra("subjectid", subjectId);
-                            i.putExtra("paperid", paperid);
-                            i.putExtra("json", attempt);
-                            i.putExtra("TYPE", "PRACTISE_TEST");
-                            mycontext.startActivity(i);
+                            String path=getExternalPath(mycontext, singletest, "ATTEMPT") + testid + ".json";
+                            File file = new File(path);
+                            if(file.exists()){
+                                attempt = new String(SaveJSONdataToFile.bytesFromFile(path), "UTF-8");
+                                Intent i = new Intent(mycontext, ReviewActivity.class);
+                                i.putExtra("test", testid);
+                                i.putExtra("studentid", studentid);
+                                i.putExtra("enrollid", enrollid);
+                                i.putExtra("courseid", courseid);
+                                i.putExtra("subjectid", subjectId);
+                                i.putExtra("paperid", paperid);
+                                i.putExtra("json", attempt);
+                                i.putExtra("TYPE", "PRACTISE_TEST");
+                                ((ListofPractiseTests)mycontext).finish();
+                            mycontext.startActivity(i);}
                         } catch (IOException | ClassNotFoundException e) {
                             e.printStackTrace();
                         }
@@ -515,14 +527,14 @@ public class PractiseTestAdapter extends RecyclerView.Adapter<PractiseTestAdapte
                     @Override
                     public void bagroundData(String json) {
                         try{
-                            Log.e("UploadStatus---",json);
+                            Log.e("PracticeTestAdapter","Respnse from server : "+json);
                             if(json.equalsIgnoreCase("Updated")){
 
                                 long updateFlag=myhelper.updatePTestStartStatus(studentid,enrollid,singletest.getTestid(),"STARTED",startdttm);
                                 if(updateFlag>0){
-                                    Log.e("LocalStatusUpdate---","Updated Locally");
+                                    Log.e("PracticeTestAdapter","Updated Locally");
                                 }else{
-                                    Log.e("LocalStatusUpdate---","Unable to Update Locally");
+                                    Log.e("PracticeTestAdapter","Unable to Update Locally");
                                 }
 
                                 Cursor mycursor=myhelper.checkPractiseTest(studentid,singletest.getTestid());
@@ -570,7 +582,7 @@ public class PractiseTestAdapter extends RecyclerView.Adapter<PractiseTestAdapte
                                             }catch (Exception e){
 
                                                 e.printStackTrace();
-                                                Log.e("DownloadFile----",e.toString());
+                                                Log.e("PracticeTestAdapter",e.toString());
                                             }
                                         }
                                     }).execute();
@@ -859,11 +871,14 @@ public class PractiseTestAdapter extends RecyclerView.Adapter<PractiseTestAdapte
                         chapterFileList.add(new SingleDWDQues(chapterid,paperid,subid,singlequesObj.getString("qbm_image_file")));
                     }
 
-                    if(downloadfileList.contains(singlequesObj.getString("qbm_QAdditional_Image"))){
 
-                    }else{
-                        downloadfileList.add(singlequesObj.getString("qbm_QAdditional_Image"));
-                        chapterFileList.add(new SingleDWDQues(chapterid,paperid,subid,singlequesObj.getString("qbm_QAdditional_Image")));
+                    if(!singlequesObj.getString("qbm_QAdditional_Image").equalsIgnoreCase("NULL")) {
+                        if (downloadfileList.contains(singlequesObj.getString("qbm_QAdditional_Image"))) {
+
+                        } else {
+                            downloadfileList.add(singlequesObj.getString("qbm_QAdditional_Image"));
+                            chapterFileList.add(new SingleDWDQues(chapterid, paperid, subid, singlequesObj.getString("qbm_QAdditional_Image")));
+                        }
                     }
 
                     if(downloadfileList.contains(singlequesObj.getString("qbm_Review_Images"))){
@@ -932,19 +947,21 @@ public class PractiseTestAdapter extends RecyclerView.Adapter<PractiseTestAdapte
     }
 
     private void getTestConfig(final String testid,String groupidData){
-
+        Log.e("PractiseTestAdapter","****** Welcome to test config ******");
         HashMap<String,String> hmap=new HashMap<>();
         hmap.put("testId",testid);
         hmap.put("groupiddata",groupidData);
+        Log.e("PractiseTestAdapter","groupiddata:"+groupidData);
         new BagroundTask(finalUrl+"getTestConfig.php",hmap,mycontext,new IBagroundListener() {
             @Override
             public void bagroundData(String json) {
 
+                Log.e("PractiseTestAdapter","Resopnse from server:"+json);
                 JSONArray groupArray,quesConfigArray,groupConfigArray,sectionArray;
                 JSONObject groupObj=null,qconObj=null,gquesconObj=null,sectionObj=null;
 
                 try{
-                    Log.e("ListofPractiseTests---",json);
+                    Log.e("PractiseTestAdapter",json);
 
                     JSONObject myObj=new JSONObject(json);
 

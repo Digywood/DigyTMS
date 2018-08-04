@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="900dp"
-    android:layout_height="450dp">
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
 
     <ScrollView
         android:layout_width="match_parent"
@@ -16,16 +16,16 @@
 
             <ImageView
                 android:id="@+id/question_full_img"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_width="400dp"
+                android:layout_height="350dp"
                 android:layout_weight="1"
                 android:contentDescription="@string/dummy_content"
                 android:scaleType="fitXY" />
 
             <ImageView
                 android:id="@+id/iv_additional_img"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_width="400dp"
+                android:layout_height="350dp"
                 android:layout_weight="1"
                 android:contentDescription="@string/dummy_content"
                 android:scaleType="fitStart" />

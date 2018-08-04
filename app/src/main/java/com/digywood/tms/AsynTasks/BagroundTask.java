@@ -111,8 +111,7 @@ public class BagroundTask extends AsyncTask<Void, String, String> {
                 publishProgress(status);
             }
 
-            Log.e("LoginActivity---",sb.toString());
-            System.out.println("JSONArray--" + sb.toString());
+            Log.e("BagroundTask",sb.toString());
             is.close();
             resultString = sb.toString();
 

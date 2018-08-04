@@ -551,13 +551,14 @@ public class AssesmentTestAdapter extends RecyclerView.Adapter<AssesmentTestAdap
                         chapterFileList.add(new SingleDWDQues(chapterid,paperid,subid,singlequesObj.getString("qbm_image_file")));
                     }
 
-                    if(downloadfileList.contains(singlequesObj.getString("qbm_QAdditional_Image"))){
+                    if(!singlequesObj.getString("qbm_QAdditional_Image").equalsIgnoreCase("NULL")) {
+                        if (downloadfileList.contains(singlequesObj.getString("qbm_QAdditional_Image"))) {
 
-                    }else{
-                        downloadfileList.add(singlequesObj.getString("qbm_QAdditional_Image"));
-                        chapterFileList.add(new SingleDWDQues(chapterid,paperid,subid,singlequesObj.getString("qbm_QAdditional_Image")));
+                        } else {
+                            downloadfileList.add(singlequesObj.getString("qbm_QAdditional_Image"));
+                            chapterFileList.add(new SingleDWDQues(chapterid, paperid, subid, singlequesObj.getString("qbm_QAdditional_Image")));
+                        }
                     }
-                    
                     if(downloadfileList.contains(singlequesObj.getString("qbm_Review_Images"))){
 
                     }else{

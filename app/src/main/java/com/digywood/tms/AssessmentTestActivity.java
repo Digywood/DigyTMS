@@ -1572,7 +1572,7 @@ public class AssessmentTestActivity extends AppCompatActivity implements Adapter
                         try{
                             JSONArray ja_assessmentKeys;
                             JSONObject assessmentObj;
-                            Log.e("json"," comes :  "+json);
+                            Log.e("syncAssesmentTestData"," comes :  "+json);
 
                             JSONObject mainObj=new JSONObject(json);
 
@@ -1584,7 +1584,7 @@ public class AssessmentTestActivity extends AppCompatActivity implements Adapter
                                 if(ja_assessmentKeys!=null && ja_assessmentKeys.length()>0){
                                     int p=0,q=0;
                                     serv_count=ja_assessmentKeys.length();
-                                    Log.e("DBNActivity---","updated_assesstestQ_rec:--"+ja_assessmentKeys.length());
+                                    Log.e("syncAssesmentTestData","updated_assesstestQ_rec:--"+ja_assessmentKeys.length());
                                     for(int i=0;i<ja_assessmentKeys.length();i++){
                                         assessmentObj=ja_assessmentKeys.getJSONObject(i);
 //                                        int loc_upldflag=myhelper.checkAQUPLDStatus(studentid,assessmentObj.getString("assessmentKey"),"NotUploaded");
@@ -1600,24 +1600,24 @@ public class AssessmentTestActivity extends AppCompatActivity implements Adapter
                                             q++;
                                         }
                                     }
-                                    Log.e("DBNActivity---","AQUpdated:--"+p);
+                                    Log.e("syncAssesmentTestData","AQUpdated:--"+p);
                                     if(loc_count==serv_count){
                                         Toast.makeText(getApplicationContext(),"Syncronised",Toast.LENGTH_SHORT).show();
                                     }else {
                                         Toast.makeText(getApplicationContext(),"Sync Failed,Try Again Later",Toast.LENGTH_SHORT).show();
                                     }
                                 }else{
-                                    Log.e("ATESTQUPLDData--","Null Assessment Ques Json Array: ");
+                                    Log.e("syncAssesmentTestData","Null Assessment Ques Json Array: ");
                                 }
 
                             }
                             else {
-                                Log.e("ATESTQUPLDData--","No Assessment Ques Uploaded: ");
+                                Log.e("syncAssesmentTestData","No Assessment Ques Uploaded: ");
                             }
 
                         }catch (Exception e){
                             e.printStackTrace();
-                            Log.e("AssessmentTestActivity","  :  "+e.toString()+"lineno:--"+e.getStackTrace()[0].getLineNumber());
+                            Log.e("syncAssesmentTestData","  :  "+e.toString()+"lineno:--"+e.getStackTrace()[0].getLineNumber());
                         }
                     }
                 }).execute();
