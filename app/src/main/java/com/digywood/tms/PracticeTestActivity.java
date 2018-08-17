@@ -1,6 +1,7 @@
 package com.digywood.tms;
 
 import android.annotation.SuppressLint;
+import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -11,6 +12,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.Typeface;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.os.Handler;
@@ -23,6 +25,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.InputType;
 import android.util.Log;
 import android.view.GestureDetector;
 import android.view.KeyEvent;
@@ -30,15 +33,19 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.view.animation.AnimationUtils;
 import android.view.animation.LayoutAnimationController;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.GridView;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.Spinner;
+import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -51,12 +58,15 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Locale;
 import java.util.concurrent.TimeUnit;
 
 import com.digywood.tms.Adapters.OptionsCheckAdapter;
 import com.digywood.tms.Adapters.QuestionListAdapter;
 import com.digywood.tms.Adapters.ScrollGridAdapter;
+import com.digywood.tms.AsynTasks.AsyncCheckInternet;
+import com.digywood.tms.AsynTasks.BagroundTask;
 import com.digywood.tms.DBHelper.DBHelper;
 import com.digywood.tms.Pojo.SingleOptions;
 import com.digywood.tms.Pojo.SingleQuestion;
@@ -75,7 +85,7 @@ public class PracticeTestActivity extends AppCompatActivity implements
     ImageView fullscreen;
     GridView gridView;
     Spinner sections;
-    String /*jsonPath,*/imgPath, photoPath, Seq, Id, path,enrollid,courseid,subjectId,paperid,testid,groupId,studentId;
+    String /*jsonPath,*/imgPath, photoPath, Seq, Id, path,enrollid,courseid,subjectId,paperid,chapterId/*,catId,subCatId*/,testid,groupId,studentId;
     final String notAttempted = "NOT_ATTEMPTED", attempted = "ATTEMPTED", skipped = "SKIPPED", bookmarked = "BOOKMARKED",not_confirmed = "NOT_CONFIRMED",confirmed = "CONFIRMED";
     //EncryptDecrypt encObj;
     RecyclerView question_scroll;
@@ -91,7 +101,7 @@ public class PracticeTestActivity extends AppCompatActivity implements
     ArrayList<SingleOptions> optionsList = new ArrayList<>();
     ArrayList<SingleQuestionList> questionOpList = new ArrayList<>();
     ArrayList<ArrayList<SingleQuestionList>> listOfLists = new ArrayList<>();
-    ImageView question_img ,menu;
+    ImageView question_img ,menu,report;
     Bundle bundle;
     Button btn_group_info, btn_qadditional, btn_review, btn_prev, btn_next, btn_clear_option, btn_mark,btn_confirm;
     Cursor c;
@@ -113,8 +123,10 @@ public class PracticeTestActivity extends AppCompatActivity implements
     DBHelper dataObj;
     long millisStart = 0, millisRemaining = 0;
     GestureDetector gd;
-
-
+    String report_Text = "";
+    String cur_questionNo="";
+    String report_message="";
+    Spinner sp_report;
     private static final boolean AUTO_HIDE = true;
 
     /**
@@ -204,6 +216,7 @@ public class PracticeTestActivity extends AppCompatActivity implements
         qno_label = findViewById(R.id.tv_Question_no_label);
         fullscreen = findViewById(R.id.fullscreen);
         menu = findViewById(R.id.menu);
+        report=findViewById(R.id.report);
 
         Typeface font = Typeface.createFromAsset(getAssets(), "fonts/Raleway-Medium.ttf");
         qno_label.setTypeface(font);
@@ -225,6 +238,7 @@ public class PracticeTestActivity extends AppCompatActivity implements
         studentId = getIntent().getStringExtra("studentid");
         Log.e("stuid-->",studentId);
         rv_option = findViewById(R.id.option_view);
+
 
         if(checkPermission()){
 
@@ -352,6 +366,13 @@ public class PracticeTestActivity extends AppCompatActivity implements
             }
         });
 
+        //report window button
+        report.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                initiateReportWindow(v);
+            }
+        });
         //clear option button
         btn_clear_option.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -840,6 +861,80 @@ public class PracticeTestActivity extends AppCompatActivity implements
         }
     }
 
+
+    //method to create a report window
+   public void initiateReportWindow(View v) {
+
+        String[] s = { "QUASTION", "OPTION", "ANSWER", "EXPLINATION", "ADL_INFO", "GRP_INFO","REV_INFO","OTHERS"};
+        final ArrayAdapter<String> adp = new ArrayAdapter<String>(PracticeTestActivity.this,
+                android.R.layout.simple_dropdown_item_1line, s);
+
+        LayoutInflater factory = LayoutInflater.from(this);
+        final View view = factory.inflate(R.layout.activity_alert_report, null);
+        //View view = infl.inflate(R.layout.activity_alert_report, null);
+        final android.app.AlertDialog alertDialog = new android.app.AlertDialog.Builder(PracticeTestActivity.this,R.style.NewDialog).create();
+
+        TextView txt_question_id= (TextView) view.findViewById(R.id.txt_question_id);
+        txt_question_id.setText(cur_questionNo);
+        final EditText txt_reportMessage= (EditText) view.findViewById(R.id.txt_reportMessage);
+        sp_report=view.findViewById(R.id.sp_report);
+        //sp_report.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+        sp_report.setAdapter(adp);
+        ImageView iv_close= (ImageView) view.findViewById(R.id.iv_close);
+        alertDialog.setView(view);
+
+
+        Button btn_report= (Button) view.findViewById(R.id.btn_report);
+
+        btn_report.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //txt_reportMessage.setText("CourseId:"+courseid+", SubjectId:"+subjectId+", PaperId:"+paperid+", ChapterId:"+paperid);
+                new AsyncCheckInternet(PracticeTestActivity.this,new INetStatus(){
+                    @Override
+                    public void inetSatus(Boolean netStatus) {
+                        if(netStatus){
+                            HashMap<String,String> hmap=new HashMap<>();
+                            hmap.put("QUASTION_ID",cur_questionNo);
+                            hmap.put("COURSE_ID",courseid);
+                            hmap.put("SUBJECT_ID",subjectId);
+                            hmap.put("PAPER_ID",paperid);
+                            hmap.put("CHAPTER_ID",paperid);
+                            hmap.put("ACTIVITY_TYPE","PRACTICE_TEST");
+                            hmap.put("ISSUE_TYPE",sp_report.getSelectedItem().toString());
+                            report_message=txt_reportMessage.getText().toString();
+                            hmap.put("ISSUE_MESSAGE",report_message);
+                            hmap.put("REPORTED_BY",studentId);
+
+                            new BagroundTask(URLClass.hosturl +"insert_report.php",hmap,PracticeTestActivity.this, new IBagroundListener() {
+
+                                @Override
+                                public void bagroundData(String json) {
+                                    if(json.equalsIgnoreCase("Report_NOT_Inserted")){
+                                        Toast.makeText(getApplicationContext(),"Report not submitted,please try again..",Toast.LENGTH_SHORT).show();
+                                    }else {
+                                        alertDialog.cancel();
+                                        Toast.makeText(getApplicationContext(),"Report  submitted,Thank you for your feedback..",Toast.LENGTH_SHORT).show();
+                                    }
+                                }
+                            }).execute();
+                        }else {
+                            Toast.makeText(getApplicationContext(),"No internet,Please Check Your Connection",Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                }).execute();
+            }
+        });
+        iv_close.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                alertDialog.cancel();
+            }
+        });
+        alertDialog.show();
+
+    }
+
     //method to create a menu window
     public void initiateMenuWindow(View v) {
         //We need to get the instance of the LayoutInflater, use the context of this activity
@@ -1001,6 +1096,7 @@ public class PracticeTestActivity extends AppCompatActivity implements
         myLayoutManager.scrollToPositionWithOffset(index, 400);
         questionobj = array.getJSONObject(index);
         Log.e("CurrentIndex",""+index);
+        cur_questionNo=questionobj.getString("qbm_ID");
         q_no.setText(questionobj.getString("qbm_ID"));
         if (questionobj.getString("qbm_group_flag").equals("YES")) {
             groupId = questionobj.getString("gbg_id");

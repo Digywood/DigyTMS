@@ -32,6 +32,7 @@ import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.GridView;
 import android.widget.ImageButton;
@@ -44,6 +45,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 import com.digywood.tms.Adapters.CardQuestionAdapter;
 import com.digywood.tms.Adapters.ScrollGridCardAdapter;
+import com.digywood.tms.AsynTasks.AsyncCheckInternet;
+import com.digywood.tms.AsynTasks.BagroundTask;
 import com.digywood.tms.DBHelper.DBHelper;
 import com.digywood.tms.Pojo.SingleFlashQuestion;
 import org.json.JSONArray;
@@ -57,6 +60,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.HashMap;
 import java.util.TimeZone;
 
 /**
@@ -92,6 +96,10 @@ public class FlashCardActivity extends AppCompatActivity {
     ArrayList<SingleFlashQuestion> questionList=new ArrayList<>();
     ArrayList<String> fimageList=new ArrayList<>();
     Button btn_know,btn_idonknow,btn_prev,btn_next,btn_answer,btn_gQues,btn_exit;
+    ImageView freport;
+    Spinner sp_report;
+    String cur_questionNo="";
+    String report_message="";
 
     /**
      * Whether or not the system UI should be auto-hidden after
@@ -219,6 +227,7 @@ public class FlashCardActivity extends AppCompatActivity {
         tv_idonknow=findViewById(R.id.tv_idonknowcount);
         tv_skipped=findViewById(R.id.tv_skippedcount);
         tv_Qid=findViewById(R.id.tv_Qid);
+        freport=findViewById(R.id.freport);
 
 //        slideanim=AnimationUtils.loadAnimation(FlashCardActivity.this,R.anim.layout_animation_slide_right);
 
@@ -367,6 +376,14 @@ public class FlashCardActivity extends AppCompatActivity {
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
 
+            }
+        });
+
+
+        freport.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                initiateReportWindow(v);
             }
         });
 
@@ -987,6 +1004,80 @@ public class FlashCardActivity extends AppCompatActivity {
 
             status="";
         }
+    }
+
+    //method to create a report window
+    public void initiateReportWindow(View v) {
+
+        cur_questionNo=tv_Qid.getText().toString();
+        String[] s = { "QUASTION", "ANSWER",  "ADL_INFO", "GRP_INFO","REV_INFO","OTHERS"};
+        final ArrayAdapter<String> adp = new ArrayAdapter<String>(FlashCardActivity.this,
+                android.R.layout.simple_dropdown_item_1line, s);
+
+        LayoutInflater factory = LayoutInflater.from(this);
+        final View view = factory.inflate(R.layout.activity_alert_report, null);
+        //View view = infl.inflate(R.layout.activity_alert_report, null);
+        final android.app.AlertDialog alertDialog = new android.app.AlertDialog.Builder(FlashCardActivity.this,R.style.NewDialog).create();
+
+        TextView txt_question_id= (TextView) view.findViewById(R.id.txt_question_id);
+        txt_question_id.setText(cur_questionNo);
+        final EditText txt_reportMessage= (EditText) view.findViewById(R.id.txt_reportMessage);
+        sp_report=view.findViewById(R.id.sp_report);
+        //sp_report.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+        sp_report.setAdapter(adp);
+        ImageView iv_close= (ImageView) view.findViewById(R.id.iv_close);
+        alertDialog.setView(view);
+
+
+        Button btn_report= (Button) view.findViewById(R.id.btn_report);
+
+        btn_report.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //txt_reportMessage.setText("CourseId:"+courseid+", SubjectId:"+subjectId+", PaperId:"+paperid+", ChapterId:"+paperid);
+                new AsyncCheckInternet(FlashCardActivity.this,new INetStatus(){
+                    @Override
+                    public void inetSatus(Boolean netStatus) {
+                        if(netStatus){
+                            HashMap<String,String> hmap=new HashMap<>();
+                            hmap.put("QUASTION_ID",cur_questionNo);
+                            hmap.put("COURSE_ID",courseid);
+                            hmap.put("SUBJECT_ID",subjectid);
+                            hmap.put("PAPER_ID",paperid);
+                            hmap.put("CHAPTER_ID",paperid);
+                            hmap.put("ACTIVITY_TYPE","FLASH_CARD");
+                            hmap.put("ISSUE_TYPE",sp_report.getSelectedItem().toString());
+                            report_message=txt_reportMessage.getText().toString();
+                            hmap.put("ISSUE_MESSAGE",report_message);
+                            hmap.put("REPORTED_BY",studentid);
+
+                            new BagroundTask(URLClass.hosturl +"insert_report.php",hmap,FlashCardActivity.this, new IBagroundListener() {
+
+                                @Override
+                                public void bagroundData(String json) {
+                                    if(json.equalsIgnoreCase("Report_NOT_Inserted")){
+                                        Toast.makeText(getApplicationContext(),"Report not submitted,please try again..",Toast.LENGTH_SHORT).show();
+                                    }else {
+                                        alertDialog.cancel();
+                                        Toast.makeText(getApplicationContext(),"Report  submitted,Thank you for your feedback..",Toast.LENGTH_SHORT).show();
+                                    }
+                                }
+                            }).execute();
+                        }else {
+                            Toast.makeText(getApplicationContext(),"No internet,Please Check Your Connection",Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                }).execute();
+            }
+        });
+        iv_close.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                alertDialog.cancel();
+            }
+        });
+        alertDialog.show();
+
     }
 
     //method to create a popup window containing question numbers

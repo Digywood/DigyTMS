@@ -117,8 +117,23 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:gravity="center_vertical"
-                            android:layout_margin="3dp"
-                            android:orientation="horizontal">
+                            android:orientation="horizontal"
+                            android:weightSum="3">
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:gravity="center_horizontal|center_vertical|center"
+                                android:layout_weight="1">
+                                <ImageView
+                                    android:id="@+id/freport"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_gravity="center"
+                                    android:layout_toStartOf="@id/menu"
+                                    android:visibility="visible"
+                                    app:srcCompat="@drawable/ic_report" />
+
+                            </LinearLayout>
 
                             <LinearLayout
                                 android:layout_width="match_parent"
@@ -127,8 +142,8 @@
                                 android:layout_weight="1">
                                 <Button
                                     android:id="@+id/btn_groupQues"
-                                    android:layout_width="35dp"
-                                    android:layout_height="35dp"
+                                    android:layout_width="25dp"
+                                    android:layout_height="25dp"
                                     android:background="@drawable/groupletter" />
 
                             </LinearLayout>
@@ -140,8 +155,8 @@
                                 android:layout_weight="1">
                                 <Button
                                     android:id="@+id/btn_exit"
-                                    android:layout_width="30dp"
-                                    android:layout_height="30dp"
+                                    android:layout_width="25dp"
+                                    android:layout_height="25dp"
                                     android:background="@drawable/exit" />
 
                             </LinearLayout>

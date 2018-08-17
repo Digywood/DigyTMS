@@ -983,8 +983,9 @@ public class PractiseTestAdapter extends RecyclerView.Adapter<PractiseTestAdapte
 
                                 if(mycursor.getCount()>0){
                                     long updateFlag=myhelper.updateQuesGroup(groupObj.getString("qbg_ID"),testid,groupObj.getString("qbg_media_type"),groupObj.getString("qbg_media_file"),
-                                            groupObj.getString("qbg_text"),groupObj.getInt("qbg_no_questions"),groupObj.getInt("qbg_no_pick"),groupObj.getString("qbg_status"),
+                                            groupObj.getString("qbg_text"),groupObj.getInt("qbg_no_questions"),Integer.parseInt(groupObj.getString("qbg_no_pick")),groupObj.getString("qbg_status"),
                                             groupObj.getString("qbg_created_by"),groupObj.getString("qbg_created_dttm"),groupObj.getString("qbg_mod_by"),groupObj.getString("qbg_mod_dttm"),groupObj.getString("qbg_type"));
+                                            //Log.e("PractiseTestAdapter","No Of Pick"+groupObj.getString("qbg_no_pick"));
                                     if(updateFlag>0){
                                         r++;
                                     }else {
@@ -992,8 +993,9 @@ public class PractiseTestAdapter extends RecyclerView.Adapter<PractiseTestAdapte
                                     }
                                 }else{
                                     long insertFlag=myhelper.insertQuesGroup(groupObj.getInt("qbg_key"),groupObj.getString("qbg_ID"),testid,groupObj.getString("qbg_media_type"),groupObj.getString("qbg_media_file"),
-                                            groupObj.getString("qbg_text"),groupObj.getInt("qbg_no_questions"),groupObj.getInt("qbg_no_pick"),groupObj.getString("qbg_status"),
+                                            groupObj.getString("qbg_text"),groupObj.getInt("qbg_no_questions"),Integer.parseInt(groupObj.getString("qbg_no_pick")),groupObj.getString("qbg_status"),
                                             groupObj.getString("qbg_created_by"),groupObj.getString("qbg_created_dttm"),groupObj.getString("qbg_mod_by"),groupObj.getString("qbg_mod_dttm"),groupObj.getString("qbg_type"));
+                                    //Log.e("PractiseTestAdapter","No Of Pick"+groupObj.getString("qbg_no_pick"));
                                     if(insertFlag>0){
                                         p++;
                                     }else {

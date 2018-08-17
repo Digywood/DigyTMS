@@ -36,6 +36,7 @@ import android.view.animation.LayoutAnimationController;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
@@ -47,6 +48,7 @@ import com.digywood.tms.Adapters.AssesmentTestAdapter;
 import com.digywood.tms.Adapters.OptionsCheckAdapter;
 import com.digywood.tms.Adapters.QuestionListAdapter;
 import com.digywood.tms.Adapters.ScrollGridAdapter;
+import com.digywood.tms.AsynTasks.AsyncCheckInternet;
 import com.digywood.tms.AsynTasks.BagroundTask;
 import com.digywood.tms.AsynTasks.MyBagroundTask;
 import com.digywood.tms.DBHelper.DBHelper;
@@ -98,7 +100,7 @@ public class AssessmentTestActivity extends AppCompatActivity implements Adapter
     ArrayList<SingleOptions> optionsList = new ArrayList<>();
     ArrayList<SingleQuestionList> questionOpList = new ArrayList<>();
     ArrayList<ArrayList<SingleQuestionList>> listOfLists = new ArrayList<>();
-    ImageView question_img ,menu;
+    ImageView question_img ,menu,report;
     Bundle bundle;
     Button btn_group_info, btn_qadditional, btn_review, btn_prev, btn_next, btn_clear_option, btn_mark,btn_confirm;
     Cursor c;
@@ -119,7 +121,9 @@ public class AssessmentTestActivity extends AppCompatActivity implements Adapter
     DBHelper dataObj;
     long millisStart = 0, millisRemaining = 0;
     GestureDetector gd;
-
+    String cur_questionNo="";
+    String report_message="";
+    Spinner sp_report;
 
     private static final boolean AUTO_HIDE = true;
 
@@ -221,6 +225,8 @@ public class AssessmentTestActivity extends AppCompatActivity implements Adapter
         qno_label = findViewById(R.id.tv_Question_no_label);
         fullscreen = findViewById(R.id.fullscreen);
         menu = findViewById(R.id.menu);
+        report=findViewById(R.id.areport);
+
 
         Typeface font = Typeface.createFromAsset(getAssets(), "fonts/Raleway-Medium.ttf");
         qno_label.setTypeface(font);
@@ -344,6 +350,14 @@ public class AssessmentTestActivity extends AppCompatActivity implements Adapter
             @Override
             public void onClick(View v) {
                 initiateMenuWindow(v);
+            }
+        });
+
+        //report window button
+        report.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                initiateReportWindow(v);
             }
         });
 
@@ -941,6 +955,81 @@ public class AssessmentTestActivity extends AppCompatActivity implements Adapter
             e.printStackTrace();
         }
     }
+
+    //method to create a report window
+    public void initiateReportWindow(View v) {
+
+        String[] s = { "QUASTION", "OPTION", "ANSWER", "EXPLINATION", "ADL_INFO", "GRP_INFO","REV_INFO","OTHERS"};
+        final ArrayAdapter<String> adp = new ArrayAdapter<String>(AssessmentTestActivity.this,
+                android.R.layout.simple_dropdown_item_1line, s);
+
+        LayoutInflater factory = LayoutInflater.from(this);
+        final View view = factory.inflate(R.layout.activity_alert_report, null);
+        //View view = infl.inflate(R.layout.activity_alert_report, null);
+        final android.app.AlertDialog alertDialog = new android.app.AlertDialog.Builder(AssessmentTestActivity.this,R.style.NewDialog).create();
+
+        TextView txt_question_id= (TextView) view.findViewById(R.id.txt_question_id);
+        cur_questionNo=q_no.getText().toString();
+        txt_question_id.setText(cur_questionNo);
+        final EditText txt_reportMessage= (EditText) view.findViewById(R.id.txt_reportMessage);
+        sp_report=view.findViewById(R.id.sp_report);
+        //sp_report.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+        sp_report.setAdapter(adp);
+        ImageView iv_close= (ImageView) view.findViewById(R.id.iv_close);
+        alertDialog.setView(view);
+
+
+        Button btn_report= (Button) view.findViewById(R.id.btn_report);
+
+        btn_report.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //txt_reportMessage.setText("CourseId:"+courseid+", SubjectId:"+subjectId+", PaperId:"+paperid+", ChapterId:"+paperid);
+                new AsyncCheckInternet(AssessmentTestActivity.this,new INetStatus(){
+                    @Override
+                    public void inetSatus(Boolean netStatus) {
+                        if(netStatus){
+                            HashMap<String,String> hmap=new HashMap<>();
+                            hmap.put("QUASTION_ID",cur_questionNo);
+                            hmap.put("COURSE_ID",courseid);
+                            hmap.put("SUBJECT_ID",subjectId);
+                            hmap.put("PAPER_ID",paperid);
+                            hmap.put("CHAPTER_ID",paperid);
+                            hmap.put("ACTIVITY_TYPE","ASESSMENT_TEST");
+                            hmap.put("ISSUE_TYPE",sp_report.getSelectedItem().toString());
+                            report_message=txt_reportMessage.getText().toString();
+                            hmap.put("ISSUE_MESSAGE",report_message);
+                            hmap.put("REPORTED_BY",studentId);
+
+                            new BagroundTask(URLClass.hosturl +"insert_report.php",hmap,AssessmentTestActivity.this, new IBagroundListener() {
+
+                                @Override
+                                public void bagroundData(String json) {
+                                    if(json.equalsIgnoreCase("Report_NOT_Inserted")){
+                                        Toast.makeText(getApplicationContext(),"Report not submitted,please try again..",Toast.LENGTH_SHORT).show();
+                                    }else {
+                                        alertDialog.cancel();
+                                        Toast.makeText(getApplicationContext(),"Report  submitted,Thank you for your feedback..",Toast.LENGTH_SHORT).show();
+                                    }
+                                }
+                            }).execute();
+                        }else {
+                            Toast.makeText(getApplicationContext(),"No internet,Please Check Your Connection",Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                }).execute();
+            }
+        });
+        iv_close.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                alertDialog.cancel();
+            }
+        });
+        alertDialog.show();
+
+    }
+
 
     //method to create a menu window
     public void initiateMenuWindow(View v) {
