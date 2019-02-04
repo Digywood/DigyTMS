@@ -49,13 +49,20 @@ import com.digywood.tms.AsynTasks.AsyncCheckInternet;
 import com.digywood.tms.AsynTasks.BagroundTask;
 import com.digywood.tms.DBHelper.DBHelper;
 import com.digywood.tms.Pojo.SingleFlashQuestion;
+import com.google.android.gms.ads.AdListener;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
+import com.google.android.gms.ads.InterstitialAd;
+
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.FileReader;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
@@ -100,6 +107,11 @@ public class FlashCardActivity extends AppCompatActivity {
     Spinner sp_report;
     String cur_questionNo="";
     String report_message="";
+
+    private AdView mAdView;
+    InterstitialAd mInterstitialAd;
+    AppEnvironment appEnvironment;
+    UserMode userMode;
 
     /**
      * Whether or not the system UI should be auto-hidden after
@@ -177,6 +189,9 @@ public class FlashCardActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_sample);
+
+        appEnvironment = ((MyApplication) getApplication()).getAppEnvironment();//getting App Environment
+        userMode = ((MyApplication) getApplication()).getUserMode();//getting User Mode
 
         mVisible = true;
 //        myrlayout = findViewById(R.id.header);
@@ -785,6 +800,88 @@ public class FlashCardActivity extends AppCompatActivity {
             }
         });
 
+
+        if(userMode.mode()) {
+            mAdView = (AdView) findViewById(R.id.adView);
+            //mAdView.setAdSize(AdSize.BANNER);
+            //mAdView.setAdUnitId(getString(R.string.banner_home_footer));
+
+            AdRequest adRequest = null;
+
+            if(appEnvironment==AppEnvironment.DEBUG) {
+                adRequest = new AdRequest.Builder()
+                        .addTestDevice(AdRequest.DEVICE_ID_EMULATOR)
+                        // Check the LogCat to get your test device ID
+                        .addTestDevice(getString(R.string.test_device1))
+                        .build();
+            }else {
+                adRequest = new AdRequest.Builder().build();
+            }
+            mAdView.loadAd(adRequest);
+
+            mAdView.setAdListener(new AdListener() {
+                @Override
+                public void onAdLoaded() {
+                }
+
+                @Override
+                public void onAdClosed() {
+                    Toast.makeText(getApplicationContext(), "Ad is closed!", Toast.LENGTH_SHORT).show();
+                }
+
+                @Override
+                public void onAdFailedToLoad(int errorCode) {
+                    Toast.makeText(getApplicationContext(), "Ad failed to load! error code: " + errorCode, Toast.LENGTH_SHORT).show();
+                }
+
+                @Override
+                public void onAdLeftApplication() {
+                    Toast.makeText(getApplicationContext(), "Ad left application!", Toast.LENGTH_SHORT).show();
+                }
+
+                @Override
+                public void onAdOpened() {
+                    super.onAdOpened();
+                }
+            });
+
+        }
+
+
+        if(userMode.mode()) {
+            mInterstitialAd = new InterstitialAd(this);
+
+            // set the ad unit ID
+            mInterstitialAd.setAdUnitId(getString(R.string.interstitial_full_screen));
+
+            AdRequest adRequest1 = null;
+
+            if(appEnvironment==AppEnvironment.DEBUG) {
+                adRequest1 = new AdRequest.Builder()
+                        .addTestDevice(AdRequest.DEVICE_ID_EMULATOR)
+                        // Check the LogCat to get your test device ID
+                        .addTestDevice(getString(R.string.test_device1))
+                        .build();
+            }else {
+                adRequest1 = new AdRequest.Builder().build();
+            }
+
+            // Load ads into Interstitial Ads
+            mInterstitialAd.loadAd(adRequest1);
+
+            mInterstitialAd.setAdListener(new AdListener() {
+                public void onAdLoaded() {
+                    showInterstitial();
+                }
+            });
+        }
+
+    }
+
+    private void showInterstitial() {
+        if (mInterstitialAd.isLoaded()) {
+            mInterstitialAd.show();
+        }
     }
 
     @Override
@@ -1348,6 +1445,45 @@ public class FlashCardActivity extends AppCompatActivity {
         }
 
         return is;
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+    }
+
+    @Override
+    public void onResume() {
+
+        if (mAdView != null) {
+            mAdView.resume();
+        }
+
+        super.onResume();
+    }
+
+    @Override
+    public void onPause() {
+        if (mAdView != null) {
+            mAdView.pause();
+        }
+
+        super.onPause();
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+    }
+
+    @Override
+    public void onDestroy() {
+
+        if (mAdView != null) {
+            mAdView.destroy();
+        }
+
+        super.onDestroy();
     }
 
 }

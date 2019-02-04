@@ -126,7 +126,7 @@ public class AssesmentTestAdapter extends RecyclerView.Adapter<AssesmentTestAdap
     @Override
     public void onBindViewHolder(final MyViewHolder holder, final int position) {
         final SingleAssessment singletest = testList.get(position);
-        holder.tv_testid.setText(singletest.getTestName()+" ("+singletest.getTestid()+")");
+        holder.tv_testid.setText(singletest.getTestName()+" ( "+singletest.getTestid()+" / "+singletest.getInstanceId()+" )");
         holder.tv_teststatus.setText(singletest.getStatus());
 
         int nqus=myhelper.getAtuTestNumberOfQuestions(singletest.getTestid(),singletest.getInstanceId(),studentid,enrollid);
@@ -157,6 +157,7 @@ public class AssesmentTestAdapter extends RecyclerView.Adapter<AssesmentTestAdap
                 submit.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
+                        Boolean res=false;
                         Cursor cursor = myhelper.validateAssessmentTestKey(studentid,singletest.getTestid());
                         if(cursor.getCount()> 0){
                             while (cursor.moveToNext()){
@@ -165,6 +166,7 @@ public class AssesmentTestAdapter extends RecyclerView.Adapter<AssesmentTestAdap
                                     myhelper.Destroy("assessment_data");
                                     try {
                                         Log.e("dataexec",getExternalPath(mycontext, singletest));
+                                        res=true;
                                         assessment = new String(SaveJSONdataToFile.bytesFromFile(getExternalPath(mycontext, singletest)), "UTF-8");
 
                                     } catch (IOException | ClassNotFoundException | NullPointerException e) {
@@ -173,15 +175,40 @@ public class AssesmentTestAdapter extends RecyclerView.Adapter<AssesmentTestAdap
 
                                 }
                             }
+                            if(res) {
+                                Intent i = new Intent(mycontext, AssessmentTestActivity.class);
+                                i.putExtra("studentid", studentid);
+                                i.putExtra("instanceid", singletest.getInstanceId());
+                                i.putExtra("JSON", assessment);
+                                i.putExtra("enrollid", enrollid);
+                                i.putExtra("test", testid);
+                                i.putExtra("status", "NEW");
+                                mycontext.startActivity(i);
+                            }else
+                            {
 
-                            Intent i = new Intent(mycontext, AssessmentTestActivity.class);
-                            i.putExtra("studentid", studentid);
-                            i.putExtra("instanceid", singletest.getInstanceId());
-                            i.putExtra("JSON", assessment);
-                            i.putExtra("enrollid",enrollid);
-                            i.putExtra("test", testid);
-                            i.putExtra("status", "NEW");
-                            mycontext.startActivity(i);
+                                AlertDialog.Builder alertDialog2 = new AlertDialog.Builder(mycontext);
+
+                                // Setting Dialog Title
+                                alertDialog2.setTitle("Alert");
+
+                                // Setting Dialog Message
+                                alertDialog2.setMessage("Please enter correct test key...");
+
+                                // Setting Positive "Yes" Btn
+                                alertDialog2.setPositiveButton("OK",
+                                        new DialogInterface.OnClickListener() {
+                                            public void onClick(DialogInterface dialog, int which) {
+                                                // Write your code here to execute after dialog
+                                                dialog.cancel();
+                                            }
+                                        });
+
+                                // Showing Alert Dialog
+                                alertDialog2.show();
+
+                                //Toast.makeText(mycontext,"Please enter correct test key...",Toast.LENGTH_LONG).show();
+                            }
                         }
                         mydialog.cancel();
                     }

@@ -19,7 +19,9 @@
             android:layout_height="wrap_content"
             android:textSize="30sp"
             android:gravity="center_horizontal"
-            android:text="ScoreCard" />
+            android:textColor="@android:color/holo_red_dark"
+            android:textStyle="bold"
+            android:text="SCORE CARD" />
     </LinearLayout>
 
     <ScrollView
@@ -138,6 +140,7 @@
                     android:id="@+id/line1"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_margin="10dp"
                     android:weightSum="3">
 
                     <LinearLayout
@@ -150,6 +153,7 @@
                             android:id="@+id/confirm_icon"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:layout_gravity="center"
                             app:srcCompat="@drawable/number_confirm" />
 
                         <TextView
@@ -157,7 +161,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginStart="10dp"
-                            android:text="Attempted: "
+                            android:text="Conformed: "
                             android:textColor="@android:color/black"
                             android:textSize="20sp" />
 
@@ -182,6 +186,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginStart="8dp"
+                            android:layout_gravity="center"
                             app:srcCompat="@drawable/number_skipped" />
 
                         <TextView
@@ -214,6 +219,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginStart="10dp"
+                            android:layout_gravity="center"
                             app:srcCompat="@drawable/number_bookmark" />
 
                         <TextView
@@ -410,10 +416,12 @@
                         android:layout_marginTop="2dp"
                         android:background="#000000" />
 
+
                     <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal">
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:gravity="center">
 
                         <TextView
                             android:id="@+id/tv_totalScore_label"
@@ -431,15 +439,15 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginStart="10dp"
-                            android:textColor="@android:color/black"
+                            android:textColor="@android:color/holo_red_dark"
+                            android:textStyle="bold"
                             android:textSize="20sp" />
 
                         <TextView
                             android:id="@+id/tv_totalPercentage_label"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_below="@id/tv_totalScore_label"
-                            android:layout_marginStart="10dp"
+                            android:layout_marginStart="50dp"
                             android:text="Total Percentage : "
                             android:textColor="@android:color/black"
                             android:textSize="20sp"
@@ -450,10 +458,9 @@
                             android:id="@+id/tv_totalPercentage"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_below="@id/tv_totalScore_label"
                             android:layout_marginStart="10dp"
-                            android:layout_toEndOf="@id/tv_totalPercentage_label"
-                            android:textColor="@android:color/black"
+                            android:textColor="@android:color/holo_red_dark"
+                            android:textStyle="bold"
                             android:textSize="20sp" />
                     </LinearLayout>
 
@@ -494,7 +501,6 @@
                                 android:layout_weight="1"
                                 android:gravity="center"
                                 android:textSize="20sp"
-                                android:background="@drawable/spin_bg"
                                 android:textColor="@android:color/black"
                                 android:text="Section"/>
 
@@ -504,7 +510,6 @@
                                 android:layout_weight="1"
                                 android:gravity="center"
                                 android:textSize="20sp"
-                                android:background="@drawable/spin_bg"
                                 android:textColor="@android:color/black"
                                 android:text="No.of Q"/>
 
@@ -514,7 +519,6 @@
                                 android:layout_weight="1"
                                 android:gravity="center"
                                 android:textSize="20sp"
-                                android:background="@drawable/spin_bg"
                                 android:textColor="@android:color/black"
                                 android:text="Attempt"/>
 
@@ -525,7 +529,6 @@
                                 android:layout_weight="1"
                                 android:gravity="center"
                                 android:textSize="20sp"
-                                android:background="@drawable/spin_bg"
                                 android:textColor="@android:color/black"
                                 android:text="Skipped"/>
 
@@ -536,7 +539,6 @@
                                 android:layout_weight="1"
                                 android:gravity="center"
                                 android:textSize="20sp"
-                                android:background="@drawable/spin_bg"
                                 android:textColor="@android:color/black"
                                 android:text="Correct"/>
 
@@ -547,9 +549,8 @@
                                 android:layout_weight="1"
                                 android:gravity="center"
                                 android:textSize="20sp"
-                                android:background="@drawable/spin_bg"
                                 android:textColor="@android:color/black"
-                                android:text="Wrongs"/>
+                                android:text="InCorrect"/>
 
 
                             <TextView
@@ -558,13 +559,12 @@
                                 android:layout_weight="1"
                                 android:gravity="center"
                                 android:textSize="20sp"
-                                android:background="@drawable/spin_bg"
                                 android:textColor="@android:color/black"
                                 android:text="Percent"/>
                         </TableRow>
                         <View
                             android:layout_width="match_parent"
-                            android:layout_height="2dp"
+                            android:layout_height="1.5dp"
                             android:background="#000000" />
                     </TableLayout>
                 </RelativeLayout>
@@ -576,16 +576,27 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="center_horizontal"
+        android:gravity="center"
         android:layout_alignParentBottom="true"
         android:orientation="horizontal">
+
+        <com.google.android.gms.ads.AdView
+            xmlns:ads="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/adView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="4dp"
+            ads:adSize="BANNER"
+            ads:adUnitId="@string/banner_home_footer">
+
+        </com.google.android.gms.ads.AdView>
 
         <Button
             android:id="@+id/btn_save"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="@drawable/custom_button"
-            android:layout_marginEnd="2dp"
+            android:layout_margin="4dp"
             android:textColor="@drawable/custom_text"
             android:text="OK" />
 
@@ -593,7 +604,7 @@
             android:id="@+id/btn_details"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="2dp"
+            android:layout_margin="4dp"
             android:background="@drawable/custom_button"
             android:textColor="@drawable/custom_text"
             android:text="Details >>" />

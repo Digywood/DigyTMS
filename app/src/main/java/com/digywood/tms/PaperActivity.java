@@ -26,6 +26,10 @@ import com.digywood.tms.Adapters.PaperAdapter;
 import com.digywood.tms.AsynTasks.BagroundTask;
 import com.digywood.tms.DBHelper.DBHelper;
 import com.digywood.tms.Pojo.SinglePaper;
+import com.google.android.gms.ads.AdListener;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.InterstitialAd;
+
 import org.json.JSONArray;
 import org.json.JSONObject;
 import java.util.ArrayList;
@@ -49,6 +53,10 @@ public class PaperActivity extends AppCompatActivity {
     LinearLayoutManager myLayoutManager;
     PaperAdapter pAdp;
 
+    InterstitialAd mInterstitialAd;
+    AppEnvironment appEnvironment;
+    UserMode userMode;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -68,6 +76,9 @@ public class PaperActivity extends AppCompatActivity {
             getSupportActionBar().setHomeAsUpIndicator(upArrow);
 
         }
+
+        appEnvironment = ((MyApplication) getApplication()).getAppEnvironment();//getting App Environment
+        userMode = ((MyApplication) getApplication()).getUserMode();//getting User Mode
 
         papergridView=findViewById(R.id.paper_grid);
 
@@ -99,6 +110,40 @@ public class PaperActivity extends AppCompatActivity {
 
         getPapersFromLocal();
 
+        if(userMode.mode()) {
+            mInterstitialAd = new InterstitialAd(this);
+
+            // set the ad unit ID
+            mInterstitialAd.setAdUnitId(getString(R.string.interstitial_full_screen));
+
+            AdRequest adRequest = null;
+
+            if(appEnvironment==AppEnvironment.DEBUG) {
+                adRequest = new AdRequest.Builder()
+                        .addTestDevice(AdRequest.DEVICE_ID_EMULATOR)
+                        // Check the LogCat to get your test device ID
+                        .addTestDevice(getString(R.string.test_device1))
+                        .build();
+            }else {
+                adRequest = new AdRequest.Builder().build();
+            }
+
+            // Load ads into Interstitial Ads
+            mInterstitialAd.loadAd(adRequest);
+
+            mInterstitialAd.setAdListener(new AdListener() {
+                public void onAdLoaded() {
+                    showInterstitial();
+                }
+            });
+        }
+
+    }
+
+    private void showInterstitial() {
+        if (mInterstitialAd.isLoaded()) {
+            mInterstitialAd.show();
+        }
     }
 
     public void getPapersFromLocal(){

@@ -27,6 +27,7 @@
             <EditText
                 android:layout_width="match_parent"
                 android:layout_height="60dp"
+                android:inputType="number"
                 android:hint="Enter Assessment Test Key"
                 android:id="@+id/et_key" />
 

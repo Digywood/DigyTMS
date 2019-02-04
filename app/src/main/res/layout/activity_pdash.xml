@@ -240,6 +240,20 @@
 
                     </LinearLayout>
 
+                    <com.google.android.gms.ads.AdView
+                        xmlns:ads="http://schemas.android.com/apk/res-auto"
+                        android:id="@+id/adView"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_marginTop="4dp"
+                        android:layout_alignParentBottom="true"
+                        android:layout_centerHorizontal="true"
+                        ads:adSize="BANNER"
+                        ads:adUnitId="@string/banner_home_footer">
+
+                    </com.google.android.gms.ads.AdView>
+
                 </LinearLayout>
 
                 <LinearLayout

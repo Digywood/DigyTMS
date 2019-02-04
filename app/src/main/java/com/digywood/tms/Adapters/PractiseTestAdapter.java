@@ -192,13 +192,14 @@ public class PractiseTestAdapter extends RecyclerView.Adapter<PractiseTestAdapte
         final DBHelper dataObj = new DBHelper(mycontext);
         if (dataObj.getQuestionCount(testid) == 0) {
             holder.iv_review.setEnabled(false);
-        } else
+        } else{
             holder.iv_review.setEnabled(true);
+        }
         final Cursor c = dataObj.getAttempt(dataObj.getLastTestAttempt(singletest.getTestid(),studentid));
         //if cursor has values then the test is being resumed and data is retrieved from database
         if (c.getCount() > 0) {
             c.moveToLast();
-            if (c.getInt(c.getColumnIndex("Attempt_Status")) == 1) {
+            /*if (c.getInt(c.getColumnIndex("Attempt_Status")) == 1) {*/
                 if(c.getString(c.getColumnIndex("Attempt_Test_ID")).equalsIgnoreCase(singletest.getTestid())) {
                     holder.ll_resume.setOnClickListener(new View.OnClickListener() {
                         @Override
@@ -226,7 +227,8 @@ public class PractiseTestAdapter extends RecyclerView.Adapter<PractiseTestAdapte
                         }
                     });
                 }
-            } else {
+            /*}*/
+            if (c.getInt(c.getColumnIndex("Attempt_Status")) != 1) {
                 testid = singletest.getTestid();
                 holder.ll_review.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -234,7 +236,7 @@ public class PractiseTestAdapter extends RecyclerView.Adapter<PractiseTestAdapte
 //                        holder.ll_review.setBackground(mycontext.getResources().getDrawable(R.drawable.layout_press_custom));
                         try {
                             //((ListofPractiseTests)mycontext).finish();
-                            Log.e("Exec","Review,");
+                            Log.e("Exec","Review");
                             String path=getExternalPath(mycontext, singletest, "ATTEMPT") + testid + ".json";
                             File file = new File(path);
                             if(file.exists()){

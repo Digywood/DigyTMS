@@ -52,4 +52,15 @@
     <string name="nav_header_desc">Navigation header</string>
     <string name="action_settings">Settings</string>
 
+    <!-- TODO - add your ad unit Ids -->
+    <!-- AdMob ad unit IDs -->
+    <string name="admob_app_id">ca-app-pub-1316256380089053~1524939087</string>
+    <string name="banner_home_footer">ca-app-pub-1316256380089053/1956307634</string>
+    <string name="interstitial_full_screen">ca-app-pub-1316256380089053/8828714036</string>
+    <string name="rewarded_video">ca-app-pub-1316256380089053/3425888709</string>
+    <!--<string name="test_device1">E9BBD5CF8EBB7E031170CE56BD67D517</string>-->
+    <!--<string name="test_device1">093AF91E0105C3050927DEA4AB69CDC2</string>-->
+    <string name="test_device1">B5A3FFA08EEF31A749F48F0EBFEFD9E9</string>
+    <string name="test_device2">1AC0F47C17C8EB434B466C3CF4C55BC6</string>
+
 </resources>

@@ -35,6 +35,12 @@ import com.digywood.tms.Fragments.CourseFragment;
 import com.digywood.tms.Fragments.HomeFragment;
 import com.digywood.tms.Fragments.EnrollFragment;
 import com.digywood.tms.Pojo.SingleDWDQues;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.MobileAds;
+import com.google.android.gms.ads.reward.RewardItem;
+import com.google.android.gms.ads.reward.RewardedVideoAd;
+import com.google.android.gms.ads.reward.RewardedVideoAdListener;
+
 import org.json.JSONArray;
 import org.json.JSONObject;
 import java.util.Calendar;
@@ -51,6 +57,10 @@ public class DashBoardNavActivity extends AppCompatActivity implements Navigatio
     TextView tv_name,tv_email,tv_studentid,tv_connection;
     String studentid="",spersonname="",snumber="",email="";
     DBHelper myhelper;
+    AppEnvironment appEnvironment;
+    UserMode userMode;
+
+    private RewardedVideoAd mRewardedVideoAd;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,6 +70,9 @@ public class DashBoardNavActivity extends AppCompatActivity implements Navigatio
         tv_studentid=toolbar.findViewById(R.id.tv_studentid);
         tv_connection=toolbar.findViewById(R.id.tv_connection);
         setSupportActionBar(toolbar);
+
+        appEnvironment = ((MyApplication) getApplication()).getAppEnvironment();//getting App Environment
+        userMode = ((MyApplication) getApplication()).getUserMode();//getting User Mode
 
         myhelper=new DBHelper(this);
 
@@ -125,6 +138,110 @@ public class DashBoardNavActivity extends AppCompatActivity implements Navigatio
         }
 
         Log.e("FINALURL:--",finalUrl);
+
+        if(userMode.mode()) {
+            mRewardedVideoAd = MobileAds.getRewardedVideoAdInstance(this);
+            mRewardedVideoAd.setRewardedVideoAdListener(new RewardedVideoAdListener() {
+
+                @Override
+                public void onRewarded(RewardItem rewardItem) {
+                    Toast.makeText(getApplicationContext(), "onRewarded! currency: " + rewardItem.getType() + "  amount: " +
+                            rewardItem.getAmount(), Toast.LENGTH_SHORT).show();
+                }
+
+                @Override
+                public void onRewardedVideoAdLeftApplication() {
+                    Toast.makeText(getApplicationContext(), "onRewardedVideoAdLeftApplication",
+                            Toast.LENGTH_SHORT).show();
+                }
+
+                @Override
+                public void onRewardedVideoAdClosed() {
+                    Toast.makeText(getApplicationContext(), "onRewardedVideoAdClosed", Toast.LENGTH_SHORT).show();
+                }
+
+                @Override
+                public void onRewardedVideoAdFailedToLoad(int errorCode) {
+                    Toast.makeText(getApplicationContext(), "onRewardedVideoAdFailedToLoad", Toast.LENGTH_SHORT).show();
+                }
+
+                @Override
+                public void onRewardedVideoCompleted() {
+                    Toast.makeText(getApplicationContext(), "onRewardedVideoCompleted", Toast.LENGTH_SHORT).show();
+                }
+
+                @Override
+                public void onRewardedVideoAdLoaded() {
+                    // showing the ad to user
+                    showRewardedVideo();
+                    Toast.makeText(getApplicationContext(), "onRewardedVideoAdLoaded", Toast.LENGTH_SHORT).show();
+                }
+
+                @Override
+                public void onRewardedVideoAdOpened() {
+                    Toast.makeText(getApplicationContext(), "onRewardedVideoAdOpened", Toast.LENGTH_SHORT).show();
+                }
+
+                @Override
+                public void onRewardedVideoStarted() {
+                    Toast.makeText(getApplicationContext(), "onRewardedVideoStarted", Toast.LENGTH_SHORT).show();
+                }
+            });
+
+            loadRewardedVideoAd();
+        }
+
+    }
+
+    private void loadRewardedVideoAd() {
+
+        /*mRewardedVideoAd.loadAd(getString(R.string.rewarded_video),
+                new AdRequest.Builder().build());*/
+        AdRequest adRequest;
+        if(appEnvironment==AppEnvironment.DEBUG) {
+            adRequest = new AdRequest.Builder()
+                    .addTestDevice(AdRequest.DEVICE_ID_EMULATOR)
+                    // Check the LogCat to get your test device ID
+                    .addTestDevice(getString(R.string.test_device1))
+                    .build();
+        }else {
+            adRequest = new AdRequest.Builder().build();
+        }
+        mRewardedVideoAd.loadAd(getString(R.string.rewarded_video), adRequest);
+
+        // showing the ad to user
+        showRewardedVideo();
+    }
+
+    private void showRewardedVideo() {
+        // make sure the ad is loaded completely before showing it
+        if (mRewardedVideoAd.isLoaded()) {
+            mRewardedVideoAd.show();
+        }
+    }
+
+    @Override
+    public void onResume() {
+        if(userMode.mode()) {
+            mRewardedVideoAd.resume(this);
+        }
+        super.onResume();
+    }
+
+    @Override
+    public void onPause() {
+        if(userMode.mode()) {
+            mRewardedVideoAd.pause(this);
+        }
+        super.onPause();
+    }
+
+    @Override
+    public void onDestroy() {
+        if(userMode.mode()) {
+            mRewardedVideoAd.destroy(this);
+        }
+            super.onDestroy();
 
     }
 
@@ -309,8 +426,11 @@ public class DashBoardNavActivity extends AppCompatActivity implements Navigatio
                                             testObj.getString("sptu_created_by"),
                                             testObj.getString("sptu_created_dttm"),
                                             testObj.getString("sptu_mod_by"),
-                                            testObj.getString("sptu_mod_dttm"));
+                                            testObj.getString("sptu_mod_dttm"),
+                                            testObj.getString("sptu_Test_Time"),
+                                            testObj.getString("sptu_Test_Type"));
                                     if(updateFlag>0){
+                                        //Log.e("DashBoardNavActivity","sptu_Test_Time:"+testObj.getString("sptu_Test_Time")+"sptu_Test_Type"+testObj.getString("sptu_Test_Type"));
                                         r++;
                                     }else {
                                         s++;
@@ -325,9 +445,10 @@ public class DashBoardNavActivity extends AppCompatActivity implements Navigatio
                                             testObj.getInt("sptu_last_attempt_marks"),testObj.getDouble("sptu_last_attempt_percent"),testObj.getString("sptu_last_attempt_start_dttm"),testObj.getString("sptu_last_attempt_end_dttm"),
                                             testObj.getInt("sptu_no_of_attempts"),testObj.getInt("sptuflash_attempts"),testObj.getDouble("min_flashScore"),testObj.getDouble("max_flashScore"),testObj.getDouble("avg_flashScore"),
                                             testObj.getString("lastAttemptDttm"),testObj.getDouble("lastAttemptScore"), testObj.getString("sptu_created_by"),testObj.getString("sptu_created_dttm"),testObj.getString("sptu_mod_by"),
-                                            testObj.getString("sptu_mod_dttm"));
+                                            testObj.getString("sptu_mod_dttm"),testObj.getString("sptu_Test_Time"),
+                                            testObj.getString("sptu_Test_Type"));
                                     if(insertFlag>0){
-//                                        Log.e("INSERTEDTEST:---","sid:--"+testObj.getString("sptu_student_ID")+"  eid:--"+testObj.getString("sptu_entroll_id")+"  tid:--"+testObj.getString("sptu_ID"));
+                                       // Log.e("DashBoardNavActivity","sptu_Test_Time:"+testObj.getString("sptu_Test_Time")+"sptu_Test_Type"+testObj.getString("sptu_Test_Type"));
                                         p++;
                                     }else {
                                         q++;
@@ -365,9 +486,10 @@ public class DashBoardNavActivity extends AppCompatActivity implements Navigatio
                                             assesmentObj.getString("satu_batch"),assesmentObj.getString("satu_ID"),assesmentObj.getString("satu_name"),assesmentObj.getString("satu_paper_ID"),assesmentObj.getString("satu_subjet_ID"),
                                             assesmentObj.getString("satu_course_id"),assesmentObj.getString("satu_start_date"),assesmentObj.getString("satu_end_date"),assesmentObj.getString("satu_dwnld_status"),
                                             assesmentObj.getInt("satu_no_of_questions"),assesmentObj.getString("satu_file"),assesmentObj.getString("satu_exam_key"),assesmentObj.getDouble("satu_tot_marks"),
-                                            assesmentObj.getDouble("satu_min_marks"),assesmentObj.getDouble("satu_max_marks"));
+                                            assesmentObj.getDouble("satu_min_marks"),assesmentObj.getDouble("satu_max_marks"),assesmentObj.getString("satu_Test_Time"),assesmentObj.getString("satu_Test_Type"));
                                     Log.e("DBNav","orgid:"+assesmentObj.getString("satu_org_id")+",batchid:"+assesmentObj.getString("satu_batch")+",branchid:"+assesmentObj.getString("satu_branch_id"));
                                     if(updateFlag>0){
+                                        //Log.e("DashBoardNavActivity","satu_Test_Time:"+assesmentObj.getString("satu_Test_Time")+"satu_Test_Type"+assesmentObj.getString("satu_Test_Type"));
                                         r++;
                                     }else {
                                         s++;
@@ -378,9 +500,10 @@ public class DashBoardNavActivity extends AppCompatActivity implements Navigatio
                                             assesmentObj.getString("satu_batch"),assesmentObj.getString("satu_ID"),assesmentObj.getString("satu_name"),assesmentObj.getString("satu_paper_ID"),assesmentObj.getString("satu_subjet_ID"),
                                             assesmentObj.getString("satu_course_id"),assesmentObj.getString("satu_start_date"),assesmentObj.getString("satu_end_date"),assesmentObj.getString("satu_dwnld_status"),
                                             assesmentObj.getInt("satu_no_of_questions"),assesmentObj.getString("satu_file"),assesmentObj.getString("satu_exam_key"),assesmentObj.getDouble("satu_tot_marks"),
-                                            assesmentObj.getDouble("satu_min_marks"),assesmentObj.getDouble("satu_max_marks"));
+                                            assesmentObj.getDouble("satu_min_marks"),assesmentObj.getDouble("satu_max_marks"),assesmentObj.getString("satu_Test_Time"),assesmentObj.getString("satu_Test_Type"));
                                     Log.e("DBNav","orgid:"+assesmentObj.getString("satu_org_id")+",batchid:"+assesmentObj.getString("satu_batch")+",branchid:"+assesmentObj.getString("satu_branch_id"));
                                     if(insertFlag>0){
+                                        //Log.e("DashBoardNavActivity","satu_Test_Time:"+assesmentObj.getString("satu_Test_Time")+"satu_Test_Type"+assesmentObj.getString("satu_Test_Type"));
                                         p++;
                                     }else {
                                         q++;

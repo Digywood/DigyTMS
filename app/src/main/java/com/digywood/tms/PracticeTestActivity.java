@@ -72,6 +72,10 @@ import com.digywood.tms.Pojo.SingleOptions;
 import com.digywood.tms.Pojo.SingleQuestion;
 import com.digywood.tms.Pojo.SingleQuestionList;
 import com.digywood.tms.Pojo.SingleSections;
+import com.google.android.gms.ads.AdListener;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
+import com.google.android.gms.ads.InterstitialAd;
 
 import static android.Manifest.permission.READ_EXTERNAL_STORAGE;
 import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
@@ -85,7 +89,7 @@ public class PracticeTestActivity extends AppCompatActivity implements
     ImageView fullscreen;
     GridView gridView;
     Spinner sections;
-    String /*jsonPath,*/imgPath, photoPath, Seq, Id, path,enrollid,courseid,subjectId,paperid,chapterId/*,catId,subCatId*/,testid,groupId,studentId;
+    String /*jsonPath,*/imgPath, photoPath, Seq, Id, path,enrollid,courseid,subjectId,paperid,chapterId/*,catId,subCatId*/,testid,groupId,studentId,sptu_Test_Type,sptu_Test_Time;
     final String notAttempted = "NOT_ATTEMPTED", attempted = "ATTEMPTED", skipped = "SKIPPED", bookmarked = "BOOKMARKED",not_confirmed = "NOT_CONFIRMED",confirmed = "CONFIRMED";
     //EncryptDecrypt encObj;
     RecyclerView question_scroll;
@@ -97,7 +101,7 @@ public class PracticeTestActivity extends AppCompatActivity implements
     RelativeLayout parent;
     ArrayList<String> categories;
     private static final String TAG = "PracticeTestActivity";
-    ArrayList<Integer> oplist = new ArrayList<>();
+    //ArrayList<Integer> oplist = new ArrayList<>();
     ArrayList<SingleOptions> optionsList = new ArrayList<>();
     ArrayList<SingleQuestionList> questionOpList = new ArrayList<>();
     ArrayList<ArrayList<SingleQuestionList>> listOfLists = new ArrayList<>();
@@ -127,7 +131,17 @@ public class PracticeTestActivity extends AppCompatActivity implements
     String cur_questionNo="";
     String report_message="";
     Spinner sp_report;
+    CountDownTimer coundown_timer;
+    boolean test_completion_status=false;
+    String genid=null;
+
     private static final boolean AUTO_HIDE = true;
+
+    private AdView mAdView;
+    InterstitialAd mInterstitialAd;
+
+    AppEnvironment appEnvironment;
+    UserMode userMode;
 
     /**
      * If {@link #AUTO_HIDE} is set, the number of milliseconds to wait after
@@ -197,6 +211,9 @@ public class PracticeTestActivity extends AppCompatActivity implements
 
         setContentView(R.layout.activity_test);
 
+        appEnvironment = ((MyApplication) getApplication()).getAppEnvironment();//getting App Environment
+        userMode = ((MyApplication) getApplication()).getUserMode();//getting User Mode
+
         dataObj = new DBHelper(this);
         pactivity = this;
         parent = findViewById(R.id.parent);
@@ -255,6 +272,8 @@ public class PracticeTestActivity extends AppCompatActivity implements
                     courseid = cursor.getString(cursor.getColumnIndex("sptu_course_id"));
                     subjectId = cursor.getString(cursor.getColumnIndex("sptu_subjet_ID"));
                     paperid = cursor.getString(cursor.getColumnIndex("sptu_paper_ID"));
+                    sptu_Test_Time = cursor.getString(cursor.getColumnIndex("sptu_Test_Time"));
+                    sptu_Test_Type = cursor.getString(cursor.getColumnIndex("sptu_Test_Type"));
 
 
                 }
@@ -334,10 +353,12 @@ public class PracticeTestActivity extends AppCompatActivity implements
                 index = c.getInt(c.getColumnIndex("Attempt_LastQuestion"));
                 pos = c.getInt(c.getColumnIndex("Attempt_LastSection"));
             }
+
+            genid=generateUniqueId(0);
             //inserting new Test record in local database
-            long value = dataObj.UpdateAttempt(generateUniqueId(0),attempt.getString("ptu_test_ID"),2,"NotUploaded", 0,dataObj.getTestQuestionAttempted(testid),dataObj.getTestQuestionSkipped(testid),dataObj.getTestQuestionBookmarked(testid),dataObj.getTestQuestionNotAttempted(testid), 0, millisRemaining, index, pos);
+            long value = dataObj.UpdateAttempt(genid,attempt.getString("ptu_test_ID"),2,"NotUploaded", 0,dataObj.getTestQuestionAttempted(testid),dataObj.getTestQuestionSkipped(testid),dataObj.getTestQuestionBookmarked(testid),dataObj.getTestQuestionNotAttempted(testid), 0, millisRemaining, index, pos);
             if (value <= 0) {
-                long ret = dataObj.InsertAttempt(generateUniqueId(0), attempt.getString("ptu_test_ID"), enrollid, studentId, courseid, subjectId, paperid, 1, "NotUploaded", 0, dataObj.getTestQuestionAttempted(testid), dataObj.getTestQuestionSkipped(testid), dataObj.getTestQuestionBookmarked(testid), dataObj.getTestQuestionNotAttempted(testid), 0, millisRemaining, index, pos);
+                long ret = dataObj.InsertAttempt(genid, attempt.getString("ptu_test_ID"), enrollid, studentId, courseid, subjectId, paperid, 1, "NotUploaded", 0, dataObj.getTestQuestionAttempted(testid), dataObj.getTestQuestionSkipped(testid), dataObj.getTestQuestionBookmarked(testid), dataObj.getTestQuestionNotAttempted(testid), 0, millisRemaining, index, pos);
                 Log.e("New Test Insertion", "" + ret);
             }
 
@@ -381,7 +402,9 @@ public class PracticeTestActivity extends AppCompatActivity implements
 //                ((SimpleItemAnimator) rv_option.getItemAnimator()).setSupportsChangeAnimations(false);
                 opAdapter.notifyDataSetChanged();
                 clearOptions();
-                setQBackground(pos,index);
+                setQBackground(pos, index);
+                writeOption(opAdapter.getSelectedItem());
+
                 btn_confirm.setBackgroundColor(getResources().getColor(R.color.dull_yellow));
             }
         });
@@ -393,8 +416,8 @@ public class PracticeTestActivity extends AppCompatActivity implements
                 if (opAdapter.getSelectedItem() > -1) {
                     listOfLists.get(pos).get(index).setQ_status(bookmarked);
                     listOfLists.get(pos).get(index).setQ_check(confirmed);
-                    writeOption(opAdapter.getSelectedItem());
                     setQBackground(pos,index);
+                    writeOption(opAdapter.getSelectedItem());
 //                    index++;
 //                    gotoQuestion(index);
                 } else
@@ -410,6 +433,7 @@ public class PracticeTestActivity extends AppCompatActivity implements
                     listOfLists.get(pos).get(index).setQ_status(attempted);
                     listOfLists.get(pos).get(index).setQ_check(confirmed);
                     setQBackground(pos, index);
+                    writeOption(opAdapter.getSelectedItem());
                     btn_confirm.setBackgroundColor(Color.GREEN);
                 } else
                     Toast.makeText(PracticeTestActivity.this, "No option Selected", Toast.LENGTH_LONG).show();
@@ -458,7 +482,188 @@ public class PracticeTestActivity extends AppCompatActivity implements
             }
         });
 
+
         //next question button
+        btn_next.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish_view = v;
+                try {
+                    flag = true;
+                    buffer = attempt.getJSONArray("Sections").getJSONObject(pos).getJSONArray("Questions");
+                    if (index <= buffer.length()) {
+                        if (index < buffer.length() - 1) {
+                            if (opAdapter.getSelectedItem() > -1) {
+                                if (listOfLists.get(pos).get(index).getQ_check().equalsIgnoreCase(confirmed)) {
+                                    Log.e("if condition", listOfLists.get(pos).get(index).getQ_check());
+                                    setQBackground(pos, index);
+                                    writeOption(opAdapter.getSelectedItem());
+                                    index++;
+                                } else {
+                                    btn_mark.callOnClick();
+                                    index++;
+                                }
+                            } else {
+                                Log.e("else condition", "reached");
+                                setQBackground(pos, index);
+                                writeOption(opAdapter.getSelectedItem());
+                                index++;
+                            }
+                            setQuestion(pos, index, edit);
+                            checkRadio();
+                        } else if ((index == buffer.length() - 1) && (pos<attemptsectionarray.length()-1)) {
+                            //Change button once last question of test is reached
+
+                            if (opAdapter.getSelectedItem() > -1) {
+                                if (listOfLists.get(pos).get(index).getQ_check().equalsIgnoreCase(confirmed)) {
+                                    Log.e("if condition", listOfLists.get(pos).get(index).getQ_check());
+                                    setQBackground(pos, index);
+                                    writeOption(opAdapter.getSelectedItem());
+                                    index++;
+                                } else {
+                                    btn_mark.callOnClick();
+                                    index++;
+                                }
+                            } else {
+                                Log.e("else condition", "reached");
+                                setQBackground(pos, index);
+                                writeOption(opAdapter.getSelectedItem());
+                                index++;
+                            }
+
+                            flag = false;
+                            pos = pos + 1;
+                            index=0;
+                            //qAdapter.setData(index);
+                            Log.e("POS", "" + pos + "," + index);
+                            //buffer = attempt.getJSONArray("Sections").getJSONObject(pos).getJSONArray("Questions");
+                            sections.setSelection(pos);
+                            //setScrollbar(pos);
+                            scrollAdapter.updateList(listOfLists.get(pos));
+
+                            setQuestion(pos, index, edit);
+                            checkRadio();
+
+
+                        }else{
+                            if (opAdapter.getSelectedItem() > -1) {
+                                if (listOfLists.get(pos).get(index).getQ_check().equalsIgnoreCase(confirmed)) {
+                                    Log.e("if condition", listOfLists.get(pos).get(index).getQ_check());
+                                    setQBackground(pos, index);
+                                    writeOption(opAdapter.getSelectedItem());
+                                } else {
+                                    btn_mark.callOnClick();
+                                }
+                            } else {
+                                Log.e("else condition", "reached");
+                                setQBackground(pos, index);
+                                writeOption(opAdapter.getSelectedItem());
+                            }
+                            Log.e("END", "POS:" + pos + ",attemptsectionarray" + attemptsectionarray.length());
+                            if (pos >= attemptsectionarray.length()-1) {
+                                btn_next.setText("Finish");
+                                //writeOption(opAdapter.getSelectedItem());
+                                AlertDialog alertbox = new AlertDialog.Builder(PracticeTestActivity.this)
+                                        .setMessage("Do you want to finish Test?" + " " + dataObj.getAssessmentQuestionCount(testid))
+                                        .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+
+                                            // do something when the button is clicked
+                                            public void onClick(DialogInterface arg0, int arg1) {
+//                                            q_list.clear();
+                                                test_completion_status=true;
+                                                stopTest(test_completion_status);
+
+                                            }
+                                        })
+                                        .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                                            // do something when the button is clicked
+                                            public void onClick(DialogInterface arg0, int arg1) {
+                                                mHideRunnable.run();
+                                                btn_next.setText("Next");
+                                            }
+                                        })
+                                        .show();
+                                alertbox.setOnCancelListener(new DialogInterface.OnCancelListener() {
+                                    @Override
+                                    public void onCancel(DialogInterface dialog) {
+                                        mHideRunnable.run();
+                                        btn_next.setText("Next");
+                                    }
+                                });
+                            }
+
+                        }
+                    }
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+            }
+        });
+
+        //back question button
+        btn_prev.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                try {
+                    questionobj = array.getJSONObject(index);
+                    if (index > 0) {
+                        if (opAdapter.getSelectedItem() > -1) {
+                            if (listOfLists.get(pos).get(index).getQ_check().equalsIgnoreCase(confirmed)) {
+                                Log.e("if condition", listOfLists.get(pos).get(index).getQ_check());
+                                setQBackground(pos, index);
+                                writeOption(opAdapter.getSelectedItem());
+                                index--;
+                            } else {
+                                btn_mark.callOnClick();
+                                index--;
+                            }
+                        } else {
+                            Log.e("else condition", "reached");
+                            setQBackground(pos, index);
+                            writeOption(opAdapter.getSelectedItem());
+                            index--;
+                        }
+                        flag = true;
+
+                    } else if (index == 0 && pos > 0) {
+
+                        if (opAdapter.getSelectedItem() > -1) {
+                            if (listOfLists.get(pos).get(index).getQ_check().equalsIgnoreCase(confirmed)) {
+                                Log.e("if condition", listOfLists.get(pos).get(index).getQ_check());
+                                setQBackground(pos, index);
+                                writeOption(opAdapter.getSelectedItem());
+                                index--;
+                            } else {
+                                btn_mark.callOnClick();
+                                index--;
+                            }
+                        } else {
+                            Log.e("else condition", "reached");
+                            setQBackground(pos, index);
+                            writeOption(opAdapter.getSelectedItem());
+                            index--;
+                        }
+
+                        pos = pos - 1;
+                        index = attempt.getJSONArray("Sections").getJSONObject(pos).getJSONArray("Questions").length()-1;
+                        flag = false;
+                        sections.setSelection(pos);
+                        scrollAdapter.updateList(listOfLists.get(pos));
+                        //setScrollbar(pos);
+                        Log.e("POS", "" + pos + "," + index);
+
+                    }
+                    setQuestion(pos, index, edit);
+                    checkRadio();
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+
+        /*//next question button
         btn_next.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -522,11 +727,11 @@ public class PracticeTestActivity extends AppCompatActivity implements
                                                 count = dataObj.getAttempCount(studentId);
 
 
-/*                                                c = dataObj.getAttempt(count);
-                                                c.moveToFirst();*/
-/*                                                if (c.getInt(c.getColumnIndex("Attempt_Status")) == 2)
-                                                    Log.e("Test", "Finished");*/
-
+*//*                                                c = dataObj.getAttempt(count);
+                                                c.moveToFirst();*//*
+*//*                                                if (c.getInt(c.getColumnIndex("Attempt_Status")) == 2)
+                                                    Log.e("Test", "Finished");*//*
+                                                PracticeTestActivity.this.finish();
                                                 Intent intent = new Intent(PracticeTestActivity.this, ScoreActivity.class);
                                                 bundle = new Bundle();
                                                 bundle.putString("enrollid",enrollid);
@@ -616,7 +821,7 @@ public class PracticeTestActivity extends AppCompatActivity implements
                 }
             }
         });
-
+*/
         //Question number scrollbar
         question_scroll.addOnItemTouchListener(new RecyclerTouchListener(getApplicationContext(), question_scroll, new RecyclerTouchListener.OnItemClickListener() {
             @Override
@@ -644,7 +849,7 @@ public class PracticeTestActivity extends AppCompatActivity implements
             }
         }));
 
-        new CountDownTimer(millisStart, 1000) {
+        coundown_timer=new CountDownTimer(millisStart, 1000) {
 
             public void onTick(long millisUntilFinished) {
                 String text = String.format(Locale.getDefault(), "%02d:%02d:%02d",
@@ -656,15 +861,143 @@ public class PracticeTestActivity extends AppCompatActivity implements
             }
 
             public void onFinish() {
-                timer.setText("Time Up!");
+                //timer.setText(""+millisRemaining);
+                test_completion_status=true;
+                stopTest(test_completion_status);
 //                timer.setVisibility(View.INVISIBLE);
             }
         }.start();
 
+
+        if(userMode.mode()) {
+            mAdView = (AdView) findViewById(R.id.adView);
+            //mAdView.setAdSize(AdSize.BANNER);
+            //mAdView.setAdUnitId(getString(R.string.banner_home_footer));
+
+            AdRequest adRequest = null;
+
+            if(appEnvironment==AppEnvironment.DEBUG) {
+                adRequest = new AdRequest.Builder()
+                        .addTestDevice(AdRequest.DEVICE_ID_EMULATOR)
+                        // Check the LogCat to get your test device ID
+                        .addTestDevice(getString(R.string.test_device1))
+                        .build();
+            }else {
+                adRequest = new AdRequest.Builder().build();
+            }
+            mAdView.loadAd(adRequest);
+
+            mAdView.setAdListener(new AdListener() {
+                @Override
+                public void onAdLoaded() {
+                }
+
+                @Override
+                public void onAdClosed() {
+                    Toast.makeText(getApplicationContext(), "Ad is closed!", Toast.LENGTH_SHORT).show();
+                }
+
+                @Override
+                public void onAdFailedToLoad(int errorCode) {
+                    Toast.makeText(getApplicationContext(), "Ad failed to load! error code: " + errorCode, Toast.LENGTH_SHORT).show();
+                }
+
+                @Override
+                public void onAdLeftApplication() {
+                    Toast.makeText(getApplicationContext(), "Ad left application!", Toast.LENGTH_SHORT).show();
+                }
+
+                @Override
+                public void onAdOpened() {
+                    super.onAdOpened();
+                }
+            });
+
+        }
+
+
+        if(userMode.mode()) {
+            mInterstitialAd = new InterstitialAd(this);
+
+            // set the ad unit ID
+            mInterstitialAd.setAdUnitId(getString(R.string.interstitial_full_screen));
+
+            AdRequest adRequest1 = null;
+
+            if(appEnvironment==AppEnvironment.DEBUG) {
+                adRequest1 = new AdRequest.Builder()
+                        .addTestDevice(AdRequest.DEVICE_ID_EMULATOR)
+                        // Check the LogCat to get your test device ID
+                        .addTestDevice(getString(R.string.test_device1))
+                        .build();
+            }else {
+                adRequest1 = new AdRequest.Builder().build();
+            }
+
+            // Load ads into Interstitial Ads
+            mInterstitialAd.loadAd(adRequest1);
+
+            mInterstitialAd.setAdListener(new AdListener() {
+                public void onAdLoaded() {
+                    showInterstitial();
+                }
+            });
+        }
+
+    }
+
+    private void showInterstitial() {
+        if (mInterstitialAd.isLoaded()) {
+            mInterstitialAd.show();
+        }
+    }
+
+    //stop the test using test_completion_status=true flag
+    public  void stopTest(boolean test_completion_status){
+
+        if(test_completion_status) {
+            //timer.setText(""+millisRemaining);
+            try {
+                long value = dataObj.UpdateAttempt(genid,attempt.getString("ptu_test_ID"),2,"NotUploaded", 0,dataObj.getTestQuestionAttempted(testid),dataObj.getTestQuestionSkipped(testid),dataObj.getTestQuestionBookmarked(testid),dataObj.getTestQuestionNotAttempted(testid),0, millisRemaining, index, pos);
+                if (value <= 0) {
+                    Log.e("PaperId: ","pid  "+paperid);
+                    long ret = dataObj.InsertAttempt(genid,attempt.getString("ptu_test_ID"),enrollid,studentId,courseid,subjectId,paperid,2,"NotUploaded", 0,dataObj.getTestQuestionAttempted(testid),dataObj.getTestQuestionSkipped(testid),dataObj.getTestQuestionBookmarked(testid),dataObj.getTestQuestionNotAttempted(testid), 0, millisRemaining, index, pos);
+                    Log.e("Insertion",""+ret);
+                }
+                SaveJSONdataToFile.objectToFile(URLClass.mainpath + path + "Attempt/" + testid + ".json", attempt.toString());
+
+                ActivityOptionsCompat options = ActivityOptionsCompat.
+                        makeSceneTransitionAnimation(PracticeTestActivity.this, finish_view, "transition");
+                int revealX = (int) (finish_view.getX() + finish_view.getWidth() / 2);
+                int revealY = (int) (finish_view.getY() + finish_view.getHeight() / 2);
+
+                coundown_timer.cancel();
+
+
+                PracticeTestActivity.this.finish();
+                Intent intent = new Intent(PracticeTestActivity.this, ScoreActivity.class);
+                bundle = new Bundle();
+                bundle.putString("enrollid",enrollid);
+                bundle.putString("courseid", courseid);
+                bundle.putString("subjectid", subjectId);
+                bundle.putString("paperid",paperid);
+                bundle.putString("Type","PRACTICE");
+                intent.putExtra("JSON", attempt.toString());
+                intent.putExtra("studentid",studentId);
+                intent.putExtra("BUNDLE", bundle);
+                intent.putExtra("testid",testid);
+                intent.putExtra("Xreveal", revealX);
+                intent.putExtra("Yreveal", revealY);
+                ActivityCompat.startActivity(PracticeTestActivity.this, intent, options.toBundle());
+            } catch (JSONException|IOException|IllegalArgumentException e) {
+                e.printStackTrace();
+            }
+        }
+//                timer.setVisibility(View.INVISIBLE);
     }
 
     public void newTest() throws JSONException {
-        millisStart = 3600000;
+        millisStart = Integer.parseInt(sptu_Test_Time)*60000;
         obj = new JSONObject(getIntent().getStringExtra("json"));
         //encObj = new EncryptDecrypt();
         attemptsectionarray = new JSONArray();
@@ -716,6 +1049,26 @@ public class PracticeTestActivity extends AppCompatActivity implements
     public void setQBackground(int pos, int index) {
 
         if (opAdapter.getSelectedItem() == -1) {
+
+            listOfLists.get(pos).get(index).setQ_status(skipped);
+            listOfLists.get(pos).get(index).setQ_check(not_confirmed);
+
+        } else {
+            if(!listOfLists.get(pos).get(index).getQ_status().equalsIgnoreCase(bookmarked)) {
+                Log.e("status", listOfLists.get(pos).get(index).getQ_status());
+                listOfLists.get(pos).get(index).setQ_status(attempted);
+                listOfLists.get(pos).get(index).setQ_check(confirmed);
+            }else{
+                listOfLists.get(pos).get(index).setQ_status(bookmarked);
+            }
+        }
+        qAdapter.updateList(listOfLists.get(pos));
+    }
+
+    /*//method to set the background of the question nuumber in the scroll bar
+    public void setQBackground(int pos, int index) {
+
+        if (opAdapter.getSelectedItem() == -1) {
             listOfLists.get(pos).get(index).setQ_status(skipped);
             listOfLists.get(pos).get(index).setQ_check(not_confirmed);
 
@@ -727,7 +1080,7 @@ public class PracticeTestActivity extends AppCompatActivity implements
             }
         }
         qAdapter.updateList(listOfLists.get(pos));
-    }
+    }*/
 
     //method to check if permission is already granted
     public boolean checkPermission() {
@@ -812,35 +1165,91 @@ public class PracticeTestActivity extends AppCompatActivity implements
         }
     }
 
-    //method to store the selected option in the local database
+    //method to store the selected option into the local database
     public void writeOption(int indx) {
         try {
             long result = -1;
+            long res=-1;
             buffer = attempt.getJSONArray("Sections").getJSONObject(pos).getJSONArray("Questions");
             Id = buffer.getJSONObject(index).getString("qbm_ID");
             Seq = buffer.getJSONObject(index).getString("qbm_SequenceID");
             questionobj = buffer.getJSONObject(index);
             scrollAdapter.updateList(listOfLists.get(pos));
+
+            double qbm_marks=Double.parseDouble(questionobj.getString("qbm_marks"));
+            double qbm_negative_mrk=Double.valueOf(questionobj.getString("qbm_negative_mrk"));
+            double neg_marks=qbm_negative_mrk;
+            Double obtained_marks=0.0;
+            int correct_option_seq=-1;
+            JSONArray ja_option=questionobj.getJSONArray("Options");
+            for (int o=0;o<ja_option.length();o++)
+            {
+                JSONObject jo_option=(JSONObject)ja_option.get(o);
+                if(jo_option.getString("qbo_answer_flag").equalsIgnoreCase("YES"))
+                {
+                    correct_option_seq=Integer.parseInt(jo_option.getString("qbo_seq_no").toString());
+                }
+            }
+
+
+            Log.e("PracticeTestActivity", "CurrentStatus" + dataObj.getPosition(Id,testid));
             if (dataObj.CheckQuestion(Id,testid)) {
                 Log.e("Option_Status", listOfLists.get(pos).get(index).getQ_status());
+
                 if (indx > -1) {
-                    result = dataObj.UpdateQuestion(attempt.getString("ptu_test_ID"), generateUniqueId(0),studentId, Id, Seq,attempt.getJSONArray("Sections").getJSONObject(pos).getString("ptu_section_name"),questionobj.getString("qbm_CategoryName"),questionobj.getString("qbm_Sub_CategoryName"), Integer.valueOf(questionobj.getString("qbm_marks")), Double.valueOf(questionobj.getString("qbm_negative_mrk")), 0, 0, indx, listOfLists.get(pos).get(index).getQ_status(), opAdapter.getSelectedSequence(), opAdapter.getFlag());
+
+                    int sel_seq=Integer.parseInt(opAdapter.getSelectedSequence());
+
+                    if(sel_seq==(correct_option_seq))
+                    {
+                        obtained_marks=qbm_marks;
+                        neg_marks=0.0;
+                    }else{
+                        obtained_marks=0.0;
+                        neg_marks=qbm_negative_mrk;
+                    }
+                    Log.e("writeOption","obtained_marks:"+obtained_marks);
+                    Log.e("writeOption","neg_marks:"+neg_marks);
+
+
+                    result = dataObj.UpdateQuestion(attempt.getString("ptu_test_ID"), genid,studentId, Id, Seq,attempt.getJSONArray("Sections").getJSONObject(pos).getString("ptu_section_name"),questionobj.getString("qbm_CategoryName"),questionobj.getString("qbm_Sub_CategoryName"), Integer.valueOf(questionobj.getString("qbm_marks")), Double.valueOf(questionobj.getString("qbm_negative_mrk")), obtained_marks, neg_marks, indx, listOfLists.get(pos).get(index).getQ_status(), opAdapter.getSelectedSequence(), opAdapter.getFlag());
                 } else {
                     //if question is attempted and then the option is cleared store as skipped
-                    result = dataObj.UpdateQuestion(attempt.getString("ptu_test_ID"), generateUniqueId(0),studentId, Id, Seq,attempt.getJSONArray("Sections").getJSONObject(pos).getString("ptu_section_name"),questionobj.getString("qbm_CategoryName"),questionobj.getString("qbm_Sub_CategoryName"), Integer.valueOf(questionobj.getString("qbm_marks")), Double.valueOf(questionobj.getString("qbm_negative_mrk")), 0, 0, indx, listOfLists.get(pos).get(index).getQ_status(), opAdapter.getSelectedSequence(), opAdapter.getFlag());
+                    result = dataObj.UpdateQuestion(attempt.getString("ptu_test_ID"), generateUniqueId(0),studentId, Id, Seq,attempt.getJSONArray("Sections").getJSONObject(pos).getString("ptu_section_name"),questionobj.getString("qbm_CategoryName"),questionobj.getString("qbm_Sub_CategoryName"), Integer.valueOf(questionobj.getString("qbm_marks")), Double.valueOf(questionobj.getString("qbm_negative_mrk")), obtained_marks, neg_marks, indx, listOfLists.get(pos).get(index).getQ_status(), opAdapter.getSelectedSequence(), opAdapter.getFlag());
                 }
-                if (result == 0) {
-                    dataObj.InsertQuestion(attempt.getString("ptu_test_ID"), generateUniqueId(0),studentId, Id, Seq,attempt.getJSONArray("Sections").getJSONObject(pos).getString("ptu_section_name"),questionobj.getString("qbm_CategoryName"),questionobj.getString("qbm_Sub_CategoryName"), Integer.valueOf(questionobj.getString("qbm_marks")), Double.valueOf(questionobj.getString("qbm_negative_mrk")), 0, 0, indx, listOfLists.get(pos).get(index).getQ_status(), opAdapter.getSelectedSequence(), opAdapter.getFlag());
-                }
-                Log.e("PracticeTestActivity", "attempt" + attempt.toString());
-                Log.e("PracticeTestActivity", "questionobj" + questionobj.toString());
-                Log.e("PracticeTestActivity","CatName:"+questionobj.getString("qbm_Chapter_name")+", SubCatNAme"+questionobj.getString("qbm_Sub_CategoryName"));
-                Log.e("CurrentStatus", "" + dataObj.getPosition(Id,testid));
             }
+            else {
+                res=dataObj.InsertQuestion(attempt.getString("ptu_test_ID"), genid,studentId, Id, Seq,attempt.getJSONArray("Sections").getJSONObject(pos).getString("ptu_section_name"),questionobj.getString("qbm_CategoryName"),questionobj.getString("qbm_Sub_CategoryName"), Integer.valueOf(questionobj.getString("qbm_marks")), Double.valueOf(questionobj.getString("qbm_negative_mrk")), 0, 0, indx, listOfLists.get(pos).get(index).getQ_status(), opAdapter.getSelectedSequence(), opAdapter.getFlag());
+            }
+
+            Log.e("PracticeTestActivity", "attempt" + attempt.toString());
+            Log.e("PracticeTestActivity", "questionobj" + questionobj.toString());
+            Log.e("PracticeTestActivity","CatName:"+questionobj.getString("qbm_Chapter_name")+", SubCatNAme"+questionobj.getString("qbm_Sub_CategoryName"));
+            Log.e("PracticeTestActivity","Selected_option_ID: "+indx+",result:"+result+",res:"+res);
+            Log.e("PracticeTestActivity","ptu_test_ID"+attempt.getString("ptu_test_ID"));
+            Log.e("PracticeTestActivity","gnid"+genid);
+            Log.e("PracticeTestActivity","gnid"+genid);
+            Log.e("PracticeTestActivity","studentId"+studentId);
+            Log.e("PracticeTestActivity","qbmid"+Id);
+                /*Log.e("AssessmenttestActivity","writeOption"+orgid);
+                Log.e("AssessmenttestActivity","writeOption"+branchid);
+                Log.e("AssessmenttestActivity","writeOption"+batchid);*/
+            Log.e("PracticeTestActivity","qbm_SequenceID"+questionobj.getString("qbm_SequenceID"));
+            //Log.e("PracticeTestActivity","Sections"+attempt.getJSONArray("Sections").getJSONObject(pos).getString("atu_section_name"));
+            Log.e("PracticeTestActivity","qbm_ChapterName"+questionobj.getString("qbm_ChapterName"));
+            Log.e("PracticeTestActivity","qbm_Sub_CategoryName"+questionobj.getString("qbm_Sub_CategoryName"));
+            Log.e("PracticeTestActivity","qbm_marks"+Integer.valueOf(questionobj.getString("qbm_marks")));
+            Log.e("PracticeTestActivity","qbm_negative_mrk"+Double.valueOf(questionobj.getString("qbm_negative_mrk")));
+            Log.e("PracticeTestActivity","indx"+indx);
+            Log.e("PracticeTestActivity","q_status"+listOfLists.get(pos).get(index).getQ_status());
+            Log.e("PracticeTestActivity","writeOption"+"NotUploaded");
+            Log.e("PracticeTestActivity","op_sqwq"+opAdapter.getSelectedSequence());
+            Log.e("PracticeTestActivity","op_flag"+opAdapter.getFlag());
 
         } catch (JSONException e) {
             e.printStackTrace();
         }
+
     }
 
     //method to clear the selected options in the local database
@@ -973,36 +1382,8 @@ public class PracticeTestActivity extends AppCompatActivity implements
 
                             // do something when the button is clicked
                             public void onClick(DialogInterface arg0, int arg1) {
-                                try {
-                                    long value = dataObj.UpdateAttempt(generateUniqueId(0),attempt.getString("ptu_test_ID"),2,"NotUploaded", 0,dataObj.getTestQuestionAttempted(testid),dataObj.getTestQuestionSkipped(testid),dataObj.getTestQuestionBookmarked(testid),dataObj.getTestQuestionNotAttempted(testid),0, millisRemaining, index, pos);
-                                    if (value <= 0) {
-                                        Log.e("PaperId: ","pid  "+paperid);
-                                        long ret = dataObj.InsertAttempt(generateUniqueId(0),attempt.getString("ptu_test_ID"),enrollid,studentId,courseid,subjectId,paperid,2,"NotUploaded", 0,dataObj.getTestQuestionAttempted(testid),dataObj.getTestQuestionSkipped(testid),dataObj.getTestQuestionBookmarked(testid),dataObj.getTestQuestionNotAttempted(testid), 0, millisRemaining, index, pos);
-                                        Log.e("Insertion",""+ret);
-                                    }
-                                    SaveJSONdataToFile.objectToFile(URLClass.mainpath + path + "Attempt/" + testid + ".json", attempt.toString());
-
-                                    ActivityOptionsCompat options = ActivityOptionsCompat.
-                                            makeSceneTransitionAnimation(PracticeTestActivity.this, finish_view, "transition");
-                                    int revealX = (int) (finish_view.getX() + finish_view.getWidth() / 2);
-                                    int revealY = (int) (finish_view.getY() + finish_view.getHeight() / 2);
-                                    Intent intent = new Intent(PracticeTestActivity.this, ScoreActivity.class);
-                                    bundle = new Bundle();
-                                    bundle.putString("enrollid",enrollid);
-                                    bundle.putString("courseid", courseid);
-                                    bundle.putString("subjectid", subjectId);
-                                    bundle.putString("paperid",paperid);
-                                    bundle.putString("Type","PRACTICE");
-                                    intent.putExtra("JSON", attempt.toString());
-                                    intent.putExtra("studentid",studentId);
-                                    intent.putExtra("BUNDLE", bundle);
-                                    intent.putExtra("testid",testid);
-                                    intent.putExtra("Xreveal", revealX);
-                                    intent.putExtra("Yreveal", revealY);
-                                    ActivityCompat.startActivity(PracticeTestActivity.this, intent, options.toBundle());
-                                } catch (JSONException|IOException|IllegalArgumentException e) {
-                                    e.printStackTrace();
-                                }
+                                test_completion_status=true;
+                                stopTest(test_completion_status);
 
                             }
                         })
@@ -1161,14 +1542,31 @@ public class PracticeTestActivity extends AppCompatActivity implements
 
         try {
             opAdapter = new OptionsCheckAdapter(optionsList, PracticeTestActivity.this, photoPath,rv_option);
-            Log.e("opSize", ""+oplist.size());
+            Log.e("opSize", ""+optionsList.size());
             RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
             rv_option.setLayoutManager(mLayoutManager);
             rv_option.setItemAnimator(new DefaultItemAnimator());
             rv_option.setAdapter(opAdapter);
             opAdapter.setOptionsEditable(edit);
             runLayoutAnimation(rv_option);
-//        opAdapter.notifyDataSetChanged();
+            opAdapter.notifyDataSetChanged();
+
+            try {
+                buffer = attempt.getJSONArray("Sections").getJSONObject(pos).getJSONArray("Questions");
+                Id = buffer.getJSONObject(index).getString("qbm_ID");
+                Log.e("SelectedOption", "Id"+Id+",testid"+testid);
+                Log.e("SelectedOption", "selected option:"+dataObj.getPosition(Id,testid));
+                if (dataObj.getPosition(Id,testid) > -1) {
+                    Log.e("SelectedOption", "Reached");
+                    opAdapter.setOptionsList(dataObj.getPosition(Id,testid));
+                    rv_option.setItemAnimator(null);
+                    opAdapter.notifyDataSetChanged();
+                }
+
+            } catch (JSONException | NullPointerException e) {
+                e.printStackTrace();
+            }
+
         } catch (NullPointerException e) {
             e.printStackTrace();
         }
@@ -1199,7 +1597,7 @@ public class PracticeTestActivity extends AppCompatActivity implements
                     questionobj = array2.getJSONObject(j);
                     Log.e("sequence", Seq);
                     qListObj = new SingleQuestionList(array2.getJSONObject(j).getString("qbm_SequenceID"), notAttempted,not_confirmed);
-                    dataObj.InsertQuestion(attempt.getString("ptu_test_ID"), generateUniqueId(0),studentId, Id, Seq,attempt.getJSONArray("Sections").getJSONObject(pos).getString("ptu_section_name"),questionobj.getString("qbm_Chapter_name"),questionobj.getString("qbm_Sub_CategoryName"), 0, 0, 0, 0, -1, "NOT_ATTEMPTED", "-1", "NO");
+                    dataObj.InsertQuestion(attempt.getString("ptu_test_ID"), genid,studentId, Id, Seq,attempt.getJSONArray("Sections").getJSONObject(pos).getString("ptu_section_name"),questionobj.getString("qbm_Chapter_name"),questionobj.getString("qbm_Sub_CategoryName"), 0, 0, 0, 0, -1, "NOT_ATTEMPTED", "-1", "NO");
                     questionOpList.add(qListObj);
                 }
                 listOfLists.add(questionOpList);
@@ -1299,17 +1697,21 @@ public class PracticeTestActivity extends AppCompatActivity implements
                     // do something when the button is clicked
                     public void onClick(DialogInterface arg0, int arg1) {
                         try {
-                            long value = dataObj.UpdateAttempt(generateUniqueId(0),attempt.getString("ptu_test_ID"),1,"NotUploaded", 0,dataObj.getTestQuestionAttempted(testid),dataObj.getTestQuestionSkipped(testid),dataObj.getTestQuestionBookmarked(testid),dataObj.getTestQuestionNotAttempted(testid), 0, millisRemaining, index, pos);
-/*                            if (value <= 0) {
+                            long value = dataObj.UpdateAttempt(genid,attempt.getString("ptu_test_ID"),1,"NotUploaded", 0,dataObj.getTestQuestionAttempted(testid),dataObj.getTestQuestionSkipped(testid),dataObj.getTestQuestionBookmarked(testid),dataObj.getTestQuestionNotAttempted(testid), 0, millisRemaining, index, pos);
+                           /*if (value <= 0) {
                                 long ret = dataObj.InsertAttempt(generateUniqueId(0),attempt.getString("ptu_test_ID"),1, 0,dataObj.getQuestionAttempted(),dataObj.getQuestionSkipped(),dataObj.getQuestionBookmarked(),dataObj.getQuestionNotAttempted(), 0, millisRemaining, index, pos);
                                 Log.e("Insertion",""+ret);
                             }*/
-                            Log.e("values",""+index+" "+pos);
+                            //if (value > 0)
+                            Log.e("values",""+index+" "+pos+"----"+value);
                             SaveJSONdataToFile.objectToFile(URLClass.mainpath + path + "Attempt/" + testid + ".json", attempt.toString());
                         } catch (JSONException|IOException e) {
                             e.printStackTrace();
                         }
-                        finish();
+
+                        coundown_timer.cancel();
+
+                        PracticeTestActivity.this.finish();
                         Intent intent = new Intent(PracticeTestActivity.this, ListofPractiseTests.class);
                         intent.putExtra("studentid",studentId);
                         intent.putExtra("enrollid",enrollid);
@@ -1391,7 +1793,7 @@ public class PracticeTestActivity extends AppCompatActivity implements
 
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-        ((TextView) parent.getChildAt(0)).setTextColor(Color.WHITE);
+        //((TextView) parent.getChildAt(position)).setTextColor(Color.WHITE);
         try {
             Log.e("ItemSelected", "reached");
             toggle();
@@ -1425,27 +1827,42 @@ public class PracticeTestActivity extends AppCompatActivity implements
 
     @Override
     public void onStart() {
+        super.onStart();
         Log.d(TAG, "onStart:");
         if (!checkPermission()) {
             requestPermission();
         }
-        super.onStart();
     }
 
     @Override
     public void onResume() {
+
+        super.onResume();
+
         Log.d(TAG, "onResume:");
+
+        if (mAdView != null) {
+            mAdView.resume();
+        }
+
         dataObj = new DBHelper(PracticeTestActivity.this);
 //        int count = dataObj.getAttempCount()-1;
-        super.onResume();
     }
 
     @Override
     public void onPause() {
+
+        super.onPause();
         Log.d(TAG, "onPause:");
+
+        if (mAdView != null) {
+            mAdView.pause();
+        }
+
+
         dataObj = new DBHelper(PracticeTestActivity.this);
         try {
-            long value = dataObj.UpdateAttempt(generateUniqueId(0),attempt.getString("ptu_test_ID"),1,"NotUploaded", 0,dataObj.getTestQuestionAttempted(testid),dataObj.getTestQuestionSkipped(testid),dataObj.getTestQuestionBookmarked(testid),dataObj.getTestQuestionNotAttempted(testid), 0, millisRemaining, index, pos);
+            long value = dataObj.UpdateAttempt(genid,attempt.getString("ptu_test_ID"),1,"NotUploaded", 0,dataObj.getTestQuestionAttempted(testid),dataObj.getTestQuestionSkipped(testid),dataObj.getTestQuestionBookmarked(testid),dataObj.getTestQuestionNotAttempted(testid), 0, millisRemaining, index, pos);
             if(alertDialog!=null){
                 alertDialog.dismiss();
             }
@@ -1455,8 +1872,6 @@ public class PracticeTestActivity extends AppCompatActivity implements
             e.printStackTrace();
         }
 
-
-        super.onPause();
     }
 
     @Override
@@ -1469,6 +1884,10 @@ public class PracticeTestActivity extends AppCompatActivity implements
     public void onDestroy() {
         Log.d(TAG, "onDestroy:");
         super.onDestroy();
+
+        if (mAdView != null) {
+            mAdView.destroy();
+        }
     }
 
     private Bitmap getTheEncriptedImage(String qbm_image_file) {

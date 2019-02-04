@@ -24,8 +24,13 @@ import android.widget.RelativeLayout;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.digywood.tms.DBHelper.DBHelper;
+import com.google.android.gms.ads.AdListener;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
+import com.google.android.gms.ads.InterstitialAd;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -52,10 +57,20 @@ public class ScoreActivity extends AppCompatActivity {
     ArrayList<Integer> OptionsList = new ArrayList<>();
     ArrayList<String> catList;
 
+    private AdView mAdView;
+
+    AppEnvironment appEnvironment;
+    UserMode userMode;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_score);
+
+        appEnvironment = ((MyApplication) getApplication()).getAppEnvironment();//getting App Environment
+        userMode = ((MyApplication) getApplication()).getUserMode();//getting User Mode
+
+
         bundle = new Bundle();
         bundle = getIntent().getBundleExtra("BUNDLE");
         if (PracticeTestActivity.pactivity != null) {
@@ -144,13 +159,16 @@ public class ScoreActivity extends AppCompatActivity {
                 TotalCount = dataObj.getQuestionAttempted(testId) + dataObj.getQuestionBookmarked(testId);
                 WrongCount = dataObj.getWrongOptionsCount(testId);
 
-                TotalPositive = Double.valueOf(attempt.getString("ptu_positive_marks")) * CorrectCount;
-
-                TotalNegative = Double.valueOf(attempt.getString("ptu_negative_marks")) * WrongCount;
+                //TotalPositive = Double.valueOf(attempt.getString("ptu_positive_marks")) * CorrectCount;
+                TotalPositive=dataObj.getPracticeTestTotalPositiveMarks(testId);
+                //TotalNegative = Double.valueOf(attempt.getString("ptu_negative_marks")) * WrongCount;
+                TotalNegative=dataObj.getPracticeTestTotalNegativeMarks(testId);
                 Log.e("negative_score", attempt.getString("ptu_negative_marks"));
-                MaxMarks = Double.valueOf(attempt.getString("ptu_positive_marks")) * dataObj.getTestQuestionCount(testId);
+                //MaxMarks = Double.valueOf(attempt.getString("ptu_positive_marks")) * dataObj.getTestQuestionCount(testId);
+                MaxMarks=dataObj.getPracticeTestTotalTestMarks(testId);
                 TotalScore = TotalPositive - TotalNegative;
-                Percentage = (Double.valueOf(TotalScore) / MaxMarks) * 100;
+                //Percentage = (Double.valueOf(TotalScore) / MaxMarks) * 100;
+                Percentage = (TotalScore / MaxMarks) * 100;
 
 
                 flag = dataObj.UpdateAttempt(dataObj.getLastTestAttempt(testId, studentId), attempt.getString("ptu_test_ID"), 2, "NotUploaded", TotalScore, dataObj.getTestQuestionAttempted(testId), dataObj.getTestQuestionSkipped(testId), dataObj.getTestQuestionBookmarked(testId), dataObj.getTestQuestionNotAttempted(testId), Percentage, 0, 0, 0);
@@ -175,9 +193,13 @@ public class ScoreActivity extends AppCompatActivity {
                     TotalPositive = 0.0;
                     TotalNegative = 0.0;
                 } else {
-                    TotalPositive = Double.valueOf(attempt.getString("atu_marks")) * CorrectCount;
-                    TotalNegative = Double.valueOf(attempt.getString("atu_negative_mrk")) * WrongCount;
-                    MaxMarks = Double.valueOf(attempt.getString("atu_marks")) * dataObj.getAssessmentQuestionCount(testId);
+
+                    /*TotalPositive = Double.valueOf(attempt.getString("atu_marks")) * CorrectCount;
+                    TotalNegative = Double.valueOf(attempt.getString("atu_negative_mrk")) * WrongCount;*/
+                    TotalPositive = dataObj.getTotalPositiveMarks(testId,instanceId,studentId);
+                    TotalNegative = dataObj.getTotalNegativeMarks(testId,instanceId,studentId);
+                    //MaxMarks = Double.valueOf(attempt.getString("atu_marks")) * dataObj.getAssessmentQuestionCount(testId);
+                    MaxMarks = dataObj.getTotalTestMarks(testId,instanceId,studentId);
                     TotalScore = TotalPositive - TotalNegative;
                     Percentage = (TotalScore / MaxMarks) * 100;
                 }
@@ -222,7 +244,8 @@ public class ScoreActivity extends AppCompatActivity {
                         if (testType.equalsIgnoreCase("PRACTICE")) {
                             sec_questions = String.valueOf(dataObj.getSectionQuestions(secList.get(i), testId));
                             sec_attempted = String.valueOf(dataObj.getSectionQuesAns(secList.get(i), testId));
-                            sec_skipped = String.valueOf(dataObj.getSectionQuesSkip(secList.get(i), testId));
+                            //sec_skipped = String.valueOf(dataObj.getSectionQuesSkip(secList.get(i), testId));
+                            sec_skipped = String.valueOf(Integer.parseInt(sec_questions)-Integer.parseInt(sec_attempted));
                             sec_correct = String.valueOf(dataObj.getSectionQuesCorrect(secList.get(i), testId));
                             Log.e("SectionData", secList.get(i));
                             sec_wrong = String.valueOf(dataObj.getSectionQuesWrong(secList.get(i), testId));
@@ -235,7 +258,8 @@ public class ScoreActivity extends AppCompatActivity {
                         } else {
                             sec_questions = String.valueOf(dataObj.getAssessmentSectionQuestions(secList.get(i),testId,instanceId,studentId));
                             sec_attempted = String.valueOf(dataObj.getAssessmentSectionQuesAns(secList.get(i),testId,instanceId,studentId));
-                            sec_skipped = String.valueOf(dataObj.getAssessmentSectionQuesSkip(secList.get(i),testId,instanceId,studentId));
+                            //sec_skipped = String.valueOf(dataObj.getAssessmentSectionQuesSkip(secList.get(i),testId,instanceId,studentId));
+                            sec_skipped = String.valueOf(Integer.parseInt(sec_questions)-Integer.parseInt(sec_attempted));
                             sec_correct = String.valueOf(dataObj.getAssessmentSectionQuesCorrect(secList.get(i),testId,instanceId,studentId));
                             sec_wrong = String.valueOf(dataObj.getAssessmentSectionQuesWrong(secList.get(i),testId,instanceId,studentId));
                             score = (Double.valueOf(sec_correct) * Double.valueOf(attempt.getString("atu_marks")) - Double.valueOf(sec_wrong) * Double.valueOf(attempt.getString("atu_negative_mrk")));
@@ -291,7 +315,7 @@ public class ScoreActivity extends AppCompatActivity {
                         params = new TableRow.LayoutParams(0, TableLayout.LayoutParams.WRAP_CONTENT, 1f);
                         tv_subCatskipped.setLayoutParams(params);
 //                        tv_subCatskipped.setGravity(Gravity.CENTER);
-                        Log.d("skip", sec_skipped);
+//                        Log.d("skip", sec_skipped);
                         tv_subCatskipped.setTextSize(20f);
                         tv_subCatskipped.setGravity(Gravity.CENTER);
                         tv_subCatskipped.setTextColor(Color.BLACK);
@@ -349,7 +373,8 @@ public class ScoreActivity extends AppCompatActivity {
         tv_subject.setText(subjectid);
         if (testType.equalsIgnoreCase("PRACTICE")) {
             tv_attempted.setText(String.valueOf(dataObj.getTestQuestionAttempted(testId)));
-            tv_skipped.setText(String.valueOf(dataObj.getTestQuestionSkipped(testId)));
+            //tv_skipped.setText(String.valueOf(dataObj.getTestQuestionSkipped(testId)));
+            tv_skipped.setText(String.valueOf(Integer.parseInt(sec_questions)-Integer.parseInt(sec_attempted)));
             tv_bookmarked.setText(String.valueOf(dataObj.getTestQuestionBookmarked(testId)));
             tv_totalQuestions.setText(String.valueOf(dataObj.getTestQuestionCount(testId)));
             tv_totalCorrect.setText(String.valueOf(dataObj.getTestCorrectOptionsCount(testId)));
@@ -415,6 +440,52 @@ public class ScoreActivity extends AppCompatActivity {
             }
         });
 
+        if(userMode.mode()) {
+            mAdView = (AdView) findViewById(R.id.adView);
+            //mAdView.setAdSize(AdSize.BANNER);
+            //mAdView.setAdUnitId(getString(R.string.banner_home_footer));
+
+            AdRequest adRequest = null;
+
+            if(appEnvironment==AppEnvironment.DEBUG) {
+                adRequest = new AdRequest.Builder()
+                        .addTestDevice(AdRequest.DEVICE_ID_EMULATOR)
+                        // Check the LogCat to get your test device ID
+                        .addTestDevice(getString(R.string.test_device1))
+                        .build();
+            }else {
+                adRequest = new AdRequest.Builder().build();
+            }
+            mAdView.loadAd(adRequest);
+
+            mAdView.setAdListener(new AdListener() {
+                @Override
+                public void onAdLoaded() {
+                }
+
+                @Override
+                public void onAdClosed() {
+                    Toast.makeText(getApplicationContext(), "Ad is closed!", Toast.LENGTH_SHORT).show();
+                }
+
+                @Override
+                public void onAdFailedToLoad(int errorCode) {
+                    Toast.makeText(getApplicationContext(), "Ad failed to load! error code: " + errorCode, Toast.LENGTH_SHORT).show();
+                }
+
+                @Override
+                public void onAdLeftApplication() {
+                    Toast.makeText(getApplicationContext(), "Ad left application!", Toast.LENGTH_SHORT).show();
+                }
+
+                @Override
+                public void onAdOpened() {
+                    super.onAdOpened();
+                }
+            });
+
+        }
+
     }
 
     protected void revealActivity(int x, int y) {
@@ -464,7 +535,8 @@ public class ScoreActivity extends AppCompatActivity {
             if (testType.equalsIgnoreCase("PRACTICE")) {
                 subcat_questions = String.valueOf(dataObj.getSubCatQuestions(catList.get(i), testId));
                 subcat_attempted = String.valueOf(dataObj.getSubCatQuesAns(catList.get(i), testId));
-                subcat_skipped = String.valueOf(dataObj.getSubCatQuesSkip(catList.get(i), testId));
+                //subcat_skipped = String.valueOf(dataObj.getSubCatQuesSkip(catList.get(i), testId));
+                subcat_skipped = String.valueOf(Integer.parseInt(subcat_questions)-Integer.parseInt(subcat_attempted));
                 subcat_correct = String.valueOf(dataObj.getSubCatQuesCorrect(catList.get(i), testId));
                 percent = (Double.valueOf(subcat_correct) / Double.valueOf(subcat_questions)) * 100;
                 subcat_percentage = String.format("%.1f", percent);
@@ -472,7 +544,8 @@ public class ScoreActivity extends AppCompatActivity {
 
                 subcat_questions = String.valueOf(dataObj.getAssessmentSubCatQuestions(catList.get(i),testId,instanceId,studentId));
                 subcat_attempted = String.valueOf(dataObj.getAssessmentSubCatQuesAns(catList.get(i),testId,instanceId,studentId));
-                subcat_skipped = String.valueOf(dataObj.getAssessmentSubCatQuesSkip(catList.get(i),testId,instanceId,studentId));
+                //subcat_skipped = String.valueOf(dataObj.getAssessmentSubCatQuesSkip(catList.get(i),testId,instanceId,studentId));
+                subcat_skipped = String.valueOf(Integer.parseInt(subcat_questions)-Integer.parseInt(subcat_attempted));
                 subcat_correct = String.valueOf(dataObj.getAssessmentSubCatQuesCorrect(catList.get(i),testId,instanceId,studentId));
                 percent = (Double.valueOf(subcat_correct) / Double.valueOf(subcat_questions)) * 100;
                 subcat_percentage = String.format("%.1f", percent);
@@ -562,6 +635,43 @@ public class ScoreActivity extends AppCompatActivity {
             public void onCancel(DialogInterface dialog) {
             }
         });
+    }
+
+    @Override
+    public void onResume() {
+
+        super.onResume();
+
+        if (mAdView != null) {
+            mAdView.resume();
+        }
+
+    }
+
+    @Override
+    public void onPause() {
+
+        super.onPause();
+
+        if (mAdView != null) {
+            mAdView.pause();
+        }
+
+
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+
+        if (mAdView != null) {
+            mAdView.destroy();
+        }
     }
 
 }

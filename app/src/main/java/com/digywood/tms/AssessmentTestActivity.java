@@ -85,7 +85,7 @@ public class AssessmentTestActivity extends AppCompatActivity implements Adapter
     ImageView fullscreen;
     GridView gridView;
     Spinner sections;
-    String /*jsonPath,*/imgPath, photoPath, Seq, Id, path,instanceId,enrollid,courseid,subjectId,paperid,studentId,testid,groupId,orgid,branchid,batchid;
+    String /*jsonPath,*/imgPath, photoPath, Seq, Id, path,instanceId,enrollid,courseid,subjectId,paperid,studentId,testid,groupId,orgid,branchid,batchid,satu_Test_Type,satu_Test_Time;
     final String notAttempted = "NOT_ATTEMPTED", attempted = "ATTEMPTED", skipped = "SKIPPED", bookmarked = "BOOKMARKED",not_confirmed = "NOT_CONFIRMED",confirmed = "CONFIRMED";
     EncryptDecrypt encObj;
     RecyclerView question_scroll;
@@ -124,6 +124,8 @@ public class AssessmentTestActivity extends AppCompatActivity implements Adapter
     String cur_questionNo="";
     String report_message="";
     Spinner sp_report;
+    CountDownTimer coundown_timer;
+    boolean test_completion_status=false;
 
     private static final boolean AUTO_HIDE = true;
 
@@ -263,6 +265,8 @@ public class AssessmentTestActivity extends AppCompatActivity implements Adapter
                     courseid=cursor.getString(cursor.getColumnIndex("satu_course_id"));
                     subjectId=cursor.getString(cursor.getColumnIndex("satu_subjet_ID"));
                     paperid=cursor.getString(cursor.getColumnIndex("satu_paper_ID"));
+                    satu_Test_Time = cursor.getString(cursor.getColumnIndex("satu_Test_Time"));
+                    satu_Test_Type = cursor.getString(cursor.getColumnIndex("satu_Test_Type"));
                 }
             }
 
@@ -382,10 +386,11 @@ public class AssessmentTestActivity extends AppCompatActivity implements Adapter
                 if (opAdapter.getSelectedItem() > -1) {
                     listOfLists.get(pos).get(index).setQ_status(bookmarked);
                     listOfLists.get(pos).get(index).setQ_check(confirmed);
-//                    writeOption(opAdapter.getSelectedItem());
+                    writeOption(opAdapter.getSelectedItem());
                     setQBackground(pos,index);
 //                    index++;
 //                    gotoQuestion(index);
+                    btn_confirm.setBackgroundColor(getResources().getColor(R.color.dull_yellow));
                 } else
                     Toast.makeText(AssessmentTestActivity.this, "No option Selected", Toast.LENGTH_LONG).show();
             }
@@ -398,7 +403,7 @@ public class AssessmentTestActivity extends AppCompatActivity implements Adapter
                 if (opAdapter.getSelectedItem() > -1) {
                     listOfLists.get(pos).get(index).setQ_status(attempted);
                     listOfLists.get(pos).get(index).setQ_check(confirmed);
-//                    writeOption(opAdapter.getSelectedItem());
+                    writeOption(opAdapter.getSelectedItem());
                     setQBackground(pos, index);
                     btn_confirm.setBackgroundColor(Color.GREEN);
                 } else
@@ -477,13 +482,58 @@ public class AssessmentTestActivity extends AppCompatActivity implements Adapter
                             }
                             setQuestion(pos, index, edit);
                             checkRadio();
-                        } else if (index == buffer.length() - 1) {
+                        } else if ((index == buffer.length() - 1) && (pos<attemptsectionarray.length()-1)) {
                             //Change button once last question of test is reached
-                            setQBackground(pos, index);
-                            writeOption(opAdapter.getSelectedItem());
-                            if (pos == attemptsectionarray.length() - 1) {
-                                btn_next.setText("Finish");
+
+                            if (opAdapter.getSelectedItem() > -1) {
+                                if (listOfLists.get(pos).get(index).getQ_check().equalsIgnoreCase(confirmed)) {
+                                    Log.e("if condition", listOfLists.get(pos).get(index).getQ_check());
+                                    setQBackground(pos, index);
+                                    writeOption(opAdapter.getSelectedItem());
+                                    index++;
+                                } else {
+                                    btn_mark.callOnClick();
+                                    index++;
+                                }
+                            } else {
+                                Log.e("else condition", "reached");
+                                setQBackground(pos, index);
                                 writeOption(opAdapter.getSelectedItem());
+                                index++;
+                            }
+
+                            flag = false;
+                            pos = pos + 1;
+                            index=0;
+                            //qAdapter.setData(index);
+                            Log.e("POS", "" + pos + "," + index);
+                            //buffer = attempt.getJSONArray("Sections").getJSONObject(pos).getJSONArray("Questions");
+                            sections.setSelection(pos);
+                            //setScrollbar(pos);
+                            scrollAdapter.updateList(listOfLists.get(pos));
+
+                            setQuestion(pos, index, edit);
+                            checkRadio();
+
+
+                        }else{
+                            if (opAdapter.getSelectedItem() > -1) {
+                                if (listOfLists.get(pos).get(index).getQ_check().equalsIgnoreCase(confirmed)) {
+                                    Log.e("if condition", listOfLists.get(pos).get(index).getQ_check());
+                                    setQBackground(pos, index);
+                                    writeOption(opAdapter.getSelectedItem());
+                                } else {
+                                    btn_mark.callOnClick();
+                                }
+                            } else {
+                                Log.e("else condition", "reached");
+                                setQBackground(pos, index);
+                                writeOption(opAdapter.getSelectedItem());
+                            }
+                            Log.e("END", "POS:" + pos + ",attemptsectionarray" + attemptsectionarray.length());
+                            if (pos >= attemptsectionarray.length()-1) {
+                                btn_next.setText("Finish");
+                                //writeOption(opAdapter.getSelectedItem());
                                 AlertDialog alertbox = new AlertDialog.Builder(AssessmentTestActivity.this)
                                         .setMessage("Do you want to finish Test?" + " " + dataObj.getAssessmentQuestionCount(testid))
                                         .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
@@ -491,47 +541,8 @@ public class AssessmentTestActivity extends AppCompatActivity implements Adapter
                                             // do something when the button is clicked
                                             public void onClick(DialogInterface arg0, int arg1) {
 //                                            q_list.clear();
-                                                try {
-                                                    long value = dataObj.UpdateAssessment(attempt.getString("atu_ID"),instanceId,enrollid,"",courseid,subjectId,paperid,2,"", 0.0,dataObj.getAssessmentQuestionAttempted(testid,instanceId,studentId),dataObj.getAssessmentQuestionSkipped(testid,instanceId,studentId),dataObj.getAssessmentQuestionBookmarked(testid,instanceId,studentId),dataObj.getAssessmentQuestionNotAttempted(testid,instanceId,studentId), 0.0, millisRemaining, index, pos);
-                                                    Log.e("Update",""+instanceId);
-                                                    if (value <= 0) {
-                                                        Log.e("PaperId: ","pid  "+paperid);
-                                                        long ret = dataObj.InsertAssessment(attempt.getString("atu_ID"),instanceId,enrollid,studentId,courseid,subjectId,paperid,2,null, 0.0,dataObj.getAssessmentQuestionAttempted(testid,instanceId,studentId),dataObj.getAssessmentQuestionSkipped(testid,instanceId,studentId),dataObj.getAssessmentQuestionBookmarked(testid,instanceId,studentId),dataObj.getAssessmentQuestionNotAttempted(testid,instanceId,studentId), 0.0, millisRemaining, index, pos);
-                                                        Log.e("Insertion",""+instanceId);
-                                                    }
-                                                    SaveJSONdataToFile.objectToFile(URLClass.mainpath + path + testid + ".json", attempt.toString());
-//                                                    syncAssesmentTestData();
-                                                } catch (JSONException|IOException e) {
-                                                    e.printStackTrace();
-                                                }
-
-                                                ActivityOptionsCompat options = ActivityOptionsCompat.
-                                                        makeSceneTransitionAnimation(AssessmentTestActivity.this, finish_view, "transition");
-                                                int revealX = (int) (finish_view.getX() + finish_view.getWidth() / 2);
-                                                int revealY = (int) (finish_view.getY() + finish_view.getHeight() / 2);
-                                                finish();
-                                                count = dataObj.getAttempCount(studentId);
-
-                                                stopRepeatingTask();       //stop the baground task for uploading assessment data to server
-
-                                                Intent intent = new Intent(AssessmentTestActivity.this, ScoreActivity.class);
-                                                bundle = new Bundle();
-
-//                                                bundle.putString("JSON", attempt.toString());
-//                                                Log.e("testAssessment",attempt.toString());
-                                                bundle.putString("enrollid",enrollid);
-                                                bundle.putString("courseid", courseid);
-                                                bundle.putString("subjectid", subjectId);
-                                                bundle.putString("paperid",paperid);
-                                                bundle.putString("Type","ASSESSMENT");
-                                                intent.putExtra("BUNDLE", bundle);
-                                                intent.putExtra("testid",testid);
-                                                intent.putExtra("instanceid", instanceId);
-                                                intent.putExtra("JSON", attempt.toString());
-                                                intent.putExtra("studentid", studentId);
-                                                intent.putExtra("Xreveal", revealX);
-                                                intent.putExtra("Yreveal", revealY);
-                                                ActivityCompat.startActivity(AssessmentTestActivity.this, intent, options.toBundle());
+                                                test_completion_status=true;
+                                                stopTest(test_completion_status);
 
                                             }
                                         })
@@ -550,15 +561,8 @@ public class AssessmentTestActivity extends AppCompatActivity implements Adapter
                                         btn_next.setText("Next");
                                     }
                                 });
-                            } else {
-                                qAdapter.setData(index);
-                                pos = pos + 1;
-//                                Log.e("ValuesElse--->", "" + pos + "," + index);
-                                buffer = attempt.getJSONArray("Sections").getJSONObject(pos).getJSONArray("Questions");
-                                sections.setSelection(pos);
-                                setScrollbar(pos);
-                                scrollAdapter.updateList(listOfLists.get(pos));
                             }
+
                         }
                     }
 
@@ -593,15 +597,36 @@ public class AssessmentTestActivity extends AppCompatActivity implements Adapter
                             index--;
                         }
                         flag = true;
-                        setQuestion(pos, index, edit);
+
                     } else if (index == 0 && pos > 0) {
+
+                        if (opAdapter.getSelectedItem() > -1) {
+                            if (listOfLists.get(pos).get(index).getQ_check().equalsIgnoreCase(confirmed)) {
+                                Log.e("if condition", listOfLists.get(pos).get(index).getQ_check());
+                                setQBackground(pos, index);
+                                writeOption(opAdapter.getSelectedItem());
+                                index--;
+                            } else {
+                                btn_mark.callOnClick();
+                                index--;
+                            }
+                        } else {
+                            Log.e("else condition", "reached");
+                            setQBackground(pos, index);
+                            writeOption(opAdapter.getSelectedItem());
+                            index--;
+                        }
+
                         pos = pos - 1;
-                        index = attempt.getJSONArray("Sections").getJSONObject(pos).getJSONArray("Questions").length() - 1;
+                        index = attempt.getJSONArray("Sections").getJSONObject(pos).getJSONArray("Questions").length()-1;
                         flag = false;
                         sections.setSelection(pos);
                         scrollAdapter.updateList(listOfLists.get(pos));
-                        setScrollbar(pos);
+                        //setScrollbar(pos);
+                        Log.e("POS", "" + pos + "," + index);
+
                     }
+                    setQuestion(pos, index, edit);
                     checkRadio();
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -636,7 +661,7 @@ public class AssessmentTestActivity extends AppCompatActivity implements Adapter
             }
         }));
 
-        new CountDownTimer(millisStart, 1000) {
+        coundown_timer= new CountDownTimer(millisStart, 1000) {
 
             public void onTick(long millisUntilFinished) {
                 String text = String.format(Locale.getDefault(), "%02d:%02d:%02d",
@@ -648,49 +673,10 @@ public class AssessmentTestActivity extends AppCompatActivity implements Adapter
             }
 
             public void onFinish() {
-                timer.setText("Time Up!");
+                //timer.setText("Time Up!");
+                test_completion_status=true;
+                stopTest(test_completion_status);
 
-                try {
-                    long value = dataObj.UpdateAssessment(attempt.getString("atu_ID"),instanceId,enrollid,"",courseid,subjectId,paperid,2,"", 0.0,dataObj.getAssessmentQuestionAttempted(testid,instanceId,studentId),dataObj.getAssessmentQuestionSkipped(testid,instanceId,studentId),dataObj.getAssessmentQuestionBookmarked(testid,instanceId,studentId),dataObj.getAssessmentQuestionNotAttempted(testid,instanceId,studentId), 0.0, millisRemaining, index, pos);
-                    Log.e("Update",""+instanceId);
-                    if (value <= 0) {
-                        Log.e("PaperId: ","pid  "+paperid);
-                        long ret = dataObj.InsertAssessment(attempt.getString("atu_ID"),instanceId,enrollid,studentId,courseid,subjectId,paperid,2,null, 0.0,dataObj.getAssessmentQuestionAttempted(testid,instanceId,studentId),dataObj.getAssessmentQuestionSkipped(testid,instanceId,studentId),dataObj.getAssessmentQuestionBookmarked(testid,instanceId,studentId),dataObj.getAssessmentQuestionNotAttempted(testid,instanceId,studentId), 0.0, millisRemaining, index, pos);
-                        Log.e("Insertion",""+instanceId);
-                    }
-                    SaveJSONdataToFile.objectToFile(URLClass.mainpath + path + testid + ".json", attempt.toString());
-//                                                    syncAssesmentTestData();
-                } catch (JSONException|IOException e) {
-                    e.printStackTrace();
-                }
-
-                ActivityOptionsCompat options = ActivityOptionsCompat.
-                        makeSceneTransitionAnimation(AssessmentTestActivity.this, finish_view, "transition");
-                int revealX = (int) (finish_view.getX() + finish_view.getWidth() / 2);
-                int revealY = (int) (finish_view.getY() + finish_view.getHeight() / 2);
-                finish();
-                count = dataObj.getAttempCount(studentId);
-
-                stopRepeatingTask();       //stop the baground task for uploading assessment data to server
-
-                Intent intent = new Intent(AssessmentTestActivity.this, ScoreActivity.class);
-                bundle = new Bundle();
-//                                                bundle.putString("JSON", attempt.toString());
-//                                                Log.e("testAssessment",attempt.toString());
-                bundle.putString("enrollid",enrollid);
-                bundle.putString("courseid", courseid);
-                bundle.putString("subjectid", subjectId);
-                bundle.putString("paperid",paperid);
-                bundle.putString("Type","ASSESSMENT");
-                intent.putExtra("BUNDLE", bundle);
-                intent.putExtra("testid",testid);
-                intent.putExtra("instanceid", instanceId);
-                intent.putExtra("JSON", attempt.toString());
-                intent.putExtra("studentid", studentId);
-                intent.putExtra("Xreveal", revealX);
-                intent.putExtra("Yreveal", revealY);
-                ActivityCompat.startActivity(AssessmentTestActivity.this, intent, options.toBundle());
-//                timer.setVisibility(View.INVISIBLE);
             }
         }.start();
 
@@ -699,8 +685,64 @@ public class AssessmentTestActivity extends AppCompatActivity implements Adapter
 
     }
 
+    //stop the test using test_completion_status=true flag
+    public  void stopTest(boolean test_completion_status){
+
+        if(test_completion_status) {
+            try {
+                long value = dataObj.UpdateAssessment(attempt.getString("atu_ID"), instanceId, enrollid, "", courseid, subjectId, paperid, 2, "", 0.0, dataObj.getAssessmentQuestionAttempted(testid, instanceId, studentId), dataObj.getAssessmentQuestionSkipped(testid, instanceId, studentId), dataObj.getAssessmentQuestionBookmarked(testid, instanceId, studentId), dataObj.getAssessmentQuestionNotAttempted(testid, instanceId, studentId), 0.0, millisRemaining, index, pos);
+                Log.e("Update", "" + instanceId);
+                if (value <= 0) {
+                    Log.e("PaperId: ", "pid  " + paperid);
+                    long ret = dataObj.InsertAssessment(attempt.getString("atu_ID"), instanceId, enrollid, studentId, courseid, subjectId, paperid, 2, null, 0.0, dataObj.getAssessmentQuestionAttempted(testid, instanceId, studentId), dataObj.getAssessmentQuestionSkipped(testid, instanceId, studentId), dataObj.getAssessmentQuestionBookmarked(testid, instanceId, studentId), dataObj.getAssessmentQuestionNotAttempted(testid, instanceId, studentId), 0.0, millisRemaining, index, pos);
+                    Log.e("Insertion", "" + instanceId);
+                }
+                SaveJSONdataToFile.objectToFile(URLClass.mainpath + path + testid + ".json", attempt.toString());
+//                                                    syncAssesmentTestData();
+            } catch (JSONException | IOException e) {
+                e.printStackTrace();
+            }
+
+            ActivityOptionsCompat options = ActivityOptionsCompat.
+                    makeSceneTransitionAnimation(AssessmentTestActivity.this, finish_view, "transition");
+            int revealX = (int) (finish_view.getX() + finish_view.getWidth() / 2);
+            int revealY = (int) (finish_view.getY() + finish_view.getHeight() / 2);
+            finish();
+            count = dataObj.getAttempCount(studentId);
+
+            try {
+                syncAssesmentTestData();
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+
+            coundown_timer.cancel();
+            stopRepeatingTask();       //stop the baground task for uploading assessment data to server
+            AssessmentTestActivity.this.finish();
+            Intent intent = new Intent(AssessmentTestActivity.this, ScoreActivity.class);
+            bundle = new Bundle();
+
+//                                                bundle.putString("JSON", attempt.toString());
+//                                                Log.e("testAssessment",attempt.toString());
+            bundle.putString("enrollid",enrollid);
+            bundle.putString("courseid", courseid);
+            bundle.putString("subjectid", subjectId);
+            bundle.putString("paperid",paperid);
+            bundle.putString("Type","ASSESSMENT");
+            intent.putExtra("BUNDLE", bundle);
+            intent.putExtra("testid",testid);
+            intent.putExtra("instanceid", instanceId);
+            intent.putExtra("JSON", attempt.toString());
+            intent.putExtra("studentid", studentId);
+            intent.putExtra("Xreveal", revealX);
+            intent.putExtra("Yreveal", revealY);
+            ActivityCompat.startActivity(AssessmentTestActivity.this, intent, options.toBundle());
+        }
+//                timer.setVisibility(View.INVISIBLE);
+    }
+
     public void newTest() throws JSONException {
-        millisStart = 3600000;
+        millisStart = Integer.parseInt(satu_Test_Time)*60000;
         attemptsectionarray = new JSONArray();
         max = 1;
          attempt = new JSONObject(getIntent().getStringExtra("JSON"));
@@ -760,6 +802,7 @@ public class AssessmentTestActivity extends AppCompatActivity implements Adapter
     public void setQBackground(int pos, int index) {
 
         if (opAdapter.getSelectedItem() == -1) {
+
                 listOfLists.get(pos).get(index).setQ_status(skipped);
                 listOfLists.get(pos).get(index).setQ_check(not_confirmed);
 
@@ -768,6 +811,8 @@ public class AssessmentTestActivity extends AppCompatActivity implements Adapter
                 Log.e("status", listOfLists.get(pos).get(index).getQ_status());
                 listOfLists.get(pos).get(index).setQ_status(attempted);
                 listOfLists.get(pos).get(index).setQ_check(confirmed);
+            }else{
+                listOfLists.get(pos).get(index).setQ_status(bookmarked);
             }
         }
         qAdapter.updateList(listOfLists.get(pos));
@@ -865,7 +910,7 @@ public class AssessmentTestActivity extends AppCompatActivity implements Adapter
 //            Log.e("writeOption--->",""+Id);
 //            Seq = buffer.getJSONObject(index).getString("qbm_SequenceID");
             questionobj = buffer.getJSONObject(index);
-            scrollAdapter.updateList(listOfLists.get(pos));
+//            scrollAdapter.updateList(listOfLists.get(pos));
 
             double qbm_marks=Double.parseDouble(questionobj.getString("qbm_marks"));
             double qbm_negative_mrk=Double.valueOf(questionobj.getString("qbm_negative_mrk"));
@@ -882,25 +927,32 @@ public class AssessmentTestActivity extends AppCompatActivity implements Adapter
                 }
             }
 
-            int sel_seq=Integer.parseInt(opAdapter.getSelectedSequence());
 
-            if(sel_seq==(correct_option_seq-1))
-            {
-                obtained_marks=qbm_marks;
-                neg_marks=0.0;
-            }
 
 
             String atu_ID=attempt.getString("atu_ID");
             String q_status=listOfLists.get(pos).get(index).getQ_status();
 
-            Log.e("writeOption","obtained_marks:"+obtained_marks);
-            Log.e("writeOption","neg_marks:"+neg_marks);
+
 
             Log.e("condition",""+dataObj.AssessmentCheckQuestion(Id));
             if (dataObj.AssessmentCheckQuestion(Id)) {
 
                 if (indx > -1) {
+
+                    int sel_seq=Integer.parseInt(opAdapter.getSelectedSequence());
+
+                    if(sel_seq==(correct_option_seq))
+                    {
+                        obtained_marks=qbm_marks;
+                        neg_marks=0.0;
+                    }else{
+                        obtained_marks=0.0;
+                        neg_marks=qbm_negative_mrk;
+                    }
+                    Log.e("writeOption","obtained_marks:"+obtained_marks);
+                    Log.e("writeOption","neg_marks:"+neg_marks);
+
                     result = dataObj.UpdateAssessmentQuestion(atu_ID,instanceId,studentId, Id,orgid,branchid,batchid, obtained_marks, neg_marks, indx, q_status,"NotUploaded",sel_seq);
                 } /*else {
                     //if question is attempted and then the option is cleared store as skipped
@@ -1070,42 +1122,8 @@ public class AssessmentTestActivity extends AppCompatActivity implements Adapter
                             // do something when the button is clicked
                             public void onClick(DialogInterface arg0, int arg1) {
 //                                            q_list.clear();
-                                try {
-                                    long value = dataObj.UpdateAssessment( attempt.getString("atu_ID"),instanceId,enrollid,"",courseid,subjectId,paperid, 2,null,0.0, dataObj.getAssessmentQuestionAttempted(testid,instanceId,studentId), dataObj.getAssessmentQuestionSkipped(testid,instanceId,studentId), dataObj.getAssessmentQuestionBookmarked(testid,instanceId,studentId), dataObj.getAssessmentQuestionNotAttempted(testid,instanceId,studentId),0.0 , 0, 0, 0);
-                                    Log.e("Update",""+instanceId);
-//                                     = dataObj.UpdateAssessmentTest(attempt.getString("atu_ID"),testid,courseid,dataObj.getAssessmentQuestionCount(),2, 0,dataObj.getQuestionAttempted(),dataObj.getQuestionSkipped(),dataObj.getQuestionBookmarked(),dataObj.getQuestionNotAttempted(), 0, millisRemaining, index, pos);
-                                    if (value <= 0) {
-                                        Log.e("PaperId: ","pid  "+paperid);
-                                        long ret = dataObj.InsertAssessment(attempt.getString("atu_ID"),instanceId,enrollid,"",courseid,subjectId,paperid,2,"", 0,dataObj.getAssessmentQuestionAttempted(testid,instanceId,studentId),dataObj.getAssessmentQuestionSkipped(testid,instanceId,studentId),dataObj.getAssessmentQuestionBookmarked(testid,instanceId,studentId),dataObj.getAssessmentQuestionNotAttempted(testid,instanceId,studentId), 0, millisRemaining, index, pos);
-                                        Log.e("Insertion",""+instanceId);
-                                    }
-                                    SaveJSONdataToFile.objectToFile(URLClass.mainpath + path + testid + ".json", attempt.toString());
-                                ActivityOptionsCompat options = ActivityOptionsCompat.
-                                        makeSceneTransitionAnimation(AssessmentTestActivity.this, finish_view, "transition");
-                                int revealX = (int) (finish_view.getX() + finish_view.getWidth() / 2);
-                                int revealY = (int) (finish_view.getY() + finish_view.getHeight() / 2);
-
-                                stopRepeatingTask();       //stop the baground task for uploading assessment data to server
-
-                                Intent intent = new Intent(AssessmentTestActivity.this, ScoreActivity.class);
-                                bundle = new Bundle();
-                                bundle.putString("enrollid",enrollid);
-                                bundle.putString("courseid", courseid);
-                                bundle.putString("subjectid", subjectId);
-                                bundle.putString("paperid",paperid);
-                                bundle.putString("Type","ASSESSMENT");
-                                intent.putExtra("BUNDLE", bundle);
-                                intent.putExtra("testid",testid);
-                                intent.putExtra("instanceid", instanceId);
-                                intent.putExtra("JSON", attempt.toString());
-                                intent.putExtra("studentid", studentId);
-                                intent.putExtra("Xreveal", revealX);
-                                intent.putExtra("Yreveal", revealY);
-                                finish();
-                                ActivityCompat.startActivity(AssessmentTestActivity.this, intent, options.toBundle());
-                                } catch (JSONException|IOException|IllegalArgumentException e) {
-                                    e.printStackTrace();
-                                }
+                                test_completion_status=true;
+                                stopTest(test_completion_status);
                             }
                         })
                         .setNegativeButton("No", new DialogInterface.OnClickListener() {
@@ -1268,7 +1286,17 @@ public class AssessmentTestActivity extends AppCompatActivity implements Adapter
             rv_option.setAdapter(opAdapter);
             opAdapter.setOptionsEditable(edit);
             runLayoutAnimation(rv_option);
-//        opAdapter.notifyDataSetChanged();
+            opAdapter.notifyDataSetChanged();
+            buffer = attempt.getJSONArray("Sections").getJSONObject(pos).getJSONArray("Questions");
+            Id = buffer.getJSONObject(index).getString("qbm_ID");
+            Log.e("SelectedOption",""+ dataObj.getAssessmentPosition(Id,testid));
+            if (dataObj.getAssessmentPosition(Id,testid) > -1) {
+
+                opAdapter.setOptionsList(dataObj.getAssessmentPosition(Id,testid));
+                rv_option.setItemAnimator(null);
+                opAdapter.notifyDataSetChanged();
+            }
+
         } catch (NullPointerException e) {
             e.printStackTrace();
         }
@@ -1382,6 +1410,7 @@ public class AssessmentTestActivity extends AppCompatActivity implements Adapter
 
                     // do something when the button is clicked
                     public void onClick(DialogInterface arg0, int arg1) {
+
                         try {
                             long value = dataObj.UpdateAssessment(attempt.getString("atu_ID"),instanceId,enrollid,studentId,courseid,subjectId,paperid,1,"", 0.0,dataObj.getAssessmentQuestionAttempted(testid,instanceId,studentId),dataObj.getAssessmentQuestionSkipped(testid,instanceId,studentId),dataObj.getAssessmentQuestionBookmarked(testid,instanceId,studentId),dataObj.getAssessmentQuestionNotAttempted(testid,instanceId,studentId), 0.0, millisRemaining, index, pos);
                             Log.e("Update",""+instanceId);
@@ -1392,8 +1421,9 @@ public class AssessmentTestActivity extends AppCompatActivity implements Adapter
                         }
 
                         stopRepeatingTask();       //stop the baground task for uploading assessment data to server
+                        coundown_timer.cancel();
 
-                        finish();
+                        AssessmentTestActivity.this.finish();
                         Intent intent = new Intent(AssessmentTestActivity.this, ListofAssessmentTests.class);
                         intent.putExtra("enrollid",enrollid);
                         intent.putExtra("courseid", courseid);
@@ -1661,19 +1691,20 @@ public class AssessmentTestActivity extends AppCompatActivity implements Adapter
                         try{
                             JSONArray ja_assessmentKeys;
                             JSONObject assessmentObj;
-                            Log.e("syncAssesmentTestData"," comes :  "+json);
+                            Log.e("syncAssesmentTest11"," comes :  "+json);
 
                             JSONObject mainObj=new JSONObject(json);
 
                             Object obj1=mainObj.get("assessmentIds");
-
+                            Object obj2=mainObj.get("Question_Negative_Applied");
+                            Log.e("syncAssesmentTest11"," Question_Negative_Applied :  "+obj2.toString());
                             if (obj1 instanceof JSONArray)
                             {
                                 ja_assessmentKeys=mainObj.getJSONArray("assessmentIds");
                                 if(ja_assessmentKeys!=null && ja_assessmentKeys.length()>0){
                                     int p=0,q=0;
                                     serv_count=ja_assessmentKeys.length();
-                                    Log.e("syncAssesmentTestData","updated_assesstestQ_rec:--"+ja_assessmentKeys.length());
+                                    Log.e("syncAssesmentTest11","updated_assesstestQ_rec:--"+ja_assessmentKeys.length());
                                     for(int i=0;i<ja_assessmentKeys.length();i++){
                                         assessmentObj=ja_assessmentKeys.getJSONObject(i);
 //                                        int loc_upldflag=myhelper.checkAQUPLDStatus(studentid,assessmentObj.getString("assessmentKey"),"NotUploaded");
@@ -1689,19 +1720,19 @@ public class AssessmentTestActivity extends AppCompatActivity implements Adapter
                                             q++;
                                         }
                                     }
-                                    Log.e("syncAssesmentTestData","AQUpdated:--"+p);
+                                    Log.e("syncAssesmentTest11","AQUpdated:--"+p);
                                     if(loc_count==serv_count){
                                         Toast.makeText(getApplicationContext(),"Syncronised",Toast.LENGTH_SHORT).show();
                                     }else {
                                         Toast.makeText(getApplicationContext(),"Sync Failed,Try Again Later",Toast.LENGTH_SHORT).show();
                                     }
                                 }else{
-                                    Log.e("syncAssesmentTestData","Null Assessment Ques Json Array: ");
+                                    Log.e("syncAssesmentTest11","Null Assessment Ques Json Array: ");
                                 }
 
                             }
                             else {
-                                Log.e("syncAssesmentTestData","No Assessment Ques Uploaded: ");
+                                Log.e("syncAssesmentTest11","No Assessment Ques Uploaded: ");
                             }
 
                         }catch (Exception e){

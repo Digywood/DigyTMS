@@ -18,7 +18,7 @@ public class DBHelper extends SQLiteOpenHelper {
 
     Context context;
     SQLiteDatabase db;
-    private static final int DATABASE_VERSION =1;
+    private static final int DATABASE_VERSION =2;
 
     public DBHelper(Context c)
     {
@@ -156,6 +156,8 @@ public class DBHelper extends SQLiteOpenHelper {
                 "  `sptu_upld_dttm` text DEFAULT NULL,\n" +
                 "  `sptu_no_of_questions` integer(5) DEFAULT NULL,\n" +
                 "  `sptu_tot_marks` double DEFAULT NULL,\n" +
+                "  `sptu_Test_Time` text DEFAULT NULL,\n" +
+                "  `sptu_Test_Type` text DEFAULT NULL,\n" +
                 "  `stpu_min_marks` double DEFAULT NULL,\n" +
                 "  `sptu_max_marks` double DEFAULT NULL,\n" +
                 "  `sptu_avg_marks` double DEFAULT NULL,\n" +
@@ -202,6 +204,8 @@ public class DBHelper extends SQLiteOpenHelper {
                 "  `satu_file` text DEFAULT NULL,\n" +
                 "  `satu_exam_key` text DEFAULT NULL,\n" +
                 "  `satu_tot_marks` double DEFAULT NULL,\n" +
+                "  `satu_Test_Time` text DEFAULT NULL,\n" +
+                "  `satu_Test_Type` text DEFAULT NULL,\n" +
                 "  `satu_min_marks` double DEFAULT NULL,\n" +
                 "  `satu_max_marks` double DEFAULT NULL,\n" +
                 "  `satu_avg_marks` double DEFAULT NULL,\n" +
@@ -451,6 +455,10 @@ public class DBHelper extends SQLiteOpenHelper {
         switch (oldVersion)
         {
             case 1:
+                db.execSQL("ALTER TABLE sptu_student ADD COLUMN sptu_Test_Time text;");
+                db.execSQL("ALTER TABLE sptu_student ADD COLUMN sptu_Test_Type text;");
+                db.execSQL("ALTER TABLE satu_student ADD COLUMN satu_Test_Time text;");
+                db.execSQL("ALTER TABLE satu_student ADD COLUMN satu_Test_Type text;");
                 // upgrade logic from version 1 to 2
                 break;
             default:
@@ -593,7 +601,7 @@ public class DBHelper extends SQLiteOpenHelper {
         return serverid;
     }
 
-    public long insertAssessmentTest(int tkey,String torgid,String branchid,String tinstanceid,String tenrollid,String tstudentid,String tbatch,String tid,String tname,String tpid,String tsid,String tcid,String tstartdate,String tenddate,String tdwdstatus,int tnoofques,String testfilename,String testKey,Double ttotalmarks,Double tminmarks,Double tmaxmarks){
+    public long insertAssessmentTest(int tkey,String torgid,String branchid,String tinstanceid,String tenrollid,String tstudentid,String tbatch,String tid,String tname,String tpid,String tsid,String tcid,String tstartdate,String tenddate,String tdwdstatus,int tnoofques,String testfilename,String testKey,Double ttotalmarks,Double tminmarks,Double tmaxmarks,String satu_Test_Time,String satu_Test_Type){
         long insertFlag=0;
         ContentValues cv = new ContentValues();
         cv.put("satu_key",tkey);
@@ -617,11 +625,13 @@ public class DBHelper extends SQLiteOpenHelper {
         cv.put("satu_tot_marks",ttotalmarks);
         cv.put("satu_min_marks",tminmarks);
         cv.put("satu_max_marks",tmaxmarks);
+        cv.put("satu_Test_Time",satu_Test_Time);
+        cv.put("satu_Test_Type",satu_Test_Type);
         insertFlag = db.insert("satu_student",null, cv);
         return insertFlag;
     }
 
-    public long updateAssessmentTest(String torgid,String branchid,String tinstanceid,String tenrollid,String tstudentid,String tbatch,String tid,String tname,String tpid,String tsid,String tcid,String tstartdate,String tenddate,String tdwdstatus,int tnoofques,String testfilename,String testKey,Double ttotalmarks,Double tminmarks,Double tmaxmarks){
+    public long updateAssessmentTest(String torgid,String branchid,String tinstanceid,String tenrollid,String tstudentid,String tbatch,String tid,String tname,String tpid,String tsid,String tcid,String tstartdate,String tenddate,String tdwdstatus,int tnoofques,String testfilename,String testKey,Double ttotalmarks,Double tminmarks,Double tmaxmarks,String satu_Test_Time,String satu_Test_Type){
         long updateFlag=0;
         ContentValues cv = new ContentValues();
         cv.put("satu_org_id",torgid);
@@ -640,6 +650,8 @@ public class DBHelper extends SQLiteOpenHelper {
         cv.put("satu_tot_marks",ttotalmarks);
         cv.put("satu_min_marks",tminmarks);
         cv.put("satu_max_marks",tmaxmarks);
+        cv.put("satu_Test_Time",satu_Test_Time);
+        cv.put("satu_Test_Type",satu_Test_Type);
         updateFlag=db.update("satu_student", cv, "satu_student_id='"+tstudentid+"' and satu_entroll_id='"+tenrollid+"' and satu_ID='"+tid+"' and satu_instace_id='"+tinstanceid+"'",null);
         return updateFlag;
     }
@@ -1098,7 +1110,7 @@ public class DBHelper extends SQLiteOpenHelper {
     }
 
 
-    public long insertPractiseTest(int tkey,String torgid,String tenrollid,String tstudentid,String tbatch,String tid,String testname,String tpid,String tsid,String tcid,String tstartdate,String tenddate,String tdwdstartdttm,String tdwdenddttm,String tdwdstatus,String tstatus,int tnoofques,double tptotalmarks,double tpminmarks,double tpmaxmarks,double tpavgmarks,double tpminpercent,double tpmaxpercent,double tpavgpercent,double tplastmarks,double tplastpercent,String tplaststartdttm,String tplastenddttm,int pnoofattempts,int fnoofattempts,double fminscore,double fmaxscore,double favgscore,String flastdttm,double flastscore,String createby,String cdttm,String modifiedby,String mdttm){
+    public long insertPractiseTest(int tkey,String torgid,String tenrollid,String tstudentid,String tbatch,String tid,String testname,String tpid,String tsid,String tcid,String tstartdate,String tenddate,String tdwdstartdttm,String tdwdenddttm,String tdwdstatus,String tstatus,int tnoofques,double tptotalmarks,double tpminmarks,double tpmaxmarks,double tpavgmarks,double tpminpercent,double tpmaxpercent,double tpavgpercent,double tplastmarks,double tplastpercent,String tplaststartdttm,String tplastenddttm,int pnoofattempts,int fnoofattempts,double fminscore,double fmaxscore,double favgscore,String flastdttm,double flastscore,String createby,String cdttm,String modifiedby,String mdttm,String sptu_Test_Time,String sptu_Test_Type){
         long insertFlag=0;
         ContentValues cv = new ContentValues();
         cv.put("sptu_key",tkey);
@@ -1140,6 +1152,8 @@ public class DBHelper extends SQLiteOpenHelper {
         cv.put("sptu_created_dttm",cdttm);
         cv.put("sptu_mod_by",modifiedby);
         cv.put("sptu_mod_dttm",mdttm);
+        cv.put("sptu_Test_Time",sptu_Test_Time);
+        cv.put("sptu_Test_Type",sptu_Test_Type);
         insertFlag = db.insert("sptu_student",null, cv);
         return insertFlag;
     }
@@ -1168,7 +1182,7 @@ public class DBHelper extends SQLiteOpenHelper {
         return  c;
     }
 
-    public long updatePractiseTestData(String torgid,String tenrollid,String tstudentid,String tbatch,String tid,String testname,String tpid,String tsid,String tcid,String tstartdate,String tenddate,String tdwdstartdttm,String tdwdenddttm,String tdwdstatus,String tstatus,int tnoofques,double tptotalmarks,double tpminmarks,double tpmaxmarks,double tpavgmarks,double tpminpercent,double tpmaxpercent,double tpavgpercent,double tplastmarks,double tplastpercent,String tplaststartdttm,String tplastenddttm,int pnoofattempts,int fnoofattempts,double fminscore,double fmaxscore,double favgscore,String flastdttm,double flastscore,String createby,String cdttm,String modifiedby,String mdttm){
+    public long updatePractiseTestData(String torgid,String tenrollid,String tstudentid,String tbatch,String tid,String testname,String tpid,String tsid,String tcid,String tstartdate,String tenddate,String tdwdstartdttm,String tdwdenddttm,String tdwdstatus,String tstatus,int tnoofques,double tptotalmarks,double tpminmarks,double tpmaxmarks,double tpavgmarks,double tpminpercent,double tpmaxpercent,double tpavgpercent,double tplastmarks,double tplastpercent,String tplaststartdttm,String tplastenddttm,int pnoofattempts,int fnoofattempts,double fminscore,double fmaxscore,double favgscore,String flastdttm,double flastscore,String createby,String cdttm,String modifiedby,String mdttm,String sptu_Test_Time,String sptu_Test_Type){
         long updateFlag=0;
         ContentValues cv = new ContentValues();
         cv.put("sptu_org_id",torgid);
@@ -1202,6 +1216,8 @@ public class DBHelper extends SQLiteOpenHelper {
         cv.put("sptu_created_dttm",cdttm);
         cv.put("sptu_mod_by",modifiedby);
         cv.put("sptu_mod_dttm",mdttm);
+        cv.put("sptu_Test_Time",sptu_Test_Time);
+        cv.put("sptu_Test_Type",sptu_Test_Type);
         updateFlag = db.update("sptu_student", cv,"sptu_ID='"+tid+"' and sptu_entroll_id='"+tenrollid+"' and sptu_student_ID='"+tstudentid+"'",null);
         return updateFlag;
     }
@@ -1281,12 +1297,12 @@ public class DBHelper extends SQLiteOpenHelper {
     }
 
     public Cursor checkPractiseTest(String studentId,String testId){
-        Cursor c =db.query("sptu_student", new String[] {"sptu_entroll_id,sptu_student_ID,sptu_ID,sptu_paper_ID,sptu_subjet_ID,sptu_course_id,sptu_dwnld_status"},"sptu_student_ID='"+studentId+"' and sptu_ID='"+testId+"'", null, null, null,null);
+        Cursor c =db.query("sptu_student", new String[] {"sptu_entroll_id,sptu_student_ID,sptu_ID,sptu_paper_ID,sptu_subjet_ID,sptu_course_id,sptu_dwnld_status,sptu_Test_Time,sptu_Test_Type"},"sptu_student_ID='"+studentId+"' and sptu_ID='"+testId+"'", null, null, null,null);
         return c;
     }
 
     public Cursor checkAssessmentTest(String studentId,String enrollId,String testId,String instanceId){
-        Cursor c =db.query("satu_student", new String[] {"satu_entroll_id,satu_student_id,satu_course_id,satu_paper_ID,satu_subjet_ID"},"satu_student_id='"+studentId+"' and satu_entroll_id='"+enrollId+"' and satu_ID='"+testId+"' and satu_instace_id='"+instanceId+"'", null, null, null,null);
+        Cursor c =db.query("satu_student", new String[] {"satu_entroll_id,satu_student_id,satu_course_id,satu_paper_ID,satu_subjet_ID,satu_Test_Time,satu_Test_Type"},"satu_student_id='"+studentId+"' and satu_entroll_id='"+enrollId+"' and satu_ID='"+testId+"' and satu_instace_id='"+instanceId+"'", null, null, null,null);
         return c;
     }
 
@@ -1365,7 +1381,7 @@ public class DBHelper extends SQLiteOpenHelper {
 
     public Cursor getSingleAssessmentTests(String studentId,String enrollId,String testId){
         Log.e("DBHelper","studentId"+studentId+"; enrollId"+enrollId+"; testId"+testId);
-        Cursor c =db.query("satu_student", new String[] {"satu_entroll_id,satu_student_id,satu_ID,satu_paper_ID,satu_subjet_ID,satu_course_id,satu_dwnld_status"},"satu_student_id='"+studentId+"' and satu_entroll_id='"+enrollId+"' and satu_ID='"+testId+"'", null, null, null,null);
+        Cursor c =db.query("satu_student", new String[] {"satu_entroll_id,satu_student_id,satu_ID,satu_paper_ID,satu_subjet_ID,satu_course_id,satu_dwnld_status,satu_Test_Time,satu_Test_Type"},"satu_student_id='"+studentId+"' and satu_entroll_id='"+enrollId+"' and satu_ID='"+testId+"'", null, null, null,null);
         return c;
     }
 
@@ -1620,9 +1636,16 @@ public class DBHelper extends SQLiteOpenHelper {
         cv.put("Question_Option_Sequence",oSeq );
         cv.put("Option_Answer_Flag",flag );
 
-        Log.e("DB_Insert:",status);
+        //Log.e("DB_Insert:",status);
+        Log.e("InsertQuestion:","Question_Seq_No:"+qSeq+"," +
+                "Question_Section:"+qSec+",Question_Category"+cat+"," +
+                "Question_SubCategory:"+subcat+",Question_Max_Marks:"+maxMarks+
+                ",Question_Negative_Marks:"+negMarks+",Question_Marks_Obtained:"+marksObtained+
+                ",Question_Negative_Applied:"+negApplied+",Question_Option:"+option+
+                ",Question_Status:"+status+",Question_Option_Sequence:"+oSeq+",Option_Answer_Flag:"+flag+
+                "Question_ID='"+qId+"' and Attempt_ID='"+attemptId+"' and Test_ID='"+testId+"' and Student_ID='"+stuId+"'");
         insertFlag = db.insert("attempt_data",null, cv);
-
+        Log.e("DB_Insert","insertFlag:"+insertFlag);
         return insertFlag;
     }
 
@@ -1647,8 +1670,15 @@ public class DBHelper extends SQLiteOpenHelper {
         cv.put("Question_Status",status );
         cv.put("Question_Option_Sequence",oSeq );
         cv.put("Option_Answer_Flag",flag );
-        Log.e("DB_Update:",status);
-        updateFlag = db.update("attempt_data",cv,"Question_ID='"+qId+"' and Attempt_ID='"+attemptId+"' and Test_ID='"+testId+"' and Student_ID='"+stuId+"'",null);
+        Log.e("UpdateQuestion:","Question_Seq_No:"+qSeq+"," +
+                "Question_Section:"+qSec+",Question_Category"+cat+"," +
+                "Question_SubCategory:"+subcat+",Question_Max_Marks:"+maxMarks+
+                ",Question_Negative_Marks:"+negMarks+",Question_Marks_Obtained:"+marksObtained+
+                ",Question_Negative_Applied:"+negApplied+",Question_Option:"+option+
+                ",Question_Status:"+status+",Question_Option_Sequence:"+oSeq+",Option_Answer_Flag:"+flag+
+                "Question_ID='"+qId+"' and Attempt_ID='"+attemptId+"' and Test_ID='"+testId+"' and Student_ID='"+stuId+"'");
+        //updateFlag = db.update("attempt_data",cv,"Question_ID='"+qId+"' and Attempt_ID='"+attemptId+"' and Test_ID='"+testId+"' and Student_ID='"+stuId+"'",null);
+        updateFlag = db.update("attempt_data",cv,"Question_ID='"+qId+"'  and Test_ID='"+testId+"' and Student_ID='"+stuId+"'",null);
 
         return updateFlag;
     }
@@ -1982,7 +2012,7 @@ public class DBHelper extends SQLiteOpenHelper {
 
     public int getTestQuestionSkipped(String testId){
         int count=0;
-        String query ="SELECT  Question_Status FROM "+" attempt_data"+" WHERE Question_Status = 'SKIPPED' and Test_ID ='"+testId+"'";
+        String query ="SELECT  Question_Status FROM "+" attempt_data"+" WHERE Question_Status = 'NOT_ATTEMPTED' and Test_ID ='"+testId+"'";
         Cursor c = db.rawQuery(query, null);
         count=c.getCount();
         return count;
@@ -2487,7 +2517,7 @@ public class DBHelper extends SQLiteOpenHelper {
     public int getAssessmentCorrectOptionsCount(String testId, String instanceId, String studentId){
         int count = 0;
         //ArrayList<Integer> OptionList = new ArrayList<>();
-        String query ="SELECT  Question_Option FROM  assessment_data  WHERE Question_Marks_Obtained > 0 and Question_Status <> 'SKIPPED' and Test_ID='"+testId+"' and Assessment_Instance_ID='"+instanceId+"' and StudentId='"+studentId+"' ";
+        String query ="SELECT  Question_Option FROM  assessment_data  WHERE Question_Marks_Obtained > 0 and Question_Status <> 'NOT_ATTEMPTED' and Test_ID='"+testId+"' and Assessment_Instance_ID='"+instanceId+"' and StudentId='"+studentId+"' ";
         Cursor c=db.rawQuery(query,null);
         count = c.getCount();
         c.close();
@@ -2561,7 +2591,7 @@ public class DBHelper extends SQLiteOpenHelper {
 
     public int getAssessmentQuestionSkipped(String testId, String instanceId, String studentId){
         int count=0;
-        String query ="SELECT  Question_Status FROM "+" assessment_data"+" WHERE Question_Status = 'SKIPPED' and Test_ID='"+testId+"' and Assessment_Instance_ID='"+instanceId+"' and StudentId='"+studentId+"' ";
+        String query ="SELECT  Question_Status FROM "+" assessment_data"+" WHERE Question_Status = 'NOT_ATTEMPTED' and Test_ID='"+testId+"' and Assessment_Instance_ID='"+instanceId+"' and StudentId='"+studentId+"' ";
         Cursor c = db.rawQuery(query, null);
         count=c.getCount();
         return count;
@@ -2589,4 +2619,96 @@ public class DBHelper extends SQLiteOpenHelper {
     }
 
 
+    public double getTotalPositiveMarks(String testId, String instanceId, String studentId) {
+
+        double positivemarks = 0.0;
+        String query ="SELECT  SUM(Question_Marks_Obtained) as Question_Marks_Obtained FROM  assessment_data  WHERE Question_Marks_Obtained > 0 and Question_Status <> 'NOT_ATTEMPTED' and Test_ID='"+testId+"' and Assessment_Instance_ID='"+instanceId+"' and StudentId='"+studentId+"' ";
+        Cursor c=db.rawQuery(query,null);
+        if(c.getCount()!=0)
+        {
+            while (c.moveToNext()) {
+                positivemarks=  c.getDouble(c.getColumnIndex("Question_Marks_Obtained"));
+            }
+        }
+        c.close();
+
+        return positivemarks;
+    }
+
+    public double getPracticeTestTotalPositiveMarks(String testId) {
+
+        double positivemarks = 0.0;
+        String query ="SELECT  SUM(Question_Marks_Obtained) as Question_Marks_Obtained FROM  attempt_data  WHERE Question_Marks_Obtained > 0 and Question_Status <> 'NOT_ATTEMPTED' and Test_ID='"+testId+"'";
+        Cursor c=db.rawQuery(query,null);
+        if(c.getCount()!=0)
+        {
+            while (c.moveToNext()) {
+                positivemarks=  c.getDouble(c.getColumnIndex("Question_Marks_Obtained"));
+            }
+        }
+        c.close();
+
+        return positivemarks;
+    }
+
+
+    public Double getTotalNegativeMarks(String testId, String instanceId, String studentId) {
+        double negativemarks = 0.0;
+        String query ="SELECT  SUM(Question_Negative_Applied) as Question_Negative_Applied FROM  assessment_data  WHERE Question_Negative_Applied > 0 and Question_Status <> 'NOT_ATTEMPTED' and Test_ID='"+testId+"' and Assessment_Instance_ID='"+instanceId+"' and StudentId='"+studentId+"' ";
+        Cursor c=db.rawQuery(query,null);
+        if(c.getCount()!=0)
+        {
+            while (c.moveToNext()) {
+                negativemarks=  c.getDouble(c.getColumnIndex("Question_Negative_Applied"));
+            }
+        }
+        c.close();
+
+        return negativemarks;
+    }
+
+    public Double getPracticeTestTotalNegativeMarks(String testId) {
+        double negativemarks = 0.0;
+        String query ="SELECT  SUM(Question_Negative_Applied) as Question_Negative_Applied FROM  attempt_data  WHERE Question_Negative_Applied > 0 and Question_Status <> 'NOT_ATTEMPTED' and Test_ID='"+testId+"' ";
+        Cursor c=db.rawQuery(query,null);
+        if(c.getCount()!=0)
+        {
+            while (c.moveToNext()) {
+                negativemarks=  c.getDouble(c.getColumnIndex("Question_Negative_Applied"));
+            }
+        }
+        c.close();
+
+        return negativemarks;
+    }
+
+    public Double getTotalTestMarks(String testId, String instanceId, String studentId) {
+        double totalmarks = 0.0;
+        String query ="SELECT  SUM(Question_Max_Marks) as Question_Max_Marks FROM  assessment_data  WHERE  Test_ID='"+testId+"' and Assessment_Instance_ID='"+instanceId+"' and StudentId='"+studentId+"' ";
+        Cursor c=db.rawQuery(query,null);
+        if(c.getCount()!=0)
+        {
+            while (c.moveToNext()) {
+                totalmarks=  c.getDouble(c.getColumnIndex("Question_Max_Marks"));
+            }
+        }
+        c.close();
+
+        return totalmarks;
+    }
+
+    public Double getPracticeTestTotalTestMarks(String testId) {
+        double totalmarks = 0.0;
+        String query ="SELECT  SUM(Question_Max_Marks) as Question_Max_Marks FROM  attempt_data  WHERE  Test_ID='"+testId+"'  ";
+        Cursor c=db.rawQuery(query,null);
+        if(c.getCount()!=0)
+        {
+            while (c.moveToNext()) {
+                totalmarks=  c.getDouble(c.getColumnIndex("Question_Max_Marks"));
+            }
+        }
+        c.close();
+
+        return totalmarks;
+    }
 }

@@ -58,6 +58,10 @@ import com.digywood.tms.Pojo.SingleOptions;
 import com.digywood.tms.Pojo.SingleQuestion;
 import com.digywood.tms.Pojo.SingleQuestionList;
 import com.digywood.tms.Pojo.SingleSections;
+import com.google.android.gms.ads.AdListener;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
+import com.google.android.gms.ads.InterstitialAd;
 
 import static android.Manifest.permission.READ_EXTERNAL_STORAGE;
 import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
@@ -116,6 +120,11 @@ public class ReviewActivity extends AppCompatActivity implements
 
 
     private static final boolean AUTO_HIDE = true;
+
+    private AdView mAdView;
+    InterstitialAd mInterstitialAd;
+    AppEnvironment appEnvironment;
+    UserMode userMode;
 
     /**
      * If {@link #AUTO_HIDE} is set, the number of milliseconds to wait after
@@ -184,6 +193,9 @@ public class ReviewActivity extends AppCompatActivity implements
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_test);
+
+        appEnvironment = ((MyApplication) getApplication()).getAppEnvironment();//getting App Environment
+        userMode = ((MyApplication) getApplication()).getUserMode();//getting User Mode
 
         dataObj = new DBHelper(this);
         testObj = new PracticeTestActivity();
@@ -428,7 +440,7 @@ public class ReviewActivity extends AppCompatActivity implements
                         if (index < ja_questions.length() - 1) {
 //                            setQBackground(pos,index);
                             index++;
-                            setQuestion(pos, index, edit);
+                            //setQuestion(pos, index, edit);
                         } else if (index == ja_questions.length() - 1) {
                             //Change button once last question of test is reached
 //                            setQBackground(pos,index);
@@ -477,6 +489,10 @@ public class ReviewActivity extends AppCompatActivity implements
                                 scrollAdapter.updateList(listOfLists.get(pos));
                             }
                         }
+
+                        setQuestion(pos, index, edit);
+                        checkRadio();
+
                     }
 
                 } catch (JSONException e) {
@@ -494,7 +510,7 @@ public class ReviewActivity extends AppCompatActivity implements
                     if (index > 0) {
                         index--;
                         flag = true;
-                        setQuestion(pos, index, edit);
+                        //setQuestion(pos, index, edit);
                     } else if (index == 0 && pos > 0) {
                         pos = pos - 1;
                         index =attempt.getJSONArray("Sections").getJSONObject(pos).getJSONArray("Questions").length() - 1;
@@ -504,6 +520,9 @@ public class ReviewActivity extends AppCompatActivity implements
                         scrollAdapter.updateList(listOfLists.get(pos));
 
                     }
+
+                    setQuestion(pos, index, edit);
+                    checkRadio();
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -544,6 +563,87 @@ public class ReviewActivity extends AppCompatActivity implements
             }
         }
 
+        if(userMode.mode()) {
+            mAdView = (AdView) findViewById(R.id.adView);
+            //mAdView.setAdSize(AdSize.BANNER);
+            //mAdView.setAdUnitId(getString(R.string.banner_home_footer));
+
+            AdRequest adRequest = null;
+
+            if(appEnvironment==AppEnvironment.DEBUG) {
+                adRequest = new AdRequest.Builder()
+                        .addTestDevice(AdRequest.DEVICE_ID_EMULATOR)
+                        // Check the LogCat to get your test device ID
+                        .addTestDevice(getString(R.string.test_device1))
+                        .build();
+            }else {
+                adRequest = new AdRequest.Builder().build();
+            }
+            mAdView.loadAd(adRequest);
+
+            mAdView.setAdListener(new AdListener() {
+                @Override
+                public void onAdLoaded() {
+                }
+
+                @Override
+                public void onAdClosed() {
+                    Toast.makeText(getApplicationContext(), "Ad is closed!", Toast.LENGTH_SHORT).show();
+                }
+
+                @Override
+                public void onAdFailedToLoad(int errorCode) {
+                    Toast.makeText(getApplicationContext(), "Ad failed to load! error code: " + errorCode, Toast.LENGTH_SHORT).show();
+                }
+
+                @Override
+                public void onAdLeftApplication() {
+                    Toast.makeText(getApplicationContext(), "Ad left application!", Toast.LENGTH_SHORT).show();
+                }
+
+                @Override
+                public void onAdOpened() {
+                    super.onAdOpened();
+                }
+            });
+
+        }
+
+
+        /*if(userMode.mode()) {
+            mInterstitialAd = new InterstitialAd(this);
+
+            // set the ad unit ID
+            mInterstitialAd.setAdUnitId(getString(R.string.interstitial_full_screen));
+
+            AdRequest adRequest1 = null;
+
+            if(appEnvironment==AppEnvironment.DEBUG) {
+                adRequest1 = new AdRequest.Builder()
+                        .addTestDevice(AdRequest.DEVICE_ID_EMULATOR)
+                        // Check the LogCat to get your test device ID
+                        .addTestDevice(getString(R.string.test_device1))
+                        .build();
+            }else {
+                adRequest1 = new AdRequest.Builder().build();
+            }
+
+            // Load ads into Interstitial Ads
+            mInterstitialAd.loadAd(adRequest1);
+
+            mInterstitialAd.setAdListener(new AdListener() {
+                public void onAdLoaded() {
+                    showInterstitial();
+                }
+            });
+        }*/
+
+    }
+
+    private void showInterstitial() {
+        if (mInterstitialAd.isLoaded()) {
+            mInterstitialAd.show();
+        }
     }
 
     //method to dynamically request permissions
@@ -1347,15 +1447,24 @@ public class ReviewActivity extends AppCompatActivity implements
     }
     @Override public void onResume() {
         super.onResume();
+        if (mAdView != null) {
+            mAdView.resume();
+        }
     }
     @Override public void onPause() {
         super.onPause();
+        if (mAdView != null) {
+            mAdView.pause();
+        }
     }
     @Override public void onStop() {
         super.onStop();
     }
     @Override public void onDestroy() {
         super.onDestroy();
+        if (mAdView != null) {
+            mAdView.destroy();
+        }
     }
 
     private Bitmap getTheEncriptedImage(String qbm_image_file) {

@@ -10,6 +10,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.text.SpannableString;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,13 +20,18 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import com.digywood.tms.AppEnvironment;
 import com.digywood.tms.Charts.DayAxisValueFormatter;
 import com.digywood.tms.Charts.MyAxisValueFormatter;
 import com.digywood.tms.Charts.XYMarkerView;
 import com.digywood.tms.DBHelper.DBHelper;
+import com.digywood.tms.MyApplication;
 import com.digywood.tms.PaperDashActivity;
 import com.digywood.tms.Pojo.SingleEnrollment;
 import com.digywood.tms.R;
+import com.digywood.tms.UserMode;
 import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.charts.PieChart;
 import com.github.mikephil.charting.components.Legend;
@@ -43,6 +49,12 @@ import com.github.mikephil.charting.formatter.PercentFormatter;
 import com.github.mikephil.charting.highlight.Highlight;
 import com.github.mikephil.charting.interfaces.datasets.IBarDataSet;
 import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
+import com.google.android.gms.ads.AdListener;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdSize;
+import com.google.android.gms.ads.AdView;
+import com.google.android.gms.ads.MobileAds;
+
 import java.util.ArrayList;
 
 public class PracticeFragment extends Fragment implements OnChartValueSelectedListener {
@@ -78,6 +90,10 @@ public class PracticeFragment extends Fragment implements OnChartValueSelectedLi
     TextView tv_ptottests,tv_pattempted,tv_ptestsasplan,tv_ppercent,tv_pmax,tv_pmin,tv_pavg,tv_pRAGattempt,tv_pRAGAVGscore,tv_courseid;
 
     private PracticeFragment.OnFragmentInteractionListener mListener;
+
+    private AdView mAdView;
+    AppEnvironment appEnvironment;
+    UserMode userMode;
 
     public PracticeFragment() {
         // Required empty public constructor
@@ -116,6 +132,13 @@ public class PracticeFragment extends Fragment implements OnChartValueSelectedLi
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.activity_pdash, container,false);
 
+        // Sample AdMob app ID: ca-app-pub-8900998468829546~5077758012
+        //MobileAds.initialize(getContext(), getString(R.string.admob_app_id));
+
+        appEnvironment = ((MyApplication) getActivity().getApplication()).getAppEnvironment();//getting App Environment
+        userMode = ((MyApplication) getActivity().getApplication()).getUserMode();//getting User Mode
+
+
         tv_ptottests=view.findViewById(R.id.tv_ptottests);
         tv_pattempted=view.findViewById(R.id.tv_pattempted);
         tv_ptestsasplan=view.findViewById(R.id.tv_ptestsasplan);
@@ -145,6 +168,55 @@ public class PracticeFragment extends Fragment implements OnChartValueSelectedLi
             e.printStackTrace();
             Log.e("PractiseFragment---",""+e.toString());
         }
+
+
+        if(userMode.mode()) {
+
+        mAdView = (AdView) view.findViewById(R.id.adView);
+        //mAdView.setAdSize(AdSize.BANNER);
+        //mAdView.setAdUnitId(getString(R.string.banner_home_footer));
+            AdRequest adRequest = null;
+
+            if(appEnvironment==AppEnvironment.DEBUG) {
+                adRequest = new AdRequest.Builder()
+                        .addTestDevice(AdRequest.DEVICE_ID_EMULATOR)
+                        // Check the LogCat to get your test device ID
+                        .addTestDevice(getString(R.string.test_device1))
+                        .build();
+            }else {
+                adRequest = new AdRequest.Builder().build();
+            }
+            mAdView.loadAd(adRequest);
+
+            mAdView.setAdListener(new AdListener() {
+                @Override
+                public void onAdLoaded() {
+                }
+
+                @Override
+                public void onAdClosed() {
+                    Toast.makeText(getContext(), "Ad is closed!", Toast.LENGTH_SHORT).show();
+                }
+
+                @Override
+                public void onAdFailedToLoad(int errorCode) {
+                    Toast.makeText(getContext(), "Ad failed to load! error code: " + errorCode, Toast.LENGTH_SHORT).show();
+                }
+
+                @Override
+                public void onAdLeftApplication() {
+                    Toast.makeText(getContext(), "Ad left application!", Toast.LENGTH_SHORT).show();
+                }
+
+                @Override
+                public void onAdOpened() {
+                    super.onAdOpened();
+                }
+            });
+        }
+
+
+
 
         return view;
     }
@@ -332,6 +404,30 @@ public class PracticeFragment extends Fragment implements OnChartValueSelectedLi
     public void onDetach() {
         super.onDetach();
         mListener = null;
+    }
+
+    @Override
+    public void onPause() {
+        if (mAdView != null) {
+            mAdView.pause();
+        }
+        super.onPause();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (mAdView != null) {
+            mAdView.resume();
+        }
+    }
+
+    @Override
+    public void onDestroy() {
+        if (mAdView != null) {
+            mAdView.destroy();
+        }
+        super.onDestroy();
     }
 
     /**

@@ -37,6 +37,10 @@ import com.digywood.tms.AsynTasks.DownloadFileAsync;
 import com.digywood.tms.DBHelper.DBHelper;
 import com.digywood.tms.Pojo.SingleDWDQues;
 import com.digywood.tms.Pojo.SingleTest;
+import com.google.android.gms.ads.AdListener;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.InterstitialAd;
+
 import static android.Manifest.permission.READ_EXTERNAL_STORAGE;
 import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
 
@@ -62,6 +66,10 @@ public class ListofPractiseTests extends AppCompatActivity {
     LinearLayoutManager myLayoutManager;
     String studentid="",enrollid="",courseid="",paperid="",subjectid="",downloadjsonpath="",path="",localpath="",filedata="",groupdata="",tfiledwdpath="";
 
+    InterstitialAd mInterstitialAd;
+    AppEnvironment appEnvironment;
+    UserMode userMode;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -82,6 +90,9 @@ public class ListofPractiseTests extends AppCompatActivity {
             getSupportActionBar().setHomeAsUpIndicator(upArrow);
 
         }
+
+        appEnvironment = ((MyApplication) getApplication()).getAppEnvironment();//getting App Environment
+        userMode = ((MyApplication) getApplication()).getUserMode();//getting User Mode
 
         rv_tests=findViewById(R.id.rv_listoftests);
         tv_emptytests=findViewById(R.id.tv_testemptydata);
@@ -111,6 +122,40 @@ public class ListofPractiseTests extends AppCompatActivity {
 
         getTestIdsFromLocal();
 
+        if(userMode.mode()) {
+            mInterstitialAd = new InterstitialAd(this);
+
+            // set the ad unit ID
+            mInterstitialAd.setAdUnitId(getString(R.string.interstitial_full_screen));
+
+            AdRequest adRequest = null;
+
+            if(appEnvironment==AppEnvironment.DEBUG) {
+                adRequest = new AdRequest.Builder()
+                        .addTestDevice(AdRequest.DEVICE_ID_EMULATOR)
+                        // Check the LogCat to get your test device ID
+                        .addTestDevice(getString(R.string.test_device1))
+                        .build();
+            }else {
+                adRequest = new AdRequest.Builder().build();
+            }
+
+            // Load ads into Interstitial Ads
+            mInterstitialAd.loadAd(adRequest);
+
+            mInterstitialAd.setAdListener(new AdListener() {
+                public void onAdLoaded() {
+                    showInterstitial();
+                }
+            });
+        }
+
+    }
+
+    private void showInterstitial() {
+        if (mInterstitialAd.isLoaded()) {
+            mInterstitialAd.show();
+        }
     }
 
     public void getTestIdsFromLocal(){

@@ -24,6 +24,10 @@ import com.digywood.tms.AsynTasks.AsyncCheckInternet;
 import com.digywood.tms.AsynTasks.BagroundTask;
 import com.digywood.tms.DBHelper.DBHelper;
 import com.digywood.tms.Pojo.SingleEnrollment;
+import com.google.android.gms.ads.AdListener;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.InterstitialAd;
+
 import org.json.JSONArray;
 import org.json.JSONObject;
 import java.util.ArrayList;
@@ -42,6 +46,11 @@ public class LearningActivity extends AppCompatActivity {
     ArrayList<SingleEnrollment> enrollList;
     LinearLayoutManager myLayoutManager;
     EnrollAdapter eAdp;
+
+    InterstitialAd mInterstitialAd;
+    AppEnvironment appEnvironment;
+    UserMode userMode;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,6 +71,10 @@ public class LearningActivity extends AppCompatActivity {
             getSupportActionBar().setHomeAsUpIndicator(upArrow);
 
         }
+
+        appEnvironment = ((MyApplication) getApplication()).getAppEnvironment();//getting App Environment
+        userMode = ((MyApplication) getApplication()).getUserMode();//getting User Mode
+
 
         rv_enroll=findViewById(R.id.rv_listofenrolls);
         tv_emptyenroll=findViewById(R.id.tv_enrollemptydata);
@@ -98,6 +111,40 @@ public class LearningActivity extends AppCompatActivity {
 
         getEnrollsFromLocal();
 
+        if(userMode.mode()) {
+            mInterstitialAd = new InterstitialAd(this);
+
+            // set the ad unit ID
+            mInterstitialAd.setAdUnitId(getString(R.string.interstitial_full_screen));
+
+            AdRequest adRequest = null;
+
+            if(appEnvironment==AppEnvironment.DEBUG) {
+                adRequest = new AdRequest.Builder()
+                        .addTestDevice(AdRequest.DEVICE_ID_EMULATOR)
+                        // Check the LogCat to get your test device ID
+                        .addTestDevice(getString(R.string.test_device1))
+                        .build();
+            }else {
+                adRequest = new AdRequest.Builder().build();
+            }
+
+            // Load ads into Interstitial Ads
+            mInterstitialAd.loadAd(adRequest);
+
+            mInterstitialAd.setAdListener(new AdListener() {
+                public void onAdLoaded() {
+                    showInterstitial();
+                }
+            });
+        }
+
+    }
+
+    private void showInterstitial() {
+        if (mInterstitialAd.isLoaded()) {
+            mInterstitialAd.show();
+        }
     }
 
     public void getEnrolls(){
