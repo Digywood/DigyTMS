@@ -6,20 +6,26 @@ package com.digywood.tms.Pojo;
 
 public class SingleBatch {
 
-    private String id,name,startdate,enddate;
+    private String id;
+    private String name;
+    private String startdate;
+    private String enddate;
+
+    private String Batch_Type;
     private Double feeamount,feetax;
 
     public SingleBatch(){
 
     }
 
-    public SingleBatch(String bid,String bname,String bstartdate,String benddate,Double bfeeamount,Double bfeetax){
+    public SingleBatch(String bid,String bname,String bstartdate,String benddate,Double bfeeamount,Double bfeetax,String Batch_Type){
         this.id=bid;
         this.name=bname;
         this.startdate=bstartdate;
         this.enddate=benddate;
         this.feeamount=bfeeamount;
         this.feetax=bfeetax;
+        this.Batch_Type=Batch_Type;
 
     }
 
@@ -69,5 +75,13 @@ public class SingleBatch {
 
     public void setFeetax(Double feetax) {
         this.feetax = feetax;
+    }
+
+    public String getBatch_Type() {
+        return Batch_Type;
+    }
+
+    public void setBatch_Type(String batch_Type) {
+        Batch_Type = batch_Type;
     }
 }

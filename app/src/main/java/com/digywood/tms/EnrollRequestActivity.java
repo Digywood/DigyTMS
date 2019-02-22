@@ -26,6 +26,8 @@ import com.digywood.tms.AsynTasks.AsyncCheckInternet;
 import com.digywood.tms.AsynTasks.BagroundTask;
 import com.digywood.tms.Pojo.SingleBatch;
 import com.digywood.tms.Pojo.SingleBatchdata;
+import com.digywood.tms.Pojo.SinglePratiseTestData;
+
 import org.json.JSONArray;
 import org.json.JSONObject;
 import java.util.ArrayList;
@@ -41,6 +43,7 @@ public class EnrollRequestActivity extends AppCompatActivity {
     ArrayList<String> orgnames;
     ArrayList<String> courseids;
     ArrayList<String> coursenames;
+    ArrayList<String> courstypes;
     ArrayList<String> branchids;
     ArrayList<String> branchnames;
     ArrayList<String> batchids;
@@ -49,6 +52,7 @@ public class EnrollRequestActivity extends AppCompatActivity {
     ArrayList<Double> batchtaxes;
     ArrayList<SingleBatch> batchList;
     ArrayList<SingleBatchdata> batchdataList;
+    ArrayList<SinglePratiseTestData> ptestdataList=new ArrayList<>();
     TextView tv_amount,tv_tax,tv_total,tv_emptybatchdata;
     Random random;
     RecyclerView rv_batchdata;
@@ -58,6 +62,8 @@ public class EnrollRequestActivity extends AppCompatActivity {
     String startdate="",enddate="",studentid="",batchid="";
     String orgid="",courseid="",branchid="",feeamount="",feetax="",totalfee="",RandomAudioFileName="ABCDEFGHIJKLMNOPQRSTUVWXYZ";
     ArrayAdapter<String> orgAdp,courseAdp,branchAdp,batchAdp;
+    String Course_Type="";
+    String Batch_Type="";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -93,6 +99,7 @@ public class EnrollRequestActivity extends AppCompatActivity {
         orgnames=new ArrayList<>();
         courseids=new ArrayList<>();
         coursenames=new ArrayList<>();
+        courstypes=new ArrayList<>();
         branchids=new ArrayList<>();
         branchnames=new ArrayList<>();
         batchids=new ArrayList<>();
@@ -182,6 +189,7 @@ public class EnrollRequestActivity extends AppCompatActivity {
                     sp_batch.setAdapter(null);
                 }else{
                     courseid=courseids.get(position-1);
+                    Course_Type=courstypes.get(position-1);
                     batchid="";
                     getBatches();
                 }
@@ -230,7 +238,7 @@ public class EnrollRequestActivity extends AppCompatActivity {
                     tv_amount.setText(null);
                 }else{
                     SingleBatch sb=batchList.get(position-1);
-
+                    Batch_Type=sb.getBatch_Type();
                     Double amount=sb.getFeeamount();
                     feeamount=String.valueOf(sb.getFeeamount());
                     feetax=String.valueOf(sb.getFeetax());
@@ -352,6 +360,7 @@ public class EnrollRequestActivity extends AppCompatActivity {
                                 courseObj=ja_course_table.getJSONObject(i);
                                 courseids.add(courseObj.getString("Course_ID"));
                                 coursenames.add(courseObj.getString("Course_Name"));
+                                courstypes.add(courseObj.getString("Course_Type"));
                             }
                         }else{
                             Log.e("Courses--","Empty Json Array: ");
@@ -431,7 +440,7 @@ public class EnrollRequestActivity extends AppCompatActivity {
                                 batchnames.add(batchObj.getString("Batch_Name"));
 //                            batchfeeamounts.add(batchObj.getDouble("batch_Fee_Amount"));
 //                            batchtaxes.add(batchObj.getDouble("batch_Fee_tax_percentage"));
-                                batchList.add(new SingleBatch(batchObj.getString("Batch_ID"),batchObj.getString("Batch_Name"),batchObj.getString("batch_start_Date"),batchObj.getString("batch_end_Date"),batchObj.getDouble("batch_Fee_Amount"),batchObj.getDouble("batch_Fee_tax_percentage")));
+                                batchList.add(new SingleBatch(batchObj.getString("Batch_ID"),batchObj.getString("Batch_Name"),batchObj.getString("batch_start_Date"),batchObj.getString("batch_end_Date"),batchObj.getDouble("batch_Fee_Amount"),batchObj.getDouble("batch_Fee_tax_percentage"),batchObj.getString("Batch_Type")));
 
                             }
                         }else{
@@ -489,6 +498,8 @@ public class EnrollRequestActivity extends AppCompatActivity {
 
     public void insertEnrollRequest(){
 
+        Log.e("EnrollRequestActivity","Batch_Type:"+Batch_Type);
+
         HashMap<String,String> hashmap=new HashMap<>();
         hashmap.put("StudentId",studentid);
         hashmap.put("CourseId",courseid);
@@ -506,6 +517,7 @@ public class EnrollRequestActivity extends AppCompatActivity {
                         hmap.put("StudentId",studentid);
                         hmap.put("OrgId",orgid);
                         hmap.put("CourseId",courseid);
+                        hmap.put("Batch_Type",Batch_Type);
                         hmap.put("BranchId",branchid);
                         hmap.put("BatchId",batchid);
                         hmap.put("startDate",startdate);
@@ -521,16 +533,22 @@ public class EnrollRequestActivity extends AppCompatActivity {
                         hmap.put("activationkey",CreateRandomString(8));
                         new BagroundTask(URLClass.hosturl+"insertEnrollRequest.php",hmap,EnrollRequestActivity.this,new IBagroundListener() {
                             @Override
-                            public void bagroundData(String json) {
+                            public void bagroundData(String resp) {
                                 try{
-                                    Log.e("EnrollReqActivity---",json);
-                                    if(json.equalsIgnoreCase("Inserted")){
-                                        Toast.makeText(getApplicationContext(),"Request Generated Succesfully",Toast
-                                                .LENGTH_SHORT).show();
-                                        finish();
-                                    }else{
+                                    Log.e("EnrollReqActivity---",resp);
+                                    if(resp.equalsIgnoreCase("Not_Inserted")){
                                         Toast.makeText(getApplicationContext(),"Request Generation Failed",Toast
                                                 .LENGTH_SHORT).show();
+                                    }else if(resp!=null){
+                                        if(Batch_Type.equalsIgnoreCase("FREE"))
+                                        {
+                                            Log.e("EnrollRequestActivity","courseid:"+courseid+",resp:"+resp);
+                                            getAvailTestsByCourse(courseid,resp);
+                                        }else {
+                                            Toast.makeText(getApplicationContext(),"Request Generated Succesfully",Toast
+                                                    .LENGTH_SHORT).show();
+                                            finish();
+                                        }
                                     }
                                 }catch (Exception e){
                                     e.printStackTrace();
@@ -547,6 +565,118 @@ public class EnrollRequestActivity extends AppCompatActivity {
             }
         }).execute();
 
+    }
+
+    public void getAvailTestsByCourse(final String courseid, final String enrollId){
+
+        final HashMap<String,String> hashMap=new HashMap<>();
+        hashMap.put("courseId",courseid);
+        Log.e("courseId","courseId:"+courseid);
+        new BagroundTask(URLClass.hosturl+"getAllTestsByCourse.php",hashMap,EnrollRequestActivity.this,new IBagroundListener() {
+            @Override
+            public void bagroundData(String json) {
+                try{
+                    Log.e("json---","comes:--"+json);
+
+                    if(json.equalsIgnoreCase("Tests_Not_Exist")){
+                        Toast.makeText(getApplicationContext(),"No Tests to Configure",Toast.LENGTH_SHORT).show();
+                    }else{
+                        JSONObject testdataObj=null;
+                        String createdttm = new java.text.SimpleDateFormat("yyyy-MM-dd:hh:mm:ss").format(Calendar.getInstance(TimeZone.getDefault()).getTime());
+                        JSONArray ja_testdata=new JSONArray(json);
+                        for(int i=0;i<ja_testdata.length();i++){
+
+                            testdataObj=ja_testdata.getJSONObject(i);
+                            ptestdataList.add(new SinglePratiseTestData(orgid,enrollId,studentid,batchid,courseid,testdataObj.getString("Ptu_ID"),testdataObj.getString("Ptu_name"),testdataObj.getString("Ptu_subjet_ID"),testdataObj.getString("Ptu_paper_ID"),"OPEN","A",testdataObj.getInt("Ptu_total_questions"),testdataObj.getDouble("ptu_totalmarks"),testdataObj.getString("ptu_Test_Time"),testdataObj.getString("ptu_Test_Type"),0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0,0,0.0,0.0,0.0,0.0,"SELF",createdttm));
+
+                        }
+                        if(ptestdataList.size()!=0){
+                            configurePTestData();
+                        }else{
+
+                        }
+                    }
+
+                }catch (Exception e){
+                    e.printStackTrace();
+                    Log.e("EnrollmentActivity---",e.toString());
+                }
+            }
+        }).execute();
+
+    }
+
+    public void configurePTestData(){
+        Log.e("PTESTSDATA:---",""+ptestdataList.size());
+        JSONObject finalObj=JSONEncode(ptestdataList);
+        HashMap<String,String> hashMap=new HashMap<>();
+        hashMap.put("Json",finalObj.toString());
+        try {
+            new BagroundTask(URLClass.hosturl+"configureEnrollPTests.php",hashMap,EnrollRequestActivity.this,new IBagroundListener() {
+                @Override
+                public void bagroundData(String json) {
+                    Log.d("ja", "comes:" + json);
+                    if (json.equals("Inserted")) {
+                        Toast.makeText(getApplicationContext(),"Tests Configured", Toast.LENGTH_SHORT).show();
+                        finish();
+                    } else {
+                        Toast.makeText(getApplicationContext(),"unable to configure tests,try later", Toast.LENGTH_SHORT).show();
+                    }
+                }
+            }).execute();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private JSONObject JSONEncode(ArrayList<SinglePratiseTestData> finalList){
+        JSONObject job=new JSONObject();
+        JSONArray testList = new JSONArray();
+        try{
+            JSONObject testRec;
+            for(int i=0;i<finalList.size();i++){
+
+                SinglePratiseTestData sptdata=finalList.get(i);
+
+                testRec = new JSONObject();
+                testRec.put("orgId",sptdata.getOrgId());
+                testRec.put("enrollId",sptdata.getEnrollId());
+                testRec.put("studentId",sptdata.getStudentId());
+                testRec.put("batchId",sptdata.getBatchId());
+                testRec.put("courseId",sptdata.getCourseId());
+                testRec.put("testId",sptdata.getTestId());
+                testRec.put("testName",sptdata.getTestName());
+                testRec.put("subjectId",sptdata.getSubjectId());
+                testRec.put("paperId",sptdata.getPaperId());
+                testRec.put("downloadStatus",sptdata.getDownloadStatus());
+                testRec.put("Status",sptdata.getStatus());
+                testRec.put("noofQues",sptdata.getNoofQues());
+                testRec.put("totalmarks",sptdata.getTotalmarks());
+                testRec.put("pminmarks",sptdata.getPminmarks());
+                testRec.put("pavgmarks",sptdata.getPavgmarks());
+                testRec.put("pmaxmarks",sptdata.getPmaxmarks());
+                testRec.put("pminpercent",sptdata.getPminpercent());
+                testRec.put("pavgpercent",sptdata.getPavgpercent());
+                testRec.put("pmaxpercent",sptdata.getPmaxpercent());
+                testRec.put("plastattemptmarks",sptdata.getPlastattemptmarks());
+                testRec.put("plastattmeptpercent",sptdata.getPlastattmeptpercent());
+                testRec.put("noofattempts",sptdata.getNoofattempts());
+                testRec.put("noofflashattempts",sptdata.getNoofflashattempts());
+                testRec.put("fminscore",sptdata.getFminscore());
+                testRec.put("favgscore",sptdata.getFavgscore());
+                testRec.put("fmaxscore",sptdata.getFmaxscore());
+                testRec.put("flastattemptscore",sptdata.getFlastattemptscore());
+                testRec.put("createby",sptdata.getCreateby());
+                testRec.put("createddttm",sptdata.getCreateddttm());
+
+                testList.put(testRec);
+            }
+            job.put("TestList",testList);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return job;
     }
 
     public boolean validate() {

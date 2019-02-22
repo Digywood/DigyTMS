@@ -455,10 +455,10 @@ public class DBHelper extends SQLiteOpenHelper {
         switch (oldVersion)
         {
             case 1:
-                db.execSQL("ALTER TABLE sptu_student ADD COLUMN sptu_Test_Time text;");
-                db.execSQL("ALTER TABLE sptu_student ADD COLUMN sptu_Test_Type text;");
-                db.execSQL("ALTER TABLE satu_student ADD COLUMN satu_Test_Time text;");
-                db.execSQL("ALTER TABLE satu_student ADD COLUMN satu_Test_Type text;");
+                db.execSQL("ALTER TABLE sptu_student ADD COLUMN `sptu_Test_Time` text DEFAULT NULL;");
+                db.execSQL("ALTER TABLE sptu_student ADD COLUMN `sptu_Test_Type` text DEFAULT NULL;");
+                db.execSQL("ALTER TABLE satu_student ADD COLUMN `satu_Test_Time` text DEFAULT NULL;");
+                db.execSQL("ALTER TABLE satu_student ADD COLUMN `satu_Test_Type` text DEFAULT NULL;");
                 // upgrade logic from version 1 to 2
                 break;
             default:

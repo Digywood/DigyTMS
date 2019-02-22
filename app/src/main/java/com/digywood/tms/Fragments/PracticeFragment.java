@@ -186,6 +186,7 @@ public class PracticeFragment extends Fragment implements OnChartValueSelectedLi
             }else {
                 adRequest = new AdRequest.Builder().build();
             }
+
             mAdView.loadAd(adRequest);
 
             mAdView.setAdListener(new AdListener() {
