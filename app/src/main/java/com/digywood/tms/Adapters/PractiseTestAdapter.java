@@ -17,6 +17,9 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.digywood.tms.AppEnvironment;
+import com.digywood.tms.AsynTasks.AsyncCheckInternet_WithOutProgressBar;
 import com.digywood.tms.AsynTasks.BagroundTask;
 import com.digywood.tms.AsynTasks.DownloadFileAsync;
 import com.digywood.tms.AttemptDataActivity;
@@ -24,16 +27,22 @@ import com.digywood.tms.EncryptDecrypt;
 import com.digywood.tms.FlashCardActivity;
 import com.digywood.tms.IBagroundListener;
 import com.digywood.tms.IDownloadStatus;
+import com.digywood.tms.INetStatus;
 import com.digywood.tms.JSONParser;
 import com.digywood.tms.DBHelper.DBHelper;
+import com.digywood.tms.LearningActivity;
 import com.digywood.tms.ListofPractiseTests;
+import com.digywood.tms.MyApplication;
+import com.digywood.tms.PaperActivity;
 import com.digywood.tms.Pojo.SingleDWDQues;
+import com.digywood.tms.Pojo.SingleEnrollment;
 import com.digywood.tms.PracticeTestActivity;
 import com.digywood.tms.R;
 import com.digywood.tms.Pojo.SingleTest;
 import com.digywood.tms.ReviewActivity;
 import com.digywood.tms.SaveJSONdataToFile;
 import com.digywood.tms.URLClass;
+import com.digywood.tms.UserMode;
 import com.github.mikephil.charting.charts.PieChart;
 import com.github.mikephil.charting.data.PieEntry;
 import org.json.JSONArray;
@@ -79,6 +88,10 @@ public class PractiseTestAdapter extends RecyclerView.Adapter<PractiseTestAdapte
     String studentid="",subjectId, paperid, testid, fullTest, attempt=null,json,downloadjsonpath=""/*,tfiledwdpath=""*/,localpath="";
     String restoredsname="",serverId="",finalUrl="",finalAssetUrl="";
 
+    ListofPractiseTests lstPts;
+    AppEnvironment appEnvironment;
+    UserMode userMode;
+
     public class MyViewHolder extends RecyclerView.ViewHolder {
 
         public TextView tv_testid,tv_noOfQues, tv_teststatus,tv_testAttempt,tv_attempt_min,tv_attempt_max,tv_flashAttempt,tv_attempt_avg;
@@ -120,9 +133,13 @@ public class PractiseTestAdapter extends RecyclerView.Adapter<PractiseTestAdapte
     public PractiseTestAdapter(ArrayList<SingleTest> testList,Context c,String studentId,String enrollId) {
         this.testList = testList;
         this.mycontext = c;
+        this.lstPts=(ListofPractiseTests) c;
         this.studentid=studentId;
         this.enrollid=enrollId;
         myhelper = new DBHelper(c);
+
+        appEnvironment = ((MyApplication) this.lstPts.getApplication()).getAppEnvironment();//getting App Environment
+        userMode = ((MyApplication) this.lstPts.getApplication()).getUserMode();//getting User Mode
 
         restoredprefs = mycontext.getSharedPreferences("SERVERPREF", MODE_PRIVATE);
         restoredsname = restoredprefs.getString("servername","main_server");
@@ -375,13 +392,33 @@ public class PractiseTestAdapter extends RecyclerView.Adapter<PractiseTestAdapte
                                         attempt = new String(SaveJSONdataToFile.bytesFromFile(getExternalPath(mycontext, singletest, "ATTEMPT") + testid + ".json"), "UTF-8");
                                         Log.e("FULLTEST:---","sample:--"+fullTest);
                                         Log.e("attempt:---","sample:--"+studentid);
-                                        Intent i = new Intent(mycontext, PracticeTestActivity.class);
-                                        i.putExtra("studentid",studentid);
-                                        i.putExtra("json", attempt);
-                                        i.putExtra("test", testid);
-                                        i.putExtra("status", "NEW");
-                                        mycontext.startActivity(i);
-                                        ((ListofPractiseTests)mycontext).finish();
+                                        if(!userMode.mode()) {
+                                            Intent i = new Intent(mycontext, PracticeTestActivity.class);
+                                            i.putExtra("studentid", studentid);
+                                            i.putExtra("json", attempt);
+                                            i.putExtra("test", testid);
+                                            i.putExtra("status", "NEW");
+                                            mycontext.startActivity(i);
+                                            ((ListofPractiseTests) mycontext).finish();
+                                        }else {
+                                            new AsyncCheckInternet_WithOutProgressBar(mycontext, new INetStatus() {
+                                                @Override
+                                                public void inetSatus(Boolean netStatus) {
+                                                    if(netStatus)
+                                                    {
+                                                        Intent i = new Intent(mycontext, PracticeTestActivity.class);
+                                                        i.putExtra("studentid", studentid);
+                                                        i.putExtra("json", attempt);
+                                                        i.putExtra("test", testid);
+                                                        i.putExtra("status", "NEW");
+                                                        mycontext.startActivity(i);
+                                                        ((ListofPractiseTests) mycontext).finish();
+                                                    }else {
+                                                        Toast.makeText(mycontext, "No internet,Please Check Your Connection", Toast.LENGTH_SHORT).show();
+                                                    }
+                                                }
+                                            }).execute();
+                                        }
                                     } catch (IOException | ClassNotFoundException | NullPointerException e) {
                                         e.printStackTrace();
                                     }
@@ -424,7 +461,7 @@ public class PractiseTestAdapter extends RecyclerView.Adapter<PractiseTestAdapte
                 }
 
                 try {
-                    String tPath = URLClass.mainpath+enrollid +"/"+courseid+"/"+subjectId+"/"+paperid+"/"+singletest.getTestid()+"/ENC/";
+                    final String tPath = URLClass.mainpath+enrollid +"/"+courseid+"/"+subjectId+"/"+paperid+"/"+singletest.getTestid()+"/ENC/";
 
                     File file = new File(tPath +singletest.getTestid() + ".json");
                     if (!file.exists()) {
@@ -475,12 +512,33 @@ public class PractiseTestAdapter extends RecyclerView.Adapter<PractiseTestAdapte
                                 }else{
 
                                     myparser = new JSONParser(filedata,tPath + "/flashAttempts/", "FLASH", mycontext);
-                                    Intent i = new Intent(mycontext, FlashCardActivity.class);
-                                    i.putExtra("studentid",studentid);
-                                    i.putExtra("testId", testList.get(position).getTestid());
-                                    i.putExtra("testPath", tPath);
-                                    mycontext.startActivity(i);
-                                    ((ListofPractiseTests)mycontext).finish();
+
+                                    if(!userMode.mode()) {
+                                        Intent i = new Intent(mycontext, FlashCardActivity.class);
+                                        i.putExtra("studentid",studentid);
+                                        i.putExtra("testId", testList.get(position).getTestid());
+                                        i.putExtra("testPath", tPath);
+                                        mycontext.startActivity(i);
+                                        ((ListofPractiseTests)mycontext).finish();
+                                    }else {
+                                        new AsyncCheckInternet_WithOutProgressBar(mycontext, new INetStatus() {
+                                            @Override
+                                            public void inetSatus(Boolean netStatus) {
+                                                if(netStatus)
+                                                {
+                                                    Intent i = new Intent(mycontext, FlashCardActivity.class);
+                                                    i.putExtra("studentid",studentid);
+                                                    i.putExtra("testId", testList.get(position).getTestid());
+                                                    i.putExtra("testPath", tPath);
+                                                    mycontext.startActivity(i);
+                                                    ((ListofPractiseTests)mycontext).finish();
+                                                }else {
+                                                    Toast.makeText(mycontext, "No internet,Please Check Your Connection", Toast.LENGTH_SHORT).show();
+                                                }
+                                            }
+                                        }).execute();
+                                    }
+
                                 }
 
                             }else{

@@ -32,10 +32,12 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import com.digywood.tms.Adapters.PractiseTestAdapter;
 import com.digywood.tms.AsynTasks.AsyncCheckInternet;
+import com.digywood.tms.AsynTasks.AsyncCheckInternet_WithOutProgressBar;
 import com.digywood.tms.AsynTasks.BagroundTask;
 import com.digywood.tms.AsynTasks.DownloadFileAsync;
 import com.digywood.tms.DBHelper.DBHelper;
 import com.digywood.tms.Pojo.SingleDWDQues;
+import com.digywood.tms.Pojo.SingleEnrollment;
 import com.digywood.tms.Pojo.SingleTest;
 import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
@@ -141,7 +143,7 @@ public class ListofPractiseTests extends AppCompatActivity {
             }
 
             // Load ads into Interstitial Ads
-            mInterstitialAd.loadAd(adRequest);
+            //mInterstitialAd.loadAd(adRequest);
 
             mInterstitialAd.setAdListener(new AdListener() {
                 public void onAdLoaded() {
@@ -183,25 +185,66 @@ public class ListofPractiseTests extends AppCompatActivity {
 
     @Override
     public boolean onSupportNavigateUp() {
-        finish();
-        Intent i=new Intent(getApplicationContext(),PaperActivity.class);
-        i.putExtra("studentid",studentid);
-        i.putExtra("enrollid",enrollid);
-        i.putExtra("courseid",courseid);
-        i.putExtra("paperid",paperid);
-        startActivity(i);
+
+        if (!userMode.mode()) {
+            Intent i = new Intent(getApplicationContext(), PaperActivity.class);
+            i.putExtra("studentid", studentid);
+            i.putExtra("enrollid", enrollid);
+            i.putExtra("courseid", courseid);
+            i.putExtra("paperid", paperid);
+            startActivity(i);
+            finish();
+        }else {
+            new AsyncCheckInternet_WithOutProgressBar(getApplicationContext(), new INetStatus() {
+                @Override
+                public void inetSatus(Boolean netStatus) {
+                    if(netStatus)
+                    {
+                        Intent i = new Intent(getApplicationContext(), PaperActivity.class);
+                        i.putExtra("studentid", studentid);
+                        i.putExtra("enrollid", enrollid);
+                        i.putExtra("courseid", courseid);
+                        i.putExtra("paperid", paperid);
+                        startActivity(i);
+                        finish();
+                    }else {
+                        Toast.makeText(getApplicationContext(), "No internet,Please Check Your Connection", Toast.LENGTH_SHORT).show();
+                    }
+                }
+            }).execute();
+        }
         return true;
     }
 
     @Override
     public void onBackPressed() {
-        finish();
-        Intent i=new Intent(getApplicationContext(),PaperActivity.class);
-        i.putExtra("studentid",studentid);
-        i.putExtra("enrollid",enrollid);
-        i.putExtra("courseid",courseid);
-        i.putExtra("paperid",paperid);
-        startActivity(i);
+        if (!userMode.mode()) {
+            Intent i = new Intent(getApplicationContext(), PaperActivity.class);
+            i.putExtra("studentid", studentid);
+            i.putExtra("enrollid", enrollid);
+            i.putExtra("courseid", courseid);
+            i.putExtra("paperid", paperid);
+            startActivity(i);
+            finish();
+        }else {
+            new AsyncCheckInternet_WithOutProgressBar(getApplicationContext(), new INetStatus() {
+                @Override
+                public void inetSatus(Boolean netStatus) {
+                    if(netStatus)
+                    {
+                        Intent i = new Intent(getApplicationContext(), PaperActivity.class);
+                        i.putExtra("studentid", studentid);
+                        i.putExtra("enrollid", enrollid);
+                        i.putExtra("courseid", courseid);
+                        i.putExtra("paperid", paperid);
+                        startActivity(i);
+                        finish();
+                    }else {
+                        Toast.makeText(getApplicationContext(), "No internet,Please Check Your Connection", Toast.LENGTH_SHORT).show();
+                    }
+                }
+            }).execute();
+        }
     }
 
     public void getTestIds(){

@@ -24,13 +24,21 @@ import android.widget.TextView;
 import android.widget.Toast;
 import com.digywood.tms.AsynTasks.AsyncCheckInternet;
 import com.digywood.tms.AsynTasks.BagroundTask;
+
+import java.security.InvalidAlgorithmParameterException;
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.TimeZone;
 
+import javax.crypto.BadPaddingException;
+import javax.crypto.IllegalBlockSizeException;
+import javax.crypto.NoSuchPaddingException;
+
 public class RegistrationActivity extends AppCompatActivity {
 
-    EditText et_name,et_addressline1,et_addressline2,et_city,et_state,et_country,et_number,et_email,et_password;
+    EditText et_name,et_addressline1,et_addressline2,et_city,et_state,et_country,et_number,et_email,et_password,et_cnf_password;
     Switch sw_gender;
     TextView tv_male,tv_female,tv_dob;
     int yyyy,mm,dd,qulifypos;
@@ -68,6 +76,7 @@ public class RegistrationActivity extends AppCompatActivity {
         et_number=findViewById(R.id.et_phnumber);
         et_email=findViewById(R.id.et_email);
         et_password=findViewById(R.id.et_password);
+        et_cnf_password=findViewById(R.id.et_cnf_password);
         sw_gender=findViewById(R.id.sw_gender);
         tv_male=findViewById(R.id.tv_male);
         tv_male.setTextColor(this.getResources().getColor(R.color.colorAccent));
@@ -129,6 +138,29 @@ public class RegistrationActivity extends AppCompatActivity {
                     hmap.put("country",et_country.getText().toString());
                     hmap.put("mobile",et_number.getText().toString());
                     hmap.put("email",et_email.getText().toString());
+
+
+                    /*try {
+                        //Log.e("RegistrationActivity","Original Password:"+et_password.getText().toString());
+                        String enc_pwd=CryptUtil.encrypt(et_password.getText().toString());
+                        hmap.put("password",enc_pwd);
+                        //Log.e("RegistrationActivity","Encrypt Password:"+enc_pwd);
+                        //Log.e("RegistrationActivity","Decrypt Password:"+CryptUtil.decrypt(enc_pwd));
+                    } catch (NoSuchPaddingException e) {
+                        e.printStackTrace();
+                    } catch (NoSuchAlgorithmException e) {
+                        e.printStackTrace();
+                    } catch (InvalidAlgorithmParameterException e) {
+                        e.printStackTrace();
+                    } catch (InvalidKeyException e) {
+                        e.printStackTrace();
+                    } catch (BadPaddingException e) {
+                        e.printStackTrace();
+                    } catch (IllegalBlockSizeException e) {
+                        e.printStackTrace();
+                    }*/
+
+
                     hmap.put("password",et_password.getText().toString());
                     String androidid=Settings.Secure.getString(getApplicationContext().getContentResolver(),Settings.Secure.ANDROID_ID);
                     hmap.put("macid",androidid);
@@ -152,10 +184,29 @@ public class RegistrationActivity extends AppCompatActivity {
 
                                         }else{
                                             if(json.equalsIgnoreCase("Inserted")){
-                                                Intent i=new Intent(getApplicationContext(),MainActivity.class);
-                                                startActivity(i);
-                                                finish();
-                                                Toast.makeText(getApplicationContext(),"Registered Successfully",Toast.LENGTH_SHORT).show();
+
+                                                AlertDialog.Builder builder = new AlertDialog.Builder(RegistrationActivity.this);
+                                                builder.setMessage("Registration Successfully Done...")
+                                                        .setCancelable(false)
+                                                        .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                                                            public void onClick(DialogInterface dialog, int id) {
+
+                                                                dialog.cancel();
+
+                                                                Intent i=new Intent(getApplicationContext(),MainActivity.class);
+                                                                startActivity(i);
+                                                                finish();
+
+                                                            }
+                                                        });
+                                                AlertDialog alert = builder.create();
+                                                //Setting the title manually
+                                                alert.setTitle("Registration");
+                                                alert.setIcon(R.drawable.info);
+                                                alert.show();
+
+
+                                                //Toast.makeText(getApplicationContext(),"Registered Successfully",Toast.LENGTH_SHORT).show();
                                             }else{
                                                 Toast.makeText(getApplicationContext(),"Registration Failed",Toast.LENGTH_SHORT).show();
                                             }
@@ -204,6 +255,7 @@ public class RegistrationActivity extends AppCompatActivity {
         String contactnumber = et_number.getText().toString();
         String email = et_email.getText().toString();
         String password = et_password.getText().toString();
+        String cnf_password = et_cnf_password.getText().toString();
 
         if (name.isEmpty()) {
             et_name.setError("Please enter a valid name");
@@ -275,6 +327,11 @@ public class RegistrationActivity extends AppCompatActivity {
             } else {
 
             }
+        }
+
+        if(!password.equalsIgnoreCase(cnf_password)){
+            Toast.makeText(getApplicationContext(),"Password and Confirm Paasword should be same",Toast.LENGTH_SHORT).show();
+            valid=false;
         }
 
         return valid;

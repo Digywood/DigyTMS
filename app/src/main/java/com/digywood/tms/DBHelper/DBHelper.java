@@ -10,15 +10,11 @@ import com.digywood.tms.Pojo.SingleEnrollment;
 import com.digywood.tms.Pojo.SingleSubcatConfig;
 import java.util.ArrayList;
 
-/**
- * Created by prasa on 2018-02-28.
- */
-
 public class DBHelper extends SQLiteOpenHelper {
 
     Context context;
     SQLiteDatabase db;
-    private static final int DATABASE_VERSION =2;
+    private static final int DATABASE_VERSION =3;
 
     public DBHelper(Context c)
     {
@@ -30,7 +26,7 @@ public class DBHelper extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase db) {
 
-        String tbl_student_master="CREATE TABLE IF NOT EXISTS `student_master` (`StudentKey` integer,`StudentID` text DEFAULT NULL,`Student_Name` text DEFAULT NULL,"+
+        String tbl_student_master="CREATE TABLE IF NOT EXISTS `student_master` (`StudentKey` integer PRIMARY KEY,`StudentID` text DEFAULT NULL,`Student_Name` text DEFAULT NULL,"+
                 "`Student_gender` text DEFAULT NULL,`Student_Education` text DEFAULT NULL,`Student_DOB` date DEFAULT NULL,`Student_Address01` text DEFAULT NULL,"+
                 "`Student_Address02` text DEFAULT NULL,`Student_City` text DEFAULT NULL,`Student_State` text DEFAULT NULL,"+
                 "`Student_Country` text DEFAULT NULL,`Student_Mobile` text DEFAULT NULL,`Student_email` text DEFAULT NULL,"+
@@ -40,7 +36,7 @@ public class DBHelper extends SQLiteOpenHelper {
         db.execSQL(tbl_student_master);
 
         String tbl_enrollments="CREATE TABLE IF NOT EXISTS `enrollments` (\n" +
-                "  `Enroll_key` integer,\n" +
+                "  `Enroll_key` integer PRIMARY KEY,\n" +
                 "  `Enroll_ID` text DEFAULT NULL,\n" +
                 "  `Enroll_org_id` text DEFAULT NULL,\n" +
                 "  `Enroll_Student_ID` text DEFAULT NULL,\n" +
@@ -93,7 +89,7 @@ public class DBHelper extends SQLiteOpenHelper {
         db.execSQL(tbl_courses);
 
         String tbl_subjects="CREATE TABLE IF NOT EXISTS `subjects` (\n" +
-                "  `Subject_key` integer,\n" +
+                "  `Subject_key` integer PRIMARY KEY,\n" +
                 "  `Course_ID` text DEFAULT NULL,\n" +
                 "  `Subject_ID` text DEFAULT NULL,\n" +
                 "  `Subject_Name` text DEFAULT NULL,\n" +
@@ -114,7 +110,7 @@ public class DBHelper extends SQLiteOpenHelper {
         db.execSQL(tbl_subjects);
 
         String tbl_papers="CREATE TABLE IF NOT EXISTS `papers` (\n" +
-                "  `Paper_Key` integer,\n" +
+                "  `Paper_Key` integer PRIMARY KEY,\n" +
                 "  `Paper_ID` text DEFAULT NULL,\n" +
                 "  `Paper_Seq_no` integer(3) DEFAULT NULL,\n" +
                 "  `Subject_ID` text DEFAULT NULL,\n" +
@@ -136,7 +132,7 @@ public class DBHelper extends SQLiteOpenHelper {
         db.execSQL(tbl_papers);
 
         String tbl_sptu_student="CREATE TABLE IF NOT EXISTS `sptu_student` (\n" +
-                "  `sptu_key` integer,\n" +
+                "  `sptu_key` integer PRIMARY KEY,\n" +
                 "  `sptu_org_id` text DEFAULT NULL,\n" +
                 "  `sptu_entroll_id` text DEFAULT NULL,\n" +
                 "  `sptu_student_ID` text DEFAULT NULL,\n" +
@@ -178,7 +174,8 @@ public class DBHelper extends SQLiteOpenHelper {
                 "  `sptu_created_by` text DEFAULT NULL,\n" +
                 "  `sptu_created_dttm` datetime DEFAULT NULL,\n" +
                 "  `sptu_mod_by` text DEFAULT NULL,\n" +
-                "  `sptu_mod_dttm` datetime DEFAULT NULL)";
+                "  `sptu_mod_dttm` datetime DEFAULT NULL,\n" +
+                "  `sptu_sequence` integer )";
         db.execSQL(tbl_sptu_student);
 
         String tbl_satu_student="CREATE TABLE IF NOT EXISTS `satu_student` (\n" +
@@ -269,7 +266,7 @@ public class DBHelper extends SQLiteOpenHelper {
         db.execSQL(AttemptList);
 
         String AssessmentTestList ="CREATE TABLE `Assessment_list` (\n"+
-                "   `Assessment_Test_ID` TEXT,\n"+
+                "   `Assessment_Test_ID` TEXT PRIMARY KEY,\n"+
                 "   `Assessment_Instance_ID` TEXT,\n"+
                 "   `Assessment_enrollId` TEXT DEFAULT NULL,\n"+
                 "   `Assessment_studentId` TEXT DEFAULT NULL,\n"+
@@ -460,6 +457,10 @@ public class DBHelper extends SQLiteOpenHelper {
                 db.execSQL("ALTER TABLE satu_student ADD COLUMN `satu_Test_Time` text DEFAULT NULL;");
                 db.execSQL("ALTER TABLE satu_student ADD COLUMN `satu_Test_Type` text DEFAULT NULL;");
                 // upgrade logic from version 1 to 2
+                break;
+            case 2:
+                db.execSQL("ALTER TABLE sptu_student ADD COLUMN `sptu_sequence` integer  ;");
+                // upgrade logic from version 2 to 3
                 break;
             default:
                 throw new IllegalStateException("onUpgrade() with unknown old version "+oldVersion);
@@ -890,7 +891,7 @@ public class DBHelper extends SQLiteOpenHelper {
         return c.getCount();
     }
 
-    public long insertStudent(int skey,String sid,String sname,String sgender,String sedu,String sdob,String saddress1,String saddress2,String scity,String sstate,String scountry,String smobile,String semail,String spassword,String smacid,String sstatus,String screateby,String screateddatetime){
+    public long insertStudent(int skey,String sid,String sname,String sgender,String sedu,String sdob,String saddress1,String saddress2,String scity,String sstate,String scountry,String smobile,String semail,String spassword,String smacid,String sstatus,String screateby,String screateddatetime,String smodifiedby,String smodified_dtm){
         long insertFlag=0;
         ContentValues cv = new ContentValues();
         cv.put("StudentKey",skey);
@@ -911,6 +912,8 @@ public class DBHelper extends SQLiteOpenHelper {
         cv.put("Student_Status",sstatus);
         cv.put("Student_created_by",screateby);
         cv.put("Student_created_DtTm",screateddatetime);
+        cv.put("Student_mod_by",smodifiedby);
+        cv.put("Student_mod_DtTm",smodified_dtm);
         insertFlag = db.insert("student_master",null, cv);
         return insertFlag;
     }
@@ -1110,7 +1113,7 @@ public class DBHelper extends SQLiteOpenHelper {
     }
 
 
-    public long insertPractiseTest(int tkey,String torgid,String tenrollid,String tstudentid,String tbatch,String tid,String testname,String tpid,String tsid,String tcid,String tstartdate,String tenddate,String tdwdstartdttm,String tdwdenddttm,String tdwdstatus,String tstatus,int tnoofques,double tptotalmarks,double tpminmarks,double tpmaxmarks,double tpavgmarks,double tpminpercent,double tpmaxpercent,double tpavgpercent,double tplastmarks,double tplastpercent,String tplaststartdttm,String tplastenddttm,int pnoofattempts,int fnoofattempts,double fminscore,double fmaxscore,double favgscore,String flastdttm,double flastscore,String createby,String cdttm,String modifiedby,String mdttm,String sptu_Test_Time,String sptu_Test_Type){
+    public long insertPractiseTest(int tkey,String torgid,String tenrollid,String tstudentid,String tbatch,String tid,String testname,String tpid,String tsid,String tcid,String tstartdate,String tenddate,String tdwdstartdttm,String tdwdenddttm,String tdwdstatus,String tstatus,int tnoofques,double tptotalmarks,double tpminmarks,double tpmaxmarks,double tpavgmarks,double tpminpercent,double tpmaxpercent,double tpavgpercent,double tplastmarks,double tplastpercent,String tplaststartdttm,String tplastenddttm,int pnoofattempts,int fnoofattempts,double fminscore,double fmaxscore,double favgscore,String flastdttm,double flastscore,String createby,String cdttm,String modifiedby,String mdttm,String sptu_Test_Time,String sptu_Test_Type,int sptu_sequence){
         long insertFlag=0;
         ContentValues cv = new ContentValues();
         cv.put("sptu_key",tkey);
@@ -1154,6 +1157,7 @@ public class DBHelper extends SQLiteOpenHelper {
         cv.put("sptu_mod_dttm",mdttm);
         cv.put("sptu_Test_Time",sptu_Test_Time);
         cv.put("sptu_Test_Type",sptu_Test_Type);
+        cv.put("sptu_sequence",sptu_sequence);
         insertFlag = db.insert("sptu_student",null, cv);
         return insertFlag;
     }
@@ -1182,7 +1186,7 @@ public class DBHelper extends SQLiteOpenHelper {
         return  c;
     }
 
-    public long updatePractiseTestData(String torgid,String tenrollid,String tstudentid,String tbatch,String tid,String testname,String tpid,String tsid,String tcid,String tstartdate,String tenddate,String tdwdstartdttm,String tdwdenddttm,String tdwdstatus,String tstatus,int tnoofques,double tptotalmarks,double tpminmarks,double tpmaxmarks,double tpavgmarks,double tpminpercent,double tpmaxpercent,double tpavgpercent,double tplastmarks,double tplastpercent,String tplaststartdttm,String tplastenddttm,int pnoofattempts,int fnoofattempts,double fminscore,double fmaxscore,double favgscore,String flastdttm,double flastscore,String createby,String cdttm,String modifiedby,String mdttm,String sptu_Test_Time,String sptu_Test_Type){
+    public long updatePractiseTestData(String torgid,String tenrollid,String tstudentid,String tbatch,String tid,String testname,String tpid,String tsid,String tcid,String tstartdate,String tenddate,String tdwdstartdttm,String tdwdenddttm,String tdwdstatus,String tstatus,int tnoofques,double tptotalmarks,double tpminmarks,double tpmaxmarks,double tpavgmarks,double tpminpercent,double tpmaxpercent,double tpavgpercent,double tplastmarks,double tplastpercent,String tplaststartdttm,String tplastenddttm,int pnoofattempts,int fnoofattempts,double fminscore,double fmaxscore,double favgscore,String flastdttm,double flastscore,String createby,String cdttm,String modifiedby,String mdttm,String sptu_Test_Time,String sptu_Test_Type,int sptu_sequence){
         long updateFlag=0;
         ContentValues cv = new ContentValues();
         cv.put("sptu_org_id",torgid);
@@ -1218,6 +1222,7 @@ public class DBHelper extends SQLiteOpenHelper {
         cv.put("sptu_mod_dttm",mdttm);
         cv.put("sptu_Test_Time",sptu_Test_Time);
         cv.put("sptu_Test_Type",sptu_Test_Type);
+        cv.put("sptu_sequence",sptu_sequence);
         updateFlag = db.update("sptu_student", cv,"sptu_ID='"+tid+"' and sptu_entroll_id='"+tenrollid+"' and sptu_student_ID='"+tstudentid+"'",null);
         return updateFlag;
     }
@@ -1287,7 +1292,7 @@ public class DBHelper extends SQLiteOpenHelper {
     }
 
     public Cursor getStudentTests(String studentId,String enrollId,String paperId,String status){
-        Cursor c =db.query("sptu_student", new String[] {"sptu_entroll_id,sptu_student_ID,sptu_ID,sptu_name,sptu_paper_ID,sptu_subjet_ID,sptu_course_id,sptu_dwnld_status"},"sptu_student_ID='"+studentId+"' and sptu_entroll_id='"+enrollId+"' and sptu_paper_ID='"+paperId+"' and sptu_status='"+status+"' ORDER BY `sptu_ID` ASC", null, null, null,null);
+        Cursor c =db.query("sptu_student", new String[] {"sptu_entroll_id,sptu_student_ID,sptu_ID,sptu_name,sptu_paper_ID,sptu_subjet_ID,sptu_course_id,sptu_dwnld_status"},"sptu_student_ID='"+studentId+"' and sptu_entroll_id='"+enrollId+"' and sptu_paper_ID='"+paperId+"' and sptu_status='"+status+"'", null, null, null,"sptu_sequence ASC");
         return c;
     }
 
@@ -2711,4 +2716,15 @@ public class DBHelper extends SQLiteOpenHelper {
 
         return totalmarks;
     }
+
+
+    public long updatePassword(String mobile_num,String email,String password){
+        long updateFlag=0;
+        ContentValues cv = new ContentValues();
+        cv.put("Student_password",password);
+        updateFlag = db.update("student_master",cv,"Student_Mobile='"+mobile_num+"' and Student_email='"+email+"'",null);
+        return updateFlag;
+    }
+
+
 }

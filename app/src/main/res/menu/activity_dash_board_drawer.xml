@@ -11,11 +11,11 @@
         <item
             android:id="@+id/nav_enrollments"
             android:icon="@drawable/ic_list_black_24dp"
-            android:title="Enrollments" />
+            android:title="Enrolments" />
         <item
             android:id="@+id/nav_reqenrolls"
             android:icon="@drawable/interestedicon"
-            android:title="Requested Enrolls" />
+            android:title="New Enrolment" />
         <item
             android:id="@+id/nav_courses"
             android:icon="@drawable/courses"

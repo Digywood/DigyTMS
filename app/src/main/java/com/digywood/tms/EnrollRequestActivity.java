@@ -587,7 +587,7 @@ public class EnrollRequestActivity extends AppCompatActivity {
                         for(int i=0;i<ja_testdata.length();i++){
 
                             testdataObj=ja_testdata.getJSONObject(i);
-                            ptestdataList.add(new SinglePratiseTestData(orgid,enrollId,studentid,batchid,courseid,testdataObj.getString("Ptu_ID"),testdataObj.getString("Ptu_name"),testdataObj.getString("Ptu_subjet_ID"),testdataObj.getString("Ptu_paper_ID"),"OPEN","A",testdataObj.getInt("Ptu_total_questions"),testdataObj.getDouble("ptu_totalmarks"),testdataObj.getString("ptu_Test_Time"),testdataObj.getString("ptu_Test_Type"),0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0,0,0.0,0.0,0.0,0.0,"SELF",createdttm));
+                            ptestdataList.add(new SinglePratiseTestData(orgid,enrollId,studentid,batchid,courseid,testdataObj.getString("Ptu_ID"),testdataObj.getString("Ptu_name"),testdataObj.getString("Ptu_subjet_ID"),testdataObj.getString("Ptu_paper_ID"),"OPEN","A",testdataObj.getInt("Ptu_total_questions"),testdataObj.getDouble("ptu_totalmarks"),testdataObj.getString("ptu_Test_Time"),testdataObj.getString("ptu_Test_Type"),0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0,0,0.0,0.0,0.0,0.0,"SELF",createdttm,testdataObj.getInt("ptu_sequence")));
 
                         }
                         if(ptestdataList.size()!=0){
@@ -669,6 +669,7 @@ public class EnrollRequestActivity extends AppCompatActivity {
                 testRec.put("flastattemptscore",sptdata.getFlastattemptscore());
                 testRec.put("createby",sptdata.getCreateby());
                 testRec.put("createddttm",sptdata.getCreateddttm());
+                testRec.put("ptu_sequence",sptdata.getPtu_sequence());
 
                 testList.put(testRec);
             }

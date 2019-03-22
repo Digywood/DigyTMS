@@ -17,12 +17,23 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
+
 import com.digywood.tms.Adapters.EnrollAdapter;
+import com.digywood.tms.AppEnvironment;
+import com.digywood.tms.AsynTasks.AsyncCheckInternet_WithOutProgressBar;
 import com.digywood.tms.DBHelper.DBHelper;
 import com.digywood.tms.EnrollRequestActivity;
+import com.digywood.tms.INetStatus;
+import com.digywood.tms.LearningActivity;
+import com.digywood.tms.MyApplication;
+import com.digywood.tms.PaperActivity;
 import com.digywood.tms.Pojo.SingleEnrollment;
 import com.digywood.tms.R;
+import com.digywood.tms.RecyclerTouchListener;
 import com.digywood.tms.RequestedEnrollsActivity;
+import com.digywood.tms.UserMode;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Random;
@@ -40,7 +51,7 @@ public class EnrollFragment extends Fragment {
 
     RecyclerView rv_enroll;
     TextView tv_emptyenroll;
-    String studentid="",studentname="";
+    String studentid="",studentname="",number,email;
     DBHelper myhelper;
     Random random ;
     ArrayList<String> enrollids;
@@ -49,6 +60,9 @@ public class EnrollFragment extends Fragment {
     LinearLayoutManager myLayoutManager;
 //    FloatingActionButton fab_reqenrollments;
     EnrollAdapter eAdp;
+
+    AppEnvironment appEnvironment;
+    UserMode userMode;
 
     private FlashAttemptFragment.OnFragmentInteractionListener mListener;
 
@@ -88,6 +102,10 @@ public class EnrollFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.activity_enrolllist, container, false);
+
+        appEnvironment = ((MyApplication) getActivity().getApplication()).getAppEnvironment();//getting App Environment
+        userMode = ((MyApplication) getActivity().getApplication()).getUserMode();//getting User Mode
+
         rv_enroll=view.findViewById(R.id.rv_elistofenrolls);
         tv_emptyenroll=view.findViewById(R.id.tv_eenrollemptydata);
         enrollids=new ArrayList<>();
@@ -101,7 +119,45 @@ public class EnrollFragment extends Fragment {
         if(cmgintent!=null){
             studentid=cmgintent.getStringExtra("studentid");
             studentname=cmgintent.getStringExtra("sname");
+            number=cmgintent.getStringExtra("number");
+            email=cmgintent.getStringExtra("email");
         }
+
+        rv_enroll.addOnItemTouchListener(new RecyclerTouchListener(getContext(), rv_enroll, new RecyclerTouchListener.OnItemClickListener() {
+            @Override
+            public void onClick(View view, final int position) {
+                if (!userMode.mode()) {
+                    SingleEnrollment singleEnrollment=enrollList.get(position);
+                    Intent intent=new Intent(getContext(), PaperActivity.class);
+                    intent.putExtra("studentid",studentid);
+                    intent.putExtra("enrollid",singleEnrollment.getEnrollid());
+                    intent.putExtra("courseid",singleEnrollment.getCourseid());
+                    startActivity(intent);
+                }else {
+                    new AsyncCheckInternet_WithOutProgressBar(getContext(), new INetStatus() {
+                        @Override
+                        public void inetSatus(Boolean netStatus) {
+                            if(netStatus)
+                            {
+                                SingleEnrollment singleEnrollment=enrollList.get(position);
+                                Intent intent=new Intent(getContext(),PaperActivity.class);
+                                intent.putExtra("studentid",studentid);
+                                intent.putExtra("enrollid",singleEnrollment.getEnrollid());
+                                intent.putExtra("courseid",singleEnrollment.getCourseid());
+                                startActivity(intent);
+                            }else {
+                                Toast.makeText(getContext(), "No internet,Please Check Your Connection", Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                    }).execute();
+                }
+            }
+
+            @Override
+            public void onLongClick(View view, int position) {
+
+            }
+        }));
 
         getEnrollsFromLocal();
         return view;

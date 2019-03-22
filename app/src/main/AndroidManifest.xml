@@ -15,7 +15,6 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-
         <!-- Sample AdMob App ID: ca-app-pub-8900998468829546~5077758012 -->
         <meta-data
             android:name="com.google.android.gms.ads.APPLICATION_ID"
@@ -27,10 +26,19 @@
             android:screenOrientation="landscape"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <activity android:name=".ForgotPassword"
+            android:label="@string/forgotpwd"
+            android:parentActivityName=".MainActivity"
+            android:screenOrientation="landscape">
+
+        </activity>
+
         <activity
             android:name=".RegistrationActivity"
             android:label="@string/reglabel"
@@ -39,7 +47,6 @@
         <activity
             android:name=".LearningActivity"
             android:label="@string/courselabel"
-            android:parentActivityName=".MainActivity"
             android:screenOrientation="landscape" />
         <activity
             android:name=".PaperActivity"
@@ -115,10 +122,11 @@
             android:label="Requested Enrollments"
             android:parentActivityName=".DashBoardNavActivity"
             android:screenOrientation="landscape" />
-        <activity android:name=".ListofServers"
-            android:screenOrientation="landscape"
+        <activity
+            android:name=".ListofServers"
             android:label="@string/serverlabel"
-            android:parentActivityName=".DashBoardNavActivity"></activity>
+            android:parentActivityName=".DashBoardNavActivity"
+            android:screenOrientation="landscape" />
     </application>
 
 </manifest>

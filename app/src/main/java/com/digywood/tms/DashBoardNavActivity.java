@@ -193,6 +193,14 @@ public class DashBoardNavActivity extends AppCompatActivity implements Navigatio
 
     }
 
+
+    @Override
+    public void onBackPressed() {
+        Log.e("DashBoardNavActivity","onBackPressed clicked...");
+        showAlertwithTwoButtons("Would you like to exit?");
+    }
+
+
     private void loadRewardedVideoAd() {
 
         /*mRewardedVideoAd.loadAd(getString(R.string.rewarded_video),
@@ -428,7 +436,9 @@ public class DashBoardNavActivity extends AppCompatActivity implements Navigatio
                                             testObj.getString("sptu_mod_by"),
                                             testObj.getString("sptu_mod_dttm"),
                                             testObj.getString("sptu_Test_Time"),
-                                            testObj.getString("sptu_Test_Type"));
+                                            testObj.getString("sptu_Test_Type"),
+                                            testObj.getInt("sptu_sequence")
+                                    );
                                     if(updateFlag>0){
                                         //Log.e("DashBoardNavActivity","sptu_Test_Time:"+testObj.getString("sptu_Test_Time")+"sptu_Test_Type"+testObj.getString("sptu_Test_Type"));
                                         r++;
@@ -446,7 +456,8 @@ public class DashBoardNavActivity extends AppCompatActivity implements Navigatio
                                             testObj.getInt("sptu_no_of_attempts"),testObj.getInt("sptuflash_attempts"),testObj.getDouble("min_flashScore"),testObj.getDouble("max_flashScore"),testObj.getDouble("avg_flashScore"),
                                             testObj.getString("lastAttemptDttm"),testObj.getDouble("lastAttemptScore"), testObj.getString("sptu_created_by"),testObj.getString("sptu_created_dttm"),testObj.getString("sptu_mod_by"),
                                             testObj.getString("sptu_mod_dttm"),testObj.getString("sptu_Test_Time"),
-                                            testObj.getString("sptu_Test_Type"));
+                                            testObj.getString("sptu_Test_Type"),
+                                            testObj.getInt("sptu_sequence"));
                                     if(insertFlag>0){
                                        // Log.e("DashBoardNavActivity","sptu_Test_Time:"+testObj.getString("sptu_Test_Time")+"sptu_Test_Type"+testObj.getString("sptu_Test_Type"));
                                         p++;
@@ -585,7 +596,7 @@ public class DashBoardNavActivity extends AppCompatActivity implements Navigatio
         }).execute();
     }
 
-    @Override
+    /*@Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (keyCode == KeyEvent.KEYCODE_BACK) {
             finish();
@@ -594,7 +605,7 @@ public class DashBoardNavActivity extends AppCompatActivity implements Navigatio
             return true;
         }
         return super.onKeyDown(keyCode, event);
-    }
+    }*/
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -1245,11 +1256,6 @@ public class DashBoardNavActivity extends AppCompatActivity implements Navigatio
             Toast.makeText(getApplicationContext(),"No Assessment Ques Data to Upload",Toast.LENGTH_SHORT).show();
         }
 
-    }
-
-    @Override
-    public void onBackPressed() {
-        showAlertwithTwoButtons("Would you like to exit?");
     }
 
 }

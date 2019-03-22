@@ -55,7 +55,7 @@
                         android:layout_height="wrap_content"
                         android:layout_margin="10dp"
                         android:background="@drawable/custom_edittext"
-                        android:hint="Number"
+                        android:hint="Mobile Number"
                         android:inputType="number|phone" />
 
                     <!-- Password Label -->
@@ -83,6 +83,16 @@
                         android:text="Remember"
                         android:textColor="#000000" />
 
+                    <TextView
+                        android:id="@+id/txt_forgot_pwd"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/forgotpwd1"
+                        android:textColor="@android:color/black"
+                        android:textStyle="bold|italic"
+                        android:gravity="right"
+                        android:layout_marginRight="10dp"/>
+
                     <Button
                         android:id="@+id/btn_login"
                         android:layout_width="match_parent"
@@ -99,8 +109,8 @@
                         android:layout_height="wrap_content"
                         android:layout_margin="20dp"
                         android:gravity="center"
-                        android:text="No account yet? Create one"
-                        android:textColor="@color/colorPrimaryDark"
+                        android:text="@string/signup"
+                        android:textColor="@android:color/holo_orange_dark"
                         android:textSize="16sp"
                         android:textStyle="bold" />
 

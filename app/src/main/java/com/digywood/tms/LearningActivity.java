@@ -21,6 +21,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 import com.digywood.tms.Adapters.EnrollAdapter;
 import com.digywood.tms.AsynTasks.AsyncCheckInternet;
+import com.digywood.tms.AsynTasks.AsyncCheckInternet_WithOutProgressBar;
 import com.digywood.tms.AsynTasks.BagroundTask;
 import com.digywood.tms.DBHelper.DBHelper;
 import com.digywood.tms.Pojo.SingleEnrollment;
@@ -38,7 +39,7 @@ public class LearningActivity extends AppCompatActivity {
 
     RecyclerView rv_enroll;
     TextView tv_emptyenroll;
-    String studentid="",studentname="",RandomAudioFileName="ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+    String studentid="",studentname="",RandomAudioFileName="ABCDEFGHIJKLMNOPQRSTUVWXYZ",number,email;
     DBHelper myhelper;
     Random random ;
     ArrayList<String> enrollids;
@@ -56,6 +57,7 @@ public class LearningActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_learning);
+
 
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
@@ -89,18 +91,41 @@ public class LearningActivity extends AppCompatActivity {
         if(cmgintent!=null){
             studentid=cmgintent.getStringExtra("studentid");
             studentname=cmgintent.getStringExtra("sname");
+            number=cmgintent.getStringExtra("number");
+            email=cmgintent.getStringExtra("email");
         }
 
         rv_enroll.addOnItemTouchListener(new RecyclerTouchListener(getApplicationContext(),rv_enroll,new RecyclerTouchListener.OnItemClickListener(){
             @Override
-            public void onClick(View view, int position) {
-                SingleEnrollment singleEnrollment=enrollList.get(position);
-                Intent intent=new Intent(getApplicationContext(),PaperActivity.class);
-                intent.putExtra("studentid",studentid);
-                intent.putExtra("enrollid",singleEnrollment.getEnrollid());
-                intent.putExtra("courseid",singleEnrollment.getCourseid());
-                startActivity(intent);
-                finish();
+            public void onClick(View view, final int position) {
+
+                if (!userMode.mode()) {
+                    SingleEnrollment singleEnrollment=enrollList.get(position);
+                    Intent intent=new Intent(getApplicationContext(),PaperActivity.class);
+                    intent.putExtra("studentid",studentid);
+                    intent.putExtra("enrollid",singleEnrollment.getEnrollid());
+                    intent.putExtra("courseid",singleEnrollment.getCourseid());
+                    startActivity(intent);
+                }else {
+                    new AsyncCheckInternet_WithOutProgressBar(LearningActivity.this, new INetStatus() {
+                        @Override
+                        public void inetSatus(Boolean netStatus) {
+                            if(netStatus)
+                            {
+                                SingleEnrollment singleEnrollment=enrollList.get(position);
+                                Intent intent=new Intent(getApplicationContext(),PaperActivity.class);
+                                intent.putExtra("studentid",studentid);
+                                intent.putExtra("enrollid",singleEnrollment.getEnrollid());
+                                intent.putExtra("courseid",singleEnrollment.getCourseid());
+                                startActivity(intent);
+                                finish();
+                            }else {
+                                Toast.makeText(getApplicationContext(), "No internet,Please Check Your Connection", Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                    }).execute();
+                }
+
             }
 
             @Override
@@ -130,7 +155,7 @@ public class LearningActivity extends AppCompatActivity {
             }
 
             // Load ads into Interstitial Ads
-            mInterstitialAd.loadAd(adRequest);
+            //mInterstitialAd.loadAd(adRequest);
 
             mInterstitialAd.setAdListener(new AdListener() {
                 public void onAdLoaded() {
@@ -235,8 +260,18 @@ public class LearningActivity extends AppCompatActivity {
     }
 
     @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // handle arrow click here
+        if (item.getItemId() == android.R.id.home) {
+            finish(); // close this activity and return to preview activity (if there is any)
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
     public void onBackPressed() {
-        finish();
         super.onBackPressed();
+        finish();
     }
 }

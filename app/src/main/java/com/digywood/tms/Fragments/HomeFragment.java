@@ -46,7 +46,7 @@ public class HomeFragment extends Fragment {
 
     ArrayList<String> courseIds=new ArrayList<>();
     ArrayAdapter<String> courseAdp,enrollAdp;
-    String studentid="",enrollid,courseid,studentname="";
+    String studentid="",enrollid,courseid,studentname="",number,email;
 
     private FlashAttemptFragment.OnFragmentInteractionListener mListener;
 
@@ -121,6 +121,8 @@ public class HomeFragment extends Fragment {
         if(cmgintent!=null){
             studentid=cmgintent.getStringExtra("studentid");
             studentname=cmgintent.getStringExtra("sname");
+            number=cmgintent.getStringExtra("number");
+            email=cmgintent.getStringExtra("email");
         }
 
 
@@ -142,7 +144,9 @@ public class HomeFragment extends Fragment {
 
                 Intent i=new Intent(getActivity(),LearningActivity.class);
                 i.putExtra("studentid",studentid);
-                i.putExtra("studentname",studentname);
+                i.putExtra("sname",studentname);
+                i.putExtra("number", number);
+                i.putExtra("email", email);
                 startActivity(i);
 
             }

@@ -1,6 +1,8 @@
 <resources>
     <string name="app_name">TMS</string>
     <string name="reglabel">Register Here</string>
+    <string name="forgotpwd">Forgot Password</string>
+    <string name="forgotpwd1"><u>Forgot Password ?</u></string>
     <string name="paperdashlabel">PaperWise Performance</string>
     <string name="testdashlabel">TestWise Performance</string>
     <string name="enrolllabel">Enroll Request</string>
@@ -51,16 +53,24 @@
     <string name="nav_header_subtitle">android.studio@android.com</string>
     <string name="nav_header_desc">Navigation header</string>
     <string name="action_settings">Settings</string>
+    <string name="signup">No account yet, <u><b>Sign-Up?</b></u></string>
 
     <!-- TODO - add your ad unit Ids -->
     <!-- AdMob ad unit IDs -->
-    <string name="admob_app_id">ca-app-pub-1316256380089053~1524939087</string>
+    <string name="admob_app_id">ca-app-pub-3559850072598365~5886355889</string>
+    <string name="banner_home_footer">ca-app-pub-3559850072598365/4473379479</string>
+    <string name="interstitial_full_screen">ca-app-pub-3559850072598365/5555183391</string>
+    <string name="rewarded_video">ca-app-pub-3559850072598365/6265629832</string>
+
+
+    <!--<string name="admob_app_id">ca-app-pub-1316256380089053~1524939087</string>
     <string name="banner_home_footer">ca-app-pub-1316256380089053/1956307634</string>
     <string name="interstitial_full_screen">ca-app-pub-1316256380089053/8828714036</string>
-    <string name="rewarded_video">ca-app-pub-1316256380089053/3425888709</string>
+    <string name="rewarded_video">ca-app-pub-1316256380089053/3425888709</string>-->
     <!--<string name="test_device1">E9BBD5CF8EBB7E031170CE56BD67D517</string>-->
     <!--<string name="test_device1">093AF91E0105C3050927DEA4AB69CDC2</string>-->
     <string name="test_device1">B5A3FFA08EEF31A749F48F0EBFEFD9E9</string>
+    <!--<string name="test_device1">94C38201595689188A0FA4368F9BBB7F</string>-->
     <string name="test_device2">1AC0F47C17C8EB434B466C3CF4C55BC6</string>
 
 </resources>
