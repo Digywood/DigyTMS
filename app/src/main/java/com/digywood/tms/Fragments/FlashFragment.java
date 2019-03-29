@@ -6,9 +6,9 @@ import android.database.Cursor;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
 import android.text.SpannableString;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -51,7 +51,6 @@ import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
 import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
-import com.google.android.gms.ads.MobileAds;
 
 import java.util.ArrayList;
 
@@ -90,7 +89,7 @@ public class FlashFragment extends Fragment implements OnChartValueSelectedListe
 
     private FlashFragment.OnFragmentInteractionListener mListener;
 
-    private AdView mAdView;
+    ///private AdView mAdView;
     AppEnvironment appEnvironment;
     UserMode userMode;
 
@@ -169,7 +168,7 @@ public class FlashFragment extends Fragment implements OnChartValueSelectedListe
 
         if(userMode.mode()) {
 
-            mAdView = (AdView) view.findViewById(R.id.adView);
+            /*mAdView = (AdView) view.findViewById(R.id.adView);
             //mAdView.setAdSize(AdSize.BANNER);
             //mAdView.setAdUnitId(getString(R.string.banner_home_footer));
             AdRequest adRequest = null;
@@ -209,7 +208,7 @@ public class FlashFragment extends Fragment implements OnChartValueSelectedListe
                 public void onAdOpened() {
                     super.onAdOpened();
                 }
-            });
+            });*/
 
         }
 
@@ -408,25 +407,25 @@ public class FlashFragment extends Fragment implements OnChartValueSelectedListe
 
     @Override
     public void onPause() {
-        if (mAdView != null) {
+        /*if (mAdView != null) {
             mAdView.pause();
-        }
+        }*/
         super.onPause();
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        if (mAdView != null) {
+        /*if (mAdView != null) {
             mAdView.resume();
-        }
+        }*/
     }
 
     @Override
     public void onDestroy() {
-        if (mAdView != null) {
+        /*if (mAdView != null) {
             mAdView.destroy();
-        }
+        }*/
         super.onDestroy();
     }
 

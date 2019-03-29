@@ -1,8 +1,8 @@
 package com.digywood.tms.Adapters;
 
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentStatePagerAdapter;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentStatePagerAdapter;
 
 import com.digywood.tms.Fragments.AssessmentFragment;
 import com.digywood.tms.Fragments.FlashFragment;

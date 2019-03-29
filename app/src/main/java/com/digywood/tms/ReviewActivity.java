@@ -8,20 +8,19 @@ import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.database.Cursor;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.app.ActivityOptionsCompat;
-import android.support.v4.content.ContextCompat;
-import android.support.v7.app.ActionBar;
-import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.DefaultItemAnimator;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.SimpleItemAnimator;
+import androidx.core.app.ActivityCompat;
+import androidx.core.app.ActivityOptionsCompat;
+import androidx.core.content.ContextCompat;
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.DefaultItemAnimator;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.recyclerview.widget.SimpleItemAnimator;
 import android.util.Log;
 import android.view.GestureDetector;
 import android.view.KeyEvent;
@@ -46,7 +45,6 @@ import org.json.JSONObject;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.IOException;
 import java.util.ArrayList;
 
 import com.digywood.tms.Adapters.OptionsCheckAdapter;
@@ -121,8 +119,8 @@ public class ReviewActivity extends AppCompatActivity implements
 
     private static final boolean AUTO_HIDE = true;
 
-    private AdView mAdView;
-    InterstitialAd mInterstitialAd;
+    //private AdView mAdView;
+    //InterstitialAd mInterstitialAd;
     AppEnvironment appEnvironment;
     UserMode userMode;
 
@@ -374,6 +372,7 @@ public class ReviewActivity extends AppCompatActivity implements
         btn_next.setText("Next");
         btn_prev.setText("Back");
 
+
         btn_qadditional.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -564,7 +563,7 @@ public class ReviewActivity extends AppCompatActivity implements
         }
 
         if(userMode.mode()) {
-            mAdView = (AdView) findViewById(R.id.adView);
+            /*mAdView = (AdView) findViewById(R.id.adView);
             //mAdView.setAdSize(AdSize.BANNER);
             //mAdView.setAdUnitId(getString(R.string.banner_home_footer));
 
@@ -605,13 +604,13 @@ public class ReviewActivity extends AppCompatActivity implements
                 public void onAdOpened() {
                     super.onAdOpened();
                 }
-            });
+            });*/
 
         }
 
 
-        /*if(userMode.mode()) {
-            mInterstitialAd = new InterstitialAd(this);
+        if(userMode.mode()) {
+           /* mInterstitialAd = new InterstitialAd(this);
 
             // set the ad unit ID
             mInterstitialAd.setAdUnitId(getString(R.string.interstitial_full_screen));
@@ -635,15 +634,18 @@ public class ReviewActivity extends AppCompatActivity implements
                 public void onAdLoaded() {
                     showInterstitial();
                 }
-            });
-        }*/
+            });*/
+
+            //AdColonUtility.PlayInterstitialAds(ReviewActivity.this);
+
+        }
 
     }
 
     private void showInterstitial() {
-        if (mInterstitialAd.isLoaded()) {
+        /*if (mInterstitialAd.isLoaded()) {
             mInterstitialAd.show();
-        }
+        }*/
     }
 
     //method to dynamically request permissions
@@ -1447,24 +1449,28 @@ public class ReviewActivity extends AppCompatActivity implements
     }
     @Override public void onResume() {
         super.onResume();
-        if (mAdView != null) {
+        /*if (mAdView != null) {
             mAdView.resume();
-        }
+        }*/
+
+        /*if(userMode.mode()) {
+            AdColonUtility.requestInterstitial();
+        }*/
     }
     @Override public void onPause() {
         super.onPause();
-        if (mAdView != null) {
+        /*if (mAdView != null) {
             mAdView.pause();
-        }
+        }*/
     }
     @Override public void onStop() {
         super.onStop();
     }
     @Override public void onDestroy() {
         super.onDestroy();
-        if (mAdView != null) {
+        /*if (mAdView != null) {
             mAdView.destroy();
-        }
+        }*/
     }
 
     private Bitmap getTheEncriptedImage(String qbm_image_file) {

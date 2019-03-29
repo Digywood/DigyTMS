@@ -3,12 +3,12 @@ package com.digywood.tms;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
-import android.content.Intent;
+import android.database.Cursor;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
-import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -121,6 +121,7 @@ public class ForgotPassword extends AppCompatActivity {
                                                                 final Dialog dialog = new Dialog(ForgotPassword.this);
                                                                 dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
                                                                 dialog.setCancelable(false);
+                                                                dialog.setCanceledOnTouchOutside(false);
                                                                 dialog.setContentView(R.layout.otp);
 
                                                                 final EditText et_otp = (EditText) dialog.findViewById(R.id.et_otp);
@@ -174,47 +175,157 @@ public class ForgotPassword extends AppCompatActivity {
 
 
                                                                                                         AlertDialog alert11 = builder1.create();
+                                                                                                        alert11.setCanceledOnTouchOutside(false);
                                                                                                         alert11.show();
 
 
                                                                                                     } else if (json.equals("UPDATED")) {
 
-                                                                                                        long res = myhelper.updatePassword(mobile_num, final_email, final_pwd);
 
-                                                                                                        if (res > 0) {
-                                                                                                            AlertDialog.Builder builder1 = new AlertDialog.Builder(ForgotPassword.this);
-                                                                                                            builder1.setMessage("Password Updation Success..");
-                                                                                                            builder1.setCancelable(true);
+                                                                                                        Cursor c = myhelper.checkStudent(mobile_num);
+                                                                                                        if (c.moveToNext()) {
+                                                                                                            long res = myhelper.updatePassword(mobile_num, final_email, final_pwd);
+                                                                                                            if (res > 0) {
+                                                                                                                AlertDialog.Builder builder1 = new AlertDialog.Builder(ForgotPassword.this);
+                                                                                                                builder1.setMessage("Password Updation Success..");
+                                                                                                                builder1.setCancelable(true);
 
-                                                                                                            builder1.setPositiveButton(
-                                                                                                                    "Ok",
-                                                                                                                    new DialogInterface.OnClickListener() {
-                                                                                                                        public void onClick(DialogInterface dialog, int id) {
-                                                                                                                            dialog.cancel();
-                                                                                                                            finish();
-                                                                                                                        }
-                                                                                                                    });
+                                                                                                                builder1.setPositiveButton(
+                                                                                                                        "Ok",
+                                                                                                                        new DialogInterface.OnClickListener() {
+                                                                                                                            public void onClick(DialogInterface dialog, int id) {
+                                                                                                                                dialog.cancel();
+                                                                                                                                finish();
+                                                                                                                            }
+                                                                                                                        });
 
 
-                                                                                                            AlertDialog alert11 = builder1.create();
-                                                                                                            alert11.show();
+                                                                                                                AlertDialog alert11 = builder1.create();
+                                                                                                                alert11.setCanceledOnTouchOutside(false);
+                                                                                                                alert11.show();
+                                                                                                            } else {
+                                                                                                                AlertDialog.Builder builder1 = new AlertDialog.Builder(ForgotPassword.this);
+                                                                                                                builder1.setMessage("Password Updation Failed..");
+                                                                                                                builder1.setCancelable(true);
+
+                                                                                                                builder1.setPositiveButton(
+                                                                                                                        "Ok",
+                                                                                                                        new DialogInterface.OnClickListener() {
+                                                                                                                            public void onClick(DialogInterface dialog, int id) {
+                                                                                                                                dialog.cancel();
+                                                                                                                            }
+                                                                                                                        });
+
+
+                                                                                                                AlertDialog alert11 = builder1.create();
+                                                                                                                alert11.setCanceledOnTouchOutside(false);
+                                                                                                                alert11.show();
+                                                                                                            }
+
                                                                                                         } else {
-                                                                                                            AlertDialog.Builder builder1 = new AlertDialog.Builder(ForgotPassword.this);
-                                                                                                            builder1.setMessage("Password Updation Failed..");
-                                                                                                            builder1.setCancelable(true);
+                                                                                                            new AsyncCheckInternet(ForgotPassword.this, new INetStatus() {
+                                                                                                                @Override
+                                                                                                                public void inetSatus(Boolean netStatus) {
+                                                                                                                    if (netStatus) {
+                                                                                                                        HashMap<String, String> hmap = new HashMap<>();
+                                                                                                                        hmap.put("number", mobile_num);
+                                                                                                                        hmap.put("password", final_pwd);
+                                                                                                                        new BagroundTask(URLClass.hosturl + "checkUserExist.php", hmap, ForgotPassword.this,
+                                                                                                                                new IBagroundListener() {
+                                                                                                                                    @Override
+                                                                                                                                    public void bagroundData(String json) {
+                                                                                                                                        try {
+                                                                                                                                            if (json.equalsIgnoreCase("User_Not_Exist")) {
+                                                                                                                                                Toast.makeText(getApplicationContext(), "User_Not_Exist", Toast.LENGTH_SHORT).show();
+                                                                                                                                            } else {
+                                                                                                                                                JSONObject jo = null;
+                                                                                                                                                JSONArray ja = new JSONArray(json);
+                                                                                                                                                for (int i = 0; i < ja.length(); i++) {
+                                                                                                                                                    jo = ja.getJSONObject(i);
 
-                                                                                                            builder1.setPositiveButton(
-                                                                                                                    "Ok",
-                                                                                                                    new DialogInterface.OnClickListener() {
-                                                                                                                        public void onClick(DialogInterface dialog, int id) {
-                                                                                                                            dialog.cancel();
-                                                                                                                        }
-                                                                                                                    });
+                                                                                                                                                    long checkFlag = myhelper.checkStudent(jo.getInt("StudentKey"));
+                                                                                                                                                    if (checkFlag > 0) {
+                                                                                                                                                        Log.e(TAG, "Student Exists in Local");
+                                                                                                                                                    } else {
+                                                                                                                                                        long res = myhelper.insertStudent(jo.getInt("StudentKey"), jo.getString("StudentID"), jo.getString("Student_Name"), jo.getString("Student_gender"), jo.getString("Student_Education"), jo.getString("Student_DOB"), jo.getString("Student_Address01"), jo.getString("Student_Address02"), jo.getString("Student_City"), jo.getString("Student_State"),
+                                                                                                                                                                jo.getString("Student_Country"), jo.getString("Student_Mobile"), jo.getString("Student_email"), jo.getString("Student_password"), jo.getString("Student_mac_id"), jo.getString("Student_Status"), jo.getString("Student_created_by"), jo.getString("Student_created_DtTm"),jo.getString("Student_mod_by"),jo.getString("Student_mod_DtTm"));
+                                                                                                                                                        if (res > 0) {
+                                                                                                                                                            if (res > 0) {
+                                                                                                                                                                AlertDialog.Builder builder1 = new AlertDialog.Builder(ForgotPassword.this);
+                                                                                                                                                                builder1.setMessage("Password Updation Success..");
+                                                                                                                                                                builder1.setCancelable(true);
+
+                                                                                                                                                                builder1.setPositiveButton(
+                                                                                                                                                                        "Ok",
+                                                                                                                                                                        new DialogInterface.OnClickListener() {
+                                                                                                                                                                            public void onClick(DialogInterface dialog, int id) {
+                                                                                                                                                                                dialog.cancel();
+                                                                                                                                                                                finish();
+                                                                                                                                                                            }
+                                                                                                                                                                        });
 
 
-                                                                                                            AlertDialog alert11 = builder1.create();
-                                                                                                            alert11.show();
+                                                                                                                                                                AlertDialog alert11 = builder1.create();
+                                                                                                                                                                alert11.setCanceledOnTouchOutside(false);
+                                                                                                                                                                alert11.show();
+                                                                                                                                                            } else {
+                                                                                                                                                                AlertDialog.Builder builder1 = new AlertDialog.Builder(ForgotPassword.this);
+                                                                                                                                                                builder1.setMessage("Password Updation Failed..");
+                                                                                                                                                                builder1.setCancelable(true);
+
+                                                                                                                                                                builder1.setPositiveButton(
+                                                                                                                                                                        "Ok",
+                                                                                                                                                                        new DialogInterface.OnClickListener() {
+                                                                                                                                                                            public void onClick(DialogInterface dialog, int id) {
+                                                                                                                                                                                dialog.cancel();
+                                                                                                                                                                            }
+                                                                                                                                                                        });
+
+
+                                                                                                                                                                AlertDialog alert11 = builder1.create();
+                                                                                                                                                                alert11.setCanceledOnTouchOutside(false);
+                                                                                                                                                                alert11.show();
+                                                                                                                                                            }
+                                                                                                                                                        } else {
+                                                                                                                                                            AlertDialog.Builder builder1 = new AlertDialog.Builder(ForgotPassword.this);
+                                                                                                                                                            builder1.setMessage("Password Updation Failed..");
+                                                                                                                                                            builder1.setCancelable(true);
+
+                                                                                                                                                            builder1.setPositiveButton(
+                                                                                                                                                                    "Ok",
+                                                                                                                                                                    new DialogInterface.OnClickListener() {
+                                                                                                                                                                        public void onClick(DialogInterface dialog, int id) {
+                                                                                                                                                                            dialog.cancel();
+                                                                                                                                                                        }
+                                                                                                                                                                    });
+
+
+                                                                                                                                                            AlertDialog alert11 = builder1.create();
+                                                                                                                                                            alert11.setCanceledOnTouchOutside(false);
+                                                                                                                                                            alert11.show();
+                                                                                                                                                        }
+                                                                                                                                                    }
+                                                                                                                                                }
+
+                                                                                                                                            }
+
+                                                                                                                                        } catch (Exception e) {
+
+                                                                                                                                            e.printStackTrace();
+                                                                                                                                            Log.e("MainActivity----", e.toString());
+
+                                                                                                                                        }
+                                                                                                                                    }
+                                                                                                                                }).execute();
+                                                                                                                    } else {
+                                                                                                                        Toast.makeText(getApplicationContext(), "No internet,Please Check Your Connection", Toast.LENGTH_SHORT).show();
+                                                                                                                    }
+                                                                                                                }
+                                                                                                            }).execute();
                                                                                                         }
+
+
+
                                                                                                     }
                                                                                                 }
                                                                                             }).execute();

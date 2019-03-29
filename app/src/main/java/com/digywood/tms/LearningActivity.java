@@ -5,22 +5,18 @@ import android.database.Cursor;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
-import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.DefaultItemAnimator;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
+import androidx.recyclerview.widget.DefaultItemAnimator;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 import com.digywood.tms.Adapters.EnrollAdapter;
-import com.digywood.tms.AsynTasks.AsyncCheckInternet;
 import com.digywood.tms.AsynTasks.AsyncCheckInternet_WithOutProgressBar;
 import com.digywood.tms.AsynTasks.BagroundTask;
 import com.digywood.tms.DBHelper.DBHelper;
@@ -48,7 +44,7 @@ public class LearningActivity extends AppCompatActivity {
     LinearLayoutManager myLayoutManager;
     EnrollAdapter eAdp;
 
-    InterstitialAd mInterstitialAd;
+    //InterstitialAd mInterstitialAd;
     AppEnvironment appEnvironment;
     UserMode userMode;
 
@@ -137,7 +133,7 @@ public class LearningActivity extends AppCompatActivity {
         getEnrollsFromLocal();
 
         if(userMode.mode()) {
-            mInterstitialAd = new InterstitialAd(this);
+            /*mInterstitialAd = new InterstitialAd(this);
 
             // set the ad unit ID
             mInterstitialAd.setAdUnitId(getString(R.string.interstitial_full_screen));
@@ -161,15 +157,15 @@ public class LearningActivity extends AppCompatActivity {
                 public void onAdLoaded() {
                     showInterstitial();
                 }
-            });
+            });*/
         }
 
     }
 
     private void showInterstitial() {
-        if (mInterstitialAd.isLoaded()) {
+        /*if (mInterstitialAd.isLoaded()) {
             mInterstitialAd.show();
-        }
+        }*/
     }
 
     public void getEnrolls(){

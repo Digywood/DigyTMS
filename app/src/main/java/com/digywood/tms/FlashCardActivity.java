@@ -8,22 +8,20 @@ import android.content.Intent;
 import android.content.res.Configuration;
 import android.database.Cursor;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.Matrix;
-import android.support.v7.app.ActionBar;
-import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
+
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.v7.widget.DefaultItemAnimator;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
+import androidx.recyclerview.widget.DefaultItemAnimator;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import android.text.Html;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
-import android.view.ScaleGestureDetector;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
@@ -33,7 +31,6 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.FrameLayout;
 import android.widget.GridView;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -55,14 +52,11 @@ import com.google.android.gms.ads.AdView;
 import com.google.android.gms.ads.InterstitialAd;
 
 import org.json.JSONArray;
-import org.json.JSONException;
 import org.json.JSONObject;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
-import java.io.FileReader;
-import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
@@ -108,8 +102,8 @@ public class FlashCardActivity extends AppCompatActivity {
     String cur_questionNo="";
     String report_message="";
 
-    private AdView mAdView;
-    InterstitialAd mInterstitialAd;
+    //private AdView mAdView;
+    //InterstitialAd mInterstitialAd;
     AppEnvironment appEnvironment;
     UserMode userMode;
 
@@ -802,7 +796,7 @@ public class FlashCardActivity extends AppCompatActivity {
 
 
         if(userMode.mode()) {
-            mAdView = (AdView) findViewById(R.id.adView);
+            /*mAdView = (AdView) findViewById(R.id.adView);
             //mAdView.setAdSize(AdSize.BANNER);
             //mAdView.setAdUnitId(getString(R.string.banner_home_footer));
 
@@ -843,13 +837,13 @@ public class FlashCardActivity extends AppCompatActivity {
                 public void onAdOpened() {
                     super.onAdOpened();
                 }
-            });
+            });*/
 
         }
 
 
         if(userMode.mode()) {
-            mInterstitialAd = new InterstitialAd(this);
+           /* mInterstitialAd = new InterstitialAd(this);
 
             // set the ad unit ID
             mInterstitialAd.setAdUnitId(getString(R.string.interstitial_full_screen));
@@ -873,15 +867,17 @@ public class FlashCardActivity extends AppCompatActivity {
                 public void onAdLoaded() {
                     showInterstitial();
                 }
-            });
+            });*/
+
+            AdColonUtility.PlayInterstitialAds(FlashCardActivity.this);
         }
 
     }
 
     private void showInterstitial() {
-        if (mInterstitialAd.isLoaded()) {
+        /*if (mInterstitialAd.isLoaded()) {
             mInterstitialAd.show();
-        }
+        }*/
     }
 
     @Override
@@ -1455,8 +1451,12 @@ public class FlashCardActivity extends AppCompatActivity {
     @Override
     public void onResume() {
 
-        if (mAdView != null) {
+        /*if (mAdView != null) {
             mAdView.resume();
+        }*/
+
+        if(userMode.mode()) {
+            AdColonUtility.requestInterstitial(FlashCardActivity.this);
         }
 
         super.onResume();
@@ -1464,9 +1464,9 @@ public class FlashCardActivity extends AppCompatActivity {
 
     @Override
     public void onPause() {
-        if (mAdView != null) {
+        /*if (mAdView != null) {
             mAdView.pause();
-        }
+        }*/
 
         super.onPause();
     }
@@ -1479,9 +1479,9 @@ public class FlashCardActivity extends AppCompatActivity {
     @Override
     public void onDestroy() {
 
-        if (mAdView != null) {
+        /*if (mAdView != null) {
             mAdView.destroy();
-        }
+        }*/
 
         super.onDestroy();
     }

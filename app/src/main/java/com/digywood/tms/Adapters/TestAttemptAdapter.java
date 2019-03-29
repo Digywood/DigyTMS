@@ -2,14 +2,13 @@ package com.digywood.tms.Adapters;
 
 import android.content.Context;
 import android.content.res.Resources;
-import android.support.v7.widget.RecyclerView;
+import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import com.digywood.tms.Pojo.SingleFlashAttempt;
 import com.digywood.tms.Pojo.SingleTestAttempt;
 import com.digywood.tms.R;
 

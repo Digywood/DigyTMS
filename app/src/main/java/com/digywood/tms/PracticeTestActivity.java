@@ -1,7 +1,6 @@
 package com.digywood.tms;
 
 import android.annotation.SuppressLint;
-import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -9,23 +8,21 @@ import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.database.Cursor;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.Typeface;
-import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.os.Handler;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.app.ActivityOptionsCompat;
-import android.support.v4.content.ContextCompat;
-import android.support.v7.app.ActionBar;
-import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.DefaultItemAnimator;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.text.InputType;
+import androidx.core.app.ActivityCompat;
+import androidx.core.app.ActivityOptionsCompat;
+import androidx.core.content.ContextCompat;
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.DefaultItemAnimator;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import android.util.Log;
 import android.view.GestureDetector;
 import android.view.KeyEvent;
@@ -33,7 +30,6 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
 import android.view.animation.AnimationUtils;
 import android.view.animation.LayoutAnimationController;
 import android.widget.AdapterView;
@@ -42,10 +38,8 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.GridView;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.Spinner;
-import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -69,9 +63,7 @@ import com.digywood.tms.AsynTasks.AsyncCheckInternet;
 import com.digywood.tms.AsynTasks.BagroundTask;
 import com.digywood.tms.DBHelper.DBHelper;
 import com.digywood.tms.Pojo.SingleOptions;
-import com.digywood.tms.Pojo.SingleQuestion;
 import com.digywood.tms.Pojo.SingleQuestionList;
-import com.digywood.tms.Pojo.SingleSections;
 import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
@@ -137,8 +129,8 @@ public class PracticeTestActivity extends AppCompatActivity implements
 
     private static final boolean AUTO_HIDE = true;
 
-    private AdView mAdView;
-    InterstitialAd mInterstitialAd;
+    //private AdView mAdView;
+    //InterstitialAd mInterstitialAd;
 
     AppEnvironment appEnvironment;
     UserMode userMode;
@@ -870,7 +862,7 @@ public class PracticeTestActivity extends AppCompatActivity implements
 
 
         if(userMode.mode()) {
-            mAdView = (AdView) findViewById(R.id.adView);
+            /*mAdView = (AdView) findViewById(R.id.adView);
             //mAdView.setAdSize(AdSize.BANNER);
             //mAdView.setAdUnitId(getString(R.string.banner_home_footer));
 
@@ -913,11 +905,13 @@ public class PracticeTestActivity extends AppCompatActivity implements
                 }
             });
 
+*/
+            AdColonUtility.PlayInterstitialAds(PracticeTestActivity.this);
         }
 
 
         if(userMode.mode()) {
-            mInterstitialAd = new InterstitialAd(this);
+            /*mInterstitialAd = new InterstitialAd(this);
 
             // set the ad unit ID
             mInterstitialAd.setAdUnitId(getString(R.string.interstitial_full_screen));
@@ -941,15 +935,15 @@ public class PracticeTestActivity extends AppCompatActivity implements
                 public void onAdLoaded() {
                     showInterstitial();
                 }
-            });
+            });*/
         }
 
     }
 
     private void showInterstitial() {
-        if (mInterstitialAd.isLoaded()) {
+        /*if (mInterstitialAd.isLoaded()) {
             mInterstitialAd.show();
-        }
+        }*/
     }
 
     //stop the test using test_completion_status=true flag
@@ -1841,9 +1835,9 @@ public class PracticeTestActivity extends AppCompatActivity implements
 
         Log.d(TAG, "onResume:");
 
-        if (mAdView != null) {
+       /* if (mAdView != null) {
             mAdView.resume();
-        }
+        }*/
 
         dataObj = new DBHelper(PracticeTestActivity.this);
 //        int count = dataObj.getAttempCount()-1;
@@ -1855,9 +1849,9 @@ public class PracticeTestActivity extends AppCompatActivity implements
         super.onPause();
         Log.d(TAG, "onPause:");
 
-        if (mAdView != null) {
+        /*if (mAdView != null) {
             mAdView.pause();
-        }
+        }*/
 
 
         dataObj = new DBHelper(PracticeTestActivity.this);
@@ -1884,10 +1878,12 @@ public class PracticeTestActivity extends AppCompatActivity implements
     public void onDestroy() {
         Log.d(TAG, "onDestroy:");
         super.onDestroy();
-
-        if (mAdView != null) {
-            mAdView.destroy();
+        if(userMode.mode()) {
+            AdColonUtility.requestInterstitial(PracticeTestActivity.this);
         }
+        /*if (mAdView != null) {
+            mAdView.destroy();
+        }*/
     }
 
     private Bitmap getTheEncriptedImage(String qbm_image_file) {

@@ -2,7 +2,7 @@
 package com.digywood.tms.Charts;
 
 import android.animation.TimeInterpolator;
-import android.support.annotation.RequiresApi;
+import androidx.annotation.RequiresApi;
 
 /**
  * Easing options.

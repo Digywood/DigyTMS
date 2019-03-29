@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout
+<androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -80,7 +80,7 @@
                     android:textColor="#f8a40500"
                     android:textSize="20sp" />
 
-                <android.support.v7.widget.AppCompatSpinner
+                <androidx.appcompat.widget.AppCompatSpinner
                     android:id="@+id/sp_report"
                     android:layout_width="wrap_content"
                     android:textSize="20sp"
@@ -90,7 +90,7 @@
                     android:textAlignment="center"
                     android:layout_weight="1">
 
-                </android.support.v7.widget.AppCompatSpinner>
+                </androidx.appcompat.widget.AppCompatSpinner>
             </LinearLayout>
 
             <LinearLayout
@@ -144,4 +144,4 @@
         android:src="@drawable/ic_close" />
 
 
-</android.support.constraint.ConstraintLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

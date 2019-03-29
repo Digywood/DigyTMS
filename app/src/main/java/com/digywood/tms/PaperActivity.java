@@ -7,13 +7,13 @@ import android.database.Cursor;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
-import android.support.annotation.NonNull;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.ContextCompat;
-import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
+import androidx.annotation.NonNull;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import android.util.Log;
 import android.view.View;
 import android.view.Window;
@@ -53,7 +53,7 @@ public class PaperActivity extends AppCompatActivity {
     LinearLayoutManager myLayoutManager;
     PaperAdapter pAdp;
 
-    InterstitialAd mInterstitialAd;
+    //InterstitialAd mInterstitialAd;
     AppEnvironment appEnvironment;
     UserMode userMode;
 
@@ -111,7 +111,7 @@ public class PaperActivity extends AppCompatActivity {
         getPapersFromLocal();
 
         if(userMode.mode()) {
-            mInterstitialAd = new InterstitialAd(this);
+            /*mInterstitialAd = new InterstitialAd(this);
 
             // set the ad unit ID
             mInterstitialAd.setAdUnitId(getString(R.string.interstitial_full_screen));
@@ -135,15 +135,44 @@ public class PaperActivity extends AppCompatActivity {
                 public void onAdLoaded() {
                     showInterstitial();
                 }
-            });
+            });*/
+
+            AdColonUtility.PlayInterstitialAds(PaperActivity.this);
         }
 
     }
 
-    private void showInterstitial() {
-        if (mInterstitialAd.isLoaded()) {
-            mInterstitialAd.show();
+    @Override
+    public void onResume() {
+        if(userMode.mode()) {
+            //mRewardedVideoAd.resume(this);
+            AdColonUtility.requestInterstitial(PaperActivity.this);
         }
+
+        super.onResume();
+    }
+
+    @Override
+    public void onPause() {
+        if(userMode.mode()) {
+            //mRewardedVideoAd.pause(this);
+        }
+        super.onPause();
+    }
+
+    @Override
+    public void onDestroy() {
+        if(userMode.mode()) {
+            //mRewardedVideoAd.destroy(this);
+        }
+        super.onDestroy();
+
+    }
+
+    private void showInterstitial() {
+        /*if (mInterstitialAd.isLoaded()) {
+            mInterstitialAd.show();
+        }*/
     }
 
     public void getPapersFromLocal(){

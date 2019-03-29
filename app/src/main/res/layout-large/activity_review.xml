@@ -32,7 +32,7 @@
             android:layout_toStartOf="@+id/fullscreen"
             android:background="#708090">
 
-            <android.support.v7.widget.RecyclerView
+            <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/question_scroll"
                 android:layout_width="wrap_content"
                 android:layout_height="40dp"
@@ -40,7 +40,7 @@
                 android:layout_marginRight="10dp"
                 android:gravity="center"
                 android:orientation="horizontal">
-            </android.support.v7.widget.RecyclerView>
+            </androidx.recyclerview.widget.RecyclerView>
 
         </HorizontalScrollView>
         <ImageView
@@ -149,7 +149,7 @@
                     android:background="#000000"
                     android:id="@+id/view" />
 
-                <android.support.design.widget.FloatingActionButton
+                <com.google.android.material.floatingactionbutton.FloatingActionButton
                     android:id="@+id/btn_group_info"
                     android:layout_width="30dp"
                     android:layout_height="30dp"
@@ -163,7 +163,7 @@
                     android:visibility="visible"
                     app:srcCompat="@drawable/ic_input_24dp" />
 
-                <android.support.design.widget.FloatingActionButton
+                <com.google.android.material.floatingactionbutton.FloatingActionButton
                     android:id="@+id/btn_qadditional"
                     android:layout_width="30dp"
                     android:layout_height="30dp"
@@ -186,12 +186,12 @@
             android:layout_height="match_parent"
             android:layout_weight="1">
 
-            <android.support.v7.widget.RecyclerView
+            <androidx.recyclerview.widget.RecyclerView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/option_view">
 
-            </android.support.v7.widget.RecyclerView>
+            </androidx.recyclerview.widget.RecyclerView>
 
         </LinearLayout>
 

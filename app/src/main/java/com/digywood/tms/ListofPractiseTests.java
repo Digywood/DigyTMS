@@ -8,15 +8,15 @@ import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.ContextCompat;
-import android.support.v7.app.ActionBar;
-import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.DefaultItemAnimator;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
+import androidx.annotation.NonNull;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.DefaultItemAnimator;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Menu;
@@ -34,10 +34,8 @@ import com.digywood.tms.Adapters.PractiseTestAdapter;
 import com.digywood.tms.AsynTasks.AsyncCheckInternet;
 import com.digywood.tms.AsynTasks.AsyncCheckInternet_WithOutProgressBar;
 import com.digywood.tms.AsynTasks.BagroundTask;
-import com.digywood.tms.AsynTasks.DownloadFileAsync;
 import com.digywood.tms.DBHelper.DBHelper;
 import com.digywood.tms.Pojo.SingleDWDQues;
-import com.digywood.tms.Pojo.SingleEnrollment;
 import com.digywood.tms.Pojo.SingleTest;
 import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
@@ -68,7 +66,7 @@ public class ListofPractiseTests extends AppCompatActivity {
     LinearLayoutManager myLayoutManager;
     String studentid="",enrollid="",courseid="",paperid="",subjectid="",downloadjsonpath="",path="",localpath="",filedata="",groupdata="",tfiledwdpath="";
 
-    InterstitialAd mInterstitialAd;
+    //InterstitialAd mInterstitialAd;
     AppEnvironment appEnvironment;
     UserMode userMode;
 
@@ -125,7 +123,7 @@ public class ListofPractiseTests extends AppCompatActivity {
         getTestIdsFromLocal();
 
         if(userMode.mode()) {
-            mInterstitialAd = new InterstitialAd(this);
+            /*mInterstitialAd = new InterstitialAd(this);
 
             // set the ad unit ID
             mInterstitialAd.setAdUnitId(getString(R.string.interstitial_full_screen));
@@ -149,15 +147,15 @@ public class ListofPractiseTests extends AppCompatActivity {
                 public void onAdLoaded() {
                     showInterstitial();
                 }
-            });
+            });*/
         }
 
     }
 
     private void showInterstitial() {
-        if (mInterstitialAd.isLoaded()) {
+        /*if (mInterstitialAd.isLoaded()) {
             mInterstitialAd.show();
-        }
+        }*/
     }
 
     public void getTestIdsFromLocal(){

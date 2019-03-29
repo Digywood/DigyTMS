@@ -6,25 +6,23 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
-import android.support.v7.app.AlertDialog;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
+import androidx.appcompat.app.AlertDialog;
 import android.text.Html;
 import android.util.Log;
-import android.view.KeyEvent;
 import android.view.View;
-import android.support.design.widget.NavigationView;
-import android.support.v4.view.GravityCompat;
-import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBarDrawerToggle;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
+import com.google.android.material.navigation.NavigationView;
+import androidx.core.view.GravityCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.appcompat.app.ActionBarDrawerToggle;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.Window;
 import android.widget.Button;
-import android.widget.LinearLayout;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -34,7 +32,6 @@ import com.digywood.tms.DBHelper.DBHelper;
 import com.digywood.tms.Fragments.CourseFragment;
 import com.digywood.tms.Fragments.HomeFragment;
 import com.digywood.tms.Fragments.EnrollFragment;
-import com.digywood.tms.Pojo.SingleDWDQues;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.MobileAds;
 import com.google.android.gms.ads.reward.RewardItem;
@@ -43,9 +40,8 @@ import com.google.android.gms.ads.reward.RewardedVideoAdListener;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
-import java.util.Calendar;
+
 import java.util.HashMap;
-import java.util.TimeZone;
 
 public class DashBoardNavActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
@@ -60,7 +56,7 @@ public class DashBoardNavActivity extends AppCompatActivity implements Navigatio
     AppEnvironment appEnvironment;
     UserMode userMode;
 
-    private RewardedVideoAd mRewardedVideoAd;
+   // private RewardedVideoAd mRewardedVideoAd;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -140,7 +136,7 @@ public class DashBoardNavActivity extends AppCompatActivity implements Navigatio
         Log.e("FINALURL:--",finalUrl);
 
         if(userMode.mode()) {
-            mRewardedVideoAd = MobileAds.getRewardedVideoAdInstance(this);
+            /*mRewardedVideoAd = MobileAds.getRewardedVideoAdInstance(this);
             mRewardedVideoAd.setRewardedVideoAdListener(new RewardedVideoAdListener() {
 
                 @Override
@@ -188,7 +184,9 @@ public class DashBoardNavActivity extends AppCompatActivity implements Navigatio
                 }
             });
 
-            loadRewardedVideoAd();
+            loadRewardedVideoAd();*/
+
+            AdColonUtility.PlayRewardedInterstitialAds(DashBoardNavActivity.this);
         }
 
     }
@@ -201,10 +199,10 @@ public class DashBoardNavActivity extends AppCompatActivity implements Navigatio
     }
 
 
-    private void loadRewardedVideoAd() {
+    /*private void loadRewardedVideoAd() {
 
-        /*mRewardedVideoAd.loadAd(getString(R.string.rewarded_video),
-                new AdRequest.Builder().build());*/
+        *//*mRewardedVideoAd.loadAd(getString(R.string.rewarded_video),
+                new AdRequest.Builder().build());*//*
         AdRequest adRequest;
         if(appEnvironment==AppEnvironment.DEBUG) {
             adRequest = new AdRequest.Builder()
@@ -219,27 +217,29 @@ public class DashBoardNavActivity extends AppCompatActivity implements Navigatio
 
         // showing the ad to user
         showRewardedVideo();
-    }
+    }*/
 
     private void showRewardedVideo() {
         // make sure the ad is loaded completely before showing it
-        if (mRewardedVideoAd.isLoaded()) {
+        /*if (mRewardedVideoAd.isLoaded()) {
             mRewardedVideoAd.show();
-        }
+        }*/
     }
 
     @Override
     public void onResume() {
         if(userMode.mode()) {
-            mRewardedVideoAd.resume(this);
+            //mRewardedVideoAd.resume(this);
+            AdColonUtility.requestInterstitial(DashBoardNavActivity.this);
         }
+
         super.onResume();
     }
 
     @Override
     public void onPause() {
         if(userMode.mode()) {
-            mRewardedVideoAd.pause(this);
+            //mRewardedVideoAd.pause(this);
         }
         super.onPause();
     }
@@ -247,7 +247,7 @@ public class DashBoardNavActivity extends AppCompatActivity implements Navigatio
     @Override
     public void onDestroy() {
         if(userMode.mode()) {
-            mRewardedVideoAd.destroy(this);
+            //mRewardedVideoAd.destroy(this);
         }
             super.onDestroy();
 
