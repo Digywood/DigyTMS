@@ -1,0 +1,220 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:keepScreenOn="true"
+    tools:context=".Activity_Lesson_Unit_Point_Display">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <com.google.android.exoplayer2.ui.PlayerView
+                        android:id="@+id/video_view"
+                        android:layout_width="800dp"
+                        android:layout_height="465dp"
+                        app:fastforward_increment="30000"
+                        app:hide_on_touch="false"
+                        app:repeat_toggle_modes="none"
+                        app:rewind_increment="30000"
+                        app:show_timeout="10000"
+                        app:use_controller="false"
+                        app:resize_mode="fill">
+                        <ProgressBar
+                            android:id="@+id/progress_bar"
+                            android:layout_width="48dp"
+                            android:layout_height="48dp"
+                            android:layout_gravity="center"/>
+                    </com.google.android.exoplayer2.ui.PlayerView>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="vertical">
+
+                        <ImageView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="8dp"
+                            android:id="@+id/iv_logo_file"
+                            />
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_gravity="center"
+                            android:gravity="center"
+                            android:orientation="vertical">
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center"
+                                android:gravity="center"
+                                android:orientation="horizontal">
+
+
+                                <ImageView
+                                    android:id="@+id/iv_prev"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:src="@drawable/ic_track_prev" />
+
+
+                                <ImageView
+                                    android:id="@+id/iv_play"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginLeft="16dp"
+                                    android:layout_marginRight="16dp"
+                                    android:src="@drawable/ic_play" />
+
+
+                                <ImageView
+                                    android:id="@+id/iv_next"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:src="@drawable/ic_track_next" />
+
+                            </LinearLayout>
+
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="25dp"
+                                android:gravity="center"
+                                android:layout_gravity="center"
+                                android:orientation="vertical">
+
+                                <LinearLayout
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:orientation="horizontal"
+                                    android:gravity="center"
+                                    android:layout_gravity="center">
+
+                                    <ImageView
+                                        android:id="@+id/iv_record_start"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:src="@drawable/ic_record_start"
+                                        android:layout_marginRight="4dp"
+                                        android:visibility="visible" />
+
+                                    <TextView
+                                        android:id="@+id/tv_recording_time"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:layout_marginLeft="4dp"
+                                        android:text="00 m : 00 s"
+                                        android:textColor="@color/colorAccent"
+                                        android:textStyle="bold"/>
+
+                                </LinearLayout>
+
+
+                                <TextView
+                                    android:id="@+id/tv_record_status"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginTop="8dp"
+                                    android:text="Start Recording"/>
+
+
+
+
+                                <!--<Button
+                                    android:id="@+id/btn_record"
+                                    android:layout_width="100dp"
+                                    android:layout_height="wrap_content"
+                                    android:text="Record"/>
+
+                                <Button
+                                    android:id="@+id/btn_Play"
+                                    android:layout_width="100dp"
+                                    android:layout_height="wrap_content"
+                                    android:text="Play"/>-->
+
+                            </LinearLayout>
+
+
+
+
+                            <!--<ImageView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="20dp"
+                                android:src="@drawable/ic_timer_black_24dp"
+                                />-->
+
+
+
+
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center"
+                                android:layout_marginTop="25dp"
+                                android:gravity="center"
+                                android:orientation="horizontal">
+
+                                <ImageView
+                                    android:id="@+id/iv_record_play"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginRight="4dp"
+                                    android:src="@drawable/ic_speaker_play"
+                                    android:visibility="visible" />
+
+                                <TextView
+                                    android:id="@+id/tv_record_play_status"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginLeft="4dp"
+                                    android:text="Start Playing"/>
+                            </LinearLayout>
+
+                            <Button
+                                android:id="@+id/btn_test_start"
+                                android:layout_width="150dp"
+                                android:layout_height="wrap_content"
+                                android:text="START TEST"
+                                android:textStyle="bold"
+                                android:textSize="16sp"
+                                android:layout_marginTop="25dp"
+                                android:enabled="false"/>
+
+                        </LinearLayout>
+
+
+                    </LinearLayout>
+
+
+                </LinearLayout>
+
+
+            </LinearLayout>
+
+        </ScrollView>
+
+    </RelativeLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
