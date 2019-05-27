@@ -128,6 +128,7 @@ public class EnrollFragment extends Fragment {
                     intent.putExtra("enrollid",singleEnrollment.getEnrollid());
                     intent.putExtra("courseid",singleEnrollment.getCourseid());
                     startActivity(intent);
+                    getActivity().finish();
                 }else {
                     new AsyncCheckInternet_WithOutProgressBar(getContext(), new INetStatus() {
                         @Override
@@ -140,6 +141,7 @@ public class EnrollFragment extends Fragment {
                                 intent.putExtra("enrollid",singleEnrollment.getEnrollid());
                                 intent.putExtra("courseid",singleEnrollment.getCourseid());
                                 startActivity(intent);
+                                getActivity().finish();
                             }else {
                                 Toast.makeText(getContext(), "No internet,Please Check Your Connection", Toast.LENGTH_SHORT).show();
                             }
@@ -218,7 +220,7 @@ public class EnrollFragment extends Fragment {
             Log.e("Advtlist.size()", "comes:" + enrollList.size());
             tv_emptyenroll.setVisibility(View.GONE);
             eAdp = new EnrollAdapter(enrollList,getActivity());
-            myLayoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL,false);
+            myLayoutManager = new LinearLayoutManager(getActivity(), RecyclerView.VERTICAL,false);
             rv_enroll.setLayoutManager(myLayoutManager);
             rv_enroll.setItemAnimator(new DefaultItemAnimator());
             rv_enroll.setAdapter(eAdp);

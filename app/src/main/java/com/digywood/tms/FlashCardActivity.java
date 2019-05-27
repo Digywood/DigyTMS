@@ -73,7 +73,7 @@ public class FlashCardActivity extends AppCompatActivity {
     Spinner sp_sections;
     RecyclerView question_scroll;
     ImageView iv_quesimg,iv_fullscreen;
-    String filedata,status="",testId="",testPath="",studentid="",enrollid="",courseid="",imgPath="";
+    String filedata,status="",testId="",testPath="",studentid="",enrollid="",courseid="",imgPath="",orgid="",studentname="",number="",email="";
     String subjectid="",paperid="",rfilename="",startDttm="",endDttm="",tempString="",navclick="";
     int d=0,pos=0,secpos=0,z=0;
     GridView gridView;
@@ -196,8 +196,12 @@ public class FlashCardActivity extends AppCompatActivity {
         Intent cmgintent=getIntent();
         if(cmgintent!=null){
             studentid=cmgintent.getStringExtra("studentid");
+            studentname=cmgintent.getStringExtra("sname");
+            number=cmgintent.getStringExtra("number");
+            email=cmgintent.getStringExtra("email");
             testId=cmgintent.getStringExtra("testId");
             testPath=cmgintent.getStringExtra("testPath");
+            orgid=cmgintent.getStringExtra("orgid");
         }
 
         if(testId!=null){
@@ -1267,9 +1271,13 @@ public class FlashCardActivity extends AppCompatActivity {
 
                         Intent intent = new Intent(FlashCardActivity.this, ListofPractiseTests.class);
                         intent.putExtra("studentid",studentid);
+                        intent.putExtra("sname",studentname);
+                        intent.putExtra("number",number);
+                        intent.putExtra("email",email);
                         intent.putExtra("enrollid",enrollid);
                         intent.putExtra("courseid", courseid);
                         intent.putExtra("paperid",paperid);
+                        intent.putExtra("orgid",orgid);
                         startActivity(intent);
 
                     }
@@ -1355,11 +1363,14 @@ public class FlashCardActivity extends AppCompatActivity {
                         dialog.cancel();
 
                         finish();
-                        Intent intent = new Intent(FlashCardActivity.this, ListofPractiseTests.class);
-                        intent.putExtra("studentid",studentid);
+                        Intent intent = new Intent(FlashCardActivity.this, ListofPractiseTests.class);intent.putExtra("studentid",studentid);
+                        intent.putExtra("sname",studentname);
+                        intent.putExtra("number",number);
+                        intent.putExtra("email",email);
                         intent.putExtra("enrollid",enrollid);
                         intent.putExtra("courseid", courseid);
                         intent.putExtra("paperid",paperid);
+                        intent.putExtra("orgid",orgid);
                         startActivity(intent);
 
                     }

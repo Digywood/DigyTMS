@@ -64,7 +64,7 @@ public class ListofPractiseTests extends AppCompatActivity {
     ArrayList<String> alreadydwdList;
     ArrayList<SingleTest> dwdupdateList;
     LinearLayoutManager myLayoutManager;
-    String studentid="",enrollid="",courseid="",paperid="",subjectid="",downloadjsonpath="",path="",localpath="",filedata="",groupdata="",tfiledwdpath="";
+    String studentid="",enrollid="",courseid="",paperid="",subjectid="",downloadjsonpath="",path="",localpath="",filedata="",groupdata="",tfiledwdpath="",orgid="",studentname="",number="",email="";
 
     //InterstitialAd mInterstitialAd;
     AppEnvironment appEnvironment;
@@ -115,9 +115,13 @@ public class ListofPractiseTests extends AppCompatActivity {
         Intent cmgintent=getIntent();
         if(cmgintent!=null){
             studentid=cmgintent.getStringExtra("studentid");
+            studentname=cmgintent.getStringExtra("sname");
+            number=cmgintent.getStringExtra("number");
+            email=cmgintent.getStringExtra("email");
             enrollid=cmgintent.getStringExtra("enrollid");
             courseid=cmgintent.getStringExtra("courseid");
             paperid=cmgintent.getStringExtra("paperid");
+            orgid=cmgintent.getStringExtra("orgid");
         }
 
         getTestIdsFromLocal();
@@ -186,10 +190,14 @@ public class ListofPractiseTests extends AppCompatActivity {
 
         if (!userMode.mode()) {
             Intent i = new Intent(getApplicationContext(), PaperActivity.class);
-            i.putExtra("studentid", studentid);
-            i.putExtra("enrollid", enrollid);
-            i.putExtra("courseid", courseid);
-            i.putExtra("paperid", paperid);
+            i.putExtra("studentid",studentid);
+            i.putExtra("sname",studentname);
+            i.putExtra("number",number);
+            i.putExtra("email",email);
+            i.putExtra("enrollid",enrollid);
+            i.putExtra("courseid",courseid);
+            i.putExtra("paperid",paperid);
+            i.putExtra("orgid",orgid);
             startActivity(i);
             finish();
         }else {
@@ -199,10 +207,14 @@ public class ListofPractiseTests extends AppCompatActivity {
                     if(netStatus)
                     {
                         Intent i = new Intent(getApplicationContext(), PaperActivity.class);
-                        i.putExtra("studentid", studentid);
-                        i.putExtra("enrollid", enrollid);
-                        i.putExtra("courseid", courseid);
-                        i.putExtra("paperid", paperid);
+                        i.putExtra("studentid",studentid);
+                        i.putExtra("sname",studentname);
+                        i.putExtra("number",number);
+                        i.putExtra("email",email);
+                        i.putExtra("enrollid",enrollid);
+                        i.putExtra("courseid",courseid);
+                        i.putExtra("paperid",paperid);
+                        i.putExtra("orgid",orgid);
                         startActivity(i);
                         finish();
                     }else {
@@ -218,10 +230,14 @@ public class ListofPractiseTests extends AppCompatActivity {
     public void onBackPressed() {
         if (!userMode.mode()) {
             Intent i = new Intent(getApplicationContext(), PaperActivity.class);
-            i.putExtra("studentid", studentid);
-            i.putExtra("enrollid", enrollid);
-            i.putExtra("courseid", courseid);
-            i.putExtra("paperid", paperid);
+            i.putExtra("studentid",studentid);
+            i.putExtra("sname",studentname);
+            i.putExtra("number",number);
+            i.putExtra("email",email);
+            i.putExtra("enrollid",enrollid);
+            i.putExtra("courseid",courseid);
+            i.putExtra("paperid",paperid);
+            i.putExtra("orgid",orgid);
             startActivity(i);
             finish();
         }else {
@@ -231,10 +247,14 @@ public class ListofPractiseTests extends AppCompatActivity {
                     if(netStatus)
                     {
                         Intent i = new Intent(getApplicationContext(), PaperActivity.class);
-                        i.putExtra("studentid", studentid);
-                        i.putExtra("enrollid", enrollid);
-                        i.putExtra("courseid", courseid);
-                        i.putExtra("paperid", paperid);
+                        i.putExtra("studentid",studentid);
+                        i.putExtra("sname",studentname);
+                        i.putExtra("number",number);
+                        i.putExtra("email",email);
+                        i.putExtra("enrollid",enrollid);
+                        i.putExtra("courseid",courseid);
+                        i.putExtra("paperid",paperid);
+                        i.putExtra("orgid",orgid);
                         startActivity(i);
                         finish();
                     }else {
@@ -297,8 +317,8 @@ public class ListofPractiseTests extends AppCompatActivity {
         if (testidList.size() != 0) {
             Log.e("Advtlist.size()", "comes:" + testidList.size());
             tv_emptytests.setVisibility(View.GONE);
-            tAdp = new PractiseTestAdapter(testidList,ListofPractiseTests.this,studentid,enrollid);
-            myLayoutManager = new LinearLayoutManager(ListofPractiseTests.this, LinearLayoutManager.VERTICAL,false);
+            tAdp = new PractiseTestAdapter(testidList,ListofPractiseTests.this,studentid,enrollid,studentname,number,email,courseid,paperid,orgid);
+            myLayoutManager = new LinearLayoutManager(ListofPractiseTests.this, RecyclerView.VERTICAL,false);
             rv_tests.setLayoutManager(myLayoutManager);
             rv_tests.setItemAnimator(new DefaultItemAnimator());
             rv_tests.setAdapter(tAdp);
@@ -430,12 +450,16 @@ public class ListofPractiseTests extends AppCompatActivity {
 
     protected void exitByBackKey() {
         finish();
-        Intent intent = new Intent(ListofPractiseTests.this, PaperActivity.class);
-        intent.putExtra("studentid",studentid);
-        intent.putExtra("enrollid",enrollid);
-        intent.putExtra("courseid",courseid);
-        intent.putExtra("paperid",paperid);
-        startActivity(intent);
+        Intent i = new Intent(ListofPractiseTests.this, Activity_TestTypes.class);
+        i.putExtra("studentid",studentid);
+        i.putExtra("sname",studentname);
+        i.putExtra("number",number);
+        i.putExtra("email",email);
+        i.putExtra("enrollid",enrollid);
+        i.putExtra("courseid",courseid);
+        i.putExtra("paperid",paperid);
+        i.putExtra("orgid",orgid);
+        startActivity(i);
 
     }
 

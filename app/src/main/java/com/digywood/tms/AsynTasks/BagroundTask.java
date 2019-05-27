@@ -269,7 +269,7 @@ import java.util.Map;
 import java.util.Set;
 
 public class BagroundTask extends AsyncTask<Void, String, String> {
-    String TAG="FeedbackBagroundTask";
+    String TAG="BagroundTask";
     String urlAddress;
     HashMap<String, String> hmap;
     String status;
@@ -334,6 +334,8 @@ public class BagroundTask extends AsyncTask<Void, String, String> {
             conn.setRequestProperty("Connection", "Keep-Alive");
             conn.setRequestProperty("cache-control", "no-cache");
             conn.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
+            /*conn.setConnectTimeout(50000); //set timeout to 5 seconds
+            conn.setReadTimeout(50000);*/
 
 
             String input= builder.build().getEncodedQuery();
@@ -343,11 +345,6 @@ public class BagroundTask extends AsyncTask<Void, String, String> {
                 os.write(input.getBytes());
                 os.flush();
             }
-            int responseCode=conn.getResponseCode();
-            status = getHttpStatusDescription(responseCode);
-            publishProgress(status);
-            Log.e(TAG,"responseCode:"+responseCode);
-
 
             // Responses from the server (code and message)
             int  serverResponseCode = conn.getResponseCode();
@@ -377,7 +374,8 @@ public class BagroundTask extends AsyncTask<Void, String, String> {
 
                 if(sb.toString().length()==0)
                 {
-                    resultString=""+serverResponseCode;
+                    //resultString=""+serverResponseCode;
+                    resultString="";
                 }
 
 

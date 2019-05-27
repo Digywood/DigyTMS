@@ -142,6 +142,7 @@ public class HomeFragment extends Fragment {
             @Override
             public void onClick(View v) {
 
+                getActivity().finish();
                 Intent i=new Intent(getActivity(),LearningActivity.class);
                 i.putExtra("studentid",studentid);
                 i.putExtra("sname",studentname);

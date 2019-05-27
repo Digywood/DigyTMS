@@ -98,12 +98,12 @@ public class MainActivity extends AppCompatActivity {
                         enterpwd = et_password.getText().toString();
 
 
-                        if (!userMode.mode()) {
+                       /* if (!userMode.mode()) {*/
                             Cursor mycursor = myhelper.checkStudent(et_email.getText().toString());
                             if (mycursor.getCount() > 0) {
                                 String localpwd = "";
                                 while (mycursor.moveToNext()) {
-                                    localpwd = mycursor.getString(mycursor.getColumnIndex("Student_password"));
+                                    localpwd = mycursor.getString(mycursor.getColumnIndex("Student_password")).trim();
                                    /* try {
                                         localpwd = CryptUtil.decrypt(mycursor.getString(mycursor.getColumnIndex("Student_password")));
                                     } catch (NoSuchPaddingException e) {
@@ -150,7 +150,9 @@ public class MainActivity extends AppCompatActivity {
                                                             try {
                                                                 if (json.equalsIgnoreCase("User_Not_Exist")) {
                                                                     Toast.makeText(getApplicationContext(), "User_Not_Exist", Toast.LENGTH_SHORT).show();
-                                                                } else {
+                                                                } else if(json.equalsIgnoreCase("Pwd_Wrong")) {
+                                                                    Toast.makeText(getApplicationContext(), "Wrong Password, Please Enter Correct Password.. ", Toast.LENGTH_SHORT).show();
+                                                                }else{
                                                                     JSONObject jo = null;
                                                                     JSONArray ja = new JSONArray(json);
                                                                     for (int i = 0; i < ja.length(); i++) {
@@ -165,7 +167,7 @@ public class MainActivity extends AppCompatActivity {
                                                                             Log.e("MainActivity----", "Student Exists in Local");
                                                                         } else {
                                                                             long insertFlag = myhelper.insertStudent(jo.getInt("StudentKey"), jo.getString("StudentID"), jo.getString("Student_Name"), jo.getString("Student_gender"), jo.getString("Student_Education"), jo.getString("Student_DOB"), jo.getString("Student_Address01"), jo.getString("Student_Address02"), jo.getString("Student_City"), jo.getString("Student_State"),
-                                                                                    jo.getString("Student_Country"), jo.getString("Student_Mobile"), jo.getString("Student_email"), jo.getString("Student_password"), jo.getString("Student_mac_id"), jo.getString("Student_Status"), jo.getString("Student_created_by"), jo.getString("Student_created_DtTm"),jo.getString("Student_mod_by"),jo.getString("Student_mod_DtTm"));
+                                                                                    jo.getString("Student_Country"), jo.getString("Student_Mobile"), jo.getString("Student_email"), jo.getString("Student_password").trim(), jo.getString("Student_mac_id"), jo.getString("Student_Status"), jo.getString("Student_created_by"), jo.getString("Student_created_DtTm"),jo.getString("Student_mod_by"),jo.getString("Student_mod_DtTm"));
                                                                             if (insertFlag > 0) {
                                                                                 Log.e("MainActivity----", "Student Inserted in Local");
                                                                             } else {
@@ -201,7 +203,7 @@ public class MainActivity extends AppCompatActivity {
                                 }).execute();
 
                             }
-                        } else {
+                        /*} else {
 
                             new AsyncCheckInternet(MainActivity.this, new INetStatus() {
                                 @Override
@@ -218,7 +220,10 @@ public class MainActivity extends AppCompatActivity {
                                                         try {
                                                             if (json.equalsIgnoreCase("User_Not_Exist")) {
                                                                 Toast.makeText(getApplicationContext(), "User_Not_Exist", Toast.LENGTH_SHORT).show();
-                                                            } else {
+                                                            }else if(json.equalsIgnoreCase("Pwd_Wrong")) {
+                                                                Toast.makeText(getApplicationContext(), "Wrong Password, Please Enter Correct Password.. ", Toast.LENGTH_SHORT).show();
+                                                            }else
+                                                            {
                                                                 JSONObject jo = null;
                                                                 JSONArray ja = new JSONArray(json);
                                                                 for (int i = 0; i < ja.length(); i++) {
@@ -233,7 +238,7 @@ public class MainActivity extends AppCompatActivity {
                                                                         Log.e("MainActivity----", "Student Exists in Local");
                                                                     } else {
                                                                         long insertFlag = myhelper.insertStudent(jo.getInt("StudentKey"), jo.getString("StudentID"), jo.getString("Student_Name"), jo.getString("Student_gender"), jo.getString("Student_Education"), jo.getString("Student_DOB"), jo.getString("Student_Address01"), jo.getString("Student_Address02"), jo.getString("Student_City"), jo.getString("Student_State"),
-                                                                                jo.getString("Student_Country"), jo.getString("Student_Mobile"), jo.getString("Student_email"), jo.getString("Student_password"), jo.getString("Student_mac_id"), jo.getString("Student_Status"), jo.getString("Student_created_by"), jo.getString("Student_created_DtTm"),jo.getString("Student_mod_by"),jo.getString("Student_mod_DtTm"));
+                                                                                jo.getString("Student_Country"), jo.getString("Student_Mobile"), jo.getString("Student_email"), jo.getString("Student_password").trim(), jo.getString("Student_mac_id"), jo.getString("Student_Status"), jo.getString("Student_created_by"), jo.getString("Student_created_DtTm"),jo.getString("Student_mod_by"),jo.getString("Student_mod_DtTm"));
                                                                         if (insertFlag > 0) {
                                                                             Log.e("MainActivity----", "Student Inserted in Local");
                                                                         } else {
@@ -269,7 +274,7 @@ public class MainActivity extends AppCompatActivity {
                                 }
                             }).execute();
 
-                        }
+                        }*/
                     }
                 }
             }

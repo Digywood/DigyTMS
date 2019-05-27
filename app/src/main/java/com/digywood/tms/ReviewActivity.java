@@ -116,6 +116,8 @@ public class ReviewActivity extends AppCompatActivity implements
     DBHelper dataObj;
     GestureDetector gd;
 
+    String studentname="", number="", email="", orgid="";
+
 
     private static final boolean AUTO_HIDE = true;
 
@@ -222,14 +224,23 @@ public class ReviewActivity extends AppCompatActivity implements
         question_scroll.setAdapter(qAdapter);
         rv_option = findViewById(R.id.option_view);
 
-        testid = getIntent().getStringExtra("test");
-        studentId = getIntent().getStringExtra("studentid");
-        courseid = getIntent().getStringExtra("courseid");
-        subjectId = getIntent().getStringExtra("subjectid");
-        paperid = getIntent().getStringExtra("paperid");
-        enrollid = getIntent().getStringExtra("enrollid");
-        instance_Id = getIntent().getStringExtra("instanceid");
-        test_type=getIntent().getStringExtra("TYPE");
+
+        Intent cmgintent=getIntent();
+        if(cmgintent!=null){
+            studentId=cmgintent.getStringExtra("studentid");
+            studentname=cmgintent.getStringExtra("sname");
+            number=cmgintent.getStringExtra("number");
+            email=cmgintent.getStringExtra("email");
+            enrollid=cmgintent.getStringExtra("enrollid");
+            courseid=cmgintent.getStringExtra("courseid");
+            subjectId = getIntent().getStringExtra("subjectid");
+            paperid=cmgintent.getStringExtra("paperid");
+            orgid=cmgintent.getStringExtra("orgid");
+            testid = getIntent().getStringExtra("test");
+            instance_Id = getIntent().getStringExtra("instanceid");
+            test_type=getIntent().getStringExtra("TYPE");
+        }
+
          /*if(test_type.equalsIgnoreCase("PRACTISE_TEST")) {
             Cursor cursor = dataObj.checkPractiseTest(studentId, testid);
             if (cursor.getCount() > 0) {
@@ -1328,11 +1339,15 @@ public class ReviewActivity extends AppCompatActivity implements
                             intent = new Intent(ReviewActivity.this, ListofAssessmentTests.class);
                         }
                         intent.putExtra("studentid", studentId);
+                        intent.putExtra("sname",studentname);
+                        intent.putExtra("number",number);
+                        intent.putExtra("email",email);
                         intent.putExtra("enrollid",enrollid);
                         intent.putExtra("courseid", courseid);
                         intent.putExtra("subjectid", subjectId);
                         intent.putExtra("paperid",paperid);
                         intent.putExtra("testid",testid);
+                        intent.putExtra("orgid",orgid);
                         Log.e("ReviewActivity","stu"+studentId+" pap"+paperid+" enr"+enrollid+" cour"+courseid);
 
                         startActivity(intent);

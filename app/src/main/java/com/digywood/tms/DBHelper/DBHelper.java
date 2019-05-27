@@ -6,7 +6,12 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
+
+import com.digywood.tms.Pojo.Lesson;
+import com.digywood.tms.Pojo.LessonUnit;
+import com.digywood.tms.Pojo.LessonUnitPoint;
 import com.digywood.tms.Pojo.SingleEnrollment;
+import com.digywood.tms.Pojo.SingleOrganization;
 import com.digywood.tms.Pojo.SingleSubcatConfig;
 import java.util.ArrayList;
 
@@ -14,7 +19,7 @@ public class DBHelper extends SQLiteOpenHelper {
 
     Context context;
     SQLiteDatabase db;
-    private static final int DATABASE_VERSION =3;
+    private static final int DATABASE_VERSION =5;
 
     public DBHelper(Context c)
     {
@@ -445,6 +450,121 @@ public class DBHelper extends SQLiteOpenHelper {
                 "  `modifiedDttm` text DEFAULT NULL)";
         db.execSQL(tbl_localservers);
 
+        String tbl_lession_master="CREATE TABLE `lesson_master` (\n" +
+                "  `tms_lms_lesson_key` integer PRIMARY KEY,\n" +
+                "  `tms_lms_lesson_id` text DEFAULT NULL,\n" +
+                "  `tms_lms_lesson_seq_number` text DEFAULT NULL,\n" +
+                "  `tms_lms_course_id` text DEFAULT NULL,\n" +
+                "  `tms_lms_subject_id` text DEFAULT NULL,\n" +
+                "  `tms_lms_paper_id` text DEFAULT NULL,\n" +
+                "  `tms_lms_lesson_name` text DEFAULT NULL,\n" +
+                "  `tms_lms_lesson_lang_code` text DEFAULT NULL,\n" +
+                "  `tms_lms_lesson_long_name` text DEFAULT NULL,\n" +
+                "  `tms_lms_lesson_short_name` text DEFAULT NULL,\n" +
+                "  `tms_lms_lesson_medium` text DEFAULT NULL,\n" +
+                "  `tms_lms_lesson_remark_01` text DEFAULT NULL,\n" +
+                "  `tms_lms_lesson_remark_02` text DEFAULT NULL,\n" +
+                "  `tms_lms_lesson_status` text DEFAULT NULL,\n" +
+                "  `created_by` text DEFAULT NULL,\n" +
+                "  `created_date_time` datetime DEFAULT NULL,\n" +
+                "  `mod_by` text DEFAULT NULL,\n" +
+                "  `mod_date_time` datetime DEFAULT NULL)";
+        db.execSQL(tbl_lession_master);
+
+        String tbl_lesson_unit_master ="CREATE TABLE `lesson_unit_master` (\n" +
+                "  `tms_lu_key` integer PRIMARY KEY,\n" +
+                "  `tms_lu_id` text DEFAULT NULL,\n" +
+                "  `tms_lu_seq_num` text DEFAULT NULL,\n" +
+                "  `tms_lesson_id` text DEFAULT NULL,\n" +
+                "  `tms_lu_course_id` text DEFAULT NULL,\n" +
+                "  `tms_lu_name` text DEFAULT NULL,\n" +
+                "  `tms_lu_lang_code` text DEFAULT NULL,\n" +
+                "  `tms_lu_long_name` text DEFAULT NULL,\n" +
+                "  `tms_lu_short_name` text DEFAULT NULL,\n" +
+                "  `tms_lu_short_lang_name` text DEFAULT NULL,\n" +
+                "  `tms_lu_subject_id` text DEFAULT NULL,\n" +
+                "  `tms_lu_paper_id` text DEFAULT NULL,\n" +
+                "  `tms_lu_remark_01` text DEFAULT NULL,\n" +
+                "  `tms_lu_remark_02` text DEFAULT NULL,\n" +
+                "  `tms_lu_status` text DEFAULT NULL,\n" +
+                "  `created_by` text DEFAULT NULL,\n" +
+                "  `creaated_date_time` datetime DEFAULT NULL,\n" +
+                "  `mod_by` text DEFAULT NULL,\n" +
+                "  `mod_date_time` datetime DEFAULT NULL)";
+        db.execSQL(tbl_lesson_unit_master);
+
+
+        String tbl_lesson_unit_points="CREATE TABLE `lesson_unit_points` (\n" +
+                "  `tms_lup_key` integer PRIMARY KEY,\n" +
+                "  `tms_lup_id` text DEFAULT NULL,\n" +
+                "  `tms_lup_seq_num` integer DEFAULT NULL,\n" +
+                "  `tms_lup_name` text DEFAULT NULL,\n" +
+                "  `tms_lup_short_name` text DEFAULT NULL,\n" +
+                "  `tms_lup_lu_id` text DEFAULT NULL,\n" +
+                "  `tms_lup_lesson_id` text DEFAULT NULL,\n" +
+                "  `tms_lup_course_id` text DEFAULT NULL,\n" +
+                "  `tms_lup_subject_id` text DEFAULT NULL,\n" +
+                "  `tms_lup_paper_id` text DEFAULT NULL,\n" +
+                "  `tms_lup_chapter_id` text DEFAULT NULL,\n" +
+                "  `tms_lup_exp_media_type` text DEFAULT NULL,\n" +
+                "  `tms_lup_exp_media_ukm` text DEFAULT NULL,\n" +
+                "  `tms_lup_exp_media_ukf` text DEFAULT NULL,\n" +
+                "  `tms_lup_exp_media_usm` text DEFAULT NULL,\n" +
+                "  `tms_lup_exp_media_usf` text DEFAULT NULL,\n" +
+                "  `tms_lup_exp_media_cmm` text DEFAULT NULL,\n" +
+                "  `tms_lup_exp_media_cmf` text DEFAULT NULL,\n" +
+                "  `tms_lup_exp_media_gen` text DEFAULT NULL,\n" +
+                "  `tms_lup_prct_media_type` text DEFAULT NULL,\n" +
+                "  `tms_lup_prct_media_ukm` text DEFAULT NULL,\n" +
+                "  `tms_lup_prct_media_ukf` text DEFAULT NULL,\n" +
+                "  `tms_lup_prct_media_usm` text DEFAULT NULL,\n" +
+                "  `tms_lup_prct_media_usf` text DEFAULT NULL,\n" +
+                "  `tms_lup_prct_media_cmm` text DEFAULT NULL,\n" +
+                "  `tms_lup_prct_media_cmf` text DEFAULT NULL,\n" +
+                "  `tms_lup_prct_media_gen` text DEFAULT NULL,\n" +
+                "  `tms_lup_duration` integer DEFAULT NULL,\n" +
+                "  `tms_lup_practice_yes_no` text DEFAULT NULL,\n" +
+                "  `tms_lup_test` text DEFAULT NULL,\n" +
+                "  `tms_lup_test_id` text DEFAULT NULL,\n" +
+                "  `tms_lup_pass_req` text DEFAULT NULL,\n" +
+                "  `tms_lup_remark_01` text DEFAULT NULL,\n" +
+                "  `tms_lup_remark_02` text DEFAULT NULL,\n" +
+                "  `tms_lup_status` text DEFAULT NULL,\n" +
+                "  `tms_lup_created_by` text DEFAULT NULL,\n" +
+                "  `tms_lup_created_date_time` datetime DEFAULT NULL,\n" +
+                "  `tms_lup_mod_by` text DEFAULT NULL,\n" +
+                "  `tms_lup_mod_date_time` datetime DEFAULT NULL)";
+
+        db.execSQL(tbl_lesson_unit_points);
+
+        String tbl_org_master="CREATE TABLE `org_master` (\n" +
+                "  `Ctr_key` integer PRIMARY KEY,\n" +
+                "  `Ctr_orga_id` text DEFAULT NULL,\n" +
+                "  `Ctr_Name` integer DEFAULT NULL,\n" +
+                "  `Ctr_Short_name` text DEFAULT NULL,\n" +
+                "  `Ctr_Address01` text DEFAULT NULL,\n" +
+                "  `Ctr_Address02` text DEFAULT NULL,\n" +
+                "  `Ctr_Area` text DEFAULT NULL,\n" +
+                "  `Ctr_City_Town` text DEFAULT NULL,\n" +
+                "  `Ctr_State` text DEFAULT NULL,\n" +
+                "  `Ctr_Country` text DEFAULT NULL,\n" +
+                "  `Ctr_Person` text DEFAULT NULL,\n" +
+                "  `Ctr_Mobile` text DEFAULT NULL,\n" +
+                "  `Ctr_email` text DEFAULT NULL,\n" +
+                "  `Ctr_logo_file` blob DEFAULT NULL,\n" +
+                "  `Ctr_Start_Date` text DEFAULT NULL,\n" +
+                "  `Ctr_End_Date` text DEFAULT NULL,\n" +
+                "  `Ctr_Type` text DEFAULT NULL,\n" +
+                "  `Ctr_category` text DEFAULT NULL,\n" +
+                "  `Ctr_sub_category` text DEFAULT NULL,\n" +
+                "  `ctr_Status` text DEFAULT NULL,\n" +
+                "  `Ctr_created_by` text DEFAULT NULL,\n" +
+                "  `Ctr_created_DtTm` text DEFAULT NULL,\n" +
+                "  `Ctr_Mod_by` text DEFAULT NULL,\n" +
+                "  `Ctr_Mod_DtTm` text DEFAULT NULL)";
+
+        db.execSQL(tbl_org_master);
+
     }
 
     @Override
@@ -457,11 +577,128 @@ public class DBHelper extends SQLiteOpenHelper {
                 db.execSQL("ALTER TABLE satu_student ADD COLUMN `satu_Test_Time` text DEFAULT NULL;");
                 db.execSQL("ALTER TABLE satu_student ADD COLUMN `satu_Test_Type` text DEFAULT NULL;");
                 // upgrade logic from version 1 to 2
-                break;
             case 2:
                 db.execSQL("ALTER TABLE sptu_student ADD COLUMN `sptu_sequence` integer  ;");
                 // upgrade logic from version 2 to 3
+            case 3:
+
+                String tbl_lession_master="CREATE TABLE `lesson_master` (\n" +
+                        "  `tms_lms_lesson_key` integer PRIMARY KEY,\n" +
+                        "  `tms_lms_lesson_id` text DEFAULT NULL,\n" +
+                        "  `tms_lms_lesson_seq_number` text DEFAULT NULL,\n" +
+                        "  `tms_lms_course_id` text DEFAULT NULL,\n" +
+                        "  `tms_lms_subject_id` text DEFAULT NULL,\n" +
+                        "  `tms_lms_paper_id` text DEFAULT NULL,\n" +
+                        "  `tms_lms_lesson_name` text DEFAULT NULL,\n" +
+                        "  `tms_lms_lesson_lang_code` text DEFAULT NULL,\n" +
+                        "  `tms_lms_lesson_long_name` text DEFAULT NULL,\n" +
+                        "  `tms_lms_lesson_short_name` text DEFAULT NULL,\n" +
+                        "  `tms_lms_lesson_medium` text DEFAULT NULL,\n" +
+                        "  `tms_lms_lesson_remark_01` text DEFAULT NULL,\n" +
+                        "  `tms_lms_lesson_remark_02` text DEFAULT NULL,\n" +
+                        "  `tms_lms_lesson_status` text DEFAULT NULL,\n" +
+                        "  `created_by` text DEFAULT NULL,\n" +
+                        "  `created_date_time` datetime DEFAULT NULL,\n" +
+                        "  `mod_by` text DEFAULT NULL,\n" +
+                        "  `mod_date_time` datetime DEFAULT NULL)";
+                db.execSQL(tbl_lession_master);
+
+                String tbl_lesson_unit_master ="CREATE TABLE `lesson_unit_master` (\n" +
+                        "  `tms_lu_key` integer PRIMARY KEY,\n" +
+                        "  `tms_lu_id` text DEFAULT NULL,\n" +
+                        "  `tms_lu_seq_num` text DEFAULT NULL,\n" +
+                        "  `tms_lesson_id` text DEFAULT NULL,\n" +
+                        "  `tms_lu_course_id` text DEFAULT NULL,\n" +
+                        "  `tms_lu_name` text DEFAULT NULL,\n" +
+                        "  `tms_lu_lang_code` text DEFAULT NULL,\n" +
+                        "  `tms_lu_long_name` text DEFAULT NULL,\n" +
+                        "  `tms_lu_short_name` text DEFAULT NULL,\n" +
+                        "  `tms_lu_short_lang_name` text DEFAULT NULL,\n" +
+                        "  `tms_lu_subject_id` text DEFAULT NULL,\n" +
+                        "  `tms_lu_paper_id` text DEFAULT NULL,\n" +
+                        "  `tms_lu_remark_01` text DEFAULT NULL,\n" +
+                        "  `tms_lu_remark_02` text DEFAULT NULL,\n" +
+                        "  `tms_lu_status` text DEFAULT NULL,\n" +
+                        "  `created_by` text DEFAULT NULL,\n" +
+                        "  `creaated_date_time` datetime DEFAULT NULL,\n" +
+                        "  `mod_by` text DEFAULT NULL,\n" +
+                        "  `mod_date_time` datetime DEFAULT NULL)";
+                db.execSQL(tbl_lesson_unit_master);
+
+                String tbl_lesson_unit_points="CREATE TABLE `lesson_unit_points` (\n" +
+                        "  `tms_lup_key` integer PRIMARY KEY,\n" +
+                        "  `tms_lup_id` text DEFAULT NULL,\n" +
+                        "  `tms_lup_seq_num` integer DEFAULT NULL,\n" +
+                        "  `tms_lup_name` text DEFAULT NULL,\n" +
+                        "  `tms_lup_short_name` text DEFAULT NULL,\n" +
+                        "  `tms_lup_lu_id` text DEFAULT NULL,\n" +
+                        "  `tms_lup_lesson_id` text DEFAULT NULL,\n" +
+                        "  `tms_lup_course_id` text DEFAULT NULL,\n" +
+                        "  `tms_lup_subject_id` text DEFAULT NULL,\n" +
+                        "  `tms_lup_paper_id` text DEFAULT NULL,\n" +
+                        "  `tms_lup_chapter_id` text DEFAULT NULL,\n" +
+                        "  `tms_lup_exp_media_type` text DEFAULT NULL,\n" +
+                        "  `tms_lup_exp_media_ukm` text DEFAULT NULL,\n" +
+                        "  `tms_lup_exp_media_ukf` text DEFAULT NULL,\n" +
+                        "  `tms_lup_exp_media_usm` text DEFAULT NULL,\n" +
+                        "  `tms_lup_exp_media_usf` text DEFAULT NULL,\n" +
+                        "  `tms_lup_exp_media_cmm` text DEFAULT NULL,\n" +
+                        "  `tms_lup_exp_media_cmf` text DEFAULT NULL,\n" +
+                        "  `tms_lup_exp_media_gen` text DEFAULT NULL,\n" +
+                        "  `tms_lup_prct_media_type` text DEFAULT NULL,\n" +
+                        "  `tms_lup_prct_media_ukm` text DEFAULT NULL,\n" +
+                        "  `tms_lup_prct_media_ukf` text DEFAULT NULL,\n" +
+                        "  `tms_lup_prct_media_usm` text DEFAULT NULL,\n" +
+                        "  `tms_lup_prct_media_usf` text DEFAULT NULL,\n" +
+                        "  `tms_lup_prct_media_cmm` text DEFAULT NULL,\n" +
+                        "  `tms_lup_prct_media_cmf` text DEFAULT NULL,\n" +
+                        "  `tms_lup_prct_media_gen` text DEFAULT NULL,\n" +
+                        "  `tms_lup_duration` integer DEFAULT NULL,\n" +
+                        "  `tms_lup_practice_yes_no` text DEFAULT NULL,\n" +
+                        "  `tms_lup_test` text DEFAULT NULL,\n" +
+                        "  `tms_lup_test_id` text DEFAULT NULL,\n" +
+                        "  `tms_lup_pass_req` text DEFAULT NULL,\n" +
+                        "  `tms_lup_remark_01` text DEFAULT NULL,\n" +
+                        "  `tms_lup_remark_02` text DEFAULT NULL,\n" +
+                        "  `tms_lup_status` text DEFAULT NULL,\n" +
+                        "  `tms_lup_created_by` text DEFAULT NULL,\n" +
+                        "  `tms_lup_created_date_time` datetime DEFAULT NULL,\n" +
+                        "  `tms_lup_mod_by` text DEFAULT NULL,\n" +
+                        "  `tms_lup_mod_date_time` datetime DEFAULT NULL)";
+
+                db.execSQL(tbl_lesson_unit_points);
+
+                // upgrade logic from version 3 to 4
+            case 4:
+                    String tbl_org_master="CREATE TABLE `org_master` (\n" +
+                            "  `Ctr_key` integer PRIMARY KEY,\n" +
+                            "  `Ctr_orga_id` text DEFAULT NULL,\n" +
+                            "  `Ctr_Name` integer DEFAULT NULL,\n" +
+                            "  `Ctr_Short_name` text DEFAULT NULL,\n" +
+                            "  `Ctr_Address01` text DEFAULT NULL,\n" +
+                            "  `Ctr_Address02` text DEFAULT NULL,\n" +
+                            "  `Ctr_Area` text DEFAULT NULL,\n" +
+                            "  `Ctr_City_Town` text DEFAULT NULL,\n" +
+                            "  `Ctr_State` text DEFAULT NULL,\n" +
+                            "  `Ctr_Country` text DEFAULT NULL,\n" +
+                            "  `Ctr_Person` text DEFAULT NULL,\n" +
+                            "  `Ctr_Mobile` text DEFAULT NULL,\n" +
+                            "  `Ctr_email` text DEFAULT NULL,\n" +
+                            "  `Ctr_logo_file` blob DEFAULT NULL,\n" +
+                            "  `Ctr_Start_Date` text DEFAULT NULL,\n" +
+                            "  `Ctr_End_Date` text DEFAULT NULL,\n" +
+                            "  `Ctr_Type` text DEFAULT NULL,\n" +
+                            "  `Ctr_category` text DEFAULT NULL,\n" +
+                            "  `Ctr_sub_category` text DEFAULT NULL,\n" +
+                            "  `ctr_Status` text DEFAULT NULL,\n" +
+                            "  `Ctr_created_by` text DEFAULT NULL,\n" +
+                            "  `Ctr_created_DtTm` text DEFAULT NULL,\n" +
+                            "  `Ctr_Mod_by` text DEFAULT NULL,\n" +
+                            "  `Ctr_Mod_DtTm` text DEFAULT NULL)";
+
+                    db.execSQL(tbl_org_master);
                 break;
+
             default:
                 throw new IllegalStateException("onUpgrade() with unknown old version "+oldVersion);
         }
@@ -2726,5 +2963,369 @@ public class DBHelper extends SQLiteOpenHelper {
         return updateFlag;
     }
 
+
+    public long deleteAll_lesson_master(){
+        long deleteFlag=0;
+        deleteFlag=db.delete("lesson_master", null, null);
+        return  deleteFlag;
+    }
+
+
+
+    public long insertlesson_master(int tms_lms_lesson_key,String tms_lms_lesson_id,String tms_lms_lesson_seq_number,String tms_lms_course_id,
+                                    String tms_lms_subject_id,String tms_lms_paper_id,String tms_lms_lesson_name,String tms_lms_lesson_lang_code,
+                                    String tms_lms_lesson_long_name,String tms_lms_lesson_short_name,String tms_lms_lesson_medium,
+                                    String tms_lms_lesson_remark_01,String tms_lms_lesson_remark_02,String tms_lms_lesson_status,
+                                    String created_by,String created_date_time,String mod_by,String mod_date_time){
+        long insertFlag= 0;
+        ContentValues cv = new ContentValues();
+        cv.put("tms_lms_lesson_key",tms_lms_lesson_key);
+        cv.put("tms_lms_lesson_id",tms_lms_lesson_id);
+        cv.put("tms_lms_lesson_seq_number",tms_lms_lesson_seq_number);
+        cv.put("tms_lms_course_id",tms_lms_course_id);
+        cv.put("tms_lms_subject_id",tms_lms_subject_id);
+        cv.put("tms_lms_paper_id",tms_lms_paper_id);
+        cv.put("tms_lms_lesson_name",tms_lms_lesson_name);
+        cv.put("tms_lms_lesson_lang_code",tms_lms_lesson_lang_code);
+        cv.put("tms_lms_lesson_long_name",tms_lms_lesson_long_name);
+        cv.put("tms_lms_lesson_short_name",tms_lms_lesson_short_name);
+        cv.put("tms_lms_lesson_medium",tms_lms_lesson_medium);
+        cv.put("tms_lms_lesson_remark_01",tms_lms_lesson_remark_01);
+        cv.put("tms_lms_lesson_remark_02",tms_lms_lesson_remark_02);
+        cv.put("tms_lms_lesson_status",tms_lms_lesson_status);
+        cv.put("created_by",created_by);
+        cv.put("created_date_time",created_date_time);
+        cv.put("mod_by",mod_by);
+        cv.put("mod_date_time",mod_date_time);
+        insertFlag = db.insert("lesson_master",null, cv);
+        return insertFlag;
+    }
+
+
+    public long deleteAll_lesson_unit_master(){
+        long deleteFlag=0;
+        deleteFlag=db.delete("lesson_unit_master", null, null);
+        return  deleteFlag;
+    }
+
+    public long insert_lesson_unit_master(int tms_lu_key,String tms_lu_id,String tms_lu_seq_num,String tms_lesson_id,String tms_lu_course_id,
+                                          String tms_lu_name,String tms_lu_lang_code,String tms_lu_long_name,String tms_lu_short_name,
+                                          String tms_lu_short_lang_name,String tms_lu_subject_id,String tms_lu_paper_id,String tms_lu_remark_01,
+                                          String tms_lu_remark_02,String tms_lu_status,String created_by,String creaated_date_time,String mod_by,
+                                          String mod_date_time){
+        long insertFlag= 0;
+        ContentValues cv = new ContentValues();
+        cv.put("tms_lu_key",tms_lu_key);
+        cv.put("tms_lu_id",tms_lu_id);
+        cv.put("tms_lu_seq_num",tms_lu_seq_num);
+        cv.put("tms_lesson_id",tms_lesson_id);
+        cv.put("tms_lu_course_id",tms_lu_course_id);
+        cv.put("tms_lu_name",tms_lu_name);
+        cv.put("tms_lu_lang_code",tms_lu_lang_code);
+        cv.put("tms_lu_long_name",tms_lu_long_name);
+        cv.put("tms_lu_short_name",tms_lu_short_name);
+        cv.put("tms_lu_short_lang_name",tms_lu_short_lang_name);
+        cv.put("tms_lu_subject_id",tms_lu_subject_id);
+        cv.put("tms_lu_paper_id",tms_lu_paper_id);
+        cv.put("tms_lu_remark_01",tms_lu_remark_01);
+        cv.put("tms_lu_remark_02",tms_lu_remark_02);
+        cv.put("tms_lu_status",tms_lu_status);
+        cv.put("created_by",created_by);
+        cv.put("creaated_date_time",creaated_date_time);
+        cv.put("mod_by",mod_by);
+        cv.put("mod_date_time",mod_date_time);
+        insertFlag = db.insert("lesson_unit_master",null, cv);
+        return insertFlag;
+    }
+
+    public long deleteAll_lesson_unit_points(){
+        long deleteFlag=0;
+        deleteFlag=db.delete("lesson_unit_points", null, null);
+        return  deleteFlag;
+    }
+
+    public long insert_lesson_unit_points(int tms_lup_key, String tms_lup_id, String tms_lup_seq_num, String tms_lup_name,
+                                          String tms_lup_short_name, String tms_lup_lu_id, String tms_lup_lesson_id, String tms_lup_course_id,
+                                          String tms_lup_subject_id, String tms_lup_paper_id, String tms_lup_chapter_id, String tms_lup_exp_media_type,
+                                          String tms_lup_exp_media_ukm, String tms_lup_exp_media_ukf, String tms_lup_exp_media_usm, String tms_lup_exp_media_usf,
+                                          String tms_lup_exp_media_cmm, String tms_lup_exp_media_cmf, String tms_lup_exp_media_gen,
+                                          String tms_lup_prct_media_type, String tms_lup_prct_media_ukm, String tms_lup_prct_media_ukf, String tms_lup_prct_media_usm,
+                                          String tms_lup_prct_media_usf, String tms_lup_prct_media_cmm, String tms_lup_prct_media_cmf, String tms_lup_prct_media_gen,
+                                          String tms_lup_duration, String tms_lup_practice_yes_no,
+                                          String tms_lup_test, String tms_lup_test_id, String tms_lup_pass_req, String tms_lup_remark_01, String tms_lup_remark_02,
+                                          String tms_lup_status, String tms_lup_created_by, String tms_lup_created_date_time, String tms_lup_mod_by, String tms_lup_mod_date_time){
+        long insertFlag= 0;
+        ContentValues cv = new ContentValues();
+        cv.put("tms_lup_key",tms_lup_key);
+        cv.put("tms_lup_id",tms_lup_id);
+        cv.put("tms_lup_seq_num",tms_lup_seq_num);
+        cv.put("tms_lup_name",tms_lup_name);
+        cv.put("tms_lup_short_name",tms_lup_short_name);
+        cv.put("tms_lup_lu_id",tms_lup_lu_id);
+        cv.put("tms_lup_lesson_id",tms_lup_lesson_id);
+        cv.put("tms_lup_course_id",tms_lup_course_id);
+        cv.put("tms_lup_subject_id",tms_lup_subject_id);
+        cv.put("tms_lup_paper_id",tms_lup_paper_id);
+        cv.put("tms_lup_chapter_id",tms_lup_chapter_id);
+        cv.put("tms_lup_exp_media_type",tms_lup_exp_media_type);
+        cv.put("tms_lup_exp_media_ukm",tms_lup_exp_media_ukm);
+        cv.put("tms_lup_exp_media_ukf",tms_lup_exp_media_ukf);
+        cv.put("tms_lup_exp_media_usm",tms_lup_exp_media_usm);
+        cv.put("tms_lup_exp_media_usf",tms_lup_exp_media_usf);
+        cv.put("tms_lup_exp_media_cmm",tms_lup_exp_media_cmm);
+        cv.put("tms_lup_exp_media_cmf",tms_lup_exp_media_cmf);
+        cv.put("tms_lup_exp_media_gen",tms_lup_exp_media_gen);
+        cv.put("tms_lup_prct_media_type",tms_lup_prct_media_type);
+        cv.put("tms_lup_prct_media_ukm",tms_lup_prct_media_ukm);
+        cv.put("tms_lup_prct_media_ukf",tms_lup_prct_media_ukf);
+        cv.put("tms_lup_prct_media_usm",tms_lup_prct_media_usm);
+        cv.put("tms_lup_prct_media_usf",tms_lup_prct_media_usf);
+        cv.put("tms_lup_prct_media_cmm",tms_lup_prct_media_cmm);
+        cv.put("tms_lup_prct_media_cmf",tms_lup_prct_media_cmf);
+        cv.put("tms_lup_prct_media_gen",tms_lup_prct_media_gen);
+        cv.put("tms_lup_duration",tms_lup_duration);
+        cv.put("tms_lup_practice_yes_no",tms_lup_practice_yes_no);
+        cv.put("tms_lup_test",tms_lup_test);
+        cv.put("tms_lup_test_id",tms_lup_test_id);
+        cv.put("tms_lup_pass_req",tms_lup_pass_req);
+        cv.put("tms_lup_remark_01",tms_lup_remark_01);
+        cv.put("tms_lup_remark_02",tms_lup_remark_02);
+        cv.put("tms_lup_status",tms_lup_status);
+        cv.put("tms_lup_created_by",tms_lup_created_by);
+        cv.put("tms_lup_created_date_time",tms_lup_created_date_time);
+        cv.put("tms_lup_mod_by",tms_lup_mod_by);
+        cv.put("tms_lup_mod_date_time",tms_lup_mod_date_time);
+        insertFlag = db.insert("lesson_unit_points",null, cv);
+        return insertFlag;
+    }
+
+
+    public ArrayList<Lesson> getLessons(String tms_lms_course_id,String tms_lms_subject_id,String tms_lms_paper_id){
+        ArrayList<Lesson> al_lessions=new ArrayList<>();
+        Cursor mycursor =db.query("lesson_master", new String[] {"tms_lms_lesson_key,tms_lms_lesson_id,tms_lms_lesson_seq_number,tms_lms_course_id,tms_lms_subject_id,tms_lms_paper_id,tms_lms_lesson_name,tms_lms_lesson_lang_code, tms_lms_lesson_long_name,tms_lms_lesson_short_name,tms_lms_lesson_medium,tms_lms_lesson_remark_01,tms_lms_lesson_remark_02,tms_lms_lesson_status,created_by,created_date_time,mod_by,mod_date_time"},"tms_lms_course_id='"+tms_lms_course_id+"'  and tms_lms_paper_id='"+tms_lms_paper_id+"' and tms_lms_lesson_status='ACTIVE'" , null, null, null,null);
+
+        Log.e("DBHelper","mycursor length:"+mycursor.getCount());
+
+        if(mycursor.getCount()>0){
+            while (mycursor.moveToNext()) {
+
+                al_lessions.add(new Lesson(mycursor.getInt(mycursor.getColumnIndex("tms_lms_lesson_key")),
+                        mycursor.getString(mycursor.getColumnIndex("tms_lms_lesson_id")),
+                        mycursor.getString(mycursor.getColumnIndex("tms_lms_lesson_seq_number")),
+                        mycursor.getString(mycursor.getColumnIndex("tms_lms_course_id")),
+                        mycursor.getString(mycursor.getColumnIndex("tms_lms_subject_id")),
+                        mycursor.getString(mycursor.getColumnIndex("tms_lms_paper_id")),
+                        mycursor.getString(mycursor.getColumnIndex("tms_lms_lesson_name")),
+                        mycursor.getString(mycursor.getColumnIndex("tms_lms_lesson_lang_code")),
+                        mycursor.getString(mycursor.getColumnIndex("tms_lms_lesson_long_name")),
+                        mycursor.getString(mycursor.getColumnIndex("tms_lms_lesson_short_name")),
+                        mycursor.getString(mycursor.getColumnIndex("tms_lms_lesson_medium")),
+                        mycursor.getString(mycursor.getColumnIndex("tms_lms_lesson_remark_01")),
+                        mycursor.getString(mycursor.getColumnIndex("tms_lms_lesson_remark_02")),
+                        mycursor.getString(mycursor.getColumnIndex("tms_lms_lesson_status")),
+                        mycursor.getString(mycursor.getColumnIndex("created_by")),
+                        mycursor.getString(mycursor.getColumnIndex("created_date_time")),
+                        mycursor.getString(mycursor.getColumnIndex("mod_by")),
+                        mycursor.getString(mycursor.getColumnIndex("mod_date_time"))
+                       ));
+            }
+        }else{
+            mycursor.close();
+        }
+
+        return  al_lessions;
+    }
+
+
+
+
+    public ArrayList<LessonUnit> getLessonUnits(String tms_lu_course_id, String tms_lu_subject_id, String tms_lu_paper_id,String tms_lesson_id){
+        ArrayList<LessonUnit> al_lessionUnits=new ArrayList<>();
+        Cursor mycursor =db.query("lesson_unit_master", new String[] {"tms_lu_key,\n" +
+                "     tms_lu_id, tms_lu_seq_num, tms_lesson_id, tms_lu_course_id,\n" +
+                "     tms_lu_name, tms_lu_lang_code, tms_lu_long_name, tms_lu_short_name,\n" +
+                "     tms_lu_short_lang_name, tms_lu_subject_id, tms_lu_paper_id, tms_lu_remark_01,\n" +
+                "     tms_lu_remark_02, tms_lu_status, created_by, creaated_date_time, mod_by,\n" +
+                "     mod_date_time"},"tms_lu_course_id='"+tms_lu_course_id+"'  and tms_lu_paper_id='"+tms_lu_paper_id+"' and tms_lesson_id='"+tms_lesson_id+"'  and tms_lu_status='ACTIVE'" , null, null, null,null);
+
+        Log.e("DBHelper","mycursor length:"+mycursor.getCount());
+
+        if(mycursor.getCount()>0){
+            while (mycursor.moveToNext()) {
+
+                al_lessionUnits.add(new LessonUnit(mycursor.getInt(mycursor.getColumnIndex("tms_lu_key")),
+                        mycursor.getString(mycursor.getColumnIndex("tms_lu_id")),
+                        mycursor.getString(mycursor.getColumnIndex("tms_lu_seq_num")),
+                        mycursor.getString(mycursor.getColumnIndex("tms_lesson_id")),
+                        mycursor.getString(mycursor.getColumnIndex("tms_lu_course_id")),
+                        mycursor.getString(mycursor.getColumnIndex("tms_lu_name")),
+                        mycursor.getString(mycursor.getColumnIndex("tms_lu_lang_code")),
+                        mycursor.getString(mycursor.getColumnIndex("tms_lu_long_name")),
+                        mycursor.getString(mycursor.getColumnIndex("tms_lu_short_name")),
+                        mycursor.getString(mycursor.getColumnIndex("tms_lu_short_lang_name")),
+                        mycursor.getString(mycursor.getColumnIndex("tms_lu_subject_id")),
+                        mycursor.getString(mycursor.getColumnIndex("tms_lu_paper_id")),
+                        mycursor.getString(mycursor.getColumnIndex("tms_lu_remark_01")),
+                        mycursor.getString(mycursor.getColumnIndex("tms_lu_remark_02")),
+                        mycursor.getString(mycursor.getColumnIndex("tms_lu_status")),
+                        mycursor.getString(mycursor.getColumnIndex("created_by")),
+                        mycursor.getString(mycursor.getColumnIndex("creaated_date_time")),
+                        mycursor.getString(mycursor.getColumnIndex("mod_by")),
+                        mycursor.getString(mycursor.getColumnIndex("mod_date_time"))
+                ));
+            }
+        }else{
+            mycursor.close();
+        }
+
+        return  al_lessionUnits;
+    }
+
+    public ArrayList<LessonUnitPoint> getLessonUnitpoints(String tms_lup_course_id, String tms_lup_subject_id, String tms_lup_paper_id, String tms_lup_lesson_id,String tms_lup_lu_id){
+        ArrayList<LessonUnitPoint> al_lessionUnit_points=new ArrayList<>();
+        Cursor mycursor =db.query("lesson_unit_points", new String[] {"tms_lup_key,tms_lup_id,  tms_lup_seq_num,  tms_lup_name,\n" +
+                "     tms_lup_short_name,  tms_lup_lu_id,  tms_lup_lesson_id,  tms_lup_course_id,\n" +
+                "     tms_lup_subject_id,  tms_lup_paper_id,  tms_lup_chapter_id,  tms_lup_exp_media_type,\n" +
+                "     tms_lup_exp_media_ukm,  tms_lup_exp_media_ukf,  tms_lup_exp_media_usm,  tms_lup_exp_media_usf,\n" +
+                "     tms_lup_exp_media_cmm,  tms_lup_exp_media_cmf,  tms_lup_exp_media_gen,\n" +
+                "     tms_lup_prct_media_type,  tms_lup_prct_media_ukm,  tms_lup_prct_media_ukf,  tms_lup_prct_media_usm,\n" +
+                "     tms_lup_prct_media_usf,  tms_lup_prct_media_cmm,  tms_lup_prct_media_cmf,  tms_lup_prct_media_gen,\n" +
+                "     tms_lup_duration,  tms_lup_practice_yes_no,\n" +
+                "     tms_lup_test,  tms_lup_test_id,  tms_lup_pass_req,  tms_lup_remark_01,  tms_lup_remark_02,\n" +
+                "     tms_lup_status,  tms_lup_created_by,  tms_lup_created_date_time,  tms_lup_mod_by,  tms_lup_mod_date_time"},"tms_lup_course_id='"+tms_lup_course_id+"'  and tms_lup_paper_id='"+tms_lup_paper_id+"' and tms_lup_lesson_id='"+tms_lup_lesson_id+"' and tms_lup_lu_id='"+tms_lup_lu_id+"' and tms_lup_status='ACTIVE'" , null, null, null,null);
+
+        Log.e("DBHelper","mycursor length:"+mycursor.getCount());
+
+
+        if(mycursor.getCount()>0){
+            while (mycursor.moveToNext()) {
+
+                al_lessionUnit_points.add(new LessonUnitPoint(mycursor.getInt(mycursor.getColumnIndex("tms_lup_key")),
+                        mycursor.getString(mycursor.getColumnIndex("tms_lup_id")),
+                        mycursor.getString(mycursor.getColumnIndex("tms_lup_seq_num")),
+                        mycursor.getString(mycursor.getColumnIndex("tms_lup_name")),
+                        mycursor.getString(mycursor.getColumnIndex("tms_lup_short_name")),
+                        mycursor.getString(mycursor.getColumnIndex("tms_lup_lu_id")),
+                        mycursor.getString(mycursor.getColumnIndex("tms_lup_lesson_id")),
+                        mycursor.getString(mycursor.getColumnIndex("tms_lup_course_id")),
+                        mycursor.getString(mycursor.getColumnIndex("tms_lup_subject_id")),
+                        mycursor.getString(mycursor.getColumnIndex("tms_lup_paper_id")),
+                        mycursor.getString(mycursor.getColumnIndex("tms_lup_chapter_id")),
+                        mycursor.getString(mycursor.getColumnIndex("tms_lup_exp_media_type")),
+                        mycursor.getString(mycursor.getColumnIndex("tms_lup_exp_media_ukm")),
+                        mycursor.getString(mycursor.getColumnIndex("tms_lup_exp_media_ukf")),
+                        mycursor.getString(mycursor.getColumnIndex("tms_lup_exp_media_usm")),
+                        mycursor.getString(mycursor.getColumnIndex("tms_lup_exp_media_usf")),
+                        mycursor.getString(mycursor.getColumnIndex("tms_lup_exp_media_cmm")),
+                        mycursor.getString(mycursor.getColumnIndex("tms_lup_exp_media_cmf")),
+                        mycursor.getString(mycursor.getColumnIndex("tms_lup_exp_media_gen")),
+                        mycursor.getString(mycursor.getColumnIndex("tms_lup_prct_media_type")),
+                        mycursor.getString(mycursor.getColumnIndex("tms_lup_prct_media_ukm")),
+                        mycursor.getString(mycursor.getColumnIndex("tms_lup_prct_media_ukf")),
+                        mycursor.getString(mycursor.getColumnIndex("tms_lup_prct_media_usm")),
+                        mycursor.getString(mycursor.getColumnIndex("tms_lup_prct_media_usf")),
+                        mycursor.getString(mycursor.getColumnIndex("tms_lup_prct_media_cmm")),
+                        mycursor.getString(mycursor.getColumnIndex("tms_lup_prct_media_cmf")),
+                        mycursor.getString(mycursor.getColumnIndex("tms_lup_prct_media_gen")),
+                        mycursor.getString(mycursor.getColumnIndex("tms_lup_duration")),
+                        mycursor.getString(mycursor.getColumnIndex("tms_lup_practice_yes_no")),
+                        mycursor.getString(mycursor.getColumnIndex("tms_lup_test")),
+                        mycursor.getString(mycursor.getColumnIndex("tms_lup_test_id")),
+                        mycursor.getString(mycursor.getColumnIndex("tms_lup_pass_req")),
+                        mycursor.getString(mycursor.getColumnIndex("tms_lup_remark_01")),
+                        mycursor.getString(mycursor.getColumnIndex("tms_lup_remark_02")),
+                        mycursor.getString(mycursor.getColumnIndex("tms_lup_status")),
+                        mycursor.getString(mycursor.getColumnIndex("tms_lup_created_by")),
+                        mycursor.getString(mycursor.getColumnIndex("tms_lup_created_date_time")),
+                        mycursor.getString(mycursor.getColumnIndex("tms_lup_mod_by")),
+                        mycursor.getString(mycursor.getColumnIndex("tms_lup_mod_date_time"))
+                ));
+            }
+        }else{
+            mycursor.close();
+        }
+
+        return  al_lessionUnit_points;
+    }
+
+    public long deleteAll_org_master(){
+        long deleteFlag=0;
+        deleteFlag=db.delete("org_master", null, null);
+        return  deleteFlag;
+    }
+
+    public long insert_org_master(int Ctr_key, String Ctr_orga_id, String Ctr_Name, String Ctr_Short_name,
+                                  String Ctr_Address01, String Ctr_Address02, String Ctr_Area,
+                                  String Ctr_City_Town, String Ctr_State, String Ctr_Country,
+                                  String Ctr_Person, String Ctr_Mobile, String Ctr_email,
+                                  String Ctr_logo_file, String Ctr_Start_Date, String Ctr_End_Date,
+                                  String Ctr_Type, String Ctr_category, String Ctr_sub_category,
+                                  String ctr_Status, String Ctr_created_by, String Ctr_created_DtTm,
+                                  String Ctr_Mod_by, String Ctr_Mod_DtTm){
+        long insertFlag= 0;
+        ContentValues cv = new ContentValues();
+        cv.put("Ctr_key",Ctr_key);
+        cv.put("Ctr_orga_id",Ctr_orga_id);
+        cv.put("Ctr_Name",Ctr_Name);
+        cv.put("Ctr_Short_name",Ctr_Short_name);
+        cv.put("Ctr_Address01",Ctr_Address01);
+        cv.put("Ctr_Address02",Ctr_Address02);
+        cv.put("Ctr_Area",Ctr_Area);
+        cv.put("Ctr_City_Town",Ctr_City_Town);
+        cv.put("Ctr_State",Ctr_State);
+        cv.put("Ctr_Country",Ctr_Country);
+        cv.put("Ctr_Person",Ctr_Person);
+        cv.put("Ctr_Mobile",Ctr_Mobile);
+        cv.put("Ctr_email",Ctr_email);
+        cv.put("Ctr_logo_file",Ctr_logo_file);
+        cv.put("Ctr_Start_Date",Ctr_Start_Date);
+        cv.put("Ctr_End_Date",Ctr_End_Date);
+        cv.put("Ctr_Type",Ctr_Type);
+        cv.put("Ctr_category",Ctr_category);
+        cv.put("Ctr_sub_category",Ctr_sub_category);
+        cv.put("ctr_Status",ctr_Status);
+        cv.put("Ctr_created_by",Ctr_created_by);
+        cv.put("Ctr_created_DtTm",Ctr_created_DtTm);
+        cv.put("Ctr_Mod_by",Ctr_Mod_by);
+        cv.put("Ctr_Mod_DtTm",Ctr_Mod_DtTm);
+        insertFlag = db.insert("org_master",null, cv);
+        return insertFlag;
+    }
+
+    public SingleOrganization getOrganization(String orga_id){
+        SingleOrganization org=null;
+
+        String table = "org_master";
+        String[] columns = {"Ctr_key,Ctr_orga_id,  Ctr_Name,  Ctr_Short_name,Ctr_Address01,  Ctr_Address02,  Ctr_Area,Ctr_City_Town,  Ctr_State,  Ctr_Country,Ctr_Person,  Ctr_Mobile,  Ctr_email,Ctr_logo_file,  Ctr_Start_Date,  Ctr_End_Date,Ctr_Type,  Ctr_category,  Ctr_sub_category,ctr_Status,  Ctr_created_by,  Ctr_created_DtTm,Ctr_Mod_by,  Ctr_Mod_DtTm"};
+        String selection = "Ctr_orga_id =?";
+        String[] selectionArgs = {orga_id};
+        String groupBy = null;
+        String having = null;
+        String orderBy = null;
+        String limit = null;
+
+        Cursor c = db.query(table, columns, selection, selectionArgs, groupBy, having, orderBy, limit);
+
+        if(c.getCount()!=0)
+        {
+            while (c.moveToNext()) {
+                //OptionList.add(c.getInt(c.getColumnIndex("Question_Option")));
+                org=new SingleOrganization(c.getInt(c.getColumnIndex("Ctr_key")),c.getString(c.getColumnIndex("Ctr_orga_id")),
+                        c.getString(c.getColumnIndex("Ctr_Name")),c.getString(c.getColumnIndex("Ctr_Short_name")),
+                        c.getString(c.getColumnIndex("Ctr_Address01")),c.getString(c.getColumnIndex("Ctr_Address02")),
+                        c.getString(c.getColumnIndex("Ctr_Area")),c.getString(c.getColumnIndex("Ctr_City_Town")),
+                        c.getString(c.getColumnIndex("Ctr_State")),c.getString(c.getColumnIndex("Ctr_Country")),
+                        c.getString(c.getColumnIndex("Ctr_Person")),c.getString(c.getColumnIndex("Ctr_Mobile")),
+                        c.getString(c.getColumnIndex("Ctr_email")),c.getString(c.getColumnIndex("Ctr_logo_file")),
+                        c.getString(c.getColumnIndex("Ctr_Start_Date")),c.getString(c.getColumnIndex("Ctr_End_Date")),
+                        c.getString(c.getColumnIndex("Ctr_Type")),c.getString(c.getColumnIndex("Ctr_category")),
+                        c.getString(c.getColumnIndex("Ctr_sub_category")),c.getString(c.getColumnIndex("ctr_Status")),
+                        c.getString(c.getColumnIndex("Ctr_created_by")),c.getString(c.getColumnIndex("Ctr_created_DtTm")),
+                        c.getString(c.getColumnIndex("Ctr_Mod_by")),c.getString(c.getColumnIndex("Ctr_Mod_DtTm")));
+            }
+        }
+        c.close();
+        return org;
+    }
 
 }

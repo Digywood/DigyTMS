@@ -57,7 +57,7 @@ public class ListofAssessmentTests extends AppCompatActivity {
     ArrayList<String> alreadydwdList;
     ArrayList<SingleTest> dwdupdateList;
     LinearLayoutManager myLayoutManager;
-    String studentid="",enrollid="",courseid="",paperid="",subjectid="";
+    String studentid="",enrollid="",courseid="",paperid="",subjectid="",orgid="",studentname="",number="",email="";
 
     InterstitialAd mInterstitialAd;
     AppEnvironment appEnvironment;
@@ -107,9 +107,13 @@ public class ListofAssessmentTests extends AppCompatActivity {
         Intent cmgintent=getIntent();
         if(cmgintent!=null){
             studentid=cmgintent.getStringExtra("studentid");
+            studentname=cmgintent.getStringExtra("sname");
+            number=cmgintent.getStringExtra("number");
+            email=cmgintent.getStringExtra("email");
             enrollid=cmgintent.getStringExtra("enrollid");
             courseid=cmgintent.getStringExtra("courseid");
             paperid=cmgintent.getStringExtra("paperid");
+            orgid=cmgintent.getStringExtra("orgid");
         }
 
         getTestIdsFromLocal();
@@ -222,7 +226,7 @@ public class ListofAssessmentTests extends AppCompatActivity {
             Log.e("Advtlist.size()", "comes:" + testidList.size());
             tv_emptytests.setVisibility(View.GONE);
             tAdp = new AssesmentTestAdapter(testidList,ListofAssessmentTests.this,studentid,enrollid);
-            myLayoutManager = new LinearLayoutManager(ListofAssessmentTests.this, LinearLayoutManager.VERTICAL,false);
+            myLayoutManager = new LinearLayoutManager(ListofAssessmentTests.this, RecyclerView.VERTICAL,false);
             rv_tests.setLayoutManager(myLayoutManager);
             rv_tests.setItemAnimator(new DefaultItemAnimator());
             rv_tests.setAdapter(tAdp);
@@ -247,26 +251,15 @@ public class ListofAssessmentTests extends AppCompatActivity {
 
     @Override
     public boolean onSupportNavigateUp() {
-        finish();
-        Intent i=new Intent(getApplicationContext(),PaperActivity.class);
-        i.putExtra("studentid",studentid);
-        i.putExtra("enrollid",enrollid);
-        i.putExtra("courseid",courseid);
-        i.putExtra("paperid",paperid);
-        startActivity(i);
+        exitByBackKey();
         return true;
     }
 
-    @Override
+    /*@Override
     public void onBackPressed() {
-        finish();
-        Intent i=new Intent(getApplicationContext(),PaperActivity.class);
-        i.putExtra("studentid",studentid);
-        i.putExtra("enrollid",enrollid);
-        i.putExtra("courseid",courseid);
-        i.putExtra("paperid",paperid);
+        exitByBackKey();
         startActivity(i);
-    }
+    }*/
 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
@@ -282,12 +275,16 @@ public class ListofAssessmentTests extends AppCompatActivity {
 
     protected void exitByBackKey() {
         finish();
-        Intent intent = new Intent(ListofAssessmentTests.this, PaperActivity.class);
-        intent.putExtra("studentid",studentid);
-        intent.putExtra("enrollid",enrollid);
-        intent.putExtra("courseid",courseid);
-        intent.putExtra("paperid",paperid);
-        startActivity(intent);
+        Intent i = new Intent(ListofAssessmentTests.this, Activity_TestTypes.class);
+        i.putExtra("studentid",studentid);
+        i.putExtra("sname",studentname);
+        i.putExtra("number",number);
+        i.putExtra("email",email);
+        i.putExtra("enrollid",enrollid);
+        i.putExtra("courseid",courseid);
+        i.putExtra("paperid",paperid);
+        i.putExtra("orgid",orgid);
+        startActivity(i);
 
     }
 

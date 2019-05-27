@@ -228,20 +228,21 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
+        android:layout_gravity="center"
+        android:gravity="center"
         android:layout_weight="9.5">
-        <View
+        <!--<View
             android:layout_width="2dp"
             android:layout_height="match_parent"
             android:layout_gravity="center"
             android:layout_marginBottom="15dp"
             android:layout_marginTop="15dp"
-            android:background="@android:color/darker_gray" />
+            android:background="@android:color/darker_gray" />-->
         <ImageView
             android:id="@+id/iv_start_test"
             android:layout_width="30dp"
-            android:layout_height="wrap_content"
+            android:layout_height="40dp"
             android:layout_margin="5dp"
-            android:layout_gravity="center"
             android:src="@drawable/details1" />
     </LinearLayout>
 </LinearLayout>

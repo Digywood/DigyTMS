@@ -237,7 +237,9 @@ public class ForgotPassword extends AppCompatActivity {
                                                                                                                                         try {
                                                                                                                                             if (json.equalsIgnoreCase("User_Not_Exist")) {
                                                                                                                                                 Toast.makeText(getApplicationContext(), "User_Not_Exist", Toast.LENGTH_SHORT).show();
-                                                                                                                                            } else {
+                                                                                                                                            } else if(json.equalsIgnoreCase("Pwd_Wrong")) {
+                                                                                                                                                Toast.makeText(getApplicationContext(), "Wrong Password, Please Enter Correct Password.. ", Toast.LENGTH_SHORT).show();
+                                                                                                                                            }else{
                                                                                                                                                 JSONObject jo = null;
                                                                                                                                                 JSONArray ja = new JSONArray(json);
                                                                                                                                                 for (int i = 0; i < ja.length(); i++) {

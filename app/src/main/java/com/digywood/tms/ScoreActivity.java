@@ -56,7 +56,7 @@ public class ScoreActivity extends AppCompatActivity {
     ArrayList<Integer> OptionsList = new ArrayList<>();
     ArrayList<String> catList;
 
-    private AdView mAdView;
+    //private AdView mAdView;
 
     AppEnvironment appEnvironment;
     UserMode userMode;
@@ -279,7 +279,7 @@ public class ScoreActivity extends AppCompatActivity {
                         tv_category.setLayoutParams(params);
 //                        tv_category.setGravity(Gravity.CENTER);
                         Log.d("sections", secList.get(i));
-                        tv_category.setTextSize(20f);
+                        tv_category.setTextSize(12f);
                         tv_category.setGravity(Gravity.CENTER);
                         tv_category.setTextColor(Color.BLACK);
                         tv_category.setBackground(getResources().getDrawable(R.drawable.spin_bg));
@@ -291,7 +291,7 @@ public class ScoreActivity extends AppCompatActivity {
                         tv_noOfQuestions.setLayoutParams(params);
 //                        tv_noOfQuestions.setGravity(Gravity.CENTER);
                         Log.d("number", sec_questions);
-                        tv_noOfQuestions.setTextSize(20f);
+                        tv_noOfQuestions.setTextSize(12f);
                         tv_noOfQuestions.setGravity(Gravity.CENTER);
                         tv_noOfQuestions.setTextColor(Color.BLACK);
                         tv_noOfQuestions.setBackground(getResources().getDrawable(R.drawable.spin_bg));
@@ -303,7 +303,7 @@ public class ScoreActivity extends AppCompatActivity {
                         tv_subCatattempted.setLayoutParams(params);
 //                        tv_subCatattempted.setGravity(Gravity.CENTER);
                         Log.d("attempt", sec_attempted);
-                        tv_subCatattempted.setTextSize(20f);
+                        tv_subCatattempted.setTextSize(12f);
                         tv_subCatattempted.setGravity(Gravity.CENTER);
                         tv_subCatattempted.setTextColor(Color.BLACK);
                         tv_subCatattempted.setBackground(getResources().getDrawable(R.drawable.spin_bg));
@@ -315,7 +315,7 @@ public class ScoreActivity extends AppCompatActivity {
                         tv_subCatskipped.setLayoutParams(params);
 //                        tv_subCatskipped.setGravity(Gravity.CENTER);
 //                        Log.d("skip", sec_skipped);
-                        tv_subCatskipped.setTextSize(20f);
+                        tv_subCatskipped.setTextSize(12f);
                         tv_subCatskipped.setGravity(Gravity.CENTER);
                         tv_subCatskipped.setTextColor(Color.BLACK);
                         tv_subCatskipped.setBackground(getResources().getDrawable(R.drawable.spin_bg));
@@ -327,7 +327,7 @@ public class ScoreActivity extends AppCompatActivity {
                         tv_subCatCorrect.setLayoutParams(params);
 //                        tv_subCatCorrect.setGravity(Gravity.CENTER);
                         Log.d("correct", sec_correct);
-                        tv_subCatCorrect.setTextSize(20f);
+                        tv_subCatCorrect.setTextSize(12f);
                         tv_subCatCorrect.setGravity(Gravity.CENTER);
                         tv_subCatCorrect.setTextColor(Color.BLACK);
                         tv_subCatCorrect.setBackground(getResources().getDrawable(R.drawable.spin_bg));
@@ -339,7 +339,7 @@ public class ScoreActivity extends AppCompatActivity {
                         tv_subCatWrong.setLayoutParams(params);
 //                        tv_subCatCorrect.setGravity(Gravity.CENTER);
                         Log.d("wrong", sec_wrong);
-                        tv_subCatWrong.setTextSize(20f);
+                        tv_subCatWrong.setTextSize(12f);
                         tv_subCatWrong.setGravity(Gravity.CENTER);
                         tv_subCatWrong.setTextColor(Color.BLACK);
                         tv_subCatWrong.setBackground(getResources().getDrawable(R.drawable.spin_bg));
@@ -351,7 +351,7 @@ public class ScoreActivity extends AppCompatActivity {
                         tv_percentage.setLayoutParams(params);
 //                        tv_percentage.setGravity(Gravity.CENTER);
                         Log.d("%", sec_percentage);
-                        tv_percentage.setTextSize(20f);
+                        tv_percentage.setTextSize(12f);
                         tv_percentage.setGravity(Gravity.CENTER);
                         tv_percentage.setTextColor(Color.BLACK);
                         tv_percentage.setBackground(getResources().getDrawable(R.drawable.spin_bg));
@@ -440,7 +440,7 @@ public class ScoreActivity extends AppCompatActivity {
         });
 
         if(userMode.mode()) {
-            mAdView = (AdView) findViewById(R.id.adView);
+            /*mAdView = (AdView) findViewById(R.id.adView);
             //mAdView.setAdSize(AdSize.BANNER);
             //mAdView.setAdUnitId(getString(R.string.banner_home_footer));
 
@@ -481,7 +481,7 @@ public class ScoreActivity extends AppCompatActivity {
                 public void onAdOpened() {
                     super.onAdOpened();
                 }
-            });
+            });*/
 
         }
 
@@ -514,7 +514,23 @@ public class ScoreActivity extends AppCompatActivity {
     }
 
     protected void exitByBackKey() {
-        finish();
+        if (testType.equalsIgnoreCase("PRACTICE")) {
+            Intent intent = new Intent(ScoreActivity.this, ListofPractiseTests.class);
+            intent.putExtra("studentid", studentId);
+            intent.putExtra("enrollid", enrollid);
+            intent.putExtra("courseid", courseid);
+            intent.putExtra("paperid", paperid);
+            startActivity(intent);
+            finish();
+        } else {
+            Intent intent = new Intent(ScoreActivity.this, ListofAssessmentTests.class);
+            intent.putExtra("studentid", studentId);
+            intent.putExtra("enrollid", enrollid);
+            intent.putExtra("courseid", courseid);
+            intent.putExtra("paperid", paperid);
+            startActivity(intent);
+            finish();
+        }
     }
 
     public void initiateFullScreenWindow() {
@@ -641,9 +657,9 @@ public class ScoreActivity extends AppCompatActivity {
 
         super.onResume();
 
-        if (mAdView != null) {
+        /*if (mAdView != null) {
             mAdView.resume();
-        }
+        }*/
 
     }
 
@@ -652,9 +668,9 @@ public class ScoreActivity extends AppCompatActivity {
 
         super.onPause();
 
-        if (mAdView != null) {
+        /*if (mAdView != null) {
             mAdView.pause();
-        }
+        }*/
 
 
     }
@@ -668,9 +684,9 @@ public class ScoreActivity extends AppCompatActivity {
     public void onDestroy() {
         super.onDestroy();
 
-        if (mAdView != null) {
+        /*if (mAdView != null) {
             mAdView.destroy();
-        }
+        }*/
     }
 
 }

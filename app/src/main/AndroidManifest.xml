@@ -3,21 +3,49 @@
     package="com.digywood.tms">
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
     <uses-permission android:name="android.permission.VIBRATE" />
+    <uses-permission android:name="android.permission.RECORD_AUDIO" />
 
     <application
         android:name=".MyApplication"
         android:allowBackup="true"
-        android:icon="@mipmap/ic_tmslogo"
+        android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
-        <!-- Sample AdMob App ID: ca-app-pub-8900998468829546~5077758012 -->
+
+        <activity android:name=".Activity_Lesson_Unit_Point_Display_PracticeTest"
+            android:screenOrientation="landscape"
+            android:theme="@style/AppTheme.NoActionBar"/>
+        <activity android:name=".Activity_Lesson_Unit_Point_Display_FlashCardActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:label="@string/title_activity_flash_card"
+            android:screenOrientation="landscape"
+            android:theme="@style/AppTheme.NoActionBar"/>
+        <activity
+            android:name=".Activity_Lesson_Unit_Point_Display"
+            android:screenOrientation="landscape" />
+        <activity
+            android:name=".Activity_Lesson_Unit_Points"
+            android:label="@string/title_activity_lesson_unit_points"
+            android:screenOrientation="landscape" />
+        <activity
+            android:name=".Activity_Lesson_Units"
+            android:label="@string/title_activity_lesson_units"
+            android:screenOrientation="landscape" />
+        <activity
+            android:name=".Activity_Lessons"
+            android:label="@string/title_activity_lessons"
+            android:screenOrientation="landscape" />
+        <activity
+            android:name=".Activity_TestTypes"
+            android:screenOrientation="landscape" /> <!-- Sample AdMob App ID: ca-app-pub-8900998468829546~5077758012 -->
         <meta-data
             android:name="com.google.android.gms.ads.APPLICATION_ID"
             android:value="@string/admob_app_id" />
@@ -30,17 +58,15 @@
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
-        <activity android:name=".ForgotPassword"
+        <activity
+            android:name=".ForgotPassword"
             android:label="@string/forgotpwd"
             android:parentActivityName=".MainActivity"
-            android:screenOrientation="landscape">
-
-        </activity>
-
+            android:screenOrientation="landscape" />
         <activity
             android:name=".RegistrationActivity"
             android:label="@string/reglabel"
@@ -53,7 +79,6 @@
         <activity
             android:name=".PaperActivity"
             android:label="@string/paperlabel"
-            android:parentActivityName=".LearningActivity"
             android:screenOrientation="landscape" />
         <activity
             android:name=".EnrollRequestActivity"
@@ -80,6 +105,11 @@
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".ScoreActivity"
+            android:label="@string/title_activity_score"
+            android:screenOrientation="landscape"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".Activity_LUPD_PracticeTest_ScoreActivity"
             android:label="@string/title_activity_score"
             android:screenOrientation="landscape"
             android:theme="@style/AppTheme.NoActionBar" />
@@ -129,6 +159,14 @@
             android:label="@string/serverlabel"
             android:parentActivityName=".DashBoardNavActivity"
             android:screenOrientation="landscape" />
+
+        <receiver
+            android:name=".ConnectivityReceiver"
+            android:enabled="true">
+            <intent-filter>
+                <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
+            </intent-filter>
+        </receiver>
     </application>
 
 </manifest>

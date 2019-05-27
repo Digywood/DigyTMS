@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -174,7 +175,7 @@ public class ListofServers extends AppCompatActivity {
             tv_emptyservers.setVisibility(View.GONE);
             btn_setserver.setVisibility(View.VISIBLE);
             sAdp = new ServerAdapter(serverList,ListofServers.this);
-            myLayoutManager = new LinearLayoutManager(ListofServers.this,LinearLayoutManager.VERTICAL,false);
+            myLayoutManager = new LinearLayoutManager(ListofServers.this,RecyclerView.VERTICAL,false);
             rv_servers.setLayoutManager(myLayoutManager);
             rv_servers.setItemAnimator(new DefaultItemAnimator());
             rv_servers.setAdapter(sAdp);
@@ -273,15 +274,36 @@ public class ListofServers extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    @Override
-    public boolean onSupportNavigateUp() {
-        finish();
-        return true;
-    }
 
     @Override
-    public void onBackPressed() {
-        finish();
+    public boolean onSupportNavigateUp() {
+
+        Intent i=new Intent(getApplicationContext(),DashBoardNavActivity.class);
+        i.putExtra("studentid",studentid);
+        i.putExtra("sname",spersonname);
+        i.putExtra("number",snumber);
+        i.putExtra("email",email);
+        startActivity(i);
+        this.finish();
+
+        return super.onSupportNavigateUp();
     }
+
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_BACK) {
+
+            Intent i=new Intent(getApplicationContext(),DashBoardNavActivity.class);
+            i.putExtra("studentid",studentid);
+            i.putExtra("sname",spersonname);
+            i.putExtra("number",snumber);
+            i.putExtra("email",email);
+            startActivity(i);
+            this.finish();
+
+            return true;
+        }
+        return super.onKeyDown(keyCode, event);
+    }
+
 
 }

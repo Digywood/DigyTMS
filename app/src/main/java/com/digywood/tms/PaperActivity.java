@@ -15,6 +15,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.Window;
 import android.widget.AdapterView;
@@ -48,7 +49,7 @@ public class PaperActivity extends AppCompatActivity {
     Dialog mydialog;
     int clickpos=0;
     public static final int RequestPermissionCode = 1;
-    String courseid="",enrollid="",studentid="";
+    String courseid="",enrollid="",studentid="",orgid="",studentname="",number="",email="";
     DBHelper myhelper;
     LinearLayoutManager myLayoutManager;
     PaperAdapter pAdp;
@@ -91,8 +92,12 @@ public class PaperActivity extends AppCompatActivity {
         final Intent cmgintent=getIntent();
         if(cmgintent!=null){
             studentid=cmgintent.getStringExtra("studentid");
+            studentname=cmgintent.getStringExtra("sname");
+            number=cmgintent.getStringExtra("number");
+            email=cmgintent.getStringExtra("email");
             enrollid=cmgintent.getStringExtra("enrollid");
             courseid=cmgintent.getStringExtra("courseid");
+            orgid=cmgintent.getStringExtra("orgid");
         }
 
         papergridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -101,7 +106,21 @@ public class PaperActivity extends AppCompatActivity {
                 clickpos=position;
 
                 if(checkPermission()){
-                    showPopUp();
+                    //showPopUp();
+
+                    singlePaper=paperList.get(clickpos);
+                    Intent i=new Intent(getApplicationContext(),Activity_TestTypes.class);
+                    i.putExtra("studentid",studentid);
+                    i.putExtra("sname",studentname);
+                    i.putExtra("number",number);
+                    i.putExtra("email",email);
+                    i.putExtra("enrollid",enrollid);
+                    i.putExtra("courseid",courseid);
+                    i.putExtra("paperid",singlePaper.getPaperId());
+                    i.putExtra("orgid",orgid);
+                    startActivity(i);
+                    finish();
+
                 }else{
                     requestPermission();
                 }
@@ -295,9 +314,13 @@ public class PaperActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Intent i=new Intent(getApplicationContext(),ListofPractiseTests.class);
                 i.putExtra("studentid",studentid);
+                i.putExtra("sname",studentname);
+                i.putExtra("number",number);
+                i.putExtra("email",email);
                 i.putExtra("enrollid",enrollid);
                 i.putExtra("courseid",courseid);
                 i.putExtra("paperid",singlePaper.getPaperId());
+                i.putExtra("orgid",orgid);
                 startActivity(i);
                 finish();
                 mydialog.cancel();
@@ -309,9 +332,13 @@ public class PaperActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Intent i=new Intent(getApplicationContext(),ListofAssessmentTests.class);
                 i.putExtra("studentid",studentid);
+                i.putExtra("sname",studentname);
+                i.putExtra("number",number);
+                i.putExtra("email",email);
                 i.putExtra("enrollid",enrollid);
                 i.putExtra("courseid",courseid);
                 i.putExtra("paperid",singlePaper.getPaperId());
+                i.putExtra("orgid",orgid);
                 startActivity(i);
                 finish();
                 mydialog.cancel();
@@ -370,22 +397,42 @@ public class PaperActivity extends AppCompatActivity {
 
     @Override
     public boolean onSupportNavigateUp() {
-        finish();
         Intent i=new Intent(getApplicationContext(),LearningActivity.class);
         i.putExtra("studentid",studentid);
-        i.putExtra("sname","");
+        i.putExtra("sname",studentname);
+        i.putExtra("number",number);
+        i.putExtra("email",email);
         startActivity(i);
+        this.finish();
         return true;
     }
 
-    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_BACK) {
+
+            Intent i=new Intent(getApplicationContext(),LearningActivity.class);
+            i.putExtra("studentid",studentid);
+            i.putExtra("sname",studentname);
+            i.putExtra("number",number);
+            i.putExtra("email",email);
+            startActivity(i);
+
+            this.finish();
+
+            return true;
+        }
+        return super.onKeyDown(keyCode, event);
+    }
+
+    /*@Override
     public void onBackPressed() {
-        finish();
+
         Intent i=new Intent(getApplicationContext(),LearningActivity.class);
         i.putExtra("studentid",studentid);
         i.putExtra("sname","");
         startActivity(i);
-    }
+         this.finish();
+    }*/
 
     public boolean checkPermission() {
         int result = ContextCompat.checkSelfPermission(getApplicationContext(),
@@ -405,7 +452,20 @@ public class PaperActivity extends AppCompatActivity {
 
         if(requestCode == RequestPermissionCode){
             if(grantResults.length >0 && grantResults[0] == PackageManager.PERMISSION_GRANTED && grantResults[1] == PackageManager.PERMISSION_GRANTED){
-                showPopUp();
+                //showPopUp();
+
+                singlePaper=paperList.get(clickpos);
+                Intent i=new Intent(getApplicationContext(),Activity_TestTypes.class);
+                i.putExtra("studentid",studentid);
+                i.putExtra("sname",studentname);
+                i.putExtra("number",number);
+                i.putExtra("email",email);
+                i.putExtra("enrollid",enrollid);
+                i.putExtra("courseid",courseid);
+                i.putExtra("paperid",singlePaper.getPaperId());
+                i.putExtra("orgid",orgid);
+                startActivity(i);
+                this.finish();
             }
             else {
                 Toast.makeText(PaperActivity.this, "This permission required to use full functionality of application!", Toast.LENGTH_SHORT).show();

@@ -580,7 +580,7 @@
         android:layout_alignParentBottom="true"
         android:orientation="horizontal">
 
-        <com.google.android.gms.ads.AdView
+        <!--<com.google.android.gms.ads.AdView
             xmlns:ads="http://schemas.android.com/apk/res-auto"
             android:id="@+id/adView"
             android:layout_width="wrap_content"
@@ -589,7 +589,7 @@
             ads:adSize="BANNER"
             ads:adUnitId="@string/banner_home_footer">
 
-        </com.google.android.gms.ads.AdView>
+        </com.google.android.gms.ads.AdView>-->
 
         <Button
             android:id="@+id/btn_save"

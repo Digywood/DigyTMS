@@ -79,9 +79,10 @@ public class PractiseTestAdapter extends RecyclerView.Adapter<PractiseTestAdapte
     SharedPreferences restoredprefs;
     Double minscore,maxscore,avgscore,fminscore,favgscore,fmaxscore;
     public static final int RequestPermissionCode = 1;
-    String filedata = "", path, jsonPath, attemptPath, photoPath, enrollid="", courseid,groupdata="",startdttm="",endddtm="";
-    String studentid="",subjectId, paperid, testid, fullTest, attempt=null,json,downloadjsonpath=""/*,tfiledwdpath=""*/,localpath="";
+    String filedata = "", path, jsonPath, attemptPath, photoPath, enrollid="",groupdata="",startdttm="",endddtm="";
+    String studentid="",subjectId, testid, fullTest, attempt=null,json,downloadjsonpath=""/*,tfiledwdpath=""*/,localpath="";
     String restoredsname="",serverId="",finalUrl="",finalAssetUrl="";
+    String studentname="", number="", email="", courseid="", paperid="", orgid="";
 
     ListofPractiseTests lstPts;
     AppEnvironment appEnvironment;
@@ -125,12 +126,19 @@ public class PractiseTestAdapter extends RecyclerView.Adapter<PractiseTestAdapte
         }
     }
 
-    public PractiseTestAdapter(ArrayList<SingleTest> testList,Context c,String studentId,String enrollId) {
+    public PractiseTestAdapter(ArrayList<SingleTest> testList,Context c,String studentId,String enrollId,String studentname,String number,String email,String courseid,String paperid,String orgid) {
         this.testList = testList;
         this.mycontext = c;
         this.lstPts=(ListofPractiseTests) c;
         this.studentid=studentId;
         this.enrollid=enrollId;
+        this.studentname=studentname;
+        this.number=number;
+        this.email=email;
+        this.courseid=courseid;
+        this.paperid=paperid;
+        this.orgid=orgid;
+
         myhelper = new DBHelper(c);
 
         appEnvironment = ((MyApplication) this.lstPts.getApplication()).getAppEnvironment();//getting App Environment
@@ -227,11 +235,15 @@ public class PractiseTestAdapter extends RecyclerView.Adapter<PractiseTestAdapte
                                 i.putExtra("json", attempt);
                                 i.putExtra("test", testid);
                                 i.putExtra("studentid", studentid);
+                                i.putExtra("sname",studentname);
+                                i.putExtra("number",number);
+                                i.putExtra("email",email);
                                 i.putExtra("enrollid", enrollid);
                                 i.putExtra("courseid", courseid);
                                 i.putExtra("subjectid", subjectId);
                                 i.putExtra("paperid", paperid);
                                 i.putExtra("status", "RESUME");
+                                i.putExtra("orgid",orgid);
                                 mycontext.startActivity(i);}
                             } catch (IOException | ClassNotFoundException | NullPointerException e) {
                                 e.printStackTrace();
@@ -256,12 +268,16 @@ public class PractiseTestAdapter extends RecyclerView.Adapter<PractiseTestAdapte
                                 Intent i = new Intent(mycontext, ReviewActivity.class);
                                 i.putExtra("test", testid);
                                 i.putExtra("studentid", studentid);
+                                i.putExtra("sname",studentname);
+                                i.putExtra("number",number);
+                                i.putExtra("email",email);
                                 i.putExtra("enrollid", enrollid);
                                 i.putExtra("courseid", courseid);
                                 i.putExtra("subjectid", subjectId);
                                 i.putExtra("paperid", paperid);
                                 i.putExtra("json", attempt);
                                 i.putExtra("TYPE", "PRACTISE_TEST");
+                                i.putExtra("orgid",orgid);
                                 ((ListofPractiseTests)mycontext).finish();
                             mycontext.startActivity(i);}
                         } catch (IOException | ClassNotFoundException e) {
@@ -390,9 +406,13 @@ public class PractiseTestAdapter extends RecyclerView.Adapter<PractiseTestAdapte
                                         if(!userMode.mode()) {
                                             Intent i = new Intent(mycontext, PracticeTestActivity.class);
                                             i.putExtra("studentid", studentid);
+                                            i.putExtra("sname",studentname);
+                                            i.putExtra("number",number);
+                                            i.putExtra("email",email);
                                             i.putExtra("json", attempt);
                                             i.putExtra("test", testid);
                                             i.putExtra("status", "NEW");
+                                            i.putExtra("orgid",orgid);
                                             mycontext.startActivity(i);
                                             ((ListofPractiseTests) mycontext).finish();
                                         }else {
@@ -403,9 +423,13 @@ public class PractiseTestAdapter extends RecyclerView.Adapter<PractiseTestAdapte
                                                     {
                                                         Intent i = new Intent(mycontext, PracticeTestActivity.class);
                                                         i.putExtra("studentid", studentid);
+                                                        i.putExtra("sname",studentname);
+                                                        i.putExtra("number",number);
+                                                        i.putExtra("email",email);
                                                         i.putExtra("json", attempt);
                                                         i.putExtra("test", testid);
                                                         i.putExtra("status", "NEW");
+                                                        i.putExtra("orgid",orgid);
                                                         mycontext.startActivity(i);
                                                         ((ListofPractiseTests) mycontext).finish();
                                                     }else {
@@ -511,6 +535,10 @@ public class PractiseTestAdapter extends RecyclerView.Adapter<PractiseTestAdapte
                                     if(!userMode.mode()) {
                                         Intent i = new Intent(mycontext, FlashCardActivity.class);
                                         i.putExtra("studentid",studentid);
+                                        i.putExtra("sname",studentname);
+                                        i.putExtra("number",number);
+                                        i.putExtra("email",email);
+                                        i.putExtra("orgid",orgid);
                                         i.putExtra("testId", testList.get(position).getTestid());
                                         i.putExtra("testPath", tPath);
                                         mycontext.startActivity(i);
@@ -523,6 +551,10 @@ public class PractiseTestAdapter extends RecyclerView.Adapter<PractiseTestAdapte
                                                 {
                                                     Intent i = new Intent(mycontext, FlashCardActivity.class);
                                                     i.putExtra("studentid",studentid);
+                                                    i.putExtra("sname",studentname);
+                                                    i.putExtra("number",number);
+                                                    i.putExtra("email",email);
+                                                    i.putExtra("orgid",orgid);
                                                     i.putExtra("testId", testList.get(position).getTestid());
                                                     i.putExtra("testPath", tPath);
                                                     mycontext.startActivity(i);
@@ -559,7 +591,11 @@ public class PractiseTestAdapter extends RecyclerView.Adapter<PractiseTestAdapte
                 Intent i = new Intent(mycontext, AttemptDataActivity.class);
                 i.putExtra("testId", singletest.getTestid());
                 i.putExtra("studentid", studentid);
+                i.putExtra("sname",studentname);
+                i.putExtra("number",number);
+                i.putExtra("email",email);
                 i.putExtra("enrollid",enrollid);
+                i.putExtra("orgid",orgid);
                 mycontext.startActivity(i);
             }
         });

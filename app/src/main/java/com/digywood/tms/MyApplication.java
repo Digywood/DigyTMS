@@ -2,12 +2,15 @@ package com.digywood.tms;
 
 import android.app.Application;
 
+import com.digywood.tms.ConnectivityReceiver;
 import com.google.android.gms.ads.MobileAds;
 
 
 public class MyApplication extends Application {
     AppEnvironment appEnvironment;
     UserMode userMode;
+
+    private static MyApplication mInstance;
 
     //String APP_ID,BANNER_ID,INTERSTITIA_ID,REWARD_ID;
 
@@ -19,6 +22,8 @@ public class MyApplication extends Application {
         MobileAds.initialize(this, getString(R.string.admob_app_id));
         appEnvironment = AppEnvironment.DEBUG;
         userMode=UserMode.NON_PRIME;
+
+        mInstance = this;
     }
 
     public AppEnvironment getAppEnvironment() {
@@ -37,6 +42,14 @@ public class MyApplication extends Application {
         this.userMode = userMode;
     }
 
+
+    public static synchronized MyApplication getInstance() {
+        return mInstance;
+    }
+
+    public void setConnectivityListener(ConnectivityReceiver.ConnectivityReceiverListener listener) {
+        ConnectivityReceiver.connectivityReceiverListener = listener;
+    }
     /*public String getAPP_ID() {
         return APP_ID;
     }

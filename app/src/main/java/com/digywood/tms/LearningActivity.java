@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
@@ -99,9 +100,14 @@ public class LearningActivity extends AppCompatActivity {
                     SingleEnrollment singleEnrollment=enrollList.get(position);
                     Intent intent=new Intent(getApplicationContext(),PaperActivity.class);
                     intent.putExtra("studentid",studentid);
+                    intent.putExtra("sname",studentname);
+                    intent.putExtra("number",number);
+                    intent.putExtra("email",email);
                     intent.putExtra("enrollid",singleEnrollment.getEnrollid());
                     intent.putExtra("courseid",singleEnrollment.getCourseid());
+                    intent.putExtra("orgid",singleEnrollment.getOrgid());
                     startActivity(intent);
+                    finish();
                 }else {
                     new AsyncCheckInternet_WithOutProgressBar(LearningActivity.this, new INetStatus() {
                         @Override
@@ -111,8 +117,12 @@ public class LearningActivity extends AppCompatActivity {
                                 SingleEnrollment singleEnrollment=enrollList.get(position);
                                 Intent intent=new Intent(getApplicationContext(),PaperActivity.class);
                                 intent.putExtra("studentid",studentid);
+                                intent.putExtra("sname",studentname);
+                                intent.putExtra("number",number);
+                                intent.putExtra("email",email);
                                 intent.putExtra("enrollid",singleEnrollment.getEnrollid());
                                 intent.putExtra("courseid",singleEnrollment.getCourseid());
+                                intent.putExtra("orgid",singleEnrollment.getOrgid());
                                 startActivity(intent);
                                 finish();
                             }else {
@@ -235,7 +245,7 @@ public class LearningActivity extends AppCompatActivity {
             Log.e("Advtlist.size()", "comes:" + enrollList.size());
             tv_emptyenroll.setVisibility(View.GONE);
             eAdp = new EnrollAdapter(enrollList,LearningActivity.this);
-            myLayoutManager = new LinearLayoutManager(LearningActivity.this, LinearLayoutManager.VERTICAL,false);
+            myLayoutManager = new LinearLayoutManager(LearningActivity.this, RecyclerView.VERTICAL,false);
             rv_enroll.setLayoutManager(myLayoutManager);
             rv_enroll.setItemAnimator(new DefaultItemAnimator());
             rv_enroll.setAdapter(eAdp);
@@ -255,19 +265,63 @@ public class LearningActivity extends AppCompatActivity {
         return stringBuilder.toString();
     }
 
-    @Override
+    /*@Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // handle arrow click here
         if (item.getItemId() == android.R.id.home) {
             finish(); // close this activity and return to preview activity (if there is any)
+            Intent i=new Intent(getApplicationContext(),DashBoardNavActivity.class);
+            i.putExtra("studentid",studentid);
+            i.putExtra("sname",studentname);
+            i.putExtra("number",number);
+            i.putExtra("email",email);
+            startActivity(i);
         }
 
         return super.onOptionsItemSelected(item);
-    }
+    }*/
 
-    @Override
+    /*@Override
     public void onBackPressed() {
         super.onBackPressed();
         finish();
+
+        Intent i=new Intent(getApplicationContext(),DashBoardNavActivity.class);
+        i.putExtra("studentid",studentid);
+        i.putExtra("sname",studentname);
+        i.putExtra("number",number);
+        i.putExtra("email",email);
+        startActivity(i);
+    }*/
+
+    @Override
+    public boolean onSupportNavigateUp() {
+
+        Intent i=new Intent(getApplicationContext(),DashBoardNavActivity.class);
+        i.putExtra("studentid",studentid);
+        i.putExtra("sname",studentname);
+        i.putExtra("number",number);
+        i.putExtra("email",email);
+        startActivity(i);
+        this.finish();
+
+        return super.onSupportNavigateUp();
     }
+
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_BACK) {
+
+            Intent i=new Intent(getApplicationContext(),DashBoardNavActivity.class);
+            i.putExtra("studentid",studentid);
+            i.putExtra("sname",studentname);
+            i.putExtra("number",number);
+            i.putExtra("email",email);
+            startActivity(i);
+            this.finish();
+
+            return true;
+        }
+        return super.onKeyDown(keyCode, event);
+    }
+
 }

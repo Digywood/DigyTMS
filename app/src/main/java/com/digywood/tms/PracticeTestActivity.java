@@ -127,6 +127,8 @@ public class PracticeTestActivity extends AppCompatActivity implements
     boolean test_completion_status=false;
     String genid=null;
 
+    String studentname="", number="", email="", course_id="", paper_id="", orgid="";
+
     private static final boolean AUTO_HIDE = true;
 
     //private AdView mAdView;
@@ -243,10 +245,22 @@ public class PracticeTestActivity extends AppCompatActivity implements
         question_scroll.setLayoutManager(myLayoutManager);
         question_scroll.setItemAnimator(new DefaultItemAnimator());
         question_scroll.setAdapter(qAdapter);
-        testid = getIntent().getStringExtra("test");
-        studentId = getIntent().getStringExtra("studentid");
+
         Log.e("stuid-->",studentId);
         rv_option = findViewById(R.id.option_view);
+
+        Intent cmgintent=getIntent();
+        if(cmgintent!=null){
+            studentId=cmgintent.getStringExtra("studentid");
+            studentname=cmgintent.getStringExtra("sname");
+            number=cmgintent.getStringExtra("number");
+            email=cmgintent.getStringExtra("email");
+            enrollid=cmgintent.getStringExtra("enrollid");
+            course_id=cmgintent.getStringExtra("courseid");
+            paper_id=cmgintent.getStringExtra("paperid");
+            orgid=cmgintent.getStringExtra("orgid");
+            testid = getIntent().getStringExtra("test");
+        }
 
 
         if(checkPermission()){
@@ -1708,9 +1722,14 @@ public class PracticeTestActivity extends AppCompatActivity implements
                         PracticeTestActivity.this.finish();
                         Intent intent = new Intent(PracticeTestActivity.this, ListofPractiseTests.class);
                         intent.putExtra("studentid",studentId);
+                        intent.putExtra("sname",studentname);
+                        intent.putExtra("number",number);
+                        intent.putExtra("email",email);
                         intent.putExtra("enrollid",enrollid);
                         intent.putExtra("courseid", courseid);
                         intent.putExtra("paperid",paperid);
+                        intent.putExtra("orgid",orgid);
+
                         startActivity(intent);
 
                     }

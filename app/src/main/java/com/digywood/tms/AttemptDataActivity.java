@@ -1,5 +1,6 @@
 package com.digywood.tms;
 
+import android.content.Intent;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
@@ -12,6 +13,7 @@ import android.os.Bundle;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.view.KeyEvent;
 import android.widget.TextView;
 import com.digywood.tms.Adapters.FlashAttemptAdapter;
 import com.digywood.tms.Adapters.PagerAdapter;
@@ -22,13 +24,13 @@ import java.util.ArrayList;
 public class AttemptDataActivity extends AppCompatActivity {
 
     DBHelper myhelper;
-    String testId="";
     RecyclerView rv_fattemptdata;
     TextView tv_emptyflashdata;
     FlashAttemptAdapter fAdp;
     TextView tv_testid,tv_minscore,tv_maxscore,tv_avgscore;
     LinearLayoutManager myLayoutManager;
     ArrayList<SingleFlashAttempt> fattemptList=new ArrayList<>();
+    String studentname="", number="", email="", course_id="", paper_id="", orgid="",studentId="",enrollid="",testid="";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,6 +42,19 @@ public class AttemptDataActivity extends AppCompatActivity {
             actionBar.show();
             actionBar.setDisplayHomeAsUpEnabled(true);
             actionBar.setHomeButtonEnabled(true);
+        }
+
+        Intent cmgintent=getIntent();
+        if(cmgintent!=null){
+            studentId=cmgintent.getStringExtra("studentid");
+            studentname=cmgintent.getStringExtra("sname");
+            number=cmgintent.getStringExtra("number");
+            email=cmgintent.getStringExtra("email");
+            enrollid=cmgintent.getStringExtra("enrollid");
+            course_id=cmgintent.getStringExtra("courseid");
+            paper_id=cmgintent.getStringExtra("paperid");
+            orgid=cmgintent.getStringExtra("orgid");
+            testid = getIntent().getStringExtra("test");
         }
 
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tab_layout);
@@ -148,14 +163,36 @@ public class AttemptDataActivity extends AppCompatActivity {
         return (double) tmp / factor;
     }
 
+
+
     @Override
     public boolean onSupportNavigateUp() {
-        finish();
-        return true;
+        exitByBackKey();
+        return super.onSupportNavigateUp();
     }
 
     @Override
-    public void onBackPressed() {
-        finish();
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_BACK) {
+            exitByBackKey();
+            //moveTaskToBack(false);
+
+            return true;
+        }
+        return super.onKeyDown(keyCode, event);
+    }
+
+    protected void exitByBackKey() {
+        Intent intent = new Intent(AttemptDataActivity.this, ListofPractiseTests.class);
+        intent.putExtra("studentid",studentId);
+        intent.putExtra("sname",studentname);
+        intent.putExtra("number",number);
+        intent.putExtra("email",email);
+        intent.putExtra("enrollid",enrollid);
+        intent.putExtra("courseid",course_id);
+        intent.putExtra("paperid",paper_id);
+        intent.putExtra("orgid",orgid);
+        startActivity(intent);
+        this.finish();
     }
 }

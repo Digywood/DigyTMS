@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content">
 
     <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:card="http://schemas.android.com/apk/res-auto"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:background="#FFFFFF"
         android:layout_margin="3dp"
         android:layout_gravity="center"
@@ -32,7 +32,7 @@
                     android:id="@+id/tv_papername"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:textSize="20sp"
+                    android:textSize="16sp"
                     android:gravity="center"
                     android:textColor="@color/green"
                     android:textStyle="bold"
@@ -62,7 +62,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginRight="5dp"
-                        android:textSize="14sp"
+                        android:textSize="12sp"
                         android:text="Practise Tests"/>
 
                     <TextView
@@ -71,7 +71,7 @@
                         android:layout_height="wrap_content"
                         android:textColor="@color/green"
                         android:textStyle="bold"
-                        android:textSize="14sp"/>
+                        android:textSize="12sp"/>
 
                 </LinearLayout>
 
@@ -105,7 +105,7 @@
                         android:id="@+id/tv_paperpmin"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textSize="16sp"
+                        android:textSize="12sp"
                         android:textColor="#000000"
                         android:gravity="center_vertical"
                         android:hint="min"/>
@@ -129,7 +129,7 @@
                         android:id="@+id/tv_paperpavg"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:textSize="16sp"
+                        android:textSize="12sp"
                         android:textColor="#000000"
                         android:gravity="center_vertical"
                         android:hint="avg"/>
@@ -153,7 +153,7 @@
                         android:id="@+id/tv_paperpmax"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:textSize="16sp"
+                        android:textSize="12sp"
                         android:textColor="#000000"
                         android:gravity="center_vertical"
                         android:hint="max"/>
@@ -183,7 +183,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginRight="5dp"
-                        android:textSize="14sp"
+                        android:textSize="12sp"
                         android:text="Flash Cards"/>
 
                     <TextView
@@ -192,7 +192,7 @@
                         android:layout_height="wrap_content"
                         android:textColor="@color/green"
                         android:textStyle="bold"
-                        android:textSize="14sp"/>
+                        android:textSize="12sp"/>
 
                 </LinearLayout>
 
@@ -226,7 +226,7 @@
                         android:id="@+id/tv_paperfmin"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textSize="16sp"
+                        android:textSize="12sp"
                         android:textColor="#000000"
                         android:gravity="center_vertical"
                         android:hint="min"/>
@@ -250,7 +250,7 @@
                         android:id="@+id/tv_paperfavg"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:textSize="16sp"
+                        android:textSize="12sp"
                         android:textColor="#000000"
                         android:gravity="center_vertical"
                         android:hint="avg"/>
@@ -274,7 +274,7 @@
                         android:id="@+id/tv_paperfmax"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:textSize="16sp"
+                        android:textSize="12sp"
                         android:textColor="#000000"
                         android:gravity="center_vertical"
                         android:hint="max"/>
@@ -304,7 +304,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginRight="5dp"
-                        android:textSize="14sp"
+                        android:textSize="12sp"
                         android:text="Assessment Tests"/>
 
                     <TextView
@@ -313,7 +313,7 @@
                         android:layout_height="wrap_content"
                         android:textColor="@color/green"
                         android:textStyle="bold"
-                        android:textSize="14sp"/>
+                        android:textSize="12sp"/>
 
                 </LinearLayout>
 
@@ -347,7 +347,7 @@
                         android:id="@+id/tv_paperamin"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textSize="16sp"
+                        android:textSize="12sp"
                         android:textColor="#000000"
                         android:gravity="center_vertical"
                         android:hint="min"/>
@@ -371,7 +371,7 @@
                         android:id="@+id/tv_paperaavg"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:textSize="16sp"
+                        android:textSize="12sp"
                         android:textColor="#000000"
                         android:gravity="center_vertical"
                         android:hint="avg"/>
@@ -395,7 +395,7 @@
                         android:id="@+id/tv_paperamax"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:textSize="16sp"
+                        android:textSize="12sp"
                         android:textColor="#000000"
                         android:gravity="center_vertical"
                         android:hint="max"/>

@@ -43,6 +43,13 @@
     <string name="close_text">Close</string>
     <string name="title_activity_flash_card">FlashCardActivity</string>
     <string name="title_activity_dashboard">DashboardActivity</string>
+    <string name="title_activity_lessons">Lessons</string>
+    <string name="title_activity_lesson_units">Lesson Units</string>
+    <string name="title_activity_lesson_unit_points">Lesson Unit Points</string>
+
+    <string name="base_url">http://www.digywoodads.com/digytms/assets/courses/</string>
+    <!--<string name="media_url_mp3">https://www.youtube.com/watch?v=AyzsbSJyRKs</string>
+    <string name="media_url_mp4">http://www.digywoodads.com/digytms/assets/videotest.mp4</string>-->
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
