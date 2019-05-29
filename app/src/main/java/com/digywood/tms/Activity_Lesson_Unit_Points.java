@@ -199,19 +199,19 @@ public class Activity_Lesson_Unit_Points extends AppCompatActivity {
         return super.onKeyDown(keyCode, event);
     }
 
-    protected void exitByBackKey() {
-        Intent intent = new Intent(Activity_Lesson_Unit_Points.this, Activity_Lesson_Units.class);
-        intent.putExtra("studentid",studentid);
-        intent.putExtra("sname",studentname);
-        intent.putExtra("number",number);
-        intent.putExtra("email",email);
-        intent.putExtra("enrollid",enrollid);
-        intent.putExtra("courseid",courseid);
-        intent.putExtra("paperid",paperid);
-        intent.putExtra("lessonid",lessonid);
-        intent.putExtra("orgid",orgid);
-        startActivity(intent);
-        this.finish();
+        protected void exitByBackKey() {
+            Intent intent = new Intent(Activity_Lesson_Unit_Points.this, Activity_Lesson_Units.class);
+            intent.putExtra("studentid",studentid);
+            intent.putExtra("sname",studentname);
+            intent.putExtra("number",number);
+            intent.putExtra("email",email);
+            intent.putExtra("enrollid",enrollid);
+            intent.putExtra("courseid",courseid);
+            intent.putExtra("paperid",paperid);
+            intent.putExtra("lessonid",lessonid);
+            intent.putExtra("orgid",orgid);
+            startActivity(intent);
+            this.finish();
 
     }
 }
